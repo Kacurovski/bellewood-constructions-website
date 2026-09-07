@@ -1,0 +1,16 @@
+/* Clear space: X equals the height of the symbol's roof pitch, kept clear on all
+   four sides. Nothing enters this zone — no type, no rules, no image edges. */
+.wrap {
+  display: inline-block;
+  position: relative;
+  flex: none;
+  margin: var(--clear);
+}
+
+.img {
+  width: 100%;
+  height: 100%;
+  /* Rendering hint only. The mark itself is never recoloured or filtered. */
+  image-rendering: auto;
+  user-select: none;
+}

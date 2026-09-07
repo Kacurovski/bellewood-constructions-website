@@ -1,0 +1,113 @@
+.slot {
+  position: relative;
+  margin: 0;
+  overflow: hidden;
+  background: var(--sage-panel);
+}
+
+.img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* The mask that rises as the frame enters. */
+.mask {
+  position: absolute;
+  inset: 0;
+  will-change: clip-path;
+}
+
+/* Hover zoom only. The card sets --media-zoom; this element is the one thing
+   in the stack whose transform framer-motion does not touch. */
+.zoom {
+  position: absolute;
+  inset: 0;
+  transform: scale(var(--media-zoom, 1));
+  transition: transform var(--dur-slow) var(--ease-out);
+}
+
+/* Taller than its frame, and pulled up by half the overflow, so the drift and
+   the settle both have room to travel without showing an edge. */
+.imgDrift {
+  position: absolute;
+  top: -13%;
+  left: 0;
+  height: 126%;
+  will-change: transform;
+}
+
+/* --- The empty state ------------------------------------------------------
+   A brand ground, not a placeholder graphic. The page has to read well with
+   every one of these empty, because right now every one of them is. */
+.empty {
+  display: flex;
+  align-items: flex-end;
+  padding: clamp(1rem, 2.5vw, 2rem);
+}
+
+.green {
+  background: var(--green);
+  color: var(--wash);
+}
+
+.sage {
+  background: var(--sage-panel);
+  color: var(--green);
+}
+
+/* Drawn corner marks — line-work waiting on material. Reads as an unfinished
+   drawing rather than a missing asset. */
+.corner {
+  position: absolute;
+  inset: clamp(0.75rem, 1.6vw, 1.25rem);
+  pointer-events: none;
+}
+
+.corner::before,
+.corner::after {
+  content: '';
+  position: absolute;
+  width: clamp(1.25rem, 3vw, 2.25rem);
+  height: clamp(1.25rem, 3vw, 2.25rem);
+  border: 1px solid currentColor;
+  opacity: 0.26;
+}
+
+.corner::before {
+  top: 0;
+  left: 0;
+  border-right: 0;
+  border-bottom: 0;
+}
+
+.corner::after {
+  right: 0;
+  bottom: 0;
+  border-left: 0;
+  border-top: 0;
+}
+
+.caption {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.label {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: var(--t-sub);
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+}
+
+.sublabel {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: var(--t-eyebrow);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  opacity: 0.72;
+}

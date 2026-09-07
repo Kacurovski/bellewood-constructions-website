@@ -1,0 +1,107 @@
+.hero {
+  position: relative;
+  overflow: hidden;
+}
+
+/* The photograph runs to the right edge of the viewport. The shell only
+   constrains the copy, so the image is not trapped in a page-width box. */
+.grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 0.82fr);
+  align-items: stretch;
+  min-height: clamp(34rem, 78vh, 52rem);
+}
+
+.copyCol {
+  display: flex;
+  align-items: center;
+  padding-block: clamp(3.5rem, 3rem + 6vw, 7rem);
+  /* The shell centres content up to the site max width; keep the copy aligned
+     to that grid even though the image escapes it. */
+  margin-inline-start: auto;
+  width: 100%;
+  max-width: calc(var(--max-w) * 0.56);
+}
+
+.copy { max-width: 34rem; }
+
+.heading {
+  margin: 0;
+  font-size: clamp(2rem, 1rem + 2.6vw, 3.25rem);
+}
+
+hr.rule { margin-block: clamp(1.75rem, 3vw, 2.5rem); }
+
+.lede {
+  color: var(--pine);
+  max-width: 42ch;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: clamp(1.25rem, 3vw, 2.25rem);
+  margin-top: clamp(2rem, 3.5vw, 3rem);
+  flex-wrap: wrap;
+}
+
+.call { color: var(--green); }
+
+/* The object sits on the brand ground rather than in a photographic frame, so
+   the wash runs unbroken from the copy across to it. */
+.media {
+  position: relative;
+  overflow: hidden;
+  background: var(--wash);
+}
+
+.scene { position: absolute; inset: 0; }
+
+.still {
+  width: 100%;
+  height: 100%;
+  padding: 6%;
+  box-sizing: border-box;
+}
+
+@media (max-width: 940px) {
+  .grid {
+    grid-template-columns: minmax(0, 1fr);
+    min-height: 0;
+  }
+
+  /* The headline leads, then the house, then the rest of the copy. Putting the
+     object between the two halves means both halves have to be siblings of the
+     scene, so the two wrappers collapse and their children join the grid
+     directly. They take over the shell's gutter, which collapses with them. */
+  .copyCol,
+  .copy {
+    display: contents;
+  }
+
+  .heading,
+  .body {
+    padding-inline: var(--gutter);
+    max-width: none;
+  }
+
+  .heading {
+    order: 0;
+    padding-top: clamp(2.5rem, 8vw, 4rem);
+  }
+
+  .media {
+    order: 1;
+    height: clamp(15rem, 42vh, 22rem);
+    margin-block: clamp(1.5rem, 5vw, 2.5rem);
+  }
+
+  .body {
+    order: 2;
+    padding-bottom: clamp(2.5rem, 8vw, 4rem);
+  }
+
+  hr.rule {
+    margin-top: 0;
+  }
+}

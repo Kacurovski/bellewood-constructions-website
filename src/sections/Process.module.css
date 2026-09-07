@@ -1,0 +1,184 @@
+.section {
+  border-top: 1px solid var(--rule);
+  position: relative;
+}
+
+/* --- Pinned ----------------------------------------------------------------
+   The section is one viewport-tall stage plus a run of scroll that the stage is
+   held through. That extra height IS the timeline: how far you have scrolled
+   into it is how far the frame has gone up. */
+.pinned {
+  --pin: 130vh;
+  height: calc(100vh + var(--pin));
+}
+
+.pinned .stage {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  /* Clears the sticky header, which sits above this. */
+  padding-block: 6.5rem 2.5rem;
+  box-sizing: border-box;
+}
+
+/* Reduced motion, or no WebGL: no pin, no hold, and the still frame shows the
+   finished building. Nobody is kept in place to watch something that cannot move. */
+.static {
+  padding-block: var(--section-y);
+}
+
+/* Named areas so the three blocks can reorder between layouts without the
+   markup changing: intro and steps stack in one column beside the drawing on a
+   wide screen, and run intro / drawing / steps on a narrow one. */
+.inner {
+  display: grid;
+  grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr);
+  grid-template-areas:
+    'intro scene'
+    'steps scene';
+  grid-template-rows: auto 1fr;
+  gap: 0 clamp(2rem, 5vw, 5rem);
+  align-items: center;
+  width: 100%;
+}
+
+.intro { grid-area: intro; }
+
+.heading { margin-top: var(--s-4); }
+
+.lede {
+  margin-top: clamp(1.25rem, 2vw, 1.75rem);
+  color: var(--pine);
+}
+
+.steps {
+  grid-area: steps;
+  list-style: none;
+  margin: clamp(2rem, 3.5vw, 3rem) 0 0;
+  padding: 0;
+  border-top: 1px solid var(--rule);
+}
+
+.step {
+  display: flex;
+  gap: var(--s-5);
+  padding-block: clamp(0.9rem, 1.8vw, 1.35rem);
+  border-bottom: 1px solid var(--rule);
+}
+
+/* While the section is pinned, the step the frame is currently at carries full
+   weight and the others sit back. Opacity only: no bars, no meters, no ticks. */
+.pinned .step {
+  opacity: 0.5;
+  transition: opacity var(--dur) var(--ease);
+}
+
+.pinned .stepActive { opacity: 1; }
+
+.stepNumber {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: var(--t-eyebrow);
+  letter-spacing: 0.12em;
+  color: var(--green);
+  opacity: 0.5;
+  padding-top: 0.35em;
+  flex: none;
+}
+
+.pinned .stepActive .stepNumber { opacity: 1; }
+
+.stepLabel {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: var(--t-sub);
+  letter-spacing: -0.01em;
+  margin: 0;
+}
+
+.stepNote {
+  margin-top: 0.3rem;
+  color: var(--pine);
+  opacity: 0.76;
+}
+
+.sceneWrap {
+  grid-area: scene;
+  position: relative;
+  min-width: 0;
+  width: 100%;
+  aspect-ratio: 5 / 4;
+  max-height: 100%;
+}
+
+.scene { position: absolute; inset: 0; }
+
+.still {
+  width: 100%;
+  height: 100%;
+  padding: 4%;
+  box-sizing: border-box;
+}
+
+/* --- Narrow ----------------------------------------------------------------
+   No full pin here: a viewport-tall stage cannot hold a stacked heading, lede,
+   four steps and a drawing without cramming all of them. Instead the drawing
+   alone sticks near the top and builds while the steps scroll past it. The
+   progress mapping is identical, so it still starts empty. */
+@media (max-width: 900px) {
+  /* The narrow layout pins exactly as the wide one does. It reads top to
+     bottom instead of left to right: the four steps, then the drawing filling
+     the rest of the screen and building as you scroll. Once it is up, the pin
+     releases and the page carries on.
+
+     The earlier version let the drawing stick while the steps scrolled past it,
+     which put the drawing above the words it was illustrating and left a screen
+     of empty ground at the end. */
+  .pinned {
+    --pin: 105vh;
+  }
+
+  .pinned .stage {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    height: 100svh;
+    padding-block: 5rem 1.5rem;
+  }
+
+  .inner {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-height: 0;
+    grid-template-areas: none;
+    gap: 0;
+  }
+
+  .intro { order: 0; flex: none; }
+  .steps { order: 1; flex: none; margin-top: clamp(1rem, 3vw, 1.5rem); }
+
+  /* Whatever is left after the words. It never collapses to nothing, and it is
+     the only part of the column allowed to give. */
+  .sceneWrap {
+    order: 2;
+    flex: 1;
+    min-height: 7rem;
+    aspect-ratio: auto;
+    margin-top: var(--s-4);
+  }
+
+  .lede { margin-top: var(--s-3); }
+
+  /* Tighter, so four steps and a drawing both fit a phone screen. */
+  .step { padding-block: 0.6rem; gap: var(--s-4); }
+  .stepNote { margin-top: 0.15rem; }
+}
+
+@media (max-width: 900px) and (max-height: 720px) {
+  /* On a short screen the supporting line is the first thing to go: the four
+     steps say the same thing and the drawing needs the room. */
+  .lede { display: none; }
+}

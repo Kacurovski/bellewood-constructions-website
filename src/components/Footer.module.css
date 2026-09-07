@@ -1,0 +1,65 @@
+.footer { padding-top: clamp(3.5rem, 7vw, 6rem); }
+
+.inner {
+  display: grid;
+  grid-template-columns: minmax(0, 1.6fr) repeat(3, minmax(0, 0.8fr));
+  gap: clamp(2rem, 4vw, 4rem);
+  padding-bottom: clamp(3rem, 6vw, 5rem);
+}
+
+.brand { max-width: 34ch; }
+
+/* The mark carries its own clear space, so it is pulled back to sit on the page
+   grid rather than a clear-space width inside it. The pull is capped at the
+   gutter: a fixed -1.5rem is wider than the gutter on a phone and hangs the
+   mark off the left edge of the screen. */
+.logoLink {
+  display: inline-flex;
+  margin-inline-start: calc(min(var(--s-5), var(--gutter)) * -1);
+}
+
+.blurb {
+  margin-top: var(--s-4);
+  color: color-mix(in srgb, var(--wash) 76%, transparent);
+}
+
+.columnHeading { margin-bottom: var(--s-4); }
+
+.list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-3);
+  font-family: var(--font-display);
+  font-size: var(--t-small);
+  font-weight: 500;
+}
+
+.list a { text-decoration: none; }
+
+.list a:hover { text-decoration: underline; text-underline-offset: 0.28em; }
+
+.plain { color: color-mix(in srgb, var(--wash) 70%, transparent); }
+
+.legal {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--s-5);
+  flex-wrap: wrap;
+  padding-block: clamp(1.5rem, 2.5vw, 2rem);
+  border-top: 1px solid var(--rule-reverse);
+}
+
+.copyright { opacity: 0.6; }
+
+@media (max-width: 900px) {
+  .inner { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .brand { grid-column: 1 / -1; }
+}
+
+@media (max-width: 520px) {
+  .inner { grid-template-columns: minmax(0, 1fr); gap: var(--s-6); }
+}

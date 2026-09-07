@@ -1,0 +1,28 @@
+.frame {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.still,
+.scene {
+  position: absolute;
+  inset: 0;
+}
+
+/* The still frame fades out under the live scene rather than being swapped, so
+   there is never a flash of empty ground. */
+.still {
+  opacity: 1;
+  transition: opacity 520ms var(--ease);
+}
+
+.stillHidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.scene {
+  /* The canvas is decorative on top of the still frame. */
+  pointer-events: none;
+}

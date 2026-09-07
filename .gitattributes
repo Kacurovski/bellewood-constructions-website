@@ -1,0 +1,16 @@
+# Normalise line endings. Text is stored LF in the repository and checked out
+# with whatever the platform wants, so a Windows machine and a CI runner never
+# produce a diff of the whole file just by touching it.
+* text=auto eol=lf
+
+# Binaries git must not try to normalise or diff as text.
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.webp binary
+*.avif binary
+*.ico binary
+*.pdf binary
+*.woff binary
+*.woff2 binary
+*.mp4 binary

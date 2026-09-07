@@ -1,0 +1,39 @@
+# ---------------------------------------------------------------------------
+# Client material — NEVER COMMIT
+#
+# Knowledge/ holds the signed and draft commercial documents for this
+# engagement: the Master Services Agreement, Service Agreement 1 with the fee
+# schedule and payment history, the kickoff capture list (the client's ABN, ACN,
+# personal QBCC licence, his home address, and candid notes on his objections
+# and his budget), and the brand book, which is his intellectual property.
+#
+# None of that belongs in a code repository, private or otherwise. It lives in
+# the client's Google Drive, where access is managed. The build instructions
+# that reference it are duplicated at AGENT.md in the repo root, so nothing here
+# needs the folder present to be understood.
+#
+# If you ever need to share it, share the Drive folder, not a commit.
+# ---------------------------------------------------------------------------
+Knowledge/
+
+# Dependencies and build output
+node_modules
+dist
+*.tsbuildinfo
+
+# Local environment and editor noise
+*.local
+.env
+.env.*
+!.env.example
+.DS_Store
+Thumbs.db
+.vscode/*
+!.vscode/extensions.json
+.idea/
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*

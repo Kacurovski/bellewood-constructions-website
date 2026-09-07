@@ -1,0 +1,16 @@
+.head { padding-block: clamp(3rem, 6vw, 6rem) clamp(2.5rem, 5vw, 4rem); }
+
+.title { margin-top: var(--s-4); max-width: 20ch; }
+
+.lede { margin-top: clamp(1.25rem, 2vw, 1.75rem); color: var(--pine); }
+
+/* Columns and the mobile rail belong to SwipeRow. */
+.grid {
+  padding-bottom: clamp(3rem, 6vw, 5rem);
+  border-top: 1px solid var(--rule);
+  padding-top: clamp(2.5rem, 5vw, 4rem);
+}
+
+.magnet { padding-bottom: clamp(3.5rem, 7vw, 6rem); }
+
+

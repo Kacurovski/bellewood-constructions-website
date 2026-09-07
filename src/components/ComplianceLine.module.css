@@ -1,0 +1,8 @@
+/* Fine print, but legible at the size it is actually reproduced. Never lighter
+   than this — it has to survive on a card reverse and on site mesh. */
+.line {
+  color: inherit;
+  opacity: 0.72;
+  letter-spacing: 0.01em;
+  max-width: 46ch;
+}

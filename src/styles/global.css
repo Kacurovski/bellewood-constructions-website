@@ -1,0 +1,274 @@
+@import './fonts.css';
+@import './tokens.css';
+
+*,
+*::before,
+*::after { box-sizing: border-box; }
+
+html {
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+}
+
+body {
+  margin: 0;
+  background: var(--wash);
+  color: var(--pine);
+  font-family: var(--font-body);
+  font-size: var(--t-body);
+  font-weight: 400;
+  line-height: var(--lh-body);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  overflow-x: hidden;
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--font-display);
+  color: var(--green);
+  line-height: var(--lh-heading);
+  margin: 0;
+  /* Sentence case, never all-caps display. */
+  text-transform: none;
+  text-wrap: balance;
+}
+
+p { margin: 0; }
+img, svg, video { display: block; max-width: 100%; }
+button { font: inherit; color: inherit; }
+
+a {
+  color: inherit;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.22em;
+  text-decoration-color: var(--rule-strong);
+  transition: text-decoration-color var(--dur-fast) var(--ease);
+}
+a:hover { text-decoration-color: currentColor; }
+
+:focus-visible {
+  outline: 2px solid var(--green);
+  outline-offset: 3px;
+  border-radius: 1px;
+}
+.on-green :focus-visible { outline-color: var(--wash); }
+
+::selection { background: var(--sage); color: var(--pine); }
+
+/* --- Layout primitives ---------------------------------------------------- */
+
+.shell {
+  width: 100%;
+  max-width: var(--max-w);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+.section { padding-block: var(--section-y); }
+.section--tight { padding-block: calc(var(--section-y) * 0.62); }
+
+/* A 12 column grid. Layouts are asymmetric and left aligned — architectural,
+   not centred. */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: var(--gutter);
+}
+@media (max-width: 860px) {
+  .grid { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+}
+
+.measure { max-width: var(--measure); }
+.measure-tight { max-width: var(--measure-tight); }
+
+/* --- Type roles ------------------------------------------------------------
+   Named for what they are for, not for how big they are. */
+
+.display {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: var(--t-display);
+  letter-spacing: -0.02em;
+  line-height: var(--lh-display);
+}
+
+.headline {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: var(--t-headline);
+  letter-spacing: -0.02em;
+}
+
+.section-heading {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: var(--t-section);
+  letter-spacing: -0.01em;
+}
+
+.sub-heading {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: var(--t-sub);
+  letter-spacing: -0.01em;
+}
+
+/* Uppercase is reserved for eyebrows and labels, and used sparingly rather
+   than stacked above every section. */
+.eyebrow {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: var(--t-eyebrow);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--green);
+  margin: 0;
+}
+
+.lead {
+  font-size: var(--t-lead);
+  line-height: 1.6;
+}
+
+.pull-quote {
+  font-family: var(--font-body);
+  font-weight: 300;
+  font-size: clamp(1.5rem, 1.1rem + 1.6vw, 2.25rem);
+  line-height: 1.38;
+  letter-spacing: -0.005em;
+  color: var(--green);
+}
+
+.fine {
+  font-family: var(--font-display);
+  font-size: var(--t-fine);
+  font-weight: 400;
+  line-height: 1.55;
+  letter-spacing: 0.005em;
+}
+
+.small { font-size: var(--t-small); }
+
+/* --- Grounds -------------------------------------------------------------- */
+
+/* Solid green. The 30 in the 60/30/10. */
+.on-green {
+  background: var(--green);
+  color: var(--wash);
+}
+.on-green h1, .on-green h2, .on-green h3, .on-green h4 { color: var(--wash); }
+.on-green .eyebrow { color: var(--sage); }
+.on-green a { text-decoration-color: var(--rule-reverse); }
+
+.on-sage { background: var(--sage-panel); }
+
+/* --- Rules ---------------------------------------------------------------- */
+
+.hairline {
+  border: 0;
+  border-top: 1px solid var(--rule);
+  margin: 0;
+}
+.on-green .hairline { border-top-color: var(--rule-reverse); }
+
+/* The timber accent. Decorative only — it fails contrast for text. At most
+   one of these per screen. */
+.timber-rule {
+  width: 3.5rem;
+  height: 2px;
+  background: var(--timber);
+  border: 0;
+  margin: 0;
+}
+
+/* --- Buttons and links ---------------------------------------------------- */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-3);
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: var(--t-small);
+  letter-spacing: 0.01em;
+  padding: 0.95rem 1.6rem;
+  border: 1px solid var(--green);
+  background: var(--green);
+  color: var(--wash);
+  text-decoration: none;
+  cursor: pointer;
+  transition: background var(--dur-fast) var(--ease),
+              color var(--dur-fast) var(--ease),
+              border-color var(--dur-fast) var(--ease);
+}
+.btn:hover { background: var(--pine); border-color: var(--pine); }
+
+.btn--ghost {
+  background: transparent;
+  color: var(--green);
+}
+.btn--ghost:hover { background: var(--green); color: var(--wash); }
+
+.on-green .btn {
+  background: var(--wash);
+  color: var(--green);
+  border-color: var(--wash);
+}
+.on-green .btn:hover { background: var(--sage); border-color: var(--sage); }
+
+/* A quiet inline link with a rule that draws on hover. */
+.link-underline {
+  position: relative;
+  text-decoration: none;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: var(--t-small);
+  padding-bottom: 0.35em;
+}
+.link-underline::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 1px;
+  background: currentColor;
+  transform: scaleX(0.28);
+  transform-origin: left;
+  transition: transform var(--dur) var(--ease-out);
+}
+.link-underline:hover::after,
+.link-underline:focus-visible::after { transform: scaleX(1); }
+
+/* --- Utilities ------------------------------------------------------------ */
+
+.visually-hidden {
+  position: absolute;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.skip-link {
+  position: absolute;
+  left: var(--gutter);
+  top: -100%;
+  z-index: 100;
+  background: var(--green);
+  color: var(--wash);
+  padding: 0.75rem 1.25rem;
+  font-family: var(--font-display);
+  font-size: var(--t-small);
+  text-decoration: none;
+}
+.skip-link:focus { top: var(--s-4); }
+
+.stack > * + * { margin-top: var(--s-4); }
+.stack-lg > * + * { margin-top: var(--s-6); }

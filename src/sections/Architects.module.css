@@ -1,0 +1,26 @@
+.section {
+  border-top: 1px solid var(--rule);
+  background: var(--sage-panel);
+}
+
+.inner {
+  display: grid;
+  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+  gap: clamp(1.5rem, 4vw, 5rem);
+  align-items: start;
+}
+
+.heading { margin-top: var(--s-4); max-width: 14ch; }
+
+.body {
+  max-width: 56ch;
+  /* Green on sage is 6.1:1 — fine for headings and short passages, which this
+     is. Body copy anywhere longer stays Deep Pine on Wash. */
+  color: var(--pine);
+}
+
+.link { color: var(--green); font-weight: 500; }
+
+@media (max-width: 860px) {
+  .inner { grid-template-columns: minmax(0, 1fr); gap: var(--s-5); }
+}

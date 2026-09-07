@@ -1,0 +1,82 @@
+.wrap { margin: 0; }
+
+.stage {
+  position: relative;
+  overflow: hidden;
+  touch-action: pan-y;
+  cursor: ew-resize;
+  background: var(--green);
+}
+
+.plane {
+  position: absolute;
+  inset: 0;
+  /* Depth, not decoration: the revealed state comes forward by under two
+     percent. Enough to feel like two planes, not enough to notice as an
+     effect, and it never scales below 1 so no edge of the ground shows. */
+  transform: scale(calc(1 + var(--depth, 0)));
+  transition: transform 240ms var(--ease);
+}
+
+.plane .img,
+.plane > * {
+  width: 100%;
+  height: 100%;
+}
+
+.front {
+  clip-path: inset(0 calc(100% - var(--split)) 0 0);
+}
+
+/* A hairline where the two meet. No handle, no chevron, no circle. */
+/* A hairline where the two meet. No handle, no chevron, no circle. Carries a
+   companion line so it reads on a light ground as well as a dark one. */
+.seam {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: var(--split);
+  width: 1px;
+  background: var(--wash);
+  box-shadow: 1px 0 0 color-mix(in srgb, var(--green) 45%, transparent);
+  pointer-events: none;
+}
+
+/* A real control, made invisible rather than replaced with a div. */
+.range {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  opacity: 0;
+  cursor: ew-resize;
+  -webkit-appearance: none;
+  appearance: none;
+  background: transparent;
+}
+
+.range:focus-visible {
+  opacity: 1;
+  outline: 2px solid var(--wash);
+  outline-offset: -4px;
+}
+
+.caption {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--s-4);
+  margin-top: var(--s-3);
+  font-family: var(--font-display);
+  font-size: var(--t-eyebrow);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--green);
+  opacity: 0.7;
+}
+
+.hint { opacity: 0.7; }
+
+@media (prefers-reduced-motion: reduce) {
+  .plane { transition: none; }
+}

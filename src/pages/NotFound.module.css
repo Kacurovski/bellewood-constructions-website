@@ -1,0 +1,5 @@
+.wrap { padding-block: clamp(5rem, 12vw, 10rem); }
+.title { margin-top: var(--s-4); max-width: 16ch; }
+.note { margin-top: var(--s-5); color: var(--pine); }
+.link { color: var(--green); font-weight: 500; }
+.action { margin-top: clamp(2rem, 4vw, 3rem); }

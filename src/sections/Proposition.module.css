@@ -1,0 +1,56 @@
+.section { border-top: 1px solid var(--rule); }
+
+.inner {
+  display: grid;
+  grid-template-columns: minmax(0, 0.34fr) minmax(0, 0.66fr);
+  grid-template-rows: auto 1fr;
+  column-gap: clamp(1.5rem, 4vw, 5rem);
+  row-gap: clamp(1.5rem, 3vw, 2.5rem);
+  align-items: start;
+}
+
+/* The eyebrow sits in the left column as a margin note, the way a label sits in
+   the margin of a drawing — rather than stacked above the heading. */
+.left { grid-column: 1; grid-row: 1; padding-top: 0.5rem; }
+.figure { grid-column: 1; grid-row: 2; }
+.right { grid-column: 2; grid-row: 1 / span 2; }
+
+.heading { max-width: 18ch; }
+
+.body {
+  margin-top: clamp(1.5rem, 2.5vw, 2.25rem);
+  color: var(--pine);
+}
+
+@media (max-width: 860px) {
+  .inner {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: none;
+    gap: var(--s-5);
+  }
+
+  .left,
+  .right,
+  .figure {
+    grid-column: 1;
+    grid-row: auto;
+  }
+
+  /* The photograph goes between the heading and the copy, so the two halves of
+     the right column have to become grid items in their own right. */
+  .right { display: contents; }
+
+  .left { order: 0; }
+  .headWrap { order: 1; }
+  .figure { order: 2; }
+  .bodyWrap { order: 3; }
+
+  /* The grid gap is doing this spacing now. */
+  .body { margin-top: 0; }
+
+  /* ImageSlot writes its ratio as an inline style, so overriding it for the
+     narrow layout has to outrank one. */
+  .detail {
+    aspect-ratio: 5 / 4 !important;
+  }
+}

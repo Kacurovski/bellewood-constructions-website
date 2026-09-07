@@ -1,0 +1,99 @@
+.wrap {
+  position: relative;
+}
+
+.track {
+  display: grid;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  grid-template-columns: repeat(var(--cols, 3), minmax(0, 1fr));
+  gap: clamp(1.5rem, 3vw, 3rem);
+}
+
+@media (max-width: 1000px) {
+  .track {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 620px) {
+  /* One column of six cards is nine screens of scrolling and the sixth may as
+     well not be there. Side by side it is one screen, and the card left
+     peeking past the right edge is what tells you it moves. */
+  .track {
+    grid-template-columns: none;
+    grid-auto-flow: column;
+    grid-auto-columns: 76%;
+    gap: var(--s-4);
+
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+
+    /* Bleed to the screen edges so the rail reads as continuing past them,
+       while the first card still lines up with the text above it. */
+    margin-inline: calc(var(--gutter) * -1);
+    padding-inline: var(--gutter);
+    scroll-padding-inline: var(--gutter);
+
+    scrollbar-width: none;
+  }
+
+  .track::-webkit-scrollbar {
+    display: none;
+  }
+
+  .track > * {
+    scroll-snap-align: start;
+  }
+
+  .track:focus-visible {
+    outline: 2px solid var(--green);
+    outline-offset: 6px;
+  }
+}
+
+/* The meter only exists while the track is a rail, and the component only
+   renders it then — this keeps it out of the way at every other size. */
+.meter {
+  display: flex;
+  align-items: center;
+  gap: var(--s-4);
+  margin-top: var(--s-5);
+}
+
+.count {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55em;
+  flex: none;
+  font-family: var(--font-display);
+  font-size: var(--t-fine);
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  font-variant-numeric: tabular-nums;
+  color: color-mix(in srgb, var(--pine) 62%, transparent);
+}
+
+.of {
+  width: 0.85rem;
+  height: 1px;
+  background: var(--rule-strong);
+}
+
+.bar {
+  position: relative;
+  flex: 1;
+  height: 2px;
+  background: var(--rule);
+  overflow: hidden;
+}
+
+.fill {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: calc(100% / var(--cells, 1));
+  background: var(--green);
+  transition: transform var(--dur) var(--ease-out);
+}

@@ -1,0 +1,62 @@
+/* Full bleed. This is the 30 in the 60/30/10, and it should feel like a surface
+   you walk past rather than a panel on a page.
+
+   The mesh runs across the top and resolves into the section's own green at its
+   lower edge, so there is no line where it stops and the copy below sits on
+   solid ground. Putting the copy directly on the mesh was tried and thrown away:
+   the marks ran straight through the paragraphs and nothing was readable.
+
+   The whole section is kept under a screen height. It carries one sentence and
+   two short paragraphs, and at seven hundred pixels it was mostly empty. */
+.section {
+  position: relative;
+  padding-block: 0 clamp(2rem, 4vw, 3rem);
+}
+
+.band {
+  position: relative;
+  width: 100%;
+  height: clamp(12rem, 29vh, 18rem);
+  overflow: hidden;
+}
+
+.scene { position: absolute; inset: 0; }
+
+.inner {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: clamp(1.5rem, 5vw, 5rem);
+  /* Both columns sit on the same baseline, so the short heading does not leave
+     a hole under itself. */
+  align-items: end;
+  padding-top: clamp(1rem, 2.5vw, 2rem);
+}
+
+/* A size below the page's display scale. This is a statement, not the headline
+   of the site, and at full display size it shouted. */
+.heading {
+  max-width: 15ch;
+  font-size: clamp(1.6rem, 1.15rem + 1.9vw, 2.6rem);
+}
+
+.body {
+  max-width: 52ch;
+  color: color-mix(in srgb, var(--wash) 90%, transparent);
+}
+
+.rule { margin-top: clamp(1.25rem, 2.2vw, 2rem); }
+
+.fine { margin-top: var(--s-3); }
+
+@media (max-width: 860px) {
+  .band { height: clamp(9rem, 24vh, 13rem); }
+
+  .inner {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--s-5);
+    align-items: start;
+    padding-top: var(--s-5);
+  }
+
+  .heading { max-width: 18ch; }
+}

@@ -1,0 +1,76 @@
+.card { position: relative; }
+
+/* Cards step down the page rather than sitting on one line. Architectural, and
+   it stops six identical placeholder grounds reading as a wall of tiles. */
+.offset { margin-top: clamp(1.5rem, 6vw, 5rem); }
+
+.link {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+}
+
+.media {
+  overflow: hidden;
+}
+
+/* Hover lifts the photograph inside its frame. The frame itself never moves,
+   so the grid stays put. The variable is read by ImageSlot. */
+.link { --media-zoom: 1; }
+
+.link:hover,
+.link:focus-visible {
+  --media-zoom: 1.05;
+}
+
+.link:hover .title,
+.link:focus-visible .title {
+  color: var(--pine);
+}
+
+.meta {
+  display: flex;
+  gap: var(--s-4);
+  align-items: baseline;
+  margin-top: var(--s-4);
+}
+
+.number {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: var(--t-eyebrow);
+  letter-spacing: 0.12em;
+  color: var(--green);
+  opacity: 0.5;
+  padding-top: 0.2em;
+}
+
+.title {
+  margin: 0;
+  transition: color var(--dur-fast) var(--ease);
+}
+
+.kind {
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+  margin-top: 0.35rem;
+  color: var(--pine);
+  opacity: 0.72;
+}
+
+@media (max-width: 620px) {
+  /* Stacked on the rail. The dot is a separator between two things sharing a
+     line, so it goes when they stop sharing one. */
+  .kind { display: block; }
+  .kind > span { display: block; }
+  .kind .dot { display: none; }
+}
+
+.dot {
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: currentColor;
+  opacity: 0.6;
+}

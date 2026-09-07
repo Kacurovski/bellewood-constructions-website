@@ -1,0 +1,43 @@
+.frame {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: var(--sage-panel);
+}
+
+/* Two nested layers so scroll drift and pointer lean compose without either
+   having to know about the other. */
+.drift,
+.lean {
+  position: absolute;
+  inset: 0;
+  will-change: transform;
+}
+
+/* Oversized, so neither the drift nor the lean can ever expose an edge. */
+.lean {
+  inset: -7% -3%;
+}
+
+/* Four identical copies, each filling the frame and each clipped to its own
+   band. Identical geometry is what makes the finished picture seamless. */
+.image {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 55%;
+  user-select: none;
+  will-change: clip-path;
+}
+
+.seam {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: var(--wash);
+  pointer-events: none;
+}
