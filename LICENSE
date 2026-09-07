@@ -1,0 +1,34 @@
+Proprietary — all rights reserved.
+
+This repository is client work, not open source. It is not licensed for public
+use, redistribution or modification, and no permission is granted by its
+presence on any hosting service.
+
+Ownership is governed by the Master Services Agreement between Systemations Pty
+Ltd (ACN 701 262 768) and Angus Cowan Constructions Pty Ltd, trading as
+Bellewood Constructions, and by Service Agreement 1 issued under it. In summary,
+and subject to those documents rather than to this file:
+
+  - Client Materials — the Bellewood brand artwork, the project photography once
+    supplied, and the copy drawn from the client's own words — remain the
+    client's property (MSA cl. 8.1).
+
+  - Ownership of the Deliverables passes to the client on payment in full of the
+    fees due under the relevant Service Agreement (MSA cl. 8.2). Until then the
+    client holds a revocable licence and no ownership passes (MSA cl. 8.4).
+
+  - Systemations IP embedded in a Deliverable stays with Systemations, licensed
+    to the client perpetually for use as part of that Deliverable (MSA cl. 8.3).
+
+Do not treat anything here as transferred. Which of the above applies at any
+given moment is a question for the parties and their agreements, not for a file
+in a repository.
+
+Third-party material carries its own terms and is not covered by the above:
+
+  - Archivo and Newsreader are licensed under the SIL Open Font License 1.1.
+  - three.js, React, Vite and the other dependencies are MIT licensed; see
+    node_modules for the individual notices.
+  - The photographs in public/projects/ are PLACEHOLDER STOCK. They are not
+    Bellewood's projects and must be replaced before this site is published.
+    See README.md and src/data/projects.ts.
