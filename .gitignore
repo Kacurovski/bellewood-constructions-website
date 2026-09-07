@@ -16,6 +16,11 @@
 # ---------------------------------------------------------------------------
 Knowledge/
 
+# CRM build documents. Client operational material — message copy, pipeline
+# design, workflow specs. Related to this project but not part of the website,
+# and this repository is public.
+crm/
+
 # Dependencies and build output
 node_modules
 dist
