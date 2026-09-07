@@ -1,11 +1,20 @@
 # Bellewood Constructions — website
 
 The public website for Bellewood Constructions, a Brisbane builder of high-end
-heritage renovations. Domain: `bellewood.com.au`.
+heritage renovations. Domain: `bellewood.com.au`. Built by Systemations.
 
-Built by Systemations. Brand direction lives in `Knowledge/` — that folder is the
-source of truth for anything to do with look, colour, type or the mark, and it
-wins over this README on all of it.
+> **Status: not publishable.** The project photography is placeholder stock and
+> shows other people's buildings; the testimonials were written, not collected;
+> the enquiry form has no endpoint; and nothing is measured. See **Open items**
+> below before anything goes live. Every one of those is a flag in the code, not
+> a note in a document.
+
+**Brand direction lives in `Knowledge/`, which is deliberately not in this
+repository** — it holds the client's contracts, fee schedule, personal details
+and brand book. Ask Systemations for the Drive folder. On anything to do with
+look, colour, type or the mark it is the source of truth and it wins over this
+README. `AGENT.md` in the repo root carries the build instructions that
+reference it.
 
 ---
 
