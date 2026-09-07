@@ -140,8 +140,12 @@ export const brand = {
 export const forms = {
   // OPEN: GHL webhook endpoint. Placeholder — nothing is delivered until this is set.
   endpoint: '' as string,
-  // Where notifications should land once the sending domain is configured.
-  notifyTo: 'hello@bellewood.com.au',
+  /* Where notifications should land once the sending domain is configured.
+     Angus is a sole operator and the kickoff capture list names this as his
+     address; there is no hello@ and nobody asked for one. Kept in step with
+     `contact.email` deliberately — two addresses on one one-man business is how
+     an enquiry ends up in a mailbox nobody opens. */
+  notifyTo: contact.email,
   leadMagnet: {
     // Working concept per the Service Agreement. Title is not final.
     title: 'The 18-point checklist for first-time home builders',
