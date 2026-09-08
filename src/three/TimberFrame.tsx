@@ -325,8 +325,12 @@ function Fit() {
 
     const width = Math.max(maxX - minX, 0.001)
     const height = Math.max(maxY - minY, 0.001)
-    // A little air on every side. The drawing should not touch its edges.
-    const target = Math.min(size.width / width, size.height / height) * 0.9
+    /* A little air on every side — the drawing should not touch its edges. On a
+       phone the box is small enough that 10% of it is the difference between a
+       readable building and a thumbnail, so the margin tightens with the canvas
+       rather than staying a fixed fraction of it. */
+    const air = size.width < 520 ? 0.98 : 0.9
+    const target = Math.min(size.width / width, size.height / height) * air
 
     if (Math.abs(cam.zoom - target) > 0.4) {
       cam.zoom = target
