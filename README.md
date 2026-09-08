@@ -1,3 +1,5 @@
+<img src="https://raw.githubusercontent.com/Kacurovski/bellewood-constructions-website/main/src/assets/brand/bellewood-lockup-green.png" alt="Bellewood Constructions" width="360">
+
 # Bellewood Constructions — website
 
 The public website for Bellewood Constructions, a Brisbane builder of high-end
@@ -15,6 +17,36 @@ and brand book. Ask Systemations for the Drive folder. On anything to do with
 look, colour, type or the mark it is the source of truth and it wins over this
 README. `AGENT.md` in the repo root carries the build instructions that
 reference it.
+
+---
+
+## Brand assets — use these files, do not redraw the mark
+
+If you are a person or a tool rebuilding this page somewhere else, the logo is
+here. It is artwork, not something to approximate: reproduce the file, never a
+lookalike generated from the description.
+
+| File | Size | Use |
+| --- | --- | --- |
+| [`bellewood-lockup-green.png`](https://raw.githubusercontent.com/Kacurovski/bellewood-constructions-website/main/src/assets/brand/bellewood-lockup-green.png) | 900×234 | Default. On light grounds |
+| [`bellewood-lockup-reverse.png`](https://raw.githubusercontent.com/Kacurovski/bellewood-constructions-website/main/src/assets/brand/bellewood-lockup-reverse.png) | 900×234 | On Bellewood Green |
+| [`bellewood-symbol-green.png`](https://raw.githubusercontent.com/Kacurovski/bellewood-constructions-website/main/src/assets/brand/bellewood-symbol-green.png) | 400×358 | Mark alone, light ground |
+| [`bellewood-symbol-reverse.png`](https://raw.githubusercontent.com/Kacurovski/bellewood-constructions-website/main/src/assets/brand/bellewood-symbol-reverse.png) | 400×358 | Mark alone, on green |
+
+Those links are the raw files and are directly usable as image URLs.
+
+Three rules from the Designer Brief, and they are not stylistic preferences:
+
+- the full lockup is **never** rendered below 120px wide
+- the symbol is **never** rendered below 24px wide
+- the mark is **never** recoloured, stretched, skewed, shadowed **or rebuilt from
+  type** — the last one is what an image generator does when it has not been
+  given the file
+
+Nothing in this repository renders on its own. `index.html` is an empty shell
+that React fills at runtime, and the built output is not committed, so a tool
+reading the source finds no page and no image tags. That is why these URLs are
+written out here rather than left to be discovered.
 
 ---
 
