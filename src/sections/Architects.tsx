@@ -1,4 +1,5 @@
 import { Reveal } from '../components/Reveal'
+import { SheetRef } from '../components/Sheet'
 import { contact } from '../config/site'
 import styles from './Architects.module.css'
 
@@ -15,7 +16,7 @@ export function Architects() {
     <section className={['section--tight', styles.section].join(' ')} aria-labelledby="architects-heading">
       <div className={['shell', styles.inner].join(' ')}>
         <Reveal className={styles.left}>
-          <p className="eyebrow">For architects and designers</p>
+          <SheetRef number="A-06" name="For architects and designers" rule={false} />
           <h2 id="architects-heading" className={['section-heading', styles.heading].join(' ')}>
             We build to the drawings.
           </h2>

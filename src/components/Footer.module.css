@@ -44,13 +44,60 @@
 .plain { color: color-mix(in srgb, var(--wash) 70%, transparent); }
 
 .legal {
+  padding-block: clamp(1.75rem, 3vw, 2.5rem) clamp(1.5rem, 2.5vw, 2rem);
+  border-top: 1px solid var(--ink);
+}
+
+/* --- The title block -------------------------------------------------------
+   Ruled cells, a label above each field and the value under it, exactly as the
+   block sits in the corner of a drawing sheet. It is where you look to find who
+   is responsible for what is on the sheet — which is what these four fields
+   are: the licensed entity, the number, the trading name and the date it takes
+   effect.
+
+   The rules are drawn with a gap and a single border per cell rather than a
+   table border, so no line is ever doubled where two cells meet. */
+.block {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1px;
+  margin: 0;
+  background: var(--ink);
+  border: 1px solid var(--ink);
+}
+
+.cell {
+  background: var(--green);
+  padding: clamp(0.75rem, 1.6vw, 1.1rem) clamp(0.75rem, 1.4vw, 1.25rem);
+  min-width: 0;
+}
+
+.cellLabel {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: var(--t-eyebrow);
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--sage);
+}
+
+.cellValue {
+  margin: 0.4rem 0 0;
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: var(--t-small);
+  line-height: 1.35;
+  color: var(--wash);
+  font-variant-numeric: tabular-nums;
+}
+
+.legalRow {
   display: flex;
   align-items: baseline;
   justify-content: space-between;
   gap: var(--s-5);
   flex-wrap: wrap;
-  padding-block: clamp(1.5rem, 2.5vw, 2rem);
-  border-top: 1px solid var(--rule-reverse);
+  margin-top: clamp(1.25rem, 2.2vw, 1.75rem);
 }
 
 .copyright { opacity: 0.6; }
@@ -58,6 +105,10 @@
 @media (max-width: 900px) {
   .inner { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .brand { grid-column: 1 / -1; }
+
+  /* Two cells across rather than four. A title block with four columns on a
+     phone is four columns of one word each. */
+  .block { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 
 @media (max-width: 520px) {

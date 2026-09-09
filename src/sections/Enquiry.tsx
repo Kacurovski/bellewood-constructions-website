@@ -1,5 +1,6 @@
 import { EnquiryForm } from '../components/EnquiryForm'
 import { Reveal } from '../components/Reveal'
+import { SheetRef } from '../components/Sheet'
 import { contact, nextSteps } from '../config/site'
 import styles from './Enquiry.module.css'
 
@@ -25,7 +26,7 @@ export function Enquiry() {
           renovation will not fill in a form that goes into the dark. */}
       <div className={['shell', styles.steps].join(' ')}>
         <Reveal className={styles.stepsHead}>
-          <p className="eyebrow">What happens next</p>
+          <SheetRef number="A-08" name="What happens next" rule={false} />
         </Reveal>
         <ol className={styles.stepsList}>
           {nextSteps.map((step, i) => (

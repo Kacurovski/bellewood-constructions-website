@@ -21,6 +21,7 @@ export default function About() {
   return (
     <>
       <PageHead
+        number="C-01"
         eyebrow="About"
         title="One builder, more than two decades of Brisbane houses."
         meta={[

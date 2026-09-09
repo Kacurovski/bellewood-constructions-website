@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import { Reveal } from '../components/Reveal'
+import { SheetRef } from '../components/Sheet'
 import { ProjectCard } from '../components/ProjectCard'
 import { SwipeRow } from '../components/SwipeRow'
 import { featuredProjects } from '../data/projects'
@@ -22,6 +23,7 @@ export function SelectedProjects() {
     <section className={['section', styles.section].join(' ')} aria-labelledby="work-heading">
       <div className="shell">
         <Reveal className={styles.head}>
+          <SheetRef number="A-03" name="Selected work" note="Six projects" />
           <h2 id="work-heading" className="section-heading">
             Selected work
           </h2>

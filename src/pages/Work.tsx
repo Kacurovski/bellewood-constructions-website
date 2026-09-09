@@ -19,6 +19,7 @@ export default function Work() {
   return (
     <>
       <PageHead
+        number="B-01"
         eyebrow="Work"
         title="Renovations, extensions and restorations."
         lede="A small number of projects, each one taken from the drawings through to the last piece of trim. Most are heritage or older homes in inner Brisbane."

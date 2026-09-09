@@ -2,6 +2,7 @@ import { lazy, useRef } from 'react'
 import { SceneFrame } from '../three/SceneFrame'
 import { TimberFrameStill } from '../three/TimberFrameStill'
 import { Reveal } from '../components/Reveal'
+import { SheetRef } from '../components/Sheet'
 import { useReducedMotion } from '../hooks/useReducedMotion'
 import { usePinProgress } from '../hooks/usePinProgress'
 import { FRAME_STAGES, FRAME_STAGE_STARTS } from '../three/frameMembers'
@@ -54,7 +55,7 @@ export function Process() {
         <div className={['shell', styles.inner].join(' ')}>
           <div className={styles.intro}>
             <Reveal>
-              <p className="eyebrow">How it works</p>
+              <SheetRef number="A-05" name="How it works" rule={false} />
               <h2 id="approach-heading" className={['section-heading', styles.heading].join(' ')}>
                 Drawn, then built.
               </h2>

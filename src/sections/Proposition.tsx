@@ -1,4 +1,5 @@
 import { Reveal } from '../components/Reveal'
+import { SheetRef } from '../components/Sheet'
 import { ImageSlot } from '../components/ImageSlot'
 import { stills } from '../data/projects'
 import styles from './Proposition.module.css'
@@ -17,7 +18,7 @@ export function Proposition() {
     <section className={['section', styles.section].join(' ')} aria-labelledby="proposition-heading">
       <div className={['shell', styles.inner].join(' ')}>
         <Reveal className={styles.left}>
-          <p className="eyebrow">What we build</p>
+          <SheetRef number="A-02" name="What we build" rule={false} />
         </Reveal>
 
         <div className={styles.right}>

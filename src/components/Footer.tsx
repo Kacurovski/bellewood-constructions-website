@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom'
 import { Logo } from './Logo'
 import { ComplianceLine } from './ComplianceLine'
-import { contact, nav, site, social } from '../config/site'
+import { compliance, contact, nav, site, social } from '../config/site'
 import styles from './Footer.module.css'
 
 /**
@@ -13,6 +13,13 @@ import styles from './Footer.module.css'
  * Note there is deliberately no link to the Google Business Profile. That
  * profile stays under the current name until the ASIC change so its review
  * history is not put at risk, and nothing on this site should point at it.
+ *
+ * The legal strip is set as a drawing title block: ruled cells, a label above
+ * each field, the value under it. On a real drawing that block is where you look
+ * to find who is responsible for what is on the sheet, which is exactly what
+ * this strip is for — the licensed entity, the licence number and the client.
+ * It is the same information the compliance line has always carried, set as the
+ * document it belongs to rather than as a line of small print.
  */
 export function Footer() {
   const year = new Date().getFullYear()
@@ -66,10 +73,34 @@ export function Footer() {
       </div>
 
       <div className={['shell', styles.legal].join(' ')}>
-        <ComplianceLine />
-        <p className={['fine', styles.copyright].join(' ')}>
-          © {year} {site.name}
-        </p>
+        <dl className={styles.block}>
+          <div className={styles.cell}>
+            <dt className={styles.cellLabel}>Licensed entity</dt>
+            <dd className={styles.cellValue}>{compliance.licensedEntity}</dd>
+          </div>
+          <div className={styles.cell}>
+            <dt className={styles.cellLabel}>QBCC licence</dt>
+            <dd className={styles.cellValue}>{compliance.licenceNumber}</dd>
+          </div>
+          <div className={styles.cell}>
+            <dt className={styles.cellLabel}>Trading as</dt>
+            <dd className={styles.cellValue}>{site.name}</dd>
+          </div>
+          <div className={styles.cell}>
+            <dt className={styles.cellLabel}>Effective</dt>
+            <dd className={styles.cellValue}>{compliance.nameChangeDate}</dd>
+          </div>
+        </dl>
+
+        {/* The compliance line itself stays, verbatim and unabbreviated. The
+            block above is how it is presented; this is the wording that is
+            legally required, and it is not the block's job to paraphrase it. */}
+        <div className={styles.legalRow}>
+          <ComplianceLine />
+          <p className={['fine', styles.copyright].join(' ')}>
+            © {year} {site.name}
+          </p>
+        </div>
       </div>
     </footer>
   )

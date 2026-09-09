@@ -22,6 +22,7 @@ export default function ProjectDetail() {
   return (
     <article>
       <PageHead
+        number={`B-${String(index + 2).padStart(2, '0')}`}
         eyebrow={
           <Link to="/work" className={['link-underline', styles.back].join(' ')}>
             All projects

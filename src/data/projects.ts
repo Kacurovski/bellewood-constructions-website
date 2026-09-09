@@ -210,12 +210,20 @@ export const stills = {
    * reads blue would undo the single most valuable decision in the identity.
    */
   hero: img('paddington-after', 'A restored cottage at dusk, lit from within, behind a white picket fence'),
-  onSite: img('site-frame-lift', 'A timber wall frame being lifted into place on site'),
+  onSite: img('detail-timber-cladding', 'Vertical timber cladding meeting a rendered wall'),
   /**
    * The detail plate on the home page. It used to reach into Paddington's
    * gallery by index, which coupled a home page section to the second item of
    * one project's array — reorder that array and the home page changes. It is a
    * still in its own right now.
+   *
+   * It was `detail-roof-timber`, which at thumbnail size read as an exposed
+   * timber roof and at full size was the Sydney Opera House. A recognisable
+   * landmark on a Brisbane builder's page is worse than a generic stock photo:
+   * generic reads as a placeholder, a landmark reads as a lie. That file is out
+   * of the repo. **Check every placeholder at full size, not on a contact
+   * sheet** — this one survived several passes because it was only ever looked
+   * at small.
    */
-  detail: img('detail-roof-timber', 'Exposed timber structure at the roof of a restored house'),
+  detail: img('site-frame-lift', 'A timber wall frame being lifted into place on site'),
 }

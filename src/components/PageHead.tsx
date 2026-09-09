@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react'
 import { Reveal } from './Reveal'
+import { SheetRef } from './Sheet'
 import styles from './PageHead.module.css'
 
 export type MetaRow = {
@@ -8,6 +9,8 @@ export type MetaRow = {
 }
 
 type Props = {
+  /** The sheet number in the set, e.g. "B-01". */
+  number: string
   eyebrow: ReactNode
   title: ReactNode
   lede?: ReactNode
@@ -27,12 +30,12 @@ type Props = {
  * The header is transparent over this band (see Header.module.css), which is
  * why the band runs up underneath it rather than starting below it.
  */
-export function PageHead({ eyebrow, title, lede, meta, children }: Props) {
+export function PageHead({ number, eyebrow, title, lede, meta, children }: Props) {
   return (
     <header className={['on-green', styles.head].join(' ')}>
       <div className={['shell', styles.inner].join(' ')}>
         <Reveal className={styles.copy}>
-          <p className="eyebrow">{eyebrow}</p>
+          <SheetRef number={number} name={eyebrow} rule={false} />
           <h1 className={styles.title}>{title}</h1>
           {lede && <p className={styles.lede}>{lede}</p>}
           {children}

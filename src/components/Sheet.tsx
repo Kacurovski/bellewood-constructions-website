@@ -19,8 +19,9 @@ import styles from './Sheet.module.css'
 type RefProps = {
   /** The sheet number, e.g. "SK-02". Set tabular. */
   number: string
-  /** What the sheet is. This is the old eyebrow. */
-  name: string
+  /** What the sheet is. This is the old eyebrow, and it takes a node so a
+      page can hang a link in the slot. */
+  name: ReactNode
   /** The right-hand field. A scale note on a real sheet. */
   note?: string
   className?: string
@@ -98,5 +99,3 @@ export function RegistrationMarks() {
     </div>
   )
 }
-
-export type { ReactNode }
