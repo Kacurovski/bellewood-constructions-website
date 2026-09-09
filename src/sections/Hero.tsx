@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { SceneFrame } from '../three/SceneFrame'
 import { HeritageStudyStill } from '../three/HeritageStudyStill'
 import { Dimension, RegistrationMarks, SheetRef } from '../components/Sheet'
+import { RiseIn } from '../components/RiseIn'
 import { HERITAGE_SETOUT } from '../three/heritageMembers'
 import { contact, site } from '../config/site'
 import styles from './Hero.module.css'
@@ -57,7 +58,7 @@ export function Hero() {
             stays above the fold. */}
         <div className={styles.head}>
           <h1 id="hero-heading" className={styles.heading}>
-            Heritage homes in inner Brisbane, rebuilt in timber.
+            <RiseIn text="Heritage homes in inner Brisbane, rebuilt in timber." delay={0.15} />
           </h1>
 
           <div className={styles.aside}>

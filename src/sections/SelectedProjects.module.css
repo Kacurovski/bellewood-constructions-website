@@ -25,9 +25,7 @@
   gap: clamp(2.5rem, 5vw, 5rem);
 }
 
-.cell {
-  margin-inline: calc(var(--gutter) * -1);
-}
+.cell { min-width: 0; }
 
 /* The action row stays on the text grid with the heading, not out at the
    picture edges. */
@@ -72,8 +70,9 @@
 .more:focus-visible .moreArrow { transform: translateX(0.4rem); }
 
 @media (max-width: 620px) {
-  /* A 21:9 plate on a 390px screen is a 167px strip. The bands take a taller
-     crop here so the house in them is still a house. */
+  /* Stacked, a 3:2 plate at the full column width is the right size. It only
+     needs a squarer crop once the column is narrow enough that the house in it
+     stops being a house. */
   .cell :global(figure) { aspect-ratio: 4 / 3 !important; }
 }
 

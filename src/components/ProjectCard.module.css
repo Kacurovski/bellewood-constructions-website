@@ -79,51 +79,95 @@
   opacity: 0.6;
 }
 
-/* --- The band --------------------------------------------------------------
-   One project across the whole screen, with its meta on a ruled line beneath.
-   Six cards sharing a screen meant no photograph was ever bigger than a
-   postcard; three of these are the same page height and each image is several
-   times the size. */
-.band .meta {
-  /* The plate bleeds to both screen edges; its caption does not. The band is
-     the one variant that knows it is full width, so it is the right place to
-     give the gutter back. */
-  padding-inline: var(--gutter);
-  align-items: baseline;
-  gap: clamp(1rem, 2.5vw, 2rem);
-  margin-top: clamp(0.9rem, 1.8vw, 1.4rem);
-  padding-top: clamp(0.9rem, 1.8vw, 1.4rem);
-  border-top: 1px solid var(--ink);
+/* --- The row --------------------------------------------------------------
+   The home page's selection. A plate beside its meta, alternating sides down
+   the page.
+
+   This was a full-bleed 21:9 band and the photographs were too big — a
+   1440px-wide plate is not a selection, it is a slideshow, and three of them
+   pushed everything else on the page below the fold. At a bit under half the
+   width the picture is still the largest thing in its row, the meta has
+   somewhere to live other than a caption line, and the alternation gives the
+   page a rhythm a stack of full-width plates cannot. */
+.row .link {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.62fr);
+  gap: clamp(1.5rem, 4vw, 4.5rem);
+  align-items: center;
 }
 
-.band .number {
-  font-size: var(--t-body);
-  opacity: 0.5;
+.row .media { grid-column: 1; grid-row: 1; }
+.row .meta { grid-column: 2; grid-row: 1; }
+
+.row.flip .link {
+  grid-template-columns: minmax(0, 0.62fr) minmax(0, 1.05fr);
 }
 
-/* At this size the title is the label on a plate, not a card heading. */
-.band .title {
-  font-size: clamp(1.35rem, 1.05rem + 1.3vw, 2.25rem);
-  letter-spacing: -0.022em;
-  line-height: 1.05;
+.row.flip .media { grid-column: 2; }
+.row.flip .meta { grid-column: 1; }
+
+.row .meta {
+  display: block;
+  margin-top: 0;
 }
 
-/* The kind and suburb move out to the right-hand end of the line, so the line
-   reads as a caption rule rather than as a stack of two labels. */
-.band .meta > div {
+/* The index set as a graphic rather than a footnote — it is the only large
+   numeral on the page and it gives the row something to start on. */
+.row .number {
+  display: block;
+  font-size: clamp(1.75rem, 1.1rem + 2.2vw, 3.25rem);
+  line-height: 1;
+  letter-spacing: -0.02em;
+  opacity: 0.28;
+  padding: 0 0 clamp(0.75rem, 1.6vw, 1.25rem);
+}
+
+.row .title {
+  font-size: clamp(1.4rem, 1.05rem + 1.5vw, 2.5rem);
+  letter-spacing: -0.025em;
+  line-height: 1.02;
+}
+
+.row .kind { margin-top: clamp(0.6rem, 1.2vw, 0.9rem); }
+
+/* A drawn arrow that runs on hover. The only affordance in the row, and the
+   thing that says a photograph is a link rather than a picture. */
+.row .go {
   display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: clamp(1rem, 3vw, 3rem);
-  flex: 1 1 auto;
-  min-width: 0;
-  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: clamp(1.25rem, 2.5vw, 2rem);
+  padding-top: clamp(1rem, 2vw, 1.5rem);
+  border-top: 1px solid var(--ink);
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: var(--t-small);
+  color: var(--green);
 }
 
-.band .kind { margin-top: 0; }
+.row .goArrow {
+  width: 1.75rem;
+  flex: none;
+  transition: transform var(--dur) var(--ease-out);
+}
 
-@media (max-width: 620px) {
-  .band .meta > div {
-    display: block;
+.row .goArrow svg { width: 100%; height: auto; display: block; }
+
+.row .link:hover .goArrow,
+.row .link:focus-visible .goArrow { transform: translateX(0.45rem); }
+
+@media (max-width: 760px) {
+  /* One column, plate first. The alternation is a wide-screen device — stacked
+     it would only move the words above the picture on every second row. */
+  .row .link,
+  .row.flip .link {
+    grid-template-columns: minmax(0, 1fr);
+    gap: clamp(1rem, 3vw, 1.5rem);
   }
+
+  .row .media,
+  .row.flip .media { grid-column: 1; grid-row: 1; }
+
+  .row .meta,
+  .row.flip .meta { grid-column: 1; grid-row: 2; }
 }

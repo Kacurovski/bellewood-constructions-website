@@ -37,14 +37,21 @@ export function SelectedProjects() {
           />
         </Reveal>
 
-        {/* Three bands rather than a grid of six. No rail here either: a rail
-            exists to stop six cards becoming nine screens on a phone, and three
-            full-width plates are three screens, which is a scroll worth having.
-            /work keeps the grid and the rail — that is the index. */}
+        {/* Three rows rather than a grid of six, and rows rather than the
+            full-bleed bands they were briefly: a 1440px plate is a slideshow,
+            not a selection. No rail here either — a rail exists to stop six
+            cards becoming nine screens on a phone, and three rows are not that.
+            /work keeps the grid and the rail; that is the index. */}
         <ol className={styles.list}>
           {featuredProjects.map((project, i) => (
             <Reveal as="li" key={project.slug} delay={0.05} className={styles.cell}>
-              <ProjectCard project={project} index={i} variant="band" ratio="21 / 9" />
+              <ProjectCard
+                project={project}
+                index={i}
+                variant="row"
+                flip={i % 2 === 1}
+                ratio="3 / 2"
+              />
             </Reveal>
           ))}
         </ol>

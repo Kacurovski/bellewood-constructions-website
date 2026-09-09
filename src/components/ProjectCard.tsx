@@ -11,11 +11,12 @@ type Props = {
   offset?: boolean
   ratio?: string
   /**
-   * `band` is the home page's selection: one project running the full width of
-   * the screen with its meta on a ruled line under it. `card` is the index
-   * treatment used on /work.
+   * `row` is the home page's selection: a medium plate beside its meta, the
+   * two alternating down the page. `card` is the index treatment used on /work.
    */
-  variant?: 'card' | 'band'
+  variant?: 'card' | 'row'
+  /** Puts the plate on the right instead of the left. Alternated by the list. */
+  flip?: boolean
 }
 
 export function ProjectCard({
@@ -24,10 +25,16 @@ export function ProjectCard({
   offset = false,
   ratio = '4 / 5',
   variant = 'card',
+  flip = false,
 }: Props) {
   return (
     <article
-      className={[styles.card, variant === 'band' ? styles.band : '', offset ? styles.offset : '']
+      className={[
+        styles.card,
+        variant === 'row' ? styles.row : '',
+        variant === 'row' && flip ? styles.flip : '',
+        offset ? styles.offset : '',
+      ]
         .join(' ')
         .trim()}
     >
@@ -51,6 +58,19 @@ export function ProjectCard({
               <span className={styles.dot} aria-hidden="true" />
               <span>{project.suburb}</span>
             </p>
+
+            {/* The row is the only variant with room for an affordance, and it
+                is the one whose plate is not obviously a link. */}
+            {variant === 'row' && (
+              <span className={styles.go}>
+                View project
+                <span className={styles.goArrow} aria-hidden="true">
+                  <svg viewBox="0 0 34 10" fill="none">
+                    <path d="M0 5h32M27.5 1l4.5 4-4.5 4" stroke="currentColor" strokeWidth="1.2" />
+                  </svg>
+                </span>
+              </span>
+            )}
           </div>
         </div>
       </Link>
