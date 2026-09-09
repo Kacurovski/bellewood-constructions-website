@@ -2,10 +2,10 @@ import { lazy, useRef } from 'react'
 import { SceneFrame } from '../three/SceneFrame'
 import { TimberFrameStill } from '../three/TimberFrameStill'
 import { Reveal } from '../components/Reveal'
-import { SheetRef } from '../components/Sheet'
+import { Dimension, RegistrationMarks, SheetRef } from '../components/Sheet'
 import { useReducedMotion } from '../hooks/useReducedMotion'
 import { usePinProgress } from '../hooks/usePinProgress'
-import { FRAME_STAGES, FRAME_STAGE_STARTS } from '../three/frameMembers'
+import { FRAME_BOUNDS, FRAME_STAGES, FRAME_STAGE_STARTS } from '../three/frameMembers'
 import { hasWebGL } from '../lib/webgl'
 import styles from './Process.module.css'
 
@@ -51,6 +51,8 @@ export function Process() {
       )}
       aria-labelledby="approach-heading"
     >
+      <RegistrationMarks />
+
       <div className={styles.stage}>
         <div className={['shell', styles.inner].join(' ')}>
           <div className={styles.intro}>
@@ -77,6 +79,15 @@ export function Process() {
             >
               <TimberFrame progress={progress} />
             </SceneFrame>
+
+            {/* Read off the frame in `frameMembers.ts`, not typed in — the same
+                rule the hero's dimensions follow. */}
+            <Dimension
+              figure={Math.round(FRAME_BOUNDS.length * 1000)
+                .toLocaleString('en-AU')
+                .replace(',', ' ')}
+              className={styles.sceneDim}
+            />
           </div>
 
           <ol className={styles.steps}>

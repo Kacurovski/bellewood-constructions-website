@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react'
 import { Reveal } from './Reveal'
-import { SheetRef } from './Sheet'
+import { RegistrationMarks, SheetRef } from './Sheet'
 import styles from './PageHead.module.css'
 
 export type MetaRow = {
@@ -33,6 +33,8 @@ type Props = {
 export function PageHead({ number, eyebrow, title, lede, meta, children }: Props) {
   return (
     <header className={['on-green', styles.head].join(' ')}>
+      <RegistrationMarks />
+
       <div className={['shell', styles.inner].join(' ')}>
         <Reveal className={styles.copy}>
           <SheetRef number={number} name={eyebrow} rule={false} />

@@ -1,7 +1,7 @@
 /* The action row closes the section, so it does not need a full section's worth
    of padding under it as well. */
 .section {
-  border-top: 1px solid var(--rule);
+  border-top: 1px solid var(--ink);
   padding-bottom: clamp(2.5rem, 5vw, 4rem);
 }
 
@@ -9,7 +9,7 @@
   display: flex;
   align-items: baseline;
   padding-bottom: clamp(2rem, 4vw, 3.5rem);
-  border-bottom: 1px solid var(--rule);
+  border-bottom: 1px solid var(--ink);
 }
 
 
@@ -45,8 +45,8 @@
   gap: var(--s-5);
   width: 100%;
   padding-block: clamp(1.1rem, 2.2vw, 1.6rem);
-  border-top: 1px solid var(--rule);
-  border-bottom: 1px solid var(--rule);
+  border-top: 1px solid var(--ink);
+  border-bottom: 1px solid var(--ink);
   text-decoration: none;
   color: var(--green);
   transition: border-color var(--dur-fast) var(--ease);

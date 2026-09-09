@@ -1,6 +1,6 @@
 import { EnquiryForm } from '../components/EnquiryForm'
 import { Reveal } from '../components/Reveal'
-import { SheetRef } from '../components/Sheet'
+import { RegistrationMarks, SheetRef } from '../components/Sheet'
 import { contact, nextSteps } from '../config/site'
 import styles from './Enquiry.module.css'
 
@@ -22,6 +22,8 @@ export function Enquiry() {
       className={['section', 'on-green', styles.section].join(' ')}
       aria-labelledby="enquiry-heading"
     >
+      <RegistrationMarks />
+
       {/* What happens after the form is sent. Someone weighing up a major
           renovation will not fill in a form that goes into the dark. */}
       <div className={['shell', styles.steps].join(' ')}>

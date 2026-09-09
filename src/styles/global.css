@@ -179,10 +179,11 @@ a:hover { text-decoration-color: currentColor; }
 
 .hairline {
   border: 0;
-  border-top: 1px solid var(--rule);
+  /* Drawing weight, and it reverses on its own: `--ink` is redefined on a dark
+     ground, so this needs no `.on-green` override. */
+  border-top: 1px solid var(--ink);
   margin: 0;
 }
-.on-green .hairline { border-top-color: var(--rule-reverse); }
 
 /* The timber accent. Decorative only — it fails contrast for text. At most
    one of these per screen. */

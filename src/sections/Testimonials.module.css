@@ -1,4 +1,4 @@
-.section { border-top: 1px solid var(--rule); }
+.section { border-top: 1px solid var(--ink); }
 
 .head { padding-bottom: clamp(2rem, 4vw, 3rem); }
 
@@ -6,7 +6,7 @@
 
 /* Columns, the list reset and the mobile rail all belong to SwipeRow. */
 .grid {
-  border-top: 1px solid var(--rule);
+  border-top: 1px solid var(--ink);
   padding-top: clamp(1.75rem, 3.5vw, 2.75rem);
 }
 
