@@ -107,3 +107,30 @@
 @media (max-width: 640px) {
   .row { grid-template-columns: minmax(0, 1fr); }
 }
+
+
+/* --- Reversed --------------------------------------------------------------
+   The enquiry section runs on the dark ground, so everything the form draws in
+   ink has to flip. Rules carry most of the weight here — the inputs are lines
+   rather than boxes, and a line that does not read is a field nobody fills. */
+
+:global(.on-green) .label {
+  color: var(--sage);
+}
+
+:global(.on-green) .input {
+  color: var(--wash);
+  border-bottom-color: var(--rule-reverse);
+}
+
+:global(.on-green) .input::placeholder {
+  color: color-mix(in srgb, var(--wash) 45%, transparent);
+}
+
+:global(.on-green) .input:hover {
+  border-bottom-color: var(--sage);
+}
+
+:global(.on-green) .input:focus {
+  border-bottom-color: var(--wash);
+}

@@ -63,7 +63,7 @@ hr.rule { margin-block: clamp(1.75rem, 3vw, 2.5rem); }
 .media {
   position: relative;
   overflow: hidden;
-  background: var(--sage);
+  background: var(--pine);
 }
 
 .scene { position: absolute; inset: 0; }

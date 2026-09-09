@@ -1,4 +1,4 @@
-.section { border-top: 1px solid var(--rule); }
+.section { border-top: 1px solid var(--rule-reverse); }
 
 /* --- What happens next ---------------------------------------------------- */
 
@@ -13,7 +13,7 @@
   list-style: none;
   margin: 0;
   padding: 0;
-  border-top: 1px solid var(--rule);
+  border-top: 1px solid var(--rule-reverse);
 }
 
 .step {
@@ -27,8 +27,8 @@
   font-weight: 600;
   font-size: var(--t-eyebrow);
   letter-spacing: 0.12em;
-  color: var(--green);
-  opacity: 0.5;
+  color: var(--sage);
+  opacity: 0.8;
 }
 
 .stepLabel {
@@ -41,8 +41,7 @@
 
 .stepNote {
   margin-top: 0.4rem;
-  color: var(--pine);
-  opacity: 0.78;
+  color: color-mix(in srgb, var(--wash) 74%, transparent);
 }
 
 @media (max-width: 900px) {
@@ -51,7 +50,7 @@
 
 @media (max-width: 520px) {
   .stepsList { grid-template-columns: minmax(0, 1fr); gap: 0; }
-  .step { border-bottom: 1px solid var(--rule); padding-bottom: var(--s-4); }
+  .step { border-bottom: 1px solid var(--rule-reverse); padding-bottom: var(--s-4); }
 }
 
 .inner {
@@ -65,12 +64,12 @@
 
 .note {
   margin-top: clamp(1.25rem, 2vw, 1.75rem);
-  color: var(--pine);
+  color: color-mix(in srgb, var(--wash) 80%, transparent);
 }
 
 .details {
   margin: clamp(2.5rem, 4vw, 3.5rem) 0 0;
-  border-top: 1px solid var(--rule);
+  border-top: 1px solid var(--rule-reverse);
 }
 
 .detail {
@@ -78,7 +77,7 @@
   grid-template-columns: 10rem minmax(0, 1fr);
   gap: var(--s-4);
   padding-block: var(--s-4);
-  border-bottom: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule-reverse);
 }
 
 .dt {
@@ -87,8 +86,8 @@
   font-size: var(--t-eyebrow);
   text-transform: uppercase;
   letter-spacing: 0.12em;
-  color: var(--green);
-  opacity: 0.7;
+  color: var(--sage);
+  opacity: 0.85;
   padding-top: 0.2em;
 }
 
@@ -97,10 +96,10 @@
   font-family: var(--font-display);
   font-weight: 500;
   font-size: var(--t-small);
-  color: var(--pine);
+  color: var(--wash);
 }
 
-.dd a { color: var(--green); }
+.dd a { color: var(--wash); }
 
 @media (max-width: 900px) {
   .inner { grid-template-columns: minmax(0, 1fr); gap: var(--s-7); }

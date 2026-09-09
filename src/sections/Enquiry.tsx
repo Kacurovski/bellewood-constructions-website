@@ -12,7 +12,15 @@ import styles from './Enquiry.module.css'
  */
 export function Enquiry() {
   return (
-    <section id="enquiry" className={['section', styles.section].join(' ')} aria-labelledby="enquiry-heading">
+    /* Reversed. This is the page's most important moment and it was its
+       plainest — the same pale ground as everything above it, with the form
+       reading as an afterthought. Dark, it closes the page the way the hero
+       opens it, and the form stops feeling like paperwork. */
+    <section
+      id="enquiry"
+      className={['section', 'on-green', styles.section].join(' ')}
+      aria-labelledby="enquiry-heading"
+    >
       {/* What happens after the form is sent. Someone weighing up a major
           renovation will not fill in a form that goes into the dark. */}
       <div className={['shell', styles.steps].join(' ')}>
