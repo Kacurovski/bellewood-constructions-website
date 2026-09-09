@@ -116,6 +116,34 @@ src/
 
 ---
 
+## Every page opens dark, and why the header knows it
+
+`components/PageHead.tsx` is the masthead on Work, About, Contact, a project and
+the 404. The home page's hero does the same job with the same mechanics. All of
+them:
+
+- carry `on-green` and then override the ground to `--pine`, which is a step
+  darker than the footer, so a page opens at its darkest and resolves upward;
+- pull themselves up under the sticky header with
+  `margin-top: calc(var(--header-h) * -1)` and give the same distance back as
+  `padding-top`. Without the pull the header sits *above* the band in flow, a
+  transparent bar shows the pale page behind it, and the reverse mark disappears
+  into it;
+- hold their right-hand column with a ledger of label/value rows. Nothing in a
+  ledger is a new claim — every value is a fact already stated elsewhere on the
+  site. Do not put anything in one that has not been confirmed.
+
+Because that is now true of every route, `Header.tsx` reads
+`const overDark = !scrolled && !open` with no path test in it. **If you ever add
+a route that opens on the pale ground, that line has to learn about it again** —
+otherwise the header renders the reverse lockup and wash links on wash and
+vanishes. It was route-tested before this and the test is what had to go.
+
+`Reveal` is inside `PageHead`, so a page passing `children` gets them revealed
+with the title rather than separately.
+
+---
+
 ## Three things that are load-bearing
 
 ### 1. The compliance line
@@ -376,6 +404,22 @@ you can only reach by swiping is a region some people cannot reach at all.
 in a section module next to a `SwipeRow`, the two are fighting and the section
 should lose.
 
+**`variant="index"` is the Work page's rhythm, and it lives in `SwipeRow` for
+that reason.** It lays the cards on a twelve column grid with alternating spans —
+seven-five, five-seven, six-six — and drops every second one. Six identical cards
+in a two by three grid is a contact sheet: every project is worth exactly as much
+as every other one and the eye has no reason to stop anywhere. Three things about
+it are deliberate:
+
+- **Spans only, no explicit row or column placement.** Auto-flow fills the rows
+  by itself, so a seventh project carries the rhythm on instead of breaking it.
+- **One aspect ratio across all six.** The wider card in each pair is seen from
+  closer, not cropped differently, and no project is demoted.
+- **It unwinds twice.** Below 1000px the spans go back to even halves, because a
+  five column card at that width is a thumbnail; below 620px the rail resets the
+  columns, the row gap and the drops, because a rail has one row and a top margin
+  there would knock the cards out of line with each other.
+
 Not everything long should become a rail. The four "What happens next" steps
 stayed a vertical list on purpose: they are sequential instructions, and hiding
 steps three and four behind a swipe is worse than the scroll it saves.
@@ -450,9 +494,18 @@ and which showed as soft edges wherever the mark was drawn large.
 
 **The sheet is sized to the band, and the repeat is counted in screen pixels.**
 `TILE_PX` in `three/SiteMesh.tsx` is the one number that sets how big the mark
-is, and `tileFor()` shrinks it on a narrow screen so at least two tiles always
-fit — at the full size a phone showed one mark sliced in half and another
-running off the edge.
+is, and `tileFor()` shrinks it on a narrow screen so at least two and a half
+tiles always fit.
+
+**`TILE_PX` is 300, and it must stay small enough that the marks are a field.**
+It was 540, which put a 360px mark into a band barely 250px tall: two and a bit
+across, every one of them cropped top and bottom. That does not read as printed
+mesh, it reads as a broken image — it was the least premium thing on the site.
+Real mesh works because the mark is small enough and repeated often enough that
+you take in the *surface* first and the logo second, which is exactly the effect
+Angus described from the street. If you raise this number, look at the band on a
+1440px screen before you keep it. `three/SiteMeshStill.module.css` carries the
+same sizing for the reduced-motion frame and has to move with it.
 
 Counting in pixels rather than world units also keeps the mark **sharp**. The
 source lockup is a 262px raster, so showing it far below its own resolution is
@@ -465,7 +518,9 @@ any size.
 **The whole section stays under a screen height** — around 590px at 1440x900,
 610px at 2560x1440, 690px on a phone. It carries one sentence and two short
 paragraphs, and at seven hundred pixels it was mostly empty ground. The two
-columns bottom-align so the short heading does not leave a hole beneath itself.
+columns **top**-align. Bottom-aligning them was meant to stop a hole under the
+short heading and instead put one above it, between the mesh and the words —
+which is the worst place on the band for a gap.
 
 **The copy never sits on the mesh.** That was tried twice, both times because it
 promised a single unbroken surface, and both times the marks ran straight through
