@@ -116,6 +116,40 @@ src/
 
 ---
 
+## The site is set as a drawing sheet
+
+This is the design direction, and it is load-bearing rather than decorative.
+
+The one thing this business owns that a competitor cannot copy is that it works
+from documents. The copy says so in three places. The page now makes the same
+claim in its own construction: sheet references instead of eyebrows, one line
+weight throughout, dimension lines on the drawings, registration marks on the
+reversed bands, and a title block in the footer.
+
+`components/Sheet.tsx` holds all of it — `SheetRef`, `Dimension`,
+`RegistrationMarks`. Three rules govern the language:
+
+1. **One line weight.** `--ink` in `tokens.css`, redefined on `.on-green` in
+   `global.css` so it flips with the ground. Structural rules read it; header
+   chrome and the SwipeRow meter stay on `--rule`, because those are UI and not
+   marks on a sheet. If you add a fourth kind of rule, the drawing stops being a
+   drawing.
+2. **Every dimension is real.** `HERITAGE_SETOUT` in `heritageMembers.ts` and
+   `FRAME_BOUNDS` in `frameMembers.ts` are read off the models — 10 000 and 5
+   690 on the hero, 8 000 on the Approach frame. **Never type a figure into a
+   section.** A drawing carrying an invented dimension is worse than one
+   carrying none, and it is the one claim this language makes that can be
+   falsified by looking.
+3. **Dimensions go on drawings, not between paragraphs.** There are exactly two
+   dimensioned objects on the site and both are 3D models. Putting a made-up
+   figure between two text bands would be decoration wearing the costume.
+
+The sheets are numbered as one set: `A-01` to `A-08` down the home page, `B-01`
+for the work index with each project taking its own number in the B series,
+`C-01` About, `D-01` Contact. `PageHead` takes the number as a prop.
+
+---
+
 ## Every page opens dark, and why the header knows it
 
 `components/PageHead.tsx` is the masthead on Work, About, Contact, a project and
@@ -181,6 +215,23 @@ is set up so it cannot happen by accident:
 - alt text describes the photograph, and no dollar values, dates or client names
   have been invented anywhere
 - the testimonials are the exception, and they are covered on their own below
+
+**Review placeholders at full size, never on a contact sheet.** Two files had to
+be pulled after being looked at properly:
+
+- `hero-cottage.jpg` — a bright blue Queenslander, and the New Farm hero. The
+  file it lived in says in its own comments that a hero which reads blue would
+  undo the single most valuable decision in the identity. It contradicted its
+  own rule for several passes.
+- `detail-roof-timber.jpg` — the Sydney Opera House. At thumbnail size it read
+  as an exposed timber roof; at full size it is unmistakable. It was the detail
+  plate on the home page. A recognisable landmark is worse than generic stock:
+  generic reads as a placeholder, a landmark reads as a lie.
+
+The six project heroes are chosen to read as one body of work — warm, timber,
+residential, out of blue. The three rural "before" shots are visibly not inner
+Brisbane and are the next to replace, but they only ever appear inside a project
+page.
 
 The one place stock imagery was deliberately **not** used is the About page.
 A photograph of a stranger captioned "Angus Cowan" would be a picture of someone
