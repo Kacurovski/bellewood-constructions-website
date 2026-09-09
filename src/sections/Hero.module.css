@@ -23,11 +23,19 @@
   max-width: calc(var(--max-w) * 0.56);
 }
 
-.copy { max-width: 34rem; }
+/* Wide enough for the headline to breathe. The lede keeps its own 42ch
+   measure below, so widening this only widens the display line — headline
+   wider than body copy, the way a printed page sets it. */
+.copy { max-width: 44rem; }
 
 .heading {
   margin: 0;
-  font-size: clamp(2rem, 1rem + 2.6vw, 3.25rem);
+  /* This was pinned at 3.25rem — 52px, where the brand's own display scale
+     goes to 92px. Nearly half the type the system specifies, which is most of
+     why the page read as careful rather than expensive. Large type also needs
+     tighter tracking than small type or it looks merely big. */
+  font-size: clamp(2.4rem, 1.1rem + 4vw, 4.5rem);
+  letter-spacing: -0.035em;
 }
 
 hr.rule { margin-block: clamp(1.75rem, 3vw, 2.5rem); }
@@ -55,7 +63,7 @@ hr.rule { margin-block: clamp(1.75rem, 3vw, 2.5rem); }
 .media {
   position: relative;
   overflow: hidden;
-  background: var(--sage-panel);
+  background: var(--sage);
 }
 
 .scene { position: absolute; inset: 0; }

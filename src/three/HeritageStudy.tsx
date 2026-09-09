@@ -244,8 +244,11 @@ function Fit() {
       }
     }
 
-    // A little air on every side; the object should not touch its edges.
-    cam.position.copy(geometry.axis).multiplyScalar(reference + shift + 0.35)
+    /* Close. The object is the brand image on this page, and it was sitting
+       small in the middle of its panel with air all round — which reads as a
+       render placed on a background rather than a photograph of a model. Fill
+       the frame and it becomes the subject. */
+    cam.position.copy(geometry.axis).multiplyScalar(reference + shift - 0.55)
     cam.lookAt(0, 0, 0)
     cam.updateProjectionMatrix()
   })
