@@ -11,9 +11,58 @@
   gap: clamp(1rem, 1.6vw, 1.75rem);
 }
 
+/* --- The editorial index ---------------------------------------------------
+   Six identical cards in a two by three grid is a contact sheet: every project
+   is worth exactly as much as every other one and the eye has no reason to stop
+   anywhere. On a twelve column rhythm the widths alternate seven-five, five-
+   seven, six-six, and every second card drops. Nothing is cropped differently
+   and no project is demoted — the cards keep one aspect ratio, so the wider one
+   in each pair is simply seen from closer.
+
+   Spans only, no explicit placement: auto-flow fills 7+5, 5+7, 6+6 by itself,
+   so a seventh project would carry the rhythm on rather than break it. */
+.index {
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  align-items: start;
+  column-gap: clamp(1.25rem, 2.4vw, 2.75rem);
+  row-gap: clamp(2rem, 4vw, 4.5rem);
+}
+
+.index > *:nth-child(6n + 1) { grid-column: span 7; }
+.index > *:nth-child(6n + 2) { grid-column: span 5; }
+.index > *:nth-child(6n + 3) { grid-column: span 5; }
+.index > *:nth-child(6n + 4) { grid-column: span 7; }
+.index > *:nth-child(6n + 5) { grid-column: span 6; }
+.index > *:nth-child(6n + 6) { grid-column: span 6; }
+
+/* The drop. Right-hand cards on the first two rows and the last card sit lower
+   than their neighbour, so the index reads down the page rather than across it
+   in rows. A fixed measure rather than a percentage, so it does not grow into a
+   hole on a very wide screen. */
+.index > *:nth-child(6n + 2),
+.index > *:nth-child(6n + 4),
+.index > *:nth-child(6n + 6) {
+  margin-top: clamp(1.75rem, 4.5vw, 5rem);
+}
+
 @media (max-width: 1000px) {
   .track {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  /* Below this the drop is what is left of the rhythm — the spans go back to
+     even halves, because a five column card here is a thumbnail. */
+  .index {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    row-gap: clamp(1.5rem, 4vw, 3rem);
+  }
+
+  .index > * { grid-column: auto !important; }
+
+  .index > *:nth-child(6n + 2),
+  .index > *:nth-child(6n + 4),
+  .index > *:nth-child(6n + 6) {
+    margin-top: clamp(1.5rem, 5vw, 3rem);
   }
 }
 
@@ -47,6 +96,15 @@
   .track > * {
     scroll-snap-align: start;
   }
+
+  /* A rail has one row. Spans and drops are meaningless here and a top margin
+     would knock the cards out of line with each other. */
+  .index {
+    grid-template-columns: none;
+    row-gap: 0;
+  }
+
+  .index > * { margin-top: 0 !important; }
 
   .track:focus-visible {
     outline: 2px solid var(--green);

@@ -33,7 +33,7 @@ export default function Work() {
       />
 
       <div className={['shell', styles.grid].join(' ')}>
-        <SwipeRow label="All projects" columns={2}>
+        <SwipeRow label="All projects" columns={2} variant="index">
           {projects.map((project, i) => (
             <Reveal key={project.slug} delay={(i % 2) * 0.06}>
               <ProjectCard project={project} index={i} ratio="3 / 2" />

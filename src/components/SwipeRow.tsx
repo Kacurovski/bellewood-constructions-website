@@ -10,6 +10,12 @@ type Props = {
   className?: string
   /** A list of things should still be a list. */
   as?: 'div' | 'ul'
+  /**
+   * `index` lays the cards out on a twelve column rhythm with alternating
+   * widths and drops, instead of an even grid. For a page that is nothing but
+   * the work — the rail below 620px is identical either way.
+   */
+  variant?: 'even' | 'index'
 }
 
 /**
@@ -24,7 +30,14 @@ type Props = {
  * overflows, so the breakpoint is written once and an indicator can never turn
  * up under a grid that does not move.
  */
-export function SwipeRow({ children, label, columns = 3, className, as: Tag = 'div' }: Props) {
+export function SwipeRow({
+  children,
+  label,
+  columns = 3,
+  className,
+  as: Tag = 'div',
+  variant = 'even',
+}: Props) {
   const track = useRef<HTMLElement | null>(null)
   const [rail, setRail] = useState(false)
   const [count, setCount] = useState(0)
@@ -75,7 +88,7 @@ export function SwipeRow({ children, label, columns = 3, className, as: Tag = 'd
         ref={(el: HTMLElement | null) => {
           track.current = el
         }}
-        className={styles.track}
+        className={[styles.track, variant === 'index' ? styles.index : ''].join(' ')}
         style={{ '--cols': columns } as React.CSSProperties}
         // A region you can only reach by swiping is a region some people cannot
         // reach. Focusable, so it scrolls with the arrow keys too.

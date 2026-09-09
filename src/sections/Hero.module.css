@@ -20,9 +20,14 @@
    the copy, so it is never trapped in a page-width box. */
 .grid {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 0.82fr);
+  /* The house is the brand image on this page and the camera fits it to the
+     panel it is given, so the panel is what decides how big it reads. At 0.82
+     the width was the binding constraint and the model sat with air above and
+     below it; at parity the fit is vertical instead and the house fills the
+     screen it is on. */
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.02fr);
   align-items: stretch;
-  min-height: clamp(34rem, 78vh, 52rem);
+  min-height: clamp(34rem, 84vh, 56rem);
 }
 
 .copyCol {
@@ -33,7 +38,7 @@
      to that grid even though the image escapes it. */
   margin-inline-start: auto;
   width: 100%;
-  max-width: calc(var(--max-w) * 0.56);
+  max-width: calc(var(--max-w) * 0.5);
 }
 
 /* Wide enough for the headline to breathe. The lede keeps its own 42ch
