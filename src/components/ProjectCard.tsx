@@ -10,11 +10,27 @@ type Props = {
   /** Cards alternate their vertical offset to break the grid's regularity. */
   offset?: boolean
   ratio?: string
+  /**
+   * `band` is the home page's selection: one project running the full width of
+   * the screen with its meta on a ruled line under it. `card` is the index
+   * treatment used on /work.
+   */
+  variant?: 'card' | 'band'
 }
 
-export function ProjectCard({ project, index, offset = false, ratio = '4 / 5' }: Props) {
+export function ProjectCard({
+  project,
+  index,
+  offset = false,
+  ratio = '4 / 5',
+  variant = 'card',
+}: Props) {
   return (
-    <article className={[styles.card, offset ? styles.offset : ''].join(' ')}>
+    <article
+      className={[styles.card, variant === 'band' ? styles.band : '', offset ? styles.offset : '']
+        .join(' ')
+        .trim()}
+    >
       <Link to={`/work/${project.slug}`} className={styles.link}>
         <div className={styles.media}>
           {/* No label on the ground: the title and suburb sit directly beneath

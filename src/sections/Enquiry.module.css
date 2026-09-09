@@ -110,3 +110,11 @@
 @media (max-width: 520px) {
   .detail { grid-template-columns: minmax(0, 1fr); gap: 0.25rem; }
 }
+
+/* Last band on the page and the one the whole page is for. Above the shared
+   step, below the proposition. */
+.heading {
+  font-size: clamp(2rem, 1.1rem + 3.2vw, 4rem);
+  line-height: 1.0;
+  letter-spacing: -0.035em;
+}

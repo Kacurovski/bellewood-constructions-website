@@ -25,17 +25,14 @@ export function Architects() {
         <Reveal delay={0.08} className={styles.right}>
           <div className={['stack', styles.body].join(' ')}>
             <p>
-              We are used to documented work and to being one part of a team that
-              already has a design. Questions come early, in writing, before they
-              become variations. Site is kept in a state you can bring a client to.
+              Questions come early, in writing, before they become variations. Site
+              is kept in a state you can bring a client to.
             </p>
-            <p>
-              If you have a project coming up in inner Brisbane and want to talk it
-              through before it goes to tender, call Angus directly on{' '}
+            <p className={styles.call}>
+              Talk it through before tender —{' '}
               <a href={contact.phoneHref} className={styles.link}>
                 {contact.phone}
               </a>
-              .
             </p>
           </div>
         </Reveal>

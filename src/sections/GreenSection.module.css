@@ -61,3 +61,10 @@
 
   .heading { max-width: 18ch; }
 }
+
+/* The one sentence this band exists to say, at the scale of a statement. */
+.heading {
+  font-size: clamp(1.9rem, 1.1rem + 2.8vw, 3.5rem);
+  line-height: 1.02;
+  letter-spacing: -0.032em;
+}

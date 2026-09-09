@@ -19,8 +19,10 @@ import styles from './Sheet.module.css'
 type RefProps = {
   /** The sheet number, e.g. "SK-02". Set tabular. */
   number: string
-  /** What the sheet is. This is the old eyebrow, and it takes a node so a
-      page can hang a link in the slot. */
+  /** What the sheet is. This is the old eyebrow, and it takes a node so a page
+      can hang a link — or its own <h2> — in the slot. The strip is a <div>
+      rather than a <p> for exactly that reason: a section whose heading is a
+      short label should print it once, in the reference, not twice. */
   name: ReactNode
   /** The right-hand field. A scale note on a real sheet. */
   note?: string
@@ -32,12 +34,12 @@ type RefProps = {
 export function SheetRef({ number, name, note, className, rule = true }: RefProps) {
   return (
     <div className={className}>
-      <p className={styles.ref}>
+      <div className={styles.ref}>
         <span className={styles.number}>{number}</span>
         <span className={styles.tick} aria-hidden="true" />
         <span className={styles.name}>{name}</span>
         {note && <span className={styles.note}>{note}</span>}
-      </p>
+      </div>
       {rule && <hr className={styles.refRule} />}
     </div>
   )

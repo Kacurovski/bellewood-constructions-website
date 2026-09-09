@@ -5,31 +5,28 @@
   padding-bottom: clamp(2.5rem, 5vw, 4rem);
 }
 
-.head {
-  display: flex;
-  align-items: baseline;
-  padding-bottom: clamp(2rem, 4vw, 3.5rem);
-  border-bottom: 1px solid var(--ink);
-}
+.head { padding-bottom: 0; }
 
 
-/* Columns and the mobile rail belong to SwipeRow. This is the spacing, and the
-   escape from the shell.
-
-   The heading stays on the text grid and the work runs the full width of the
+/* The heading stays on the text grid and the work runs the full width of the
    screen — that split is most of what separates a portfolio from a brochure.
-   Held inside a 1440 container with gutters, six photographs read as items in a
-   list; edge to edge they read as the work. */
-.grid {
-  padding-top: clamp(2.5rem, 5vw, 4.5rem);
+   Held inside a 1440 container with gutters, photographs read as items in a
+   list; edge to edge they read as the work.
+
+   The gutter is given back rather than a viewport width taken, so the bands
+   stay in step with the shell at every size and there is no second place to
+   keep the number. */
+.list {
+  list-style: none;
+  margin: clamp(2rem, 4vw, 3.5rem) 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(2.5rem, 5vw, 5rem);
 }
 
-@media (min-width: 621px) {
-  .grid {
-    width: 100vw;
-    margin-inline: calc(50% - 50vw);
-    padding-inline: clamp(1rem, 2.4vw, 2.5rem);
-  }
+.cell {
+  margin-inline: calc(var(--gutter) * -1);
 }
 
 /* The action row stays on the text grid with the heading, not out at the
@@ -75,7 +72,20 @@
 .more:focus-visible .moreArrow { transform: translateX(0.4rem); }
 
 @media (max-width: 620px) {
-  /* The stagger is a desktop device. On the rail it would knock the cards out
-     of line with each other. */
-  .cell > * { margin-top: 0; }
+  /* A 21:9 plate on a 390px screen is a 167px strip. The bands take a taller
+     crop here so the house in them is still a house. */
+  .cell :global(figure) { aspect-ratio: 4 / 3 !important; }
+}
+
+/* --- Scale rhythm ----------------------------------------------------------
+   This band's content is three photographs at the width of the screen. A 56px
+   heading over them competed with them and added nothing. It sits in the
+   reference strip now, at the strip's own size, so the images are the only
+   thing on the screen — which is the whole point of a work section. */
+.heading {
+  margin: 0;
+  font: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
+  color: inherit;
 }

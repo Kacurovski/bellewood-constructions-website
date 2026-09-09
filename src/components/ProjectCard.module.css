@@ -78,3 +78,52 @@
   background: currentColor;
   opacity: 0.6;
 }
+
+/* --- The band --------------------------------------------------------------
+   One project across the whole screen, with its meta on a ruled line beneath.
+   Six cards sharing a screen meant no photograph was ever bigger than a
+   postcard; three of these are the same page height and each image is several
+   times the size. */
+.band .meta {
+  /* The plate bleeds to both screen edges; its caption does not. The band is
+     the one variant that knows it is full width, so it is the right place to
+     give the gutter back. */
+  padding-inline: var(--gutter);
+  align-items: baseline;
+  gap: clamp(1rem, 2.5vw, 2rem);
+  margin-top: clamp(0.9rem, 1.8vw, 1.4rem);
+  padding-top: clamp(0.9rem, 1.8vw, 1.4rem);
+  border-top: 1px solid var(--ink);
+}
+
+.band .number {
+  font-size: var(--t-body);
+  opacity: 0.5;
+}
+
+/* At this size the title is the label on a plate, not a card heading. */
+.band .title {
+  font-size: clamp(1.35rem, 1.05rem + 1.3vw, 2.25rem);
+  letter-spacing: -0.022em;
+  line-height: 1.05;
+}
+
+/* The kind and suburb move out to the right-hand end of the line, so the line
+   reads as a caption rule rather than as a stack of two labels. */
+.band .meta > div {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: clamp(1rem, 3vw, 3rem);
+  flex: 1 1 auto;
+  min-width: 0;
+  flex-wrap: wrap;
+}
+
+.band .kind { margin-top: 0; }
+
+@media (max-width: 620px) {
+  .band .meta > div {
+    display: block;
+  }
+}

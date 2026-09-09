@@ -54,14 +54,9 @@ export function GreenSection() {
         <Reveal delay={0.08} className={styles.right}>
           <div className={['stack', styles.body].join(' ')}>
             <p>
-              Angus Cowan Constructions is becoming Bellewood Constructions. It is
-              the same company, the same licence, the same family and the same
-              person on site — an ASIC name change, and nothing else.
-            </p>
-            <p>
-              Belle for beautiful, wood for what we build with. The name changes
-              formally on {compliance.nameChangeDate}. Until then you will see both,
-              which is exactly as it should be.
+              Angus Cowan Constructions is becoming Bellewood Constructions. Same
+              company, same licence, same person on site — an ASIC name change,
+              formally on {compliance.nameChangeDate}, and nothing else.
             </p>
           </div>
 

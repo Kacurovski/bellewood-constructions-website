@@ -77,3 +77,13 @@
 @media (max-width: 620px) {
   .grid { grid-template-columns: minmax(0, 1fr); gap: var(--s-7); }
 }
+
+/* --- Scale rhythm ----------------------------------------------------------
+   Read last, immediately before the enquiry, by someone deciding whether to
+   make contact. It is the second most important argument on the page after the
+   proposition, and it was set at the same size as every other band. */
+.heading {
+  font-size: clamp(2.2rem, 1.1rem + 3.8vw, 4.75rem);
+  line-height: 0.98;
+  letter-spacing: -0.038em;
+}

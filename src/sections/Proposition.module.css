@@ -1,76 +1,92 @@
+/* ---------------------------------------------------------------------------
+   What we build.
+
+   This band used to be a label, a heading and three paragraphs beside a
+   portrait photograph in a narrow column — which is the shape of a brochure
+   page. Every other band on the site was the same shape, so nothing on the home
+   page was ever the thing on the screen.
+
+   It is now one statement at display scale, one plate running off the left edge
+   of the page, and two short lines. The heading is the largest type on the site
+   after the hero on purpose: this is the page's argument, and the sections
+   around it are deliberately quieter so it reads as the argument rather than as
+   one more heading of the same weight.
+   --------------------------------------------------------------------------- */
+
 .section { border-top: 1px solid var(--ink); }
 
 .inner {
   display: grid;
-  grid-template-columns: minmax(0, 0.34fr) minmax(0, 0.66fr);
-  grid-template-rows: auto 1fr;
-  column-gap: clamp(1.5rem, 4vw, 5rem);
-  row-gap: clamp(1.5rem, 3vw, 2.5rem);
+  grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr);
+  column-gap: clamp(2rem, 5vw, 5rem);
+  row-gap: clamp(2rem, 4vw, 3.5rem);
   align-items: start;
 }
 
-/* The eyebrow sits in the left column as a margin note, the way a label sits in
-   the margin of a drawing — rather than stacked above the heading. */
-.left { grid-column: 1; grid-row: 1; padding-top: 0.5rem; }
-.right { grid-column: 2; grid-row: 1 / span 2; }
+.head { grid-column: 1 / -1; }
 
-/* The plate runs off the left edge of the page. Inside the gutter it was a
-   photograph in a column; off the edge it is a detail you are looking at
-   closely, which is what the section is about. The gutter is given back rather
-   than a viewport width taken, so it stays in step with the shell at every size
-   and needs no second place to keep the number. */
+/* Well past the shared section step. Nine headings at the same 56px is why the
+   page read as one long band no matter what was done to its colour. */
+.heading {
+  margin: clamp(1.25rem, 2.5vw, 2rem) 0 0;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(2.6rem, 0.9rem + 5.6vw, 6.75rem);
+  line-height: 0.96;
+  letter-spacing: -0.04em;
+  color: var(--green);
+  max-width: 16ch;
+  text-wrap: balance;
+}
+
+/* Off the left edge of the page. The gutter is given back rather than a
+   viewport width taken, so it stays in step with the shell at every size. */
 .figure {
   grid-column: 1;
-  grid-row: 2;
   margin-left: calc(var(--gutter) * -1);
 }
 
-.heading { max-width: 18ch; }
-
-.body {
-  margin-top: clamp(1.5rem, 2.5vw, 2.25rem);
-  color: var(--pine);
+.bodyWrap {
+  grid-column: 2;
+  /* Dropped to sit against the middle of the plate rather than its top edge,
+     so the column does not read as a caption hanging off the corner. */
+  padding-top: clamp(1rem, 4vw, 4rem);
 }
 
-/* The first paragraph is the section's argument. It leads, and the two under it
-   read as the detail — one big thing per band. */
+.body { color: var(--pine); }
+
+/* The lead line carries the section. */
 .body > p:first-child {
   font-size: var(--t-lead);
   line-height: 1.55;
 }
 
+/* The apartment line is a footnote to the argument, not part of it. */
+.aside {
+  font-size: var(--t-small);
+  color: color-mix(in srgb, var(--pine) 72%, transparent);
+  padding-top: clamp(0.75rem, 1.5vw, 1.25rem);
+  border-top: 1px solid var(--ink);
+}
+
 @media (max-width: 860px) {
   .inner {
     grid-template-columns: minmax(0, 1fr);
-    grid-template-rows: none;
-    gap: var(--s-5);
+    row-gap: var(--s-6);
   }
 
-  .left,
-  .right,
-  .figure {
+  .head,
+  .figure,
+  .bodyWrap {
     grid-column: 1;
-    grid-row: auto;
   }
+
+  .bodyWrap { padding-top: 0; }
 
   /* Stacked, the plate bleeds both ways rather than only left. */
   .figure { margin-inline: calc(var(--gutter) * -1); }
 
-  /* The photograph goes between the heading and the copy, so the two halves of
-     the right column have to become grid items in their own right. */
-  .right { display: contents; }
-
-  .left { order: 0; }
-  .headWrap { order: 1; }
-  .figure { order: 2; }
-  .bodyWrap { order: 3; }
-
-  /* The grid gap is doing this spacing now. */
-  .body { margin-top: 0; }
-
   /* ImageSlot writes its ratio as an inline style, so overriding it for the
      narrow layout has to outrank one. */
-  .detail {
-    aspect-ratio: 5 / 4 !important;
-  }
+  .detail { aspect-ratio: 4 / 3 !important; }
 }

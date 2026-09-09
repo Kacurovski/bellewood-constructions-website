@@ -57,14 +57,16 @@ export type Project = {
   /**
    * Shown in the "Selected work" section on the home page.
    *
-   * All six are featured, because six is what the grid wants — three across,
-   * two clean rows, and no orphan at any breakpoint. Four leaves a single card
-   * stranded on a wide screen and three looks thin for a builder.
+   * Three, not six. Six was chosen when the home page laid these out as a grid
+   * of cards — three across, two clean rows, no orphan at any breakpoint — and
+   * that reasoning was about the grid, not about the page. It had two costs:
+   * the home page showed exactly what /work shows, so the link at the bottom
+   * led nowhere new, and six photographs sharing a screen meant none of them
+   * was ever bigger than a postcard.
    *
-   * When the library grows past six, leave this at six and let the extras live
-   * on /work only. The home page is a selection, not an index; that is what the
-   * section is called, and it is what makes the link at the bottom of it lead
-   * somewhere rather than to the same page in a different layout.
+   * They are now three full-width bands. Fewer, and each large enough to
+   * actually be looked at. The home page is a selection; /work is the index.
+   * Leave this at three as the library grows.
    */
   featured: boolean
 }
@@ -129,7 +131,7 @@ export const projects: Project[] = [
     after: img('ashgrove-after', 'The house after lifting, building under and landscaping'),
     gallery: [img('interior-floor', 'Timber flooring running through to the kitchen')],
     placeholder: true,
-    featured: true,
+    featured: false,
   },
   {
     slug: 'bardon-hillside-extension',
@@ -170,7 +172,7 @@ export const projects: Project[] = [
     after: none('The Red Hill cottage after restoration'),
     gallery: [img('interior-dining', 'A dining room lined and lit, the restored floor running through')],
     placeholder: true,
-    featured: true,
+    featured: false,
   },
   {
     slug: 'coastal-apartment-refurbishment',
@@ -189,7 +191,7 @@ export const projects: Project[] = [
     after: none('The coastal apartment after refurbishment'),
     gallery: [img('coastal-hero', 'The island and joinery running the length of the kitchen')],
     placeholder: true,
-    featured: true,
+    featured: false,
   },
 ]
 

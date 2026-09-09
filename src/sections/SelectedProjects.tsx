@@ -2,7 +2,6 @@ import { Link } from 'react-router-dom'
 import { Reveal } from '../components/Reveal'
 import { SheetRef } from '../components/Sheet'
 import { ProjectCard } from '../components/ProjectCard'
-import { SwipeRow } from '../components/SwipeRow'
 import { featuredProjects } from '../data/projects'
 import styles from './SelectedProjects.module.css'
 
@@ -22,20 +21,33 @@ export function SelectedProjects() {
   return (
     <section className={['section', styles.section].join(' ')} aria-labelledby="work-heading">
       <div className="shell">
+        {/* The reference carries the heading. This band's title is two words
+            and the strip already prints them — a separate 56px "Selected work"
+            under a strip reading "A-03 — Selected work" was the same two words
+            twice, and the two of them collided. */}
         <Reveal className={styles.head}>
-          <SheetRef number="A-03" name="Selected work" note="Six projects" />
-          <h2 id="work-heading" className="section-heading">
-            Selected work
-          </h2>
+          <SheetRef
+            number="A-03"
+            name={
+              <h2 id="work-heading" className={styles.heading}>
+                Selected work
+              </h2>
+            }
+            note="Three of them"
+          />
         </Reveal>
 
-        <SwipeRow label="Selected projects" columns={3} className={styles.grid}>
+        {/* Three bands rather than a grid of six. No rail here either: a rail
+            exists to stop six cards becoming nine screens on a phone, and three
+            full-width plates are three screens, which is a scroll worth having.
+            /work keeps the grid and the rail — that is the index. */}
+        <ol className={styles.list}>
           {featuredProjects.map((project, i) => (
-            <Reveal key={project.slug} delay={(i % 3) * 0.07} className={styles.cell}>
-              <ProjectCard project={project} index={i} offset={i % 2 === 1} />
+            <Reveal as="li" key={project.slug} delay={0.05} className={styles.cell}>
+              <ProjectCard project={project} index={i} variant="band" ratio="21 / 9" />
             </Reveal>
           ))}
-        </SwipeRow>
+        </ol>
 
         {/* A full-width row rather than a link floating in the middle of a lot
             of empty ground. The rule and the arrow are what say "this is the
