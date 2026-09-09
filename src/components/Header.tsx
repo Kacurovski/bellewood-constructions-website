@@ -26,9 +26,11 @@ export function Header() {
   // Close the mobile menu whenever the route changes.
   useEffect(() => setOpen(false), [location.pathname, location.hash])
 
-  /* Only the home page opens on the dark hero. Everywhere else the top of the
-     page is the pale ground and the header has to stay in ink. */
-  const overDark = !scrolled && !open && location.pathname === '/'
+  /* Every route now opens on a dark band — the hero on the home page, the
+     PageHead masthead everywhere else — so at the top of any page the header
+     floats over Deep Pine and goes reverse. It returns to ink as soon as the
+     page is scrolled off that band, or when the mobile menu opens over it. */
+  const overDark = !scrolled && !open
 
   return (
     <header

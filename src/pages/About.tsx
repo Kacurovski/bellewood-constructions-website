@@ -1,4 +1,5 @@
 import { Reveal } from '../components/Reveal'
+import { PageHead } from '../components/PageHead'
 import { ComplianceLine } from '../components/ComplianceLine'
 import { ImageSlot } from '../components/ImageSlot'
 import { usePageTitle } from '../hooks/usePageTitle'
@@ -19,19 +20,20 @@ export default function About() {
 
   return (
     <>
-      <header className={['shell', styles.head].join(' ')}>
-        <Reveal>
-          <p className="eyebrow">About</p>
-          <h1 className={['headline', styles.title].join(' ')}>
-            One builder, more than two decades of Brisbane houses.
-          </h1>
-        </Reveal>
-      </header>
+      <PageHead
+        eyebrow="About"
+        title="One builder, more than two decades of Brisbane houses."
+        meta={[
+          { label: 'Builder', value: contact.principal },
+          { label: 'QBCC licence', value: compliance.licenceNumber },
+          { label: 'Where', value: contact.serviceArea },
+        ]}
+      />
 
       <div className={['shell', styles.body].join(' ')}>
         <Reveal className={styles.copy}>
           <div className="stack-lg">
-            <p className="lead">
+            <p className={styles.opening}>
               Bellewood Constructions is run by {contact.principal}. He has been
               building in inner Brisbane for more than two decades, almost all of it
               on heritage and older homes, and he is on site on his own jobs.
@@ -62,10 +64,18 @@ export default function About() {
 
       <section className={['on-green', styles.name].join(' ')} aria-labelledby="name-story">
         <div className={['shell', styles.nameInner].join(' ')}>
-          <Reveal>
+          <Reveal className={styles.nameAside}>
             <h2 id="name-story" className={['section-heading', styles.nameHeading].join(' ')}>
               About the name
             </h2>
+            {/* The licensed entity sits at the foot of this column rather than
+                under the paragraphs. It is the thing the story is about — same
+                company, same licence — and it stops the column being a heading
+                above three quarters of empty ground. */}
+            <div className={styles.nameFine}>
+              <hr className={['hairline', styles.rule].join(' ')} />
+              <ComplianceLine />
+            </div>
           </Reveal>
 
           <Reveal delay={0.08}>
@@ -90,9 +100,6 @@ export default function About() {
                 hiring is longer than the name on the sign.
               </p>
             </div>
-
-            <hr className={['hairline', styles.rule].join(' ')} />
-            <ComplianceLine />
           </Reveal>
         </div>
       </section>

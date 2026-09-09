@@ -1,41 +1,80 @@
-.head { padding-block: clamp(3rem, 6vw, 6rem) clamp(2rem, 4vw, 3rem); }
-
-.title { margin-top: var(--s-4); max-width: 18ch; }
+/* The masthead is PageHead's. */
 
 .body {
   display: grid;
-  grid-template-columns: minmax(0, 1.25fr) minmax(0, 0.75fr);
-  gap: clamp(2rem, 5vw, 5rem);
-  padding-bottom: clamp(3.5rem, 7vw, 6rem);
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+  gap: clamp(2.5rem, 6vw, 6rem);
+  padding-block: clamp(4rem, 8vw, 7.5rem);
   align-items: start;
-  border-top: 1px solid var(--rule);
-  padding-top: clamp(2.5rem, 5vw, 4rem);
 }
 
 .copy { max-width: var(--measure); color: var(--pine); }
 
-.portrait { width: 100%; }
+/* The first paragraph is the page's argument, so it is set at a size that says
+   so. Everything after it drops to body and reads as the detail. */
+.opening {
+  font-family: var(--font-body);
+  font-weight: 400;
+  font-size: clamp(1.35rem, 1.05rem + 1.2vw, 1.95rem);
+  line-height: 1.36;
+  letter-spacing: -0.012em;
+  color: var(--green);
+  text-wrap: pretty;
+}
 
-.name { padding-block: clamp(4rem, 8vw, 7rem); }
+/* The photograph holds the right column for the length of the copy rather than
+   sitting at the top of it. Sticky, so it stays with the words it belongs to. */
+.portrait {
+  width: 100%;
+  position: sticky;
+  top: calc(var(--header-h) + 2rem);
+}
+
+/* --- About the name --------------------------------------------------------
+   The one solid green band on the page. */
+.name { padding-block: clamp(4.5rem, 8vw, 7rem); }
 
 .nameInner {
   display: grid;
-  grid-template-columns: minmax(0, 0.7fr) minmax(0, 1.3fr);
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
   gap: clamp(1.5rem, 4vw, 5rem);
-  align-items: start;
+  /* Stretch, not start: the left column runs the full height of the story so
+     its fine print can sit at the foot of it. */
+  align-items: stretch;
+}
+
+.nameAside {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-6);
 }
 
 .nameHeading { max-width: 12ch; }
 
+/* Pushed to the bottom of the column. */
+.nameFine { margin-top: auto; }
+
 .nameBody {
-  max-width: 58ch;
+  max-width: 54ch;
+  /* This band carries the whole continuity story and it was set at body size in
+     a column that did not fill, so most of the section was empty green. At lead
+     size the words occupy the ground they are printed on. */
+  font-size: var(--t-lead);
+  line-height: 1.58;
   color: color-mix(in srgb, var(--wash) 88%, transparent);
 }
 
-.rule { margin-top: clamp(2rem, 3.5vw, 3rem); margin-bottom: var(--s-4); }
+.rule { margin-bottom: var(--s-4); }
 
 @media (max-width: 860px) {
   .body,
   .nameInner { grid-template-columns: minmax(0, 1fr); gap: var(--s-6); }
-  .portrait { max-width: 22rem; }
+
+  .portrait { position: static; max-width: 22rem; }
+
+  /* Stacked, the licensed-entity line sits directly under the heading it is
+     the subject of, and the story follows. It reads as a credit rather than a
+     footnote, which is the better of the two on a phone. */
+  .nameAside { gap: var(--s-4); }
+  .nameFine { margin-top: 0; }
 }

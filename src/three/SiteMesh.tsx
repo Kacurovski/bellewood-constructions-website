@@ -109,9 +109,9 @@ const fragmentShader = /* glsl */ `
  * is meant to be. Drawing it into the texture rather than the shader means
  * mipmaps handle minification and it never aliases into moiré.
  *
- * Spacing follows the brand book — one repeat every 2.5 m, nothing on it but the
- * mark — so at the distance this is seen from you get two or three across, not a
- * grid of a dozen.
+ * Spacing follows the brand book — a half-drop repeat, nothing on the sheet but
+ * the mark — read at the distance you would pass a real hoarding from, which is
+ * a field of marks rather than two or three large ones.
  */
 function useMeshTexture() {
   const [sheet, setSheet] = useState<{ texture: THREE.CanvasTexture; aspect: number } | null>(
@@ -189,21 +189,25 @@ function useMeshTexture() {
 
 /**
  * On-screen width of one tile, in CSS pixels. Each tile holds two marks, so a
- * mark lands at roughly a third of this.
+ * mark lands at roughly two thirds of this.
  *
  * Sizing in pixels rather than world units is what keeps the mark the same size
- * on every screen and keeps it sharp: the source lockup is a 262px raster, and
- * displaying it far below that is what made it look soft. It is now shown near
- * its own resolution.
+ * on every screen and keeps it sharp: the source is a 900px raster, so it is
+ * always being downscaled, which is the direction that stays clean.
+ *
+ * This was 540, which put a 360px mark into a band barely 250px tall: two and a
+ * bit marks across, every one of them cropped top and bottom. That does not read
+ * as printed mesh, it reads as a broken image. Real mesh is a field — the mark
+ * small enough and repeated often enough that you take in the surface first and
+ * the logo second, which is exactly the effect Angus described from the street.
  */
-const TILE_PX = 540
+const TILE_PX = 300
 
 /**
- * Never so large that fewer than about two tiles fit across the band. At the
- * full size a phone showed one mark sliced in half and another running off the
- * edge, which reads as a broken image rather than as a repeat.
+ * Never so large that fewer than about two and a half tiles fit across the band,
+ * which is the floor at which the repeat still reads as a repeat on a phone.
  */
-const tileFor = (width: number) => Math.min(TILE_PX, width / 1.7)
+const tileFor = (width: number) => Math.min(TILE_PX, width / 2.4)
 
 function Scrim({ progress }: { progress: React.MutableRefObject<number> }) {
   const material = useRef<THREE.ShaderMaterial>(null)

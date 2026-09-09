@@ -35,14 +35,18 @@
   margin-top: var(--s-4);
 }
 
+/* An index number, set as one. At eyebrow size it read as a footnote on the
+   title; at this weight the six projects read as a numbered body of work.
+   Tabular figures so 01 and 06 occupy the same width and the titles align. */
 .number {
   font-family: var(--font-display);
   font-weight: 600;
-  font-size: var(--t-eyebrow);
-  letter-spacing: 0.12em;
+  font-size: var(--t-small);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.04em;
   color: var(--green);
-  opacity: 0.5;
-  padding-top: 0.2em;
+  opacity: 0.42;
+  padding-top: 0.15em;
 }
 
 .title {

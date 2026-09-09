@@ -3,6 +3,7 @@ import { ImageSlot } from '../components/ImageSlot'
 import { SlicedImage } from '../components/SlicedImage'
 import { BeforeAfter } from '../components/BeforeAfter'
 import { Reveal } from '../components/Reveal'
+import { PageHead } from '../components/PageHead'
 import { getProject, hasBeforeAfter, projects } from '../data/projects'
 import { usePageTitle } from '../hooks/usePageTitle'
 import NotFound from './NotFound'
@@ -20,32 +21,21 @@ export default function ProjectDetail() {
 
   return (
     <article>
-      <header className={['shell', styles.head].join(' ')}>
-        <Reveal>
+      <PageHead
+        eyebrow={
           <Link to="/work" className={['link-underline', styles.back].join(' ')}>
             All projects
           </Link>
-          <h1 className={['headline', styles.title].join(' ')}>{project.title}</h1>
-          <dl className={styles.facts}>
-            <div>
-              <dt className="eyebrow">Location</dt>
-              <dd className={styles.fact}>{project.suburb}</dd>
-            </div>
-            <div>
-              <dt className="eyebrow">Work</dt>
-              <dd className={styles.fact}>{project.kind}</dd>
-            </div>
-            {/* Year is only shown when it is known. An unconfirmed date is worse
-                than no date on a builder's project page. */}
-            {project.year && (
-              <div>
-                <dt className="eyebrow">Completed</dt>
-                <dd className={styles.fact}>{project.year}</dd>
-              </div>
-            )}
-          </dl>
-        </Reveal>
-      </header>
+        }
+        title={project.title}
+        meta={[
+          { label: 'Location', value: project.suburb },
+          { label: 'Work', value: project.kind },
+          /* Year is only shown when it is known. An unconfirmed date is worse
+             than no date on a builder's project page. */
+          ...(project.year ? [{ label: 'Completed', value: project.year }] : []),
+        ]}
+      />
 
       {/* Set in panels, the way the home page opens. It gives every project a
           moment of arrival rather than a photograph that is simply there. */}

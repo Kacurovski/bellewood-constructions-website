@@ -16,7 +16,7 @@
 .band {
   position: relative;
   width: 100%;
-  height: clamp(12rem, 29vh, 18rem);
+  height: clamp(15rem, 36vh, 25rem);
   overflow: hidden;
 }
 
@@ -26,10 +26,11 @@
   display: grid;
   grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
   gap: clamp(1.5rem, 5vw, 5rem);
-  /* Both columns sit on the same baseline, so the short heading does not leave
-     a hole under itself. */
-  align-items: end;
-  padding-top: clamp(1rem, 2.5vw, 2rem);
+  /* Both columns start on the same line. Bottom-aligning them was meant to stop
+     a hole under the short heading, and instead put one above it — between the
+     mesh and the words, which is the worst place on the band for a gap. */
+  align-items: start;
+  padding-top: clamp(2rem, 4vw, 3.5rem);
 }
 
 /* A size below the page's display scale. This is a statement, not the headline
@@ -49,7 +50,7 @@
 .fine { margin-top: var(--s-3); }
 
 @media (max-width: 860px) {
-  .band { height: clamp(9rem, 24vh, 13rem); }
+  .band { height: clamp(11rem, 28vh, 16rem); }
 
   .inner {
     grid-template-columns: minmax(0, 1fr);

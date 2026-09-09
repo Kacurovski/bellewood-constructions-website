@@ -13,10 +13,15 @@
 .heading { margin-top: var(--s-4); max-width: 14ch; }
 
 .body {
-  max-width: 56ch;
+  max-width: 52ch;
   /* Green on sage is 6.1:1 — fine for headings and short passages, which this
      is. Body copy anywhere longer stays Deep Pine on Wash. */
   color: var(--pine);
+  /* Two short paragraphs at body size left this band reading as a footnote to
+     the page. It is the only thing on the site addressed to architects, so it
+     is set to be read rather than skimmed past. */
+  font-size: var(--t-lead);
+  line-height: 1.55;
 }
 
 .link { color: var(--green); font-weight: 500; }

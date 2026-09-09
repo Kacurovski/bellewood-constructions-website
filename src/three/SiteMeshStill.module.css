@@ -3,8 +3,9 @@
   height: 100%;
   background-color: var(--green);
   background-repeat: repeat;
-  /* Spacing matches the scene: generous field, one repeat at a comfortable
-     interval, nothing else on it. */
-  background-size: clamp(230px, 24vw, 400px) auto;
+  /* Spacing matches the scene: a mark around 200px, repeated often enough that
+     the surface reads before the logo does. Larger than this and a short band
+     shows two cropped marks, which reads as a broken image. */
+  background-size: clamp(150px, 14vw, 205px) auto;
   background-position: center;
 }

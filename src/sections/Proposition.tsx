@@ -61,7 +61,7 @@ export function Proposition() {
         <Reveal className={styles.figure}>
           <ImageSlot
             slot={projects[0].gallery[1]}
-            ratio="3 / 4"
+            ratio="4 / 5"
             tone="sage"
             className={styles.detail}
           />

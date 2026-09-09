@@ -9,6 +9,42 @@
 
 .sage { background: var(--sage-panel); border-color: transparent; }
 
+/* --- Reversed --------------------------------------------------------------
+   The palest, flattest block on the site was a sage rectangle with a one-line
+   offer in it. On Deep Pine it stops being a notice and becomes the last thing
+   the page says. `.on-green` handles the heading and the eyebrow; everything
+   below is the parts it cannot reach — the form, which owns its own colours. */
+.green {
+  background: var(--pine);
+  border-color: transparent;
+  padding: clamp(2.25rem, 5vw, 4.5rem);
+}
+
+.green .blurb { color: color-mix(in srgb, var(--wash) 78%, transparent); opacity: 1; }
+.green .label { color: var(--sage); }
+.green .status { color: var(--sage); }
+.green .title { font-size: clamp(1.5rem, 1.2rem + 1.2vw, 2.25rem); max-width: 18ch; }
+
+.green .input {
+  color: var(--wash);
+  border-bottom-color: var(--rule-reverse);
+}
+
+.green .input::placeholder { color: var(--wash); opacity: 0.42; }
+
+.green .input:focus { border-bottom-color: var(--wash); }
+.green .input:focus-visible { outline-color: var(--wash); }
+
+/* The solid green button disappears into a Deep Pine ground, so on this one it
+   inverts: wash fill, pine ink. */
+.green :global(.btn) {
+  background: var(--wash);
+  color: var(--pine);
+  border-color: var(--wash);
+}
+
+.green :global(.btn):hover { background: var(--sage); border-color: var(--sage); }
+
 .title { margin-top: var(--s-3); max-width: 22ch; }
 
 .blurb {

@@ -17,7 +17,7 @@ import styles from './LeadMagnet.module.css'
  * `forms.leadMagnet.file` is set, this promises the checklist by email rather
  * than offering a download that does not exist.
  */
-export function LeadMagnet({ tone = 'wash' }: { tone?: 'wash' | 'sage' }) {
+export function LeadMagnet({ tone = 'wash' }: { tone?: 'wash' | 'sage' | 'green' }) {
   const [status, setStatus] = useState<'idle' | 'sending' | SubmitResult>('idle')
 
   async function onSubmit(event: FormEvent<HTMLFormElement>) {
@@ -42,7 +42,14 @@ export function LeadMagnet({ tone = 'wash' }: { tone?: 'wash' | 'sage' }) {
   }
 
   return (
-    <div className={[styles.wrap, tone === 'sage' ? styles.sage : ''].join(' ')}>
+    <div
+      className={[
+        tone === 'green' ? 'on-green' : '',
+        styles.wrap,
+        tone === 'sage' ? styles.sage : '',
+        tone === 'green' ? styles.green : '',
+      ].join(' ')}
+    >
       <div className={styles.copy}>
         <p className="eyebrow">Before you start</p>
         <h2 className={['sub-heading', styles.title].join(' ')}>{forms.leadMagnet.title}</h2>

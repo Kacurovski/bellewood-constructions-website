@@ -1,5 +1,6 @@
 import { EnquiryForm } from '../components/EnquiryForm'
 import { Reveal } from '../components/Reveal'
+import { PageHead } from '../components/PageHead'
 import { usePageTitle } from '../hooks/usePageTitle'
 import { contact, social } from '../config/site'
 import styles from './Contact.module.css'
@@ -8,56 +9,51 @@ export default function Contact() {
   usePageTitle('Contact')
 
   return (
-    <section className={['shell', styles.wrap].join(' ')}>
-      <div className={styles.inner}>
-        <Reveal className={styles.left}>
-          <p className="eyebrow">Contact</p>
-          <h1 className={['headline', styles.title].join(' ')}>
-            Tell us about the house.
-          </h1>
-          <p className={[styles.note, 'measure-tight'].join(' ')}>
-            The quickest way to reach Angus is the phone. If he is on site and
-            cannot pick up you will get a text back, so a missed call is never a
-            lost one.
-          </p>
-
-          <dl className={styles.details}>
-            <div className={styles.detail}>
-              <dt className={styles.dt}>Phone</dt>
-              <dd className={styles.dd}>
-                <a href={contact.phoneHref}>{contact.phone}</a>
-              </dd>
-            </div>
-            <div className={styles.detail}>
-              <dt className={styles.dt}>Email</dt>
-              <dd className={styles.dd}>
-                <a href={contact.emailHref}>{contact.email}</a>
-              </dd>
-            </div>
-            <div className={styles.detail}>
-              <dt className={styles.dt}>Where we work</dt>
-              <dd className={styles.dd}>{contact.serviceArea}</dd>
-            </div>
-            <div className={styles.detail}>
-              <dt className={styles.dt}>Follow</dt>
-              <dd className={styles.dd}>
-                {social.map((item, i) => (
-                  <span key={item.label}>
-                    {i > 0 && <span className={styles.sep} aria-hidden="true"> / </span>}
-                    <a href={item.href} target="_blank" rel="noreferrer noopener">
-                      {item.label}
-                    </a>
+    <>
+      <PageHead
+        eyebrow="Contact"
+        title="Tell us about the house."
+        lede="The quickest way to reach Angus is the phone. If he is on site and cannot pick up you will get a text back, so a missed call is never a lost one."
+        meta={[
+          { label: 'Phone', value: <a href={contact.phoneHref}>{contact.phone}</a> },
+          { label: 'Email', value: <a href={contact.emailHref}>{contact.email}</a> },
+          { label: 'Where we work', value: contact.serviceArea },
+          {
+            label: 'Follow',
+            value: social.map((item, i) => (
+              <span key={item.label}>
+                {i > 0 && (
+                  <span className={styles.sep} aria-hidden="true">
+                    {' / '}
                   </span>
-                ))}
-              </dd>
-            </div>
-          </dl>
-        </Reveal>
+                )}
+                <a href={item.href} target="_blank" rel="noreferrer noopener">
+                  {item.label}
+                </a>
+              </span>
+            )),
+          },
+        ]}
+      />
 
-        <Reveal delay={0.08} className={styles.right}>
-          <EnquiryForm />
-        </Reveal>
-      </div>
-    </section>
+      <section className={['shell', styles.wrap].join(' ')} aria-labelledby="enquiry-heading">
+        <div className={styles.inner}>
+          <Reveal className={styles.aside}>
+            <p className="eyebrow">Send it through</p>
+            <h2 id="enquiry-heading" className={['section-heading', styles.asideTitle].join(' ')}>
+              Or write it down.
+            </h2>
+            <p className={[styles.asideNote, 'measure-tight'].join(' ')}>
+              A suburb and a sentence about what you are thinking of is enough to
+              start. Angus reads every one of these himself.
+            </p>
+          </Reveal>
+
+          <Reveal delay={0.08} className={styles.right}>
+            <EnquiryForm />
+          </Reveal>
+        </div>
+      </section>
+    </>
   )
 }

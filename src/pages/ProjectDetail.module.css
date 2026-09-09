@@ -1,27 +1,15 @@
-.head { padding-block: clamp(2.5rem, 5vw, 4.5rem) clamp(2rem, 4vw, 3rem); }
+/* The masthead — title and the fact ledger — is PageHead's. */
 
-.back { display: inline-block; color: var(--green); }
-
-.title { margin-top: clamp(1.5rem, 3vw, 2.5rem); max-width: 18ch; }
-
-.facts {
-  display: flex;
-  flex-wrap: wrap;
-  gap: clamp(1.5rem, 4vw, 4rem);
-  margin: clamp(2rem, 3.5vw, 3rem) 0 0;
-  padding-top: var(--s-5);
-  border-top: 1px solid var(--rule);
+/* The back link takes the eyebrow slot, above the title inside the dark band,
+   so it reverses and inherits the eyebrow's placement. */
+.back {
+  display: inline-block;
+  color: var(--sage);
+  text-transform: none;
+  letter-spacing: 0.06em;
 }
 
-.facts div { display: flex; flex-direction: column; gap: 0.4rem; }
-
-.fact {
-  margin: 0;
-  font-family: var(--font-display);
-  font-weight: 500;
-  font-size: var(--t-small);
-  color: var(--pine);
-}
+.back:hover { color: var(--wash); }
 
 .hero {
   width: 100%;

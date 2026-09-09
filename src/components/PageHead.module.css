@@ -1,0 +1,122 @@
+/* ---------------------------------------------------------------------------
+   The masthead every page opens on.
+
+   Before this, only the home page opened dark. Every other route began on the
+   pale ground with a small eyebrow, a heading filling the left third and a dead
+   right half — which is the layout of a document, not the opening of a page
+   selling a two-million-dollar renovation.
+
+   Now the site has one opening move: Deep Pine, run up under the sticky header
+   so the band starts at the very top of the window, the reverse lockup on it,
+   the title at display scale, and a ledger of facts holding the right-hand
+   column. The pale ground still carries the body of the page — it is the 60 in
+   the 60/30/10 — but it is no longer the first thing anybody sees.
+   --------------------------------------------------------------------------- */
+
+.head {
+  position: relative;
+  background: var(--pine);
+  /* Up under the sticky header, and the height given back as padding, so the
+     header floats on the band instead of sitting in a strip above it. */
+  margin-top: calc(var(--header-h) * -1);
+  padding-top: var(--header-h);
+}
+
+.inner {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(0, 0.65fr);
+  gap: clamp(2rem, 5vw, 5rem);
+  align-items: end;
+  padding-block: clamp(4rem, 7vw, 8.5rem) clamp(3.5rem, 6vw, 7rem);
+}
+
+.copy {
+  min-width: 0;
+}
+
+/* One step above the shared .headline role. A masthead is the largest thing on
+   its page and should be read as a statement, not as a heading. */
+.title {
+  margin: var(--s-4) 0 0;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(2.5rem, 1.4rem + 4.3vw, 5rem);
+  line-height: 1.02;
+  letter-spacing: -0.035em;
+  color: var(--wash);
+  text-wrap: balance;
+  max-width: 17ch;
+}
+
+.lede {
+  margin: clamp(1.5rem, 2.4vw, 2.25rem) 0 0;
+  font-size: var(--t-lead);
+  line-height: 1.6;
+  max-width: 46ch;
+  color: color-mix(in srgb, var(--wash) 78%, transparent);
+}
+
+/* --- The ledger ------------------------------------------------------------
+   What fills the right-hand column. Rows of label and value, hung off a rule,
+   bottom-aligned with the baseline of the title. Nothing here is a new claim:
+   every value is a fact already stated somewhere else on the site. */
+.meta {
+  margin: 0;
+  min-width: 0;
+  border-top: 1px solid var(--rule-reverse);
+}
+
+.row {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+  gap: var(--s-4);
+  padding-block: clamp(0.7rem, 1.2vw, 0.95rem);
+  border-bottom: 1px solid var(--rule-reverse);
+}
+
+.label {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: var(--t-eyebrow);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--sage);
+  padding-top: 0.25em;
+}
+
+.value {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: var(--t-small);
+  line-height: 1.45;
+  color: var(--wash);
+}
+
+.value a {
+  color: var(--wash);
+  text-decoration-color: color-mix(in srgb, var(--wash) 45%, transparent);
+}
+
+.value a:hover {
+  text-decoration-color: var(--wash);
+}
+
+/* --- Narrow ----------------------------------------------------------------
+   One column. The ledger keeps its rules and follows the title, which is the
+   order it is read in anyway. */
+@media (max-width: 900px) {
+  .inner {
+    grid-template-columns: minmax(0, 1fr);
+    gap: clamp(2rem, 6vw, 3rem);
+    padding-block: clamp(3rem, 9vw, 4.5rem) clamp(2.5rem, 7vw, 3.5rem);
+    align-items: start;
+  }
+
+  .title { max-width: none; }
+}
+
+@media (max-width: 520px) {
+  .row { grid-template-columns: minmax(0, 1fr); gap: 0.2rem; }
+  .label { padding-top: 0; }
+}

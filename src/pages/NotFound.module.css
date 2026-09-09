@@ -1,5 +1,38 @@
-.wrap { padding-block: clamp(5rem, 12vw, 10rem); }
-.title { margin-top: var(--s-4); max-width: 16ch; }
-.note { margin-top: var(--s-5); color: var(--pine); }
-.link { color: var(--green); font-weight: 500; }
-.action { margin-top: clamp(2rem, 4vw, 3rem); }
+/* Opens dark like every other route, and runs up under the header. */
+.wrap {
+  background: var(--pine);
+  margin-top: calc(var(--header-h) * -1);
+  padding-top: var(--header-h);
+  padding-bottom: clamp(6rem, 14vw, 12rem);
+}
+
+.pad { padding-top: clamp(5rem, 11vw, 9rem); }
+
+.title {
+  margin-top: var(--s-4);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(2.5rem, 1.4rem + 4.3vw, 5rem);
+  line-height: 1.02;
+  letter-spacing: -0.035em;
+  max-width: 14ch;
+}
+
+.note {
+  margin-top: var(--s-5);
+  font-size: var(--t-lead);
+  line-height: 1.6;
+  color: color-mix(in srgb, var(--wash) 78%, transparent);
+}
+
+.link { color: var(--wash); font-weight: 500; }
+
+/* The solid green button vanishes on Deep Pine, so it inverts here. */
+.action {
+  margin-top: clamp(2.25rem, 4vw, 3.25rem);
+  background: var(--wash);
+  color: var(--pine);
+  border-color: var(--wash);
+}
+
+.action:hover { background: var(--sage); border-color: var(--sage); }

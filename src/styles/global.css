@@ -198,9 +198,11 @@ a:hover { text-decoration-color: currentColor; }
   gap: var(--s-3);
   font-family: var(--font-display);
   font-weight: 600;
-  font-size: var(--t-small);
-  letter-spacing: 0.01em;
-  padding: 0.95rem 1.6rem;
+  font-size: var(--t-body);
+  letter-spacing: 0.005em;
+  /* A call to action on a page selling this size of job should not be a chip.
+     Taller than it is tight, and wide enough to read as a considered object. */
+  padding: 1.15rem 2.25rem;
   border: 1px solid var(--green);
   background: var(--green);
   color: var(--wash);

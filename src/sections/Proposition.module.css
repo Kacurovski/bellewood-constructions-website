@@ -12,14 +12,31 @@
 /* The eyebrow sits in the left column as a margin note, the way a label sits in
    the margin of a drawing — rather than stacked above the heading. */
 .left { grid-column: 1; grid-row: 1; padding-top: 0.5rem; }
-.figure { grid-column: 1; grid-row: 2; }
 .right { grid-column: 2; grid-row: 1 / span 2; }
+
+/* The plate runs off the left edge of the page. Inside the gutter it was a
+   photograph in a column; off the edge it is a detail you are looking at
+   closely, which is what the section is about. The gutter is given back rather
+   than a viewport width taken, so it stays in step with the shell at every size
+   and needs no second place to keep the number. */
+.figure {
+  grid-column: 1;
+  grid-row: 2;
+  margin-left: calc(var(--gutter) * -1);
+}
 
 .heading { max-width: 18ch; }
 
 .body {
   margin-top: clamp(1.5rem, 2.5vw, 2.25rem);
   color: var(--pine);
+}
+
+/* The first paragraph is the section's argument. It leads, and the two under it
+   read as the detail — one big thing per band. */
+.body > p:first-child {
+  font-size: var(--t-lead);
+  line-height: 1.55;
 }
 
 @media (max-width: 860px) {
@@ -35,6 +52,9 @@
     grid-column: 1;
     grid-row: auto;
   }
+
+  /* Stacked, the plate bleeds both ways rather than only left. */
+  .figure { margin-inline: calc(var(--gutter) * -1); }
 
   /* The photograph goes between the heading and the copy, so the two halves of
      the right column have to become grid items in their own right. */

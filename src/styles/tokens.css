@@ -67,7 +67,9 @@
   --s-11: 11rem;
 
   /* Vertical rhythm between sections. Generous — space is where the premium is. */
-  --section-y: clamp(5rem, 3rem + 8vw, 11rem);
+  /* Space is where the premium is, and the top of this range was doing less
+     than it could on a wide screen. */
+  --section-y: clamp(5.5rem, 3rem + 9vw, 13.5rem);
   --gutter: clamp(1.25rem, 0.5rem + 3vw, 4rem);
   --max-w: 1440px;
   /* The sticky header height, so a section can run up underneath it. */

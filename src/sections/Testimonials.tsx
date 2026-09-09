@@ -44,7 +44,15 @@ export function Testimonials() {
           {testimonials.map((item, i) => (
             <Reveal as="li" key={i} delay={i * 0.07} className={styles.item}>
               <figure className={styles.card}>
-                <blockquote className={styles.quote}>{item.quote}</blockquote>
+                {/* Real typographic quotes, so the hanging indent in the CSS
+                    has something to hang. They are written in rather than added
+                    with ::before so the opening mark is part of the first line
+                    box and the indent lines up with the text beneath it. */}
+                <blockquote className={styles.quote}>
+                  {'“'}
+                  {item.quote}
+                  {'”'}
+                </blockquote>
                 <figcaption className={styles.by}>
                   <span className={styles.name}>{item.name}</span>
                   <span className={styles.detail}>{item.detail}</span>

@@ -45,7 +45,9 @@ export function Process() {
     <section
       ref={ref}
       id="approach"
-      className={[styles.section, canAnimate ? styles.pinned : styles.static].join(' ')}
+      className={['on-green', styles.section, canAnimate ? styles.pinned : styles.static].join(
+        ' ',
+      )}
       aria-labelledby="approach-heading"
     >
       <div className={styles.stage}>
