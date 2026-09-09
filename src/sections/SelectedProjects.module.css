@@ -17,12 +17,7 @@
    stay in step with the shell at every size and there is no second place to
    keep the number. */
 .list {
-  list-style: none;
-  margin: clamp(2rem, 4vw, 3.5rem) 0 0;
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  gap: clamp(2.5rem, 5vw, 5rem);
+  margin-top: clamp(2rem, 4vw, 3.5rem);
 }
 
 .cell { min-width: 0; }

@@ -45,9 +45,25 @@
   margin-top: clamp(1.75rem, 4.5vw, 5rem);
 }
 
+/* One column is a stack, not a grid of one — the children are full-width rows
+   and they need a row gap of their own rather than the tight column gap the
+   card grids use. Declared before the rail so the rail's own `gap` still wins
+   there. */
+.stack {
+  row-gap: clamp(2.5rem, 5vw, 5rem);
+}
+
 @media (max-width: 1000px) {
   .track {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  /* A stack stays a stack. Written as a second rule of equal specificity rather
+     than as `.track:not(.stack)` above — that raised this block's specificity
+     over the rail's, and the rail below stopped being able to override it, so
+     the testimonials sat in two columns on a phone instead of railing. */
+  .stack {
+    grid-template-columns: minmax(0, 1fr);
   }
 
   /* Below this the drop is what is left of the rhythm — the spans go back to

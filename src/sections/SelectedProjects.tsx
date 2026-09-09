@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom'
 import { Reveal } from '../components/Reveal'
 import { SheetRef } from '../components/Sheet'
 import { ProjectCard } from '../components/ProjectCard'
+import { SwipeRow } from '../components/SwipeRow'
 import { featuredProjects } from '../data/projects'
 import styles from './SelectedProjects.module.css'
 
@@ -39,10 +40,18 @@ export function SelectedProjects() {
 
         {/* Three rows rather than a grid of six, and rows rather than the
             full-bleed bands they were briefly: a 1440px plate is a slideshow,
-            not a selection. No rail here either — a rail exists to stop six
-            cards becoming nine screens on a phone, and three rows are not that.
-            /work keeps the grid and the rail; that is the index. */}
-        <ol className={styles.list}>
+            not a selection.
+
+            One column on a wide screen, a swipe rail on a phone. Stacked, three
+            rows are three screens of scrolling before the page moves on; side
+            by side they are one, and the card cut by the right edge is what
+            says the row moves. */}
+        <SwipeRow
+          as="ul"
+          label="Selected projects"
+          columns={1}
+          className={styles.list}
+        >
           {featuredProjects.map((project, i) => (
             <Reveal as="li" key={project.slug} delay={0.05} className={styles.cell}>
               <ProjectCard
@@ -54,7 +63,7 @@ export function SelectedProjects() {
               />
             </Reveal>
           ))}
-        </ol>
+        </SwipeRow>
 
         {/* A full-width row rather than a link floating in the middle of a lot
             of empty ground. The rule and the arrow are what say "this is the

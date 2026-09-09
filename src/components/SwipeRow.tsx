@@ -5,8 +5,12 @@ type Props = {
   children: ReactNode
   /** Accessible name for the scroller, e.g. "Selected projects". */
   label: string
-  /** Columns on a wide screen. Two and three are what this site uses. */
-  columns?: 2 | 3
+  /**
+   * Columns on a wide screen. One stacks the children full width — for the home
+   * page's selection, which is three alternating rows on a desktop and still
+   * has to become a rail on a phone.
+   */
+  columns?: 1 | 2 | 3
   className?: string
   /** A list of things should still be a list. */
   as?: 'div' | 'ul'
@@ -88,7 +92,11 @@ export function SwipeRow({
         ref={(el: HTMLElement | null) => {
           track.current = el
         }}
-        className={[styles.track, variant === 'index' ? styles.index : ''].join(' ')}
+        className={[
+          styles.track,
+          columns === 1 ? styles.stack : '',
+          variant === 'index' ? styles.index : '',
+        ].join(' ')}
         style={{ '--cols': columns } as React.CSSProperties}
         // A region you can only reach by swiping is a region some people cannot
         // reach. Focusable, so it scrolls with the arrow keys too.

@@ -1,6 +1,5 @@
 .section {
-  border-top: 1px solid var(--rule-reverse);
-  background: var(--pine);
+  border-top: 1px solid var(--ink);
   position: relative;
 }
 
@@ -51,7 +50,7 @@
 
 .lede {
   margin-top: clamp(1.25rem, 2vw, 1.75rem);
-  color: color-mix(in srgb, var(--wash) 78%, transparent);
+  color: var(--pine);
 }
 
 .steps {
@@ -59,25 +58,20 @@
   list-style: none;
   margin: clamp(2rem, 3.5vw, 3rem) 0 0;
   padding: 0;
-  border-top: 1px solid var(--rule-reverse);
+  border-top: 1px solid var(--ink);
 }
 
 .step {
   display: flex;
   gap: var(--s-5);
   padding-block: clamp(0.9rem, 1.8vw, 1.35rem);
-  border-bottom: 1px solid var(--rule-reverse);
+  border-bottom: 1px solid var(--ink);
 }
 
 /* While the section is pinned, the step the frame is currently at carries full
-   weight and the others sit back. Opacity only: no bars, no meters, no ticks.
-
-   Reversed on Deep Pine the same fade reads deeper than it did on the pale
-   ground — light text dropping out of a dark field disappears faster than dark
-   text washing out of a light one — so the resting state is lifted to hold the
-   sequence readable while it is not the active step. */
+   weight and the others sit back. Opacity only: no bars, no meters, no ticks. */
 .pinned .step {
-  opacity: 0.62;
+  opacity: 0.55;
   transition: opacity var(--dur) var(--ease);
 }
 
@@ -88,7 +82,7 @@
   font-weight: 600;
   font-size: var(--t-eyebrow);
   letter-spacing: 0.12em;
-  color: var(--sage);
+  color: var(--green);
   opacity: 0.5;
   padding-top: 0.35em;
   flex: none;
@@ -106,7 +100,7 @@
 
 .stepNote {
   margin-top: 0.3rem;
-  color: color-mix(in srgb, var(--wash) 78%, transparent);
+  color: var(--pine);
   opacity: 0.76;
 }
 
