@@ -11,6 +11,30 @@
   object-fit: cover;
 }
 
+/* --- The grade -------------------------------------------------------------
+   Six photographs taken by six people on six different days do not read as one
+   body of work, and no amount of layout fixes that. A shared grade does: a
+   little saturation off, the contrast lifted a touch, and a whisper of the
+   brand ground laid over the top so every frame sits in the same light.
+
+   Deliberately slight. An obvious filter reads as cheap, which is the opposite
+   of the point — this should be felt rather than seen. It also keeps earning
+   its place once the real photography arrives, because that will have been shot
+   across years by whoever was on site with a camera. */
+.slot:not(.empty) .img {
+  filter: saturate(0.84) contrast(1.04);
+}
+
+.slot:not(.empty)::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--wash);
+  mix-blend-mode: soft-light;
+  opacity: 0.24;
+  pointer-events: none;
+}
+
 /* The mask that rises as the frame enters. */
 .mask {
   position: absolute;

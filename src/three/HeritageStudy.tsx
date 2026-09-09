@@ -312,7 +312,10 @@ export default function HeritageStudy({ shadows = true }: { shadows?: boolean })
       {shadows && (
         <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, HERITAGE_GROUND, 0]} receiveShadow>
           <planeGeometry args={[52, 52]} />
-          <shadowMaterial opacity={0.17} />
+          {/* Light and tight. A soft grey pool under a floating object is the
+              single thing that makes a 3D scene read as a render rather than as
+              a photograph of a model, and the object is the brand image here. */}
+          <shadowMaterial opacity={0.1} />
         </mesh>
       )}
 

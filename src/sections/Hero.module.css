@@ -47,12 +47,15 @@ hr.rule { margin-block: clamp(1.75rem, 3vw, 2.5rem); }
 
 .call { color: var(--green); }
 
-/* The object sits on the brand ground rather than in a photographic frame, so
-   the wash runs unbroken from the copy across to it. */
+/* The object sits in a panel of its own, bleeding to the right edge of the
+   screen. The page was one flat colour from the header to the footer, which
+   reads as a document rather than as a designed page — this is the first tonal
+   block, and it also gives the house something to sit against instead of
+   floating on the same ground as the text. */
 .media {
   position: relative;
   overflow: hidden;
-  background: var(--wash);
+  background: var(--sage-panel);
 }
 
 .scene { position: absolute; inset: 0; }
