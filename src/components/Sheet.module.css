@@ -1,0 +1,196 @@
+/* ---------------------------------------------------------------------------
+   The drawing sheet.
+
+   The one thing this business owns that no competitor does is that it works
+   from documents. The site says so in words in three places; this is the same
+   claim made in the page's own construction. Every section is a sheet, every
+   divider is a dimension line, the footer is a title block, and the corners
+   carry registration marks.
+
+   The rules here are the same ones a set of construction drawings follows:
+
+   - Line work is one weight. Drawings do not have four kinds of rule, and
+     neither does this. `--ink` is that weight's colour and it flips on a dark
+     ground so nothing has to be restated per section.
+   - Figures are tabular and tracked. A dimension that reflows as it counts is
+     a dimension nobody trusts.
+   - Nothing here is filled. These are marks on a sheet, not boxes, panels or
+     cards — the moment one of them takes a background it stops being line work
+     and starts being a widget.
+   --------------------------------------------------------------------------- */
+
+.ref {
+  display: flex;
+  align-items: baseline;
+  gap: clamp(0.75rem, 2vw, 1.5rem);
+  flex-wrap: wrap;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: var(--t-eyebrow);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--green);
+  margin: 0;
+}
+
+:global(.on-green) .ref { color: var(--sage); }
+
+/* The sheet number. Tabular, because it is a number in a set. */
+.number {
+  font-variant-numeric: tabular-nums;
+  flex: none;
+}
+
+/* A short tick between the number and the name, the way a drawing separates the
+   fields of its reference. */
+.tick {
+  width: 1.25rem;
+  height: 1px;
+  background: currentColor;
+  opacity: 0.55;
+  flex: none;
+  align-self: center;
+}
+
+.name { flex: 1 1 auto; min-width: 0; }
+
+/* Pushed to the right-hand end of the strip: the scale note, which is where a
+   real sheet carries it. */
+.note {
+  flex: none;
+  opacity: 0.62;
+  letter-spacing: 0.12em;
+}
+
+/* The rule under the reference strip. One weight, full width of its column. */
+.refRule {
+  border: 0;
+  border-top: 1px solid var(--ink);
+  margin: clamp(0.7rem, 1.4vw, 1rem) 0 0;
+}
+
+/* --- Dimension lines -------------------------------------------------------
+   A line with a tick at each end and a figure sitting on it. Used instead of a
+   plain hairline wherever one band meets the next, so the page is measured
+   rather than merely divided. */
+.dim {
+  display: flex;
+  align-items: center;
+  gap: clamp(0.75rem, 1.6vw, 1.25rem);
+  width: 100%;
+}
+
+/* The end ticks. Short verticals, exactly as a drawing terminates a dimension. */
+.dim::before,
+.dim::after {
+  content: '';
+  width: 1px;
+  height: 0.7rem;
+  background: var(--ink);
+  flex: none;
+}
+
+.dimLine {
+  flex: 1 1 auto;
+  height: 1px;
+  background: var(--ink);
+  /* Drawn in from the left as the section arrives. `transform` only, so this
+     costs nothing to animate and does not touch layout. */
+  transform-origin: left center;
+}
+
+.dimFigure {
+  flex: none;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: var(--t-fine);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.16em;
+  color: var(--green);
+  opacity: 0.72;
+  white-space: nowrap;
+}
+
+:global(.on-green) .dimFigure { color: var(--sage); opacity: 0.9; }
+
+/* --- Vertical -------------------------------------------------------------
+   The same line turned on its end, for a height. The figure is set on its side
+   the way a drawing sets a vertical dimension: read from the right. */
+.dimV {
+  flex-direction: column;
+  width: auto;
+  height: 100%;
+}
+
+.dimV::before,
+.dimV::after {
+  width: 0.7rem;
+  height: 1px;
+}
+
+.dimV .dimLine {
+  width: 1px;
+  height: auto;
+  flex: 1 1 auto;
+  transform-origin: center top;
+}
+
+.dimV .dimFigure {
+  writing-mode: vertical-rl;
+  letter-spacing: 0.16em;
+}
+
+/* --- Registration marks ----------------------------------------------------
+   The crosses a sheet carries at its corners so the print can be aligned. Here
+   they mark the corners of a band and do nothing else. Decorative, so they are
+   hidden from the accessibility tree by the component. */
+.marks {
+  position: absolute;
+  inset: clamp(0.75rem, 1.6vw, 1.5rem);
+  pointer-events: none;
+}
+
+.mark {
+  position: absolute;
+  width: 0.7rem;
+  height: 0.7rem;
+  opacity: 0.5;
+}
+
+.mark::before,
+.mark::after {
+  content: '';
+  position: absolute;
+  background: var(--ink);
+}
+
+/* The horizontal arm. */
+.mark::before {
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: 1px;
+}
+
+/* The vertical arm. */
+.mark::after {
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 1px;
+}
+
+.tl { top: 0; left: 0; }
+.tr { top: 0; right: 0; }
+.bl { bottom: 0; left: 0; }
+.br { bottom: 0; right: 0; }
+
+@media (max-width: 620px) {
+  /* A phone is not a sheet of paper. The marks are the first thing to go —
+     they are the least load-bearing part of the language and the most likely
+     to collide with content at this width. */
+  .marks { display: none; }
+
+  .ref { gap: 0.6rem; }
+  .note { width: 100%; }
+}

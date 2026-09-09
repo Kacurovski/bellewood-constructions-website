@@ -169,6 +169,10 @@ a:hover { text-decoration-color: currentColor; }
 .on-green .eyebrow { color: var(--sage); }
 .on-green a { text-decoration-color: var(--rule-reverse); }
 
+/* Drawing line work reverses with everything else. Every sheet mark reads this
+   one variable, so a section changing ground changes its line work with it. */
+.on-green { --ink: color-mix(in srgb, var(--wash) 30%, transparent); }
+
 .on-sage { background: var(--sage-panel); }
 
 /* --- Rules ---------------------------------------------------------------- */

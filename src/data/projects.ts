@@ -89,10 +89,7 @@ export const projects: Project[] = [
     hero: img('paddington-after', 'A restored timber cottage at dusk behind a white picket fence'),
     before: img('paddington-before', 'A weatherboard cottage before work, paint failed and the yard overgrown'),
     after: img('paddington-after', 'The same cottage after restoration, lit from within at dusk'),
-    gallery: [
-      img('interior-dining', 'A dining room with timber floors and lined walls'),
-      img('detail-timber-cladding', 'Vertical timber cladding meeting a rendered wall'),
-    ],
+    gallery: [img('interior-dining', 'A dining room with timber floors and lined walls')],
     placeholder: true,
     featured: true,
   },
@@ -108,13 +105,10 @@ export const projects: Project[] = [
       'A Queenslander that had been tenanted for thirty years and maintained for none of them. Structurally it was sound, which is usually the way with these houses. Everything else needed doing.',
       'Placeholder copy. Replace once confirmed. Heritage before and after is the strongest material this business owns, so where a before photograph exists, lead with it.',
     ],
-    hero: img('hero-cottage', 'A restored weatherboard cottage with decorative bargeboards'),
+    hero: img('newfarm-after', 'A Queenslander on stumps with a corrugated roof and timber battens'),
     before: img('newfarm-before', 'A weathered timber house with a failing corrugated roof'),
-    after: img('hero-cottage', 'The cottage after renovation, joinery and bargeboards restored'),
-    gallery: [
-      img('newfarm-after', 'A Queenslander on stumps with a corrugated roof and timber battens'),
-      img('interior-kitchen-timber', 'A kitchen with a long timber table and pendant lighting'),
-    ],
+    after: img('newfarm-after', 'The Queenslander after renovation, roof and battens made good'),
+    gallery: [img('interior-kitchen-windows', 'A kitchen opening to the garden through full-height windows')],
     placeholder: true,
     featured: true,
   },
@@ -133,7 +127,7 @@ export const projects: Project[] = [
     hero: img('ashgrove-after', 'A brick and render home with a tiled roof behind established hedges'),
     before: img('ashgrove-before', 'An older house overgrown and closed up before work began'),
     after: img('ashgrove-after', 'The house after lifting, building under and landscaping'),
-    gallery: [img('interior-kitchen-windows', 'A kitchen opening to the garden through full-height windows')],
+    gallery: [img('interior-floor', 'Timber flooring running through to the kitchen')],
     placeholder: true,
     featured: true,
   },
@@ -149,10 +143,13 @@ export const projects: Project[] = [
       'The cheap way to build on a slope is to cut a flat pad and retain it. The better way, and the one the drawings called for, is to let the building step and leave the ground doing what it was doing.',
       'Placeholder copy. Replace once confirmed.',
     ],
-    hero: img('bardon-after', 'A green timber cottage set among established subtropical planting'),
+    hero: img('detail-timber-cladding', 'Vertical timber cladding meeting a rendered wall on the extension'),
     before: img('bardon-before', 'A tired timber building on an open site before work'),
-    after: img('bardon-after', 'The completed extension settled into the planting'),
-    gallery: [img('interior-kitchen-green', 'A kitchen with glazed green tiles and timber joinery')],
+    after: img('detail-timber-cladding', 'The completed extension, timber cladding against render'),
+    gallery: [
+      img('bardon-after', 'The extension settled into established subtropical planting'),
+      img('interior-kitchen-green', 'A kitchen with glazed green tiles and timber joinery'),
+    ],
     placeholder: true,
     featured: true,
   },
@@ -171,10 +168,7 @@ export const projects: Project[] = [
     hero: img('redhill-hero', 'A dining room in a restored cottage, dark walls and warm timber'),
     before: none('The Red Hill cottage before restoration'),
     after: none('The Red Hill cottage after restoration'),
-    gallery: [
-      img('interior-floor', 'Original timber flooring restored through to the kitchen'),
-      img('detail-roof-timber', 'Exposed timber structure at the roof'),
-    ],
+    gallery: [img('interior-dining', 'A dining room lined and lit, the restored floor running through')],
     placeholder: true,
     featured: true,
   },
@@ -190,10 +184,10 @@ export const projects: Project[] = [
       'An apartment is a different set of constraints to a house and the same set of standards. Everything comes up in a lift, nothing can be noisy before eight, and the finish still has to be right.',
       'Placeholder copy. Replace once confirmed.',
     ],
-    hero: img('coastal-hero', 'An apartment kitchen with a timber floor and a long island'),
+    hero: img('interior-kitchen-timber', 'An apartment kitchen with a long timber table and pendant lighting'),
     before: none('The coastal apartment before refurbishment'),
     after: none('The coastal apartment after refurbishment'),
-    gallery: [img('interior-floor', 'Timber flooring running through the living area')],
+    gallery: [img('coastal-hero', 'The island and joinery running the length of the kitchen')],
     placeholder: true,
     featured: true,
   },
@@ -217,4 +211,11 @@ export const stills = {
    */
   hero: img('paddington-after', 'A restored cottage at dusk, lit from within, behind a white picket fence'),
   onSite: img('site-frame-lift', 'A timber wall frame being lifted into place on site'),
+  /**
+   * The detail plate on the home page. It used to reach into Paddington's
+   * gallery by index, which coupled a home page section to the second item of
+   * one project's array — reorder that array and the home page changes. It is a
+   * still in its own right now.
+   */
+  detail: img('detail-roof-timber', 'Exposed timber structure at the roof of a restored house'),
 }

@@ -1,88 +1,97 @@
-/* Deep Pine, edge to edge. The page opened on the same pale ground as every
-   other section, which is why it read as tasteful rather than expensive —
-   nothing at the top of it had any weight. The section carries .on-green for
-   the reverse text handling and overrides the ground to Pine, which is darker
-   and lets the lit timber model carry the screen. */
+/* ---------------------------------------------------------------------------
+   The hero, set as a drawing sheet.
+
+   Deep Pine edge to edge, running up under the sticky header so the band starts
+   at the top of the window and the header floats transparent on it. Without the
+   pull the header sits ABOVE the hero in flow, a transparent bar shows the pale
+   page behind it, and the reverse mark disappears into it.
+
+   The composition is a stack, not a split: reference, headline, drawing,
+   dimension, then the supporting line and the call. Everything runs the full
+   width of the page, so the headline is not capped at half of it and neither is
+   the house.
+   --------------------------------------------------------------------------- */
+
 .hero {
   position: relative;
   overflow: hidden;
   background: var(--pine);
-  /* Runs up underneath the sticky header, which floats transparent over it
-     until the first scroll. Without this the header sits ABOVE the hero in
-     flow, so a transparent bar shows the pale page behind it and the reverse
-     mark disappears into it. The pull is the header height; the padding gives
-     the same distance back so nothing lands under the nav. */
   margin-top: calc(var(--header-h) * -1);
   padding-top: var(--header-h);
 }
 
-/* The object runs to the right edge of the viewport. The shell only constrains
-   the copy, so it is never trapped in a page-width box. */
-.grid {
-  display: grid;
-  /* The house is the brand image on this page and the camera fits it to the
-     panel it is given, so the panel is what decides how big it reads. At 0.82
-     the width was the binding constraint and the model sat with air above and
-     below it; at parity the fit is vertical instead and the house fills the
-     screen it is on. */
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1.02fr);
-  align-items: stretch;
-  min-height: clamp(34rem, 84vh, 56rem);
-}
-
-.copyCol {
+.inner {
   display: flex;
-  align-items: center;
-  padding-block: clamp(3.5rem, 3rem + 6vw, 7rem);
-  /* The shell centres content up to the site max width; keep the copy aligned
-     to that grid even though the image escapes it. */
-  margin-inline-start: auto;
-  width: 100%;
-  max-width: calc(var(--max-w) * 0.5);
+  flex-direction: column;
+  padding-block: clamp(2rem, 4vw, 3.5rem) clamp(2.5rem, 5vw, 4rem);
+  /* The whole sheet fits a screen at the sizes people actually use, so the
+     drawing is never half below the fold. The plate below gives up its height
+     first, which is what `min-height: 0` on it is for. */
+  min-height: calc(100svh - var(--header-h));
+  box-sizing: border-box;
 }
 
-/* Wide enough for the headline to breathe. The lede keeps its own 42ch
-   measure below, so widening this only widens the display line — headline
-   wider than body copy, the way a printed page sets it. */
-.copy { max-width: 44rem; }
+.ref { flex: none; }
 
+/* The headline and the supporting line, on one band. Bottom-aligned, so the
+   last line of the paragraph sits on the same baseline as the last line of the
+   headline rather than floating in the middle of it. */
+.head {
+  flex: none;
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+  gap: clamp(1.5rem, 4vw, 4rem);
+  align-items: end;
+  margin-top: clamp(1.5rem, 3vw, 2.75rem);
+}
+
+/* Set at the brand's own display step rather than at whatever fits beside an
+   object, which is what a half-width column used to cap it at. */
 .heading {
   margin: 0;
-  /* This was pinned at 3.25rem — 52px, where the brand's own display scale
-     goes to 92px. Nearly half the type the system specifies, which is most of
-     why the page read as careful rather than expensive. Large type also needs
-     tighter tracking than small type or it looks merely big. */
-  font-size: clamp(2.4rem, 1.1rem + 4vw, 4.5rem);
-  letter-spacing: -0.035em;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(2.4rem, 0.9rem + 4.6vw, 5.5rem);
+  line-height: 0.98;
+  letter-spacing: -0.04em;
+  color: var(--wash);
+  text-wrap: balance;
 }
 
-hr.rule { margin-block: clamp(1.75rem, 3vw, 2.5rem); }
-
-.lede {
-  color: color-mix(in srgb, var(--wash) 78%, transparent);
-  max-width: 42ch;
-}
-
-.actions {
+.aside {
   display: flex;
-  align-items: center;
-  gap: clamp(1.25rem, 3vw, 2.25rem);
-  margin-top: clamp(2rem, 3.5vw, 3rem);
-  flex-wrap: wrap;
+  flex-direction: column;
+  gap: clamp(1.5rem, 3vw, 2.25rem);
+  align-items: flex-start;
+  padding-bottom: 0.4rem;
 }
 
-.call { color: var(--wash); }
-
-/* The object sits in a panel of its own, bleeding to the right edge of the
-   screen. The page was one flat colour from the header to the footer, which
-   reads as a document rather than as a designed page — this is the first tonal
-   block, and it also gives the house something to sit against instead of
-   floating on the same ground as the text. */
-/* No panel of its own any more — the whole section is the panel. */
-.media {
+/* The drawing plate. It takes whatever height is left after the words, and it
+   is the only part of the sheet allowed to give. */
+.plate {
   position: relative;
-  overflow: hidden;
-  background: transparent;
+  flex: 1 1 auto;
+  /* The drawing is the biggest thing on a drawing sheet. This floor is what
+     stops the flex layout handing the remainder to the words. */
+  /* The drawing is the biggest thing on a drawing sheet, so this floor is
+     allowed to push the sheet past a screen height rather than the other way
+     round. The call sits well above the fold either way; what falls below it is
+     the bottom dimension line, which is an invitation to scroll. */
+  min-height: clamp(18rem, 46vh, 34rem);
+  margin-top: clamp(1.5rem, 3vw, 2.5rem);
+  /* Out to both screen edges. The gutter is given back rather than a viewport
+     width taken, so it stays in step with the shell at every size. */
+  margin-inline: calc(var(--gutter) * -1);
+}
+
+/* The height dimension, pinned inside the right-hand gutter of the plate. It is
+   absolute so it cannot take width from the drawing. */
+.dimV {
+  position: absolute;
+  top: 8%;
+  bottom: 8%;
+  right: var(--gutter);
+  z-index: 1;
 }
 
 .scene { position: absolute; inset: 0; }
@@ -90,48 +99,76 @@ hr.rule { margin-block: clamp(1.75rem, 3vw, 2.5rem); }
 .still {
   width: 100%;
   height: 100%;
-  padding: 6%;
+  padding: 3%;
   box-sizing: border-box;
 }
 
-@media (max-width: 940px) {
-  .grid {
-    grid-template-columns: minmax(0, 1fr);
+.dim {
+  flex: none;
+  margin-top: clamp(0.75rem, 1.5vw, 1.25rem);
+}
+
+.lede {
+  margin: 0;
+  color: color-mix(in srgb, var(--wash) 78%, transparent);
+  max-width: 34ch;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: clamp(1.25rem, 3vw, 2.25rem);
+  flex-wrap: wrap;
+  flex: none;
+}
+
+.call { color: var(--wash); }
+
+/* --- Narrow ----------------------------------------------------------------
+   The same stack, and it stays the same stack. The reason the old layout needed
+   a reorder here was that it was two columns on a wide screen and one on a
+   phone; this one was a single column all along, so a phone gets the sheet the
+   desktop gets and nothing has to move. */
+@media (max-width: 860px) {
+  .inner {
+    /* Released, so a phone scrolls the sheet rather than compressing the
+       drawing to fit one screen with four other things. */
     min-height: 0;
+    padding-block: clamp(1.5rem, 5vw, 2.5rem) clamp(2rem, 7vw, 3rem);
   }
 
-  /* The headline leads, then the house, then the rest of the copy. Putting the
-     object between the two halves means both halves have to be siblings of the
-     scene, so the two wrappers collapse and their children join the grid
-     directly. They take over the shell's gutter, which collapses with them. */
-  .copyCol,
-  .copy {
+  /* The headline leads, then the drawing, then the supporting line and the
+     call. The plate is a sibling of the head, not a child of it, so the head
+     has to stop being a box before the four of them can be put in that order —
+     `display: contents` drops it out and promotes its two children into the
+     column beside the plate and the dimension. */
+  .head {
     display: contents;
-  }
-
-  .heading,
-  .body {
-    padding-inline: var(--gutter);
-    max-width: none;
   }
 
   .heading {
     order: 0;
-    padding-top: clamp(2.5rem, 8vw, 4rem);
+    margin-top: clamp(1.5rem, 5vw, 2.25rem);
   }
 
-  .media {
+  .plate {
     order: 1;
-    height: clamp(15rem, 42vh, 22rem);
-    margin-block: clamp(1.5rem, 5vw, 2.5rem);
+    flex: none;
+    height: clamp(15rem, 40vh, 22rem);
+    margin-top: clamp(1.25rem, 4vw, 1.75rem);
   }
 
-  .body {
-    order: 2;
-    padding-bottom: clamp(2.5rem, 8vw, 4rem);
+  /* A phone has no spare width beside the drawing. The height dimension is the
+     one mark on this sheet that needs some, so it goes. */
+  .dimV { display: none; }
+
+  .dim { order: 2; }
+
+  .aside {
+    order: 3;
+    margin-top: clamp(1.75rem, 6vw, 2.5rem);
+    padding-bottom: 0;
   }
 
-  hr.rule {
-    margin-top: 0;
-  }
+  .lede { max-width: none; }
 }

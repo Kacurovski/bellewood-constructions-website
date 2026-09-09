@@ -4,7 +4,7 @@ import * as THREE from 'three'
 import { RoundedBoxGeometry } from 'three/examples/jsm/geometries/RoundedBoxGeometry.js'
 import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js'
 import {
-  HERITAGE_BOUNDS,
+
   HERITAGE_GROUND,
   HERITAGE_MEMBERS,
   HERITAGE_OFFSET,
@@ -173,26 +173,45 @@ function House({ lean }: { lean: React.MutableRefObject<{ x: number; y: number }
  * Pushes the camera back along its own axis until the whole house fits.
  *
  * A perspective camera cannot be fitted with a zoom, so the distance is solved
- * from the corners of the measured bounding box. The house turns as it drifts,
- * so the solve runs across the whole sweep and the worst case wins — fitting to
- * the current angle every frame would make the camera breathe as it turned.
+ * from measured points. The house turns as it drifts, so the solve runs across
+ * the whole sweep and the worst case wins — fitting to the current angle every
+ * frame would make the camera breathe as it turned.
+ *
+ * **It fits to the members, not to the bounding box.** The box was eight
+ * corners around the whole building, and in a three-quarter view the corners of
+ * a box project a long way outside the thing inside it: the top-front corner
+ * sits in empty air above the eave, and the fit was holding room for it. On a
+ * wide, short plate — which is what the hero sheet gives it — that slack was
+ * costing the house nearly half the height it had to work with.
+ *
+ * Every member's own eight corners are transformed the same way the mesh
+ * transforms them (roll then pitch, ZXY, matching the still frame) and the
+ * whole cloud is fitted. It is the real silhouette rather than a box around it,
+ * so the house fills the frame it is given. Six thousand-odd points, solved
+ * once per aspect change and never per frame.
  */
 function Fit() {
   const geometry = useMemo(() => {
     const axis = new THREE.Vector3(8.5, 4.9, 12).normalize()
-    const { min, max } = HERITAGE_BOUNDS
 
     const corners: THREE.Vector3[] = []
-    for (const x of [min[0], max[0]]) {
-      for (const y of [min[1], max[1]]) {
-        for (const z of [min[2], max[2]]) {
-          corners.push(
-            new THREE.Vector3(
-              x + HERITAGE_OFFSET[0],
-              y + HERITAGE_OFFSET[1],
-              z + HERITAGE_OFFSET[2],
-            ),
-          )
+    const euler = new THREE.Euler()
+    const quaternion = new THREE.Quaternion()
+
+    for (const m of HERITAGE_MEMBERS) {
+      euler.set(m.rx, 0, m.rz ?? 0, 'ZXY')
+      quaternion.setFromEuler(euler)
+
+      for (const sx of [-0.5, 0.5]) {
+        for (const sy of [-0.5, 0.5]) {
+          for (const sz of [-0.5, 0.5]) {
+            corners.push(
+              new THREE.Vector3(m.s[0] * sx, m.s[1] * sy, m.s[2] * sz)
+                .applyQuaternion(quaternion)
+                .add(new THREE.Vector3(m.p[0], m.p[1], m.p[2]))
+                .add(new THREE.Vector3(...HERITAGE_OFFSET)),
+            )
+          }
         }
       }
     }

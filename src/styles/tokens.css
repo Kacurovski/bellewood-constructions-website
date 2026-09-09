@@ -20,6 +20,12 @@
   --rule: color-mix(in srgb, var(--pine) 16%, transparent);
   --rule-strong: color-mix(in srgb, var(--pine) 32%, transparent);
   --rule-reverse: color-mix(in srgb, var(--wash) 22%, transparent);
+
+  /* Drawing line work. One weight for the whole site — a set of construction
+     drawings does not have four kinds of rule and neither does this. It flips
+     on a dark ground (see global.css) so nothing has to restate it per
+     section, which is what keeps the sheet marks portable. */
+  --ink: color-mix(in srgb, var(--pine) 30%, transparent);
   --sage-panel: color-mix(in srgb, var(--sage) 34%, var(--wash));
 
   /* Safe pairs (brand book §06):

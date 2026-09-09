@@ -1,6 +1,6 @@
 import { Reveal } from '../components/Reveal'
 import { ImageSlot } from '../components/ImageSlot'
-import { projects } from '../data/projects'
+import { stills } from '../data/projects'
 import styles from './Proposition.module.css'
 
 /**
@@ -60,7 +60,7 @@ export function Proposition() {
             used to be hidden below 860px instead. */}
         <Reveal className={styles.figure}>
           <ImageSlot
-            slot={projects[0].gallery[1]}
+            slot={stills.detail}
             ratio="4 / 5"
             tone="sage"
             className={styles.detail}

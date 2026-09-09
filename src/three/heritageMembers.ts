@@ -67,6 +67,24 @@ const EXT_HIGH = FLOOR + 2.62 // against the cottage, and below its eave
 const EXT_LOW = FLOOR + 2.18 // at the far end
 const EXT_FALL = Math.atan2(EXT_HIGH - EXT_LOW, EXT_DEP)
 
+/**
+ * Setting-out dimensions, in millimetres, for the dimension lines the hero
+ * draws under this building.
+ *
+ * Exported rather than typed into the section, because a dimension that does
+ * not come from the thing it measures is worse than no dimension at all: the
+ * one claim this drawing makes is that it was measured. Change the building and
+ * the figures on the page change with it.
+ */
+export const HERITAGE_SETOUT = {
+  /** Gable to gable, across the cottage. */
+  length: Math.round(LEN * 1000),
+  /** On plan, the verandah edge to the back of the new wing. */
+  depth: Math.round((VER_Z1 - EXT_Z0) * 1000),
+  /** Ground to ridge. */
+  height: Math.round((APEX - 0) * 1000),
+}
+
 const members: Member[] = []
 const add = (m: Member) => members.push(m)
 
