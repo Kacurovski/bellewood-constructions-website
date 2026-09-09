@@ -25,7 +25,7 @@ const HeritageStudy = lazy(() => import('../three/HeritageStudy'))
  */
 export function Hero() {
   return (
-    <section className={styles.hero} aria-labelledby="hero-heading">
+    <section className={["on-green", styles.hero].join(" ")} aria-labelledby="hero-heading">
       <div className={styles.grid}>
         <div className={[styles.copyCol, 'shell'].join(' ')}>
           <div className={styles.copy}>

@@ -26,11 +26,21 @@ export function Header() {
   // Close the mobile menu whenever the route changes.
   useEffect(() => setOpen(false), [location.pathname, location.hash])
 
+  /* Only the home page opens on the dark hero. Everywhere else the top of the
+     page is the pale ground and the header has to stay in ink. */
+  const overDark = !scrolled && !open && location.pathname === '/'
+
   return (
-    <header className={[styles.header, scrolled ? styles.scrolled : ''].join(' ')}>
+    <header
+      className={[
+        styles.header,
+        scrolled ? styles.scrolled : '',
+        overDark ? styles.overDark : '',
+      ].join(' ')}
+    >
       <div className={[styles.inner, 'shell'].join(' ')}>
         <Link to="/" className={styles.brand} aria-label={`${site.name} — home`}>
-          <Logo variant="lockup" tone="green" width={168} decorative />
+          <Logo variant="lockup" tone={overDark ? 'reverse' : 'green'} width={168} decorative />
         </Link>
 
         <nav className={styles.nav} aria-label="Primary">

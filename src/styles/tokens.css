@@ -70,6 +70,8 @@
   --section-y: clamp(5rem, 3rem + 8vw, 11rem);
   --gutter: clamp(1.25rem, 0.5rem + 3vw, 4rem);
   --max-w: 1440px;
+  /* The sticky header height, so a section can run up underneath it. */
+  --header-h: 5.25rem;
   --max-w-text: 78rem;
 
   /* --- Motion -------------------------------------------------------------

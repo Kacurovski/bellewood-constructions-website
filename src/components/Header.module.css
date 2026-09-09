@@ -19,7 +19,7 @@
   display: flex;
   align-items: center;
   gap: var(--s-5);
-  min-height: 5.25rem;
+  min-height: var(--header-h);
 }
 
 /* Pulled back so the mark sits on the page grid, but never further than the
@@ -180,4 +180,41 @@
   .toggle { display: block; }
   .mobile { display: block; }
   .inner { min-height: 4.5rem; }
+}
+
+
+/* --- Over the dark hero ----------------------------------------------------
+   On the home page the header sits on top of a Deep Pine hero with nothing
+   behind it, so everything it draws flips until the first scroll. Scoped to
+   that one case: on every other route the top of the page is pale, and a
+   transparent header with wash-coloured links would be invisible. */
+
+.overDark {
+  background: transparent;
+  backdrop-filter: none;
+  border-bottom-color: transparent;
+}
+
+.overDark .link,
+.overDark .phoneNumber,
+.overDark .active {
+  color: var(--wash);
+}
+
+.overDark .phoneLabel {
+  color: var(--sage);
+}
+
+.overDark .link::after {
+  background: var(--sage);
+}
+
+.overDark .bar,
+.overDark .bar::before,
+.overDark .bar::after {
+  background: var(--wash);
+}
+
+.overDark .toggle {
+  border-color: var(--rule-reverse);
 }

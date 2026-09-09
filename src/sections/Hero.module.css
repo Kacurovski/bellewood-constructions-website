@@ -1,10 +1,23 @@
+/* Deep Pine, edge to edge. The page opened on the same pale ground as every
+   other section, which is why it read as tasteful rather than expensive —
+   nothing at the top of it had any weight. The section carries .on-green for
+   the reverse text handling and overrides the ground to Pine, which is darker
+   and lets the lit timber model carry the screen. */
 .hero {
   position: relative;
   overflow: hidden;
+  background: var(--pine);
+  /* Runs up underneath the sticky header, which floats transparent over it
+     until the first scroll. Without this the header sits ABOVE the hero in
+     flow, so a transparent bar shows the pale page behind it and the reverse
+     mark disappears into it. The pull is the header height; the padding gives
+     the same distance back so nothing lands under the nav. */
+  margin-top: calc(var(--header-h) * -1);
+  padding-top: var(--header-h);
 }
 
-/* The photograph runs to the right edge of the viewport. The shell only
-   constrains the copy, so the image is not trapped in a page-width box. */
+/* The object runs to the right edge of the viewport. The shell only constrains
+   the copy, so it is never trapped in a page-width box. */
 .grid {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 0.82fr);
@@ -41,7 +54,7 @@
 hr.rule { margin-block: clamp(1.75rem, 3vw, 2.5rem); }
 
 .lede {
-  color: var(--pine);
+  color: color-mix(in srgb, var(--wash) 78%, transparent);
   max-width: 42ch;
 }
 
@@ -53,17 +66,18 @@ hr.rule { margin-block: clamp(1.75rem, 3vw, 2.5rem); }
   flex-wrap: wrap;
 }
 
-.call { color: var(--green); }
+.call { color: var(--wash); }
 
 /* The object sits in a panel of its own, bleeding to the right edge of the
    screen. The page was one flat colour from the header to the footer, which
    reads as a document rather than as a designed page — this is the first tonal
    block, and it also gives the house something to sit against instead of
    floating on the same ground as the text. */
+/* No panel of its own any more — the whole section is the panel. */
 .media {
   position: relative;
   overflow: hidden;
-  background: var(--pine);
+  background: transparent;
 }
 
 .scene { position: absolute; inset: 0; }
