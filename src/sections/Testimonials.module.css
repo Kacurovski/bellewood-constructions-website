@@ -1,66 +1,96 @@
+/* ---------------------------------------------------------------------------
+   A-07 · In their words.
+
+   The last thing a reader sees before the enquiry, so it is the one band that
+   changes ground entirely: dark, full width, standing on the house the quote
+   is about. See the component for why it is no longer ruled paper.
+   --------------------------------------------------------------------------- */
+
 .section {
   position: relative;
   isolation: isolate;
-  border-top: 1px solid var(--ink);
+  overflow: hidden;
+  /* No border. A dark band between two pale ones is its own rule. */
 }
 
-/* --- Ruled paper -----------------------------------------------------------
-   Faint horizontal ruling across the whole band, drifting upward without ever
-   stopping. Ruled paper is the surface words get written on, and this is the
-   band of words — the third drawing convention on the site after A-03's
-   setting-out grid and A-06's section hatch, so the three read as one
-   vocabulary rather than one pattern used three times.
-
-   It is the only thing on the site that moves on its own. That is deliberate:
-   the other grounds answer a pointer, and a phone never sees them. This one is
-   alive before anybody touches it and on every device — which is what a band
-   read last, by somebody deciding whether to ring, is worth.
-
-   One element, one transform-free property, thirty seconds a cycle. Off
-   entirely under reduced motion: a background that will not hold still is
-   exactly what that setting is for. */
-.rule {
+/* --- The plate ------------------------------------------------------------
+   Behind everything, clipped by the section, and never taller than it. */
+.plates {
   position: absolute;
   inset: 0;
   z-index: -1;
   pointer-events: none;
-  --paper-line: color-mix(in srgb, var(--pine) 11%, transparent);
-  background-image: repeating-linear-gradient(
-    to bottom,
-    var(--paper-line) 0 1px,
-    transparent 1px clamp(1.6rem, 2.6vw, 2.4rem)
+}
+
+.plate {
+  position: absolute;
+  inset: 0;
+}
+
+.plateMedia {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  /* The photographs are placeholder and several are bright, high-key exteriors.
+     Pulling the saturation down before the scrim goes on stops the band reading
+     as a tinted snapshot and keeps the ground closer to one colour. */
+  filter: saturate(0.55) contrast(1.05);
+}
+
+/* Flat scrim, over the whole plate.
+
+   0.9 is not a taste call, it is the number that clears AA against the worst
+   case. Wash (#f7f9f0) over 90% Bellewood Green laid on a pure white pixel
+   measures 7.9:1 — so even a blown-out sky in a future photograph cannot take
+   any text in this band below AA. Lower it and that guarantee goes. */
+.scrim {
+  position: absolute;
+  inset: 0;
+  background: color-mix(in srgb, var(--green) 90%, transparent);
+}
+
+/* Raking scrim, over the words only. The quote sits at display size on the
+   left, and display size on a photograph wants near-solid ground under it. */
+.rake {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    100deg,
+    color-mix(in srgb, var(--green) 72%, transparent) 0%,
+    color-mix(in srgb, var(--green) 40%, transparent) 42%,
+    transparent 72%
   );
-  -webkit-mask-image: linear-gradient(to bottom, transparent, #000 22%, #000 78%, transparent);
-  mask-image: linear-gradient(to bottom, transparent, #000 22%, #000 78%, transparent);
-  animation: drift 34s linear infinite;
 }
 
-@keyframes drift {
-  from { background-position: 0 0; }
-  to { background-position: 0 calc(clamp(1.6rem, 2.6vw, 2.4rem) * -6); }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .rule { animation: none; }
-}
+.inner { position: relative; }
 
 .head { padding-bottom: clamp(2rem, 4vw, 3rem); }
 
 .heading { margin-top: var(--s-4); max-width: 16ch; }
 
-/* Columns, the list reset and the mobile rail all belong to SwipeRow. */
-.grid {
-  border-top: 1px solid var(--ink);
-  padding-top: clamp(1.75rem, 3.5vw, 2.75rem);
+.stage {
+  display: grid;
+  grid-template-columns: minmax(0, 1.22fr) minmax(0, 0.6fr);
+  column-gap: clamp(2rem, 5vw, 5rem);
+  align-items: start;
+}
+
+.quoteSlot {
+  grid-column: 1;
+  /* Both quotes share one cell during the swap. */
+  display: grid;
+  /* Holds the band's height steady while the quotes swap, so the plate behind
+     does not resize mid cross-fade. Set to the tallest of the three. */
+  min-height: clamp(13rem, 22vw, 17rem);
 }
 
 .card {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
   margin: 0;
+  /* Both quotes occupy the same cell during the swap, so neither pushes the
+     other down the page as it goes. */
+  grid-area: 1 / 1;
 }
-
 
 .quote {
   margin: 0;
@@ -68,217 +98,182 @@
   font-weight: 400;
   /* Set at display size. Body-sized, three of these read as a page of
      testimonials; at this scale each one is the thing on the screen. */
-  font-size: clamp(1.2rem, 1rem + 0.9vw, 1.75rem);
-  line-height: 1.38;
-  letter-spacing: -0.011em;
-  color: var(--green);
+  font-size: clamp(1.35rem, 1rem + 1.35vw, 2.35rem);
+  line-height: 1.32;
+  letter-spacing: -0.012em;
+  color: var(--wash);
   text-wrap: pretty;
   /* The opening quote hangs into the margin, the way it is set in print, so the
      first line of prose starts on the same vertical as every line under it. */
   text-indent: -0.42em;
 }
 
-
 .by {
   display: flex;
-  flex-direction: column;
-  gap: 0.3rem;
-  margin-top: auto;
-  padding-top: clamp(1.75rem, 3.2vw, 2.5rem);
-}
-
-/* A short rule above the attribution, so the quote ends somewhere rather than
-   just stopping. */
-.by::before {
-  content: '';
-  width: 2.25rem;
-  height: 1px;
-  background: var(--timber);
-  margin-bottom: clamp(0.9rem, 1.6vw, 1.25rem);
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: clamp(0.6rem, 1.6vw, 1.1rem);
+  margin-top: clamp(1.5rem, 3vw, 2.25rem);
+  padding-top: clamp(0.9rem, 1.8vw, 1.3rem);
+  border-top: 1px solid var(--ink);
 }
 
 .name {
   font-family: var(--font-display);
   font-weight: 600;
   font-size: var(--t-small);
-  color: var(--green);
+  color: var(--wash);
 }
 
 .detail {
   font-family: var(--font-display);
+  font-weight: 500;
   font-size: var(--t-eyebrow);
+  letter-spacing: 0.14em;
   text-transform: uppercase;
-  letter-spacing: 0.12em;
-  color: var(--pine);
-  opacity: 0.6;
+  color: var(--sage);
 }
 
-
-@media (max-width: 900px) {
-  .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-}
-
-@media (max-width: 620px) {
-  .grid { grid-template-columns: minmax(0, 1fr); gap: var(--s-7); }
-}
-
-/* --- Scale rhythm ----------------------------------------------------------
-   Read last, immediately before the enquiry, by someone deciding whether to
-   make contact. It is the second most important argument on the page after the
-   proposition, and it was set at the same size as every other band. */
-.heading {
-  font-size: clamp(2.2rem, 1.1rem + 3.8vw, 4.75rem);
-  line-height: 0.98;
-  letter-spacing: -0.038em;
-}
-
-/* --- One at a time ---------------------------------------------------------
-   Three columns of quotes is a page of testimonials. One at the size a client's
-   own words are worth, with the other two named beside it, is a statement — and
-   it is read last, immediately before the enquiry, by somebody deciding whether
-   to make contact.
-   --------------------------------------------------------------------------- */
-
-/* --- The live quote's number ------------------------------------------------
-   It gets a column of its own. The first cut put it BEHIND the quote as a
-   ghost, and at that size a numeral does not sit behind eleven words of serif —
-   it runs straight through them: the 0 landed on "We had" and the 1 on "told".
-   Ghosted type behind text is a magazine trick that needs a picture under it,
-   not a paragraph.
-
-   So it stands beside the words instead, at full strength, and nothing
-   overlaps. It is the one thing in the band that says which of the three you
-   are reading without being read, and it changes with them. */
-.markSlot {
-  grid-column: 1;
-  grid-row: 1;
-  align-self: start;
-  pointer-events: none;
-  /* Clips the numeral's travel, so it rises into place rather than sliding
-     across the quote beside it. */
-  overflow: hidden;
-  /* Optically levels the numeral's cap with the quote's first line rather than
-     its line box, which sits lower. */
-  margin-top: -0.06em;
-}
-
-.mark {
-  display: block;
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: clamp(3.75rem, 8vw, 7rem);
-  line-height: 0.86;
-  letter-spacing: -0.055em;
-  font-variant-numeric: tabular-nums;
-  color: color-mix(in srgb, var(--green) 20%, transparent);
-}
-
-.stage {
-  display: grid;
-  /* Number, quote, set. The number column is `auto`: it is exactly as wide as
-     two digits and no wider, so it costs the quote the least it can. */
-  grid-template-columns: auto minmax(0, 1.15fr) minmax(0, 0.6fr);
-  gap: clamp(2rem, 5vw, 5rem);
-  align-items: start;
-  margin-top: clamp(2rem, 4vw, 3.25rem);
-  padding-top: clamp(2rem, 4vw, 3rem);
-  border-top: 1px solid var(--ink);
-}
-
-/* A fixed floor, so a shorter quote cannot shrink the band and make the whole
-   page jump every eight seconds. */
-.quoteSlot {
-  grid-column: 2;
-  grid-row: 1;
-  min-height: clamp(11rem, 20vw, 15rem);
-}
-
-.set { grid-column: 3; grid-row: 1; }
-
-.stage .quote {
-  font-size: clamp(1.4rem, 1rem + 1.6vw, 2.5rem);
-  line-height: 1.28;
-  letter-spacing: -0.018em;
-}
-
-.stage .by { margin-top: clamp(1.5rem, 3vw, 2.25rem); }
-
-/* --- The set ---------------------------------------------------------------
-   Numbered like everything else on this site, and each one carries its own
-   dwell as a rule that fills. A quote that changes with no warning reads as a
-   slideshow; one that shows how long it will hold reads as a considered
-   sequence you can interrupt. */
+/* --- The set --------------------------------------------------------------
+   Three plates, stacked. Picking one is visibly picking the ground. */
 .set {
+  grid-column: 2;
   list-style: none;
   margin: 0;
   padding: 0;
-  border-top: 1px solid var(--ink);
+  display: grid;
+  gap: clamp(0.6rem, 1.4vw, 1rem);
 }
 
 .pick {
   display: grid;
-  grid-template-columns: minmax(2.25rem, auto) minmax(0, 1fr);
-  align-items: baseline;
-  gap: clamp(0.75rem, 1.6vw, 1.25rem);
+  grid-template-columns: clamp(5.5rem, 10vw, 9rem) minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(0.75rem, 1.6vw, 1.1rem);
   width: 100%;
-  padding: clamp(0.9rem, 1.8vw, 1.25rem) 0;
+  position: relative;
+  padding: clamp(0.5rem, 1vw, 0.75rem) 0 clamp(0.7rem, 1.4vw, 1rem);
   border: 0;
-  border-bottom: 1px solid var(--ink);
+  border-top: 1px solid var(--ink);
   background: none;
   text-align: left;
   cursor: pointer;
-  font-family: var(--font-display);
-  color: var(--green);
+  color: inherit;
+  transition: opacity var(--dur) var(--ease);
+  /* Dimmed at rest, full when live or reached for. Three equally bright
+     thumbnails would compete with the quote, which is the point of the band. */
+  opacity: 0.5;
+}
+
+.pick:hover,
+.pick:focus-visible { opacity: 0.85; }
+
+.pickOn,
+.pickOn:hover { opacity: 1; }
+
+.thumb {
+  display: block;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  background: color-mix(in srgb, var(--wash) 12%, transparent);
+}
+
+.thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  filter: saturate(0.6);
+  transform: scale(1);
+  transition: transform var(--dur-slow) var(--ease-out);
+}
+
+.pick:hover .thumb img,
+.pick:focus-visible .thumb img { transform: scale(1.07); }
+
+.pickText {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+  min-width: 0;
 }
 
 .pickNumber {
+  font-family: var(--font-display);
   font-weight: 600;
-  font-size: var(--t-small);
+  font-size: var(--t-eyebrow);
   font-variant-numeric: tabular-nums;
-  letter-spacing: 0.06em;
-  opacity: 0.4;
-  transition: opacity var(--dur) var(--ease);
+  letter-spacing: 0.1em;
+  color: var(--sage);
+  flex: none;
 }
 
 .pickName {
-  font-weight: 600;
-  font-size: var(--t-sub);
-  letter-spacing: -0.01em;
-  opacity: 0.55;
-  transition: opacity var(--dur) var(--ease);
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: var(--t-eyebrow);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--wash);
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
-.pickOn .pickNumber,
-.pickOn .pickName,
-.pick:hover .pickName,
-.pick:focus-visible .pickName { opacity: 1; }
-
-.pick:focus-visible {
-  outline: 2px solid var(--green);
-  outline-offset: 3px;
-}
-
-/* The dwell rule, sitting on the row's own bottom border. */
+/* The dwell, drawn on the rule the row already has rather than added as a bar
+   below it — the same move the register uses. */
 .dwell {
-  grid-column: 1 / -1;
-  position: relative;
+  position: absolute;
+  top: -1px;
+  left: 0;
+  right: 0;
   height: 1px;
-  margin-bottom: calc(clamp(0.9rem, 1.8vw, 1.25rem) * -1);
-  margin-top: clamp(0.9rem, 1.8vw, 1.25rem);
+  overflow: hidden;
 }
 
 .dwellFill {
-  position: absolute;
-  inset: 0;
-  background: var(--green);
-  transform-origin: left center;
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: var(--wash);
+  transform-origin: left;
 }
 
-@media (max-width: 1100px) {
-  .stage { grid-template-columns: minmax(0, 1fr); gap: clamp(1.75rem, 4vw, 2.5rem); }
-  .quoteSlot { grid-column: 1; grid-row: 1; min-height: 0; }
-  .set { grid-column: 1; grid-row: 2; }
-  /* No room for a column of numerals at this width, and the set below already
-     numbers itself. */
-  .markSlot { display: none; }
+/* --- Narrow ---------------------------------------------------------------
+   One column: the quote, then the three plates as a row under it. The band
+   keeps its ground and its swipe, so a phone loses nothing but the side by
+   side. */
+@media (max-width: 900px) {
+  .stage {
+    grid-template-columns: minmax(0, 1fr);
+    row-gap: clamp(1.75rem, 4vw, 2.5rem);
+  }
+
+  .quoteSlot { grid-column: 1; min-height: 0; }
+
+  .set {
+    grid-column: 1;
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(0, 1fr);
+  }
+
+  /* Stacked, so three of them fit across a phone without the names colliding. */
+  .pick {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.5rem;
+    opacity: 0.55;
+  }
+
+  /* The suburb is already in the attribution under the quote, and at this width
+     three of them across is unreadable. The number is enough to pick by. */
+  .pickName { display: none; }
+
+  .rake {
+    background: linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--green) 60%, transparent) 0%,
+      transparent 60%
+    );
+  }
 }

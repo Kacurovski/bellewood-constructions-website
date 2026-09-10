@@ -228,3 +228,68 @@
 .card:not(.row) .link:focus-visible .title {
   transform: translateX(clamp(0.25rem, 0.8vw, 0.6rem));
 }
+
+/* --- The pointer mark ------------------------------------------------------
+   Follows the pointer across an index plate and says what clicking does.
+
+   Positioned from two custom properties the component writes on pointermove,
+   so nothing re-renders while it moves. It lags the pointer very slightly —
+   the transition is on `left`/`top` rather than on a transform — which is what
+   makes it read as a considered mark rather than as a cursor replacement.
+
+   `contain: paint` on the frame, because six of these each tracking a pointer
+   is the one place on this page a stray repaint would show. */
+.card:not(.row) .media {
+  position: relative;
+  contain: paint;
+}
+
+.trace {
+  position: absolute;
+  left: var(--cx, 50%);
+  top: var(--cy, 50%);
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  gap: 0.3rem;
+  width: clamp(4.5rem, 7vw, 6rem);
+  aspect-ratio: 1;
+  margin: 0;
+  border-radius: 50%;
+  background: var(--green);
+  color: var(--wash);
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: var(--t-eyebrow);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  pointer-events: none;
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(0.72);
+  transition:
+    opacity var(--dur) var(--ease),
+    transform var(--dur) var(--ease-out),
+    left var(--dur-slow) var(--ease-out),
+    top var(--dur-slow) var(--ease-out);
+}
+
+/* A registration cross inside the disc — the same mark the sheet corners use,
+   so the affordance belongs to the drawing rather than to a UI kit. */
+.traceMark {
+  width: 0.85rem;
+  height: 0.85rem;
+  background:
+    linear-gradient(currentColor, currentColor) center / 100% 1px no-repeat,
+    linear-gradient(currentColor, currentColor) center / 1px 100% no-repeat;
+  opacity: 0.7;
+}
+
+.card:not(.row) .link:hover .trace {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+/* No pointer, no mark. */
+@media (hover: none), (pointer: coarse) {
+  .trace { display: none; }
+}
