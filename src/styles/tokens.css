@@ -78,7 +78,15 @@
   --section-y: clamp(5.5rem, 3rem + 9vw, 13.5rem);
   --gutter: clamp(1.25rem, 0.5rem + 3vw, 4rem);
   --max-w: 1440px;
-  /* The sticky header height, so a section can run up underneath it. */
+  /* The sticky header height, so a section can run up underneath it, and the
+     offset every sticky element on the site pins to.
+
+     MEASURE THIS AGAINST THE HEADER WHEN THE HEADER CHANGES. It is not a
+     styling choice, it is a statement of fact about another element, and when
+     the two disagree everything that pins to it is wrong by the difference.
+     84px against a 76px header on a phone put the material key's drawing eight
+     pixels below the header, and the list scrolled visibly through the gap.
+     Measured: 85px above 880px, 76px below it. */
   --header-h: 5.25rem;
   --max-w-text: 78rem;
 
@@ -100,5 +108,14 @@
     --dur-fast: 1ms;
     --dur: 1ms;
     --dur-slow: 1ms;
+  }
+}
+
+/* The header loses its nav to a burger at 880px and gets shorter with it, so
+   the offset every sticky element pins to has to come down too. Measured, not
+   guessed: 85px above this width, 76px below. */
+@media (max-width: 880px) {
+  :root {
+    --header-h: 4.75rem;
   }
 }
