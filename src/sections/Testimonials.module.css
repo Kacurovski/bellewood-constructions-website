@@ -1,4 +1,48 @@
-.section { border-top: 1px solid var(--ink); }
+.section {
+  position: relative;
+  isolation: isolate;
+  border-top: 1px solid var(--ink);
+}
+
+/* --- Ruled paper -----------------------------------------------------------
+   Faint horizontal ruling across the whole band, drifting upward without ever
+   stopping. Ruled paper is the surface words get written on, and this is the
+   band of words — the third drawing convention on the site after A-03's
+   setting-out grid and A-06's section hatch, so the three read as one
+   vocabulary rather than one pattern used three times.
+
+   It is the only thing on the site that moves on its own. That is deliberate:
+   the other grounds answer a pointer, and a phone never sees them. This one is
+   alive before anybody touches it and on every device — which is what a band
+   read last, by somebody deciding whether to ring, is worth.
+
+   One element, one transform-free property, thirty seconds a cycle. Off
+   entirely under reduced motion: a background that will not hold still is
+   exactly what that setting is for. */
+.rule {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  --paper-line: color-mix(in srgb, var(--pine) 11%, transparent);
+  background-image: repeating-linear-gradient(
+    to bottom,
+    var(--paper-line) 0 1px,
+    transparent 1px clamp(1.6rem, 2.6vw, 2.4rem)
+  );
+  -webkit-mask-image: linear-gradient(to bottom, transparent, #000 22%, #000 78%, transparent);
+  mask-image: linear-gradient(to bottom, transparent, #000 22%, #000 78%, transparent);
+  animation: drift 34s linear infinite;
+}
+
+@keyframes drift {
+  from { background-position: 0 0; }
+  to { background-position: 0 calc(clamp(1.6rem, 2.6vw, 2.4rem) * -6); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rule { animation: none; }
+}
 
 .head { padding-bottom: clamp(2rem, 4vw, 3rem); }
 
@@ -95,9 +139,45 @@
    to make contact.
    --------------------------------------------------------------------------- */
 
+/* --- The live quote's number ------------------------------------------------
+   It gets a column of its own. The first cut put it BEHIND the quote as a
+   ghost, and at that size a numeral does not sit behind eleven words of serif —
+   it runs straight through them: the 0 landed on "We had" and the 1 on "told".
+   Ghosted type behind text is a magazine trick that needs a picture under it,
+   not a paragraph.
+
+   So it stands beside the words instead, at full strength, and nothing
+   overlaps. It is the one thing in the band that says which of the three you
+   are reading without being read, and it changes with them. */
+.markSlot {
+  grid-column: 1;
+  grid-row: 1;
+  align-self: start;
+  pointer-events: none;
+  /* Clips the numeral's travel, so it rises into place rather than sliding
+     across the quote beside it. */
+  overflow: hidden;
+  /* Optically levels the numeral's cap with the quote's first line rather than
+     its line box, which sits lower. */
+  margin-top: -0.06em;
+}
+
+.mark {
+  display: block;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(3.75rem, 8vw, 7rem);
+  line-height: 0.86;
+  letter-spacing: -0.055em;
+  font-variant-numeric: tabular-nums;
+  color: color-mix(in srgb, var(--green) 20%, transparent);
+}
+
 .stage {
   display: grid;
-  grid-template-columns: minmax(0, 1.25fr) minmax(0, 0.62fr);
+  /* Number, quote, set. The number column is `auto`: it is exactly as wide as
+     two digits and no wider, so it costs the quote the least it can. */
+  grid-template-columns: auto minmax(0, 1.15fr) minmax(0, 0.6fr);
   gap: clamp(2rem, 5vw, 5rem);
   align-items: start;
   margin-top: clamp(2rem, 4vw, 3.25rem);
@@ -107,7 +187,13 @@
 
 /* A fixed floor, so a shorter quote cannot shrink the band and make the whole
    page jump every eight seconds. */
-.quoteSlot { min-height: clamp(11rem, 20vw, 15rem); }
+.quoteSlot {
+  grid-column: 2;
+  grid-row: 1;
+  min-height: clamp(11rem, 20vw, 15rem);
+}
+
+.set { grid-column: 3; grid-row: 1; }
 
 .stage .quote {
   font-size: clamp(1.4rem, 1rem + 1.6vw, 2.5rem);
@@ -190,5 +276,9 @@
 
 @media (max-width: 1100px) {
   .stage { grid-template-columns: minmax(0, 1fr); gap: clamp(1.75rem, 4vw, 2.5rem); }
-  .quoteSlot { min-height: 0; }
+  .quoteSlot { grid-column: 1; grid-row: 1; min-height: 0; }
+  .set { grid-column: 1; grid-row: 2; }
+  /* No room for a column of numerals at this width, and the set below already
+     numbers itself. */
+  .markSlot { display: none; }
 }

@@ -4,20 +4,34 @@
   font-variant-numeric: tabular-nums;
 }
 
-/* The work index runs the full width of the window above the rail breakpoint.
-   Six projects at gutter width read as a list of thumbnails; run out to both
-   edges they read as a body of work. The shell's own gutter is given back and
-   a smaller one taken, so the images gain the difference. */
+/* The work index runs the full width of the window. Six projects at gutter
+   width read as a list of thumbnails; run out to both edges they read as a body
+   of work.
+
+   This element must NOT also carry `shell`. It did, and the two fought: `shell`
+   caps its width at 1440 and centres it, so `width: 100vw` was clamped back to
+   1440 while `margin-inline: calc(50% - 50vw)` still shifted the whole box left
+   by the difference. Above 1440 the index was neither full width nor centred —
+   it sat in the left two thirds of the window with the right third empty, which
+   is exactly what it looked like. It owns its own padding now and has no
+   maximum, so it is full width at every size and needs no negative margin at
+   all. */
 .grid {
+  width: 100%;
   padding-block: clamp(3rem, 6vw, 5.5rem) clamp(3rem, 6vw, 5rem);
+  padding-inline: clamp(1rem, 2.4vw, 2.5rem);
+  box-sizing: border-box;
 }
 
-@media (min-width: 621px) {
-  .grid {
-    width: 100vw;
-    margin-inline: calc(50% - 50vw);
-    padding-inline: clamp(1rem, 2.4vw, 2.5rem);
-  }
+/* Below 620 the index inside is a swipe rail, and the rail bleeds to the screen
+   edges with `margin-inline: calc(var(--gutter) * -1)`. That only lands on the
+   edge if the box around it is padded by exactly `--gutter`. The tighter padding
+   above is 16px at 320 where the gutter is 20, so the rail overshot by 4px each
+   side and the whole page scrolled sideways on every phone. This puts the two
+   back in step; above the rail breakpoint there is nothing bleeding, so the
+   tighter padding stands. */
+@media (max-width: 620px) {
+  .grid { padding-inline: var(--gutter); }
 }
 
 .magnet { padding-bottom: clamp(4rem, 8vw, 7rem); }

@@ -171,3 +171,60 @@
   .row .meta,
   .row.flip .meta { grid-column: 1; grid-row: 2; }
 }
+
+/* --- The index card answers ------------------------------------------------
+   On /work the cards had a zoom on the photograph and nothing else: the number
+   and the title sat still whatever you did. Every other interactive thing on
+   this site marks its live state with a drawn rule, so these do too.
+
+   The rule runs under the whole card and wipes in from the left, the number
+   comes up to full, and the title travels the same hair the register's rows do.
+   Nothing fills, nothing boxes. */
+.card:not(.row) .meta {
+  position: relative;
+  padding-top: clamp(0.8rem, 1.6vw, 1.2rem);
+}
+
+.card:not(.row) .meta::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: var(--ink);
+}
+
+.card:not(.row) .meta::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: var(--green);
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform var(--dur-slow) var(--ease-out);
+}
+
+.card:not(.row) .link:hover .meta::after,
+.card:not(.row) .link:focus-visible .meta::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+.card:not(.row) .number,
+.card:not(.row) .title {
+  transition:
+    opacity var(--dur) var(--ease),
+    transform var(--dur-slow) var(--ease-out);
+}
+
+.card:not(.row) .link:hover .number,
+.card:not(.row) .link:focus-visible .number { opacity: 1; }
+
+.card:not(.row) .link:hover .title,
+.card:not(.row) .link:focus-visible .title {
+  transform: translateX(clamp(0.25rem, 0.8vw, 0.6rem));
+}

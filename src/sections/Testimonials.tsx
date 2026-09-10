@@ -55,6 +55,13 @@ export function Testimonials() {
 
   return (
     <section className={['section', styles.section].join(' ')} aria-labelledby="said-heading">
+      {/* Ruled paper, drifting. Faint horizontal ruling is the surface words get
+          written on, which is what this band is — and it moves, very slowly and
+          without stopping, so the section is alive before anybody touches it.
+          Drawn in CSS, carrying nothing to read, and off entirely under reduced
+          motion. */}
+      <span className={styles.rule} aria-hidden="true" />
+
       <div className="shell">
         <Reveal className={styles.head}>
           {/* The heading sits under the strip rather than inside it. A-03 puts
@@ -77,6 +84,23 @@ export function Testimonials() {
             {/* One quote, at the size a client's own words are worth on a page
                 selling this size of job. Three columns of body-sized text is a
                 page of testimonials; this is a statement. */}
+            {/* The live quote's number, in a column of its own beside the
+                words. See the stylesheet for why it is not behind them. */}
+            <div className={styles.markSlot} aria-hidden="true">
+              <AnimatePresence initial={false} mode="wait">
+                <motion.span
+                  key={at}
+                  className={styles.mark}
+                  initial={reduced ? false : { opacity: 0, y: '0.4em' }}
+                  animate={{ opacity: 1, y: '0em' }}
+                  exit={reduced ? { opacity: 1 } : { opacity: 0, y: '-0.4em' }}
+                  transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
+                >
+                  {String(at + 1).padStart(2, '0')}
+                </motion.span>
+              </AnimatePresence>
+            </div>
+
             <div className={styles.quoteSlot}>
               <AnimatePresence initial={false} mode="wait">
                 <motion.figure

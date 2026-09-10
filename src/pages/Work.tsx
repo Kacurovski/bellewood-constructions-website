@@ -33,7 +33,8 @@ export default function Work() {
         ]}
       />
 
-      <div className={['shell', styles.grid].join(' ')}>
+      {/* Not `shell`. See the note in the stylesheet: the two fight. */}
+      <div className={styles.grid}>
         <SwipeRow label="All projects" columns={2} variant="index">
           {projects.map((project, i) => (
             <Reveal key={project.slug} delay={(i % 2) * 0.06}>
