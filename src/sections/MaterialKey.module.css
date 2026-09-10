@@ -38,6 +38,10 @@
   display: flex;
   align-items: center;
   background: var(--sage-panel);
+  /* Its own paint context. The drawing is nineteen hundred polygons, and
+     without this the browser repaints all of them into the page every time the
+     section moves — which is most of what made scrolling past it feel heavy. */
+  contain: paint;
   padding: clamp(1.25rem, 3vw, 2.5rem);
   box-sizing: border-box;
   /* Off the left edge of the page. */
@@ -122,13 +126,41 @@
   .plate,
   .listWrap { grid-column: 1; grid-row: auto; }
 
-  /* Stacked, the panel takes the drawing's own height again. */
-  .plate { display: block; }
+  /* The drawing holds the top of the screen while the list scrolls under it, so
+     tapping a material further down the list still has something to look at.
+     Stacked and static, the key and the thing it keys were never on screen at
+     the same time, which made the whole interaction pointless on a phone. */
+  .plate {
+    display: block;
+    position: sticky;
+    top: var(--header-h);
+    z-index: 1;
+    margin-inline: calc(var(--gutter) * -1);
+    padding: clamp(0.75rem, 3vw, 1.25rem) var(--gutter);
+    /* Enough screen to read the building on and no more — the list under it has
+       to stay reachable. */
+    max-height: 44svh;
+    box-sizing: border-box;
+  }
 
-  .plate { margin-inline: calc(var(--gutter) * -1); padding-inline: var(--gutter); }
+  .drawing { max-height: calc(44svh - 2.5rem); }
 
-  /* No pointer, no keying — so the note is simply readable at all times. */
+  /* Every note readable at all times. A legend whose text only appears when you
+     touch it is not a legend. */
   .note { opacity: 1; }
 
-  .row { grid-template-columns: minmax(0, 1fr); gap: 0.4rem; }
+  .row {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.4rem;
+    /* A tap target rather than a line of text. */
+    padding-block: clamp(1rem, 3.4vw, 1.5rem);
+    cursor: pointer;
+  }
+
+  /* The live row, marked where there is no pointer to imply it. */
+  .rowOn {
+    background: color-mix(in srgb, var(--sage) 24%, transparent);
+    margin-inline: calc(var(--gutter) * -0.5);
+    padding-inline: calc(var(--gutter) * 0.5);
+  }
 }

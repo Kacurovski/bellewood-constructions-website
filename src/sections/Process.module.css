@@ -48,15 +48,25 @@
 
 /* --- Headless --------------------------------------------------------------
    On /approach the page masthead is the head, so the section has no intro of
-   its own and the steps take that row back. */
-.headless .inner {
-  grid-template-areas:
-    'steps scene'
-    'steps scene';
-  align-items: center;
-}
+   its own and the steps take that row back.
 
-.headless .steps { margin-top: 0; }
+   Guarded to the wide layout, and that guard is the whole point. Below 900px
+   this section stops being a grid at all and becomes a column — but
+   `.headless .inner` is two classes to `.inner`'s one, so unguarded it beat the
+   media query and kept a two-column grid on a phone. The steps were squeezed
+   into half a 390px screen and the drawing was pushed off the side of it
+   entirely: the section rendered as four words and no building. Anything that
+   restyles `.inner` from here on has to be inside this query. */
+@media (min-width: 901px) {
+  .headless .inner {
+    grid-template-areas:
+      'steps scene'
+      'steps scene';
+    align-items: center;
+  }
+
+  .headless .steps { margin-top: 0; }
+}
 
 .heading { margin-top: var(--s-4); }
 

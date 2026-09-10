@@ -22,6 +22,10 @@ import styles from './MaterialKey.module.css'
  *
  * Under no pointer at all it simply reads as a key, which is the state it has to
  * work in first — nothing here is hidden behind an interaction.
+ *
+ * On a phone the drawing sticks to the top of the screen while the list scrolls
+ * under it, and a tap keys a material rather than a hover. Tapping the live row
+ * clears it.
  */
 
 const KEY: { mat: Key; name: string; note: string }[] = [
@@ -86,6 +90,10 @@ export function MaterialKey() {
                 key={item.mat}
                 className={[styles.row, lit === item.mat ? styles.rowOn : ''].join(' ')}
                 onPointerEnter={() => setLit(item.mat)}
+                // Touch has no hover to leave, so a tap has to be able to undo
+                // itself — otherwise the drawing stays keyed to whatever was
+                // last touched with no way back.
+                onClick={() => setLit((n) => (n === item.mat ? null : item.mat))}
               >
                 <dt className={styles.term}>
                   {/* The swatch is the drawing's own tone for that material, read
