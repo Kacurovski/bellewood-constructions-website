@@ -46,6 +46,18 @@
 
 .intro { grid-area: intro; }
 
+/* --- Headless --------------------------------------------------------------
+   On /approach the page masthead is the head, so the section has no intro of
+   its own and the steps take that row back. */
+.headless .inner {
+  grid-template-areas:
+    'steps scene'
+    'steps scene';
+  align-items: center;
+}
+
+.headless .steps { margin-top: 0; }
+
 .heading { margin-top: var(--s-4); }
 
 .lede {

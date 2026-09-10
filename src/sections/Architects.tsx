@@ -16,7 +16,7 @@ export function Architects() {
     <section className={['section--tight', styles.section].join(' ')} aria-labelledby="architects-heading">
       <div className={['shell', styles.inner].join(' ')}>
         <Reveal className={styles.left}>
-          <SheetRef number="A-06" name="For architects and designers" rule={false} />
+          <SheetRef number="A-05" name="For architects and designers" rule={false} />
           <h2 id="architects-heading" className={['section-heading', styles.heading].join(' ')}>
             We build to the drawings.
           </h2>

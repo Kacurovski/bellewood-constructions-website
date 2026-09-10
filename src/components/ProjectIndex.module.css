@@ -161,11 +161,25 @@
   border-top: 1px solid var(--ink);
 }
 
+/* The clip the name rises out of. Fixed height, so a longer title cannot make
+   the caption row taller as it arrives. */
+.captionSlot {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  min-width: 0;
+  flex: 1 1 auto;
+  height: 1.5em;
+}
+
 .captionName {
+  position: absolute;
+  inset: 0;
   display: flex;
-  align-items: baseline;
+  align-items: center;
   gap: 0.7rem;
   min-width: 0;
+  white-space: nowrap;
   font-family: var(--font-display);
   font-weight: 600;
   font-size: var(--t-small);
@@ -205,17 +219,15 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
+  /* Everything that moves here is animated by the component: the clip that
+     uncovers it, the scale it settles from, and the drift. Transitions declared
+     in CSS as well would fight framer's inline transform. */
+  clip-path: inset(0% 0% 100% 0%);
   opacity: 0;
-  /* Oversize, so the drift never shows an edge. */
-  transform: scale(1.06);
-  transition:
-    opacity var(--dur-slow) var(--ease),
-    transform var(--dur-slow) var(--ease-out);
   /* The same grade every photograph on the site gets. */
   filter: saturate(0.84) contrast(1.04);
+  will-change: clip-path, transform;
 }
-
-.plateOn { opacity: 1; }
 
 /* The empty state, for a project with no photograph yet. Corner marks, the same
    drawing-in-waiting the rest of the site uses. */

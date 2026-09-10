@@ -219,7 +219,7 @@ export const credentials = [
 
 export const nav = [
   { label: 'Work', to: '/work', hash: undefined },
-  { label: 'Approach', to: '/', hash: '#approach' },
+  { label: 'Approach', to: '/approach', hash: undefined },
   { label: 'About', to: '/about', hash: undefined },
   { label: 'Contact', to: '/contact', hash: undefined },
 ] as const

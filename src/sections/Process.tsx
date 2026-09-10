@@ -31,7 +31,7 @@ const TimberFrame = lazy(() => import('../three/TimberFrame'))
  * Muted throughout. No shadow theatre, no camera swoops. The boldness on this
  * site is spent on the green mesh; this section is reassurance.
  */
-export function Process() {
+export function Process({ headless = false }: { headless?: boolean } = {}) {
   const ref = useRef<HTMLElement>(null)
   const reduced = useReducedMotion()
 
@@ -46,28 +46,39 @@ export function Process() {
     <section
       ref={ref}
       id="approach"
-      className={[styles.section, canAnimate ? styles.pinned : styles.static].join(' ')}
-      aria-labelledby="approach-heading"
+      className={[
+        styles.section,
+        canAnimate ? styles.pinned : styles.static,
+        headless ? styles.headless : '',
+      ].join(' ')}
+      {...(headless
+        ? { 'aria-label': 'How it works' }
+        : { 'aria-labelledby': 'approach-heading' })}
     >
       <RegistrationMarks />
 
       <div className={styles.stage}>
         <div className={['shell', styles.inner].join(' ')}>
-          <div className={styles.intro}>
-            <Reveal>
-              <SheetRef number="A-05" name="How it works" rule={false} />
-              <h2 id="approach-heading" className={['section-heading', styles.heading].join(' ')}>
-                Drawn, then built.
-              </h2>
-            </Reveal>
+          {/* On its own page the masthead above has already said all of this —
+              the reference, the heading and the supporting line — so the section
+              drops them rather than printing the same three things twice. */}
+          {!headless && (
+            <div className={styles.intro}>
+              <Reveal>
+                <SheetRef number="E-02" name="How it works" rule={false} />
+                <h2 id="approach-heading" className={['section-heading', styles.heading].join(' ')}>
+                  Drawn, then built.
+                </h2>
+              </Reveal>
 
-            <Reveal delay={0.08}>
-              <p className={[styles.lede, 'measure-tight'].join(' ')}>
-                We work from the architect's documents, set out square, and build in
-                the same order every time. Nothing about the sequence is improvised.
-              </p>
-            </Reveal>
-          </div>
+              <Reveal delay={0.08}>
+                <p className={[styles.lede, 'measure-tight'].join(' ')}>
+                  We work from the architect's documents, set out square, and build in
+                  the same order every time. Nothing about the sequence is improvised.
+                </p>
+              </Reveal>
+            </div>
+          )}
 
           <div className={styles.sceneWrap}>
             <SceneFrame

@@ -24,30 +24,34 @@ const LETTER = {
   off: { y: '-110%', transition: { duration: 0.46, ease: [0.7, 0, 0.84, 0] } },
 } as const
 
+/** A space cannot be an inline-block on its own; a collapsed one closes the gap. */
+const glyphs = (word: string) => [...word].map((g) => (g === ' ' ? ' ' : g))
+
 /**
  * One word of a headline that changes.
  *
- * The change is per letter, not per word. The letters of the arriving word rise
- * out from behind the clip in reading order while the leaving word's letters are
- * drawn up out of it in the same order, so the word is written and unwritten
- * rather than flipped like a sign. It is the same entrance the headline itself
- * uses, one level finer.
+ * The change is per letter: the arriving word's letters rise out from behind the
+ * clip in reading order while the leaving word's are drawn up out of it in the
+ * same order, so the word is written and unwritten rather than flipped like a
+ * sign.
  *
- * The box is sized by every word at once, not by the first one.
+ * **The hidden copies that size the box are built the same way, letter by
+ * letter, and that is not cosmetic.** A run of text is kerned — the pairs inside
+ * "Post-war homes" sit tighter than the sum of their glyphs. Split into one
+ * inline-block per letter, every pair becomes a separate box and the kerning is
+ * gone, so the live word is measurably WIDER than the same string set as a run.
+ * Ghosts made of plain text sized the box to the kerned width, the live word
+ * overflowed it, and that is the "s" cut off the end of "Post-war homes". Both
+ * sides have to be built identically or the box measures the wrong thing.
  *
- * The first version held it open with a hidden copy of `words[0]` and placed
- * the rest absolutely on top. "Heritage homes" is narrower than "Workers'
- * cottages", so the box was too small for half the list and `overflow: hidden`
- * cut the longer ones off mid-letter. Every word is now a ghost in the same
- * grid cell as the live one, so the cell is as wide as the widest and as tall as
- * the tallest and nothing can be clipped by it — whatever the list is changed to
- * later.
+ * The box is also sized by every word at once rather than by the first, which
+ * was the earlier version of the same bug.
  *
  * That only guarantees the box fits the words. It does not guarantee the box
- * fits the column, and it cannot: the words have to be short enough to set on
- * one line at the headline's size. `harness/cycle.mjs` measures the widest word
- * against the column at every breakpoint, and it is the check to run before
- * adding one.
+ * fits the column: the words must be short enough to set on one line at the
+ * headline's size. `harness/cycle.mjs` measures the LIVE word against the column
+ * at thirteen widths and fails under 16px of clearance. Run it after touching
+ * this list, the face, or the headline's clamp.
  */
 export function CycleWord({ words, hold = 3400, className }: Props) {
   const reduced = useReducedMotion()
@@ -60,17 +64,26 @@ export function CycleWord({ words, hold = 3400, className }: Props) {
   }, [reduced, words.length, hold])
 
   if (reduced) {
-    return <span className={[styles.cycle, className].filter(Boolean).join(' ')}>{words[0]}</span>
+    return (
+      <span className={[styles.cycle, className].filter(Boolean).join(' ')}>
+        <span className={styles.window} data-live="">
+          {words[0]}
+        </span>
+      </span>
+    )
   }
 
   return (
     <span className={[styles.cycle, className].filter(Boolean).join(' ')}>
-      {/* Every word, in the same cell, holding the box open. They take part in
-          layout and nothing else — the grid cell ends up as wide as the widest
-          of them, which is the whole point. */}
+      {/* The sizing copies. Same structure as the live word, letter for letter,
+          so the box they build is the box it needs. */}
       {words.map((word) => (
-        <span key={word} className={styles.ghost}>
-          {word}
+        <span key={word} className={styles.ghost} data-ghost="">
+          {glyphs(word).map((glyph, n) => (
+            <span key={n} className={styles.letter}>
+              {glyph}
+            </span>
+          ))}
         </span>
       ))}
 
@@ -79,27 +92,20 @@ export function CycleWord({ words, hold = 3400, className }: Props) {
           <motion.span
             key={i}
             className={styles.word}
+            data-live=""
             initial="enter"
             animate="on"
             exit="off"
             variants={{
-              // The letters go in reading order coming in and in reading order
-              // going out, so the word is always being written and unwritten
-              // left to right rather than flipping like a sign.
+              // Reading order in and reading order out, so the word is always
+              // being written left to right.
               on: { transition: { staggerChildren: 0.026 } },
               off: { transition: { staggerChildren: 0.016 } },
             }}
           >
-            {[...words[i]].map((glyph, n) => (
-              <motion.span
-                key={n}
-                className={styles.letter}
-                variants={LETTER}
-                // A space cannot be an inline-block on its own, and a collapsed
-                // one would close the gap between the halves of the word.
-                style={glyph === ' ' ? { width: '0.28em' } : undefined}
-              >
-                {glyph === ' ' ? ' ' : glyph}
+            {glyphs(words[i]).map((glyph, n) => (
+              <motion.span key={n} className={styles.letter} variants={LETTER}>
+                {glyph}
               </motion.span>
             ))}
           </motion.span>

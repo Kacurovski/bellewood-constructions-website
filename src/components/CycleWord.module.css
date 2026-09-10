@@ -33,6 +33,24 @@
      cannot be used here at all — 2.9:1, under the 3:1 large-text floor. It works
      on Wash, which is why A-02's statement has it and this does not. */
   color: var(--wash);
+
+  /* --- The face ------------------------------------------------------------
+     Newsreader, the brand's serif, inside a headline set in Archivo. The site
+     has exactly two faces and this is the one place they meet: a serif word
+     against a sans sentence says "this part is different" before it says
+     anything else, and it costs no new type.
+
+     Roman, not italic. Only `font-style: normal` is loaded for Newsreader, so
+     an italic would be a browser-synthesised oblique — a slanted roman with
+     wrong stroke weights, which at 74px is very visible and very cheap.
+
+     Larger and untracked. A serif's x-height is smaller than Archivo's at the
+     same size, so it needs the bump to look like the same line; and the -0.04em
+     the sans wants would close a serif's letterfit up into a mess. */
+  font-family: var(--font-body);
+  font-weight: 400;
+  font-size: 1.09em;
+  letter-spacing: -0.005em;
 }
 
 .ghost,

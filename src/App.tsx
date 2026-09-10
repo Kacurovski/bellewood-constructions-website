@@ -5,6 +5,7 @@ import { Footer } from './components/Footer'
 import { useLenis } from './hooks/useLenis'
 import Home from './pages/Home'
 import Work from './pages/Work'
+import Approach from './pages/Approach'
 import ProjectDetail from './pages/ProjectDetail'
 import About from './pages/About'
 import Contact from './pages/Contact'
@@ -45,6 +46,7 @@ function Shell() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/work" element={<Work />} />
+          <Route path="/approach" element={<Approach />} />
           <Route path="/work/:slug" element={<ProjectDetail />} />
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />

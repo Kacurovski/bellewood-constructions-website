@@ -1,7 +1,7 @@
 import { useRef, useState } from 'react'
 import type { PointerEvent as ReactPointerEvent } from 'react'
 import { Link } from 'react-router-dom'
-import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion'
+import { AnimatePresence, motion, useMotionValue, useSpring, useTransform } from 'framer-motion'
 import type { Project } from '../data/projects'
 import { useReducedMotion } from '../hooks/useReducedMotion'
 import styles from './ProjectIndex.module.css'
@@ -128,8 +128,27 @@ export function ProjectIndex({ projects, start = 1 }: Props) {
             project.hero.src ? (
               <motion.img
                 key={project.slug}
-                className={[styles.plate, i === shown ? styles.plateOn : ''].join(' ')}
+                className={styles.plate}
                 style={reduced ? undefined : { x: driftX, y: driftY }}
+                // The plate is uncovered from the bottom rather than faded in,
+                // and settles from slightly oversize as it arrives. A crossfade
+                // between two photographs is a dissolve; this is one being
+                // drawn over the other, which is the move the rest of the site
+                // makes with its rules and its masks.
+                animate={
+                  i === shown
+                    ? { clipPath: 'inset(0% 0% 0% 0%)', scale: 1, opacity: 1 }
+                    : { clipPath: 'inset(0% 0% 100% 0%)', scale: 1.06, opacity: 0 }
+                }
+                transition={
+                  reduced
+                    ? { duration: 0 }
+                    : {
+                        clipPath: { duration: 0.72, ease: [0.16, 1, 0.3, 1] },
+                        scale: { duration: 1.1, ease: [0.16, 1, 0.3, 1] },
+                        opacity: { duration: 0.24 },
+                      }
+                }
                 src={project.hero.src}
                 alt=""
                 loading="eager"
@@ -145,12 +164,29 @@ export function ProjectIndex({ projects, start = 1 }: Props) {
         </div>
 
         <div className={styles.caption}>
-          <span className={styles.captionName}>
-            <span className={styles.captionNumber}>
-              {String(start + shown).padStart(2, '0')}
-            </span>
-            {projects[shown]?.title}
+          {/* The name is swapped by rising out from behind the caption rule,
+              the same entrance the plate above it makes and the same one the
+              headline uses. Swapping the text in place made the plate move and
+              the label blink, which are two different kinds of change for one
+              event. */}
+          <span className={styles.captionSlot}>
+            <AnimatePresence initial={false} mode="wait">
+              <motion.span
+                key={shown}
+                className={styles.captionName}
+                initial={reduced ? false : { y: '110%' }}
+                animate={{ y: '0%' }}
+                exit={reduced ? { y: '0%' } : { y: '-110%' }}
+                transition={{ duration: 0.42, ease: [0.16, 1, 0.3, 1] }}
+              >
+                <span className={styles.captionNumber}>
+                  {String(start + shown).padStart(2, '0')}
+                </span>
+                {projects[shown]?.title}
+              </motion.span>
+            </AnimatePresence>
           </span>
+
           <span className={styles.captionCount}>
             {String(start + shown).padStart(2, '0')}
             <span className={styles.captionSlash} />
