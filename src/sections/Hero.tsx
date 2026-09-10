@@ -18,16 +18,15 @@ const HeritageStudy = lazy(() => import('../three/HeritageStudy'))
  * homes, rebuilt — and it sets up the section further down the page, which takes
  * the same idea and runs it through time.
  *
- * The composition is the change. It used to be copy in the left column and the
- * object in the right, which is the layout of every builder's website: the
- * headline could only ever be half the width of the page, and the object could
- * only ever be half of it too, so neither was ever the thing on the screen.
+ * The sheet reference runs across the top of the band, then the words hold the
+ * left column and the drawing holds the right, running off the screen edge.
  *
- * Now the sheet reference runs the full width, the headline runs the full width
- * beneath it, and the object sits under both at the width of the page with a
- * dimension line under it. Nothing is competing for the same half. The house is
- * the largest thing on the page, which is what it should have been from the
- * start — it is the only asset here a competitor cannot buy.
+ * It was briefly a single stacked column — reference, headline, then the object
+ * at the full width of the page. That gave the house the most room it has ever
+ * had, and it pushed the supporting line and the call so far down the sheet
+ * that the top of the page was a headline and an empty field. Beside each other
+ * the words and the object both have somewhere to be, and the call is where
+ * somebody deciding whether to ring can see it.
  *
  * The dimension is real. It is `HERITAGE_SETOUT.depth` from
  * `three/heritageMembers.ts` — the building's overall depth on plan, verandah
@@ -51,17 +50,15 @@ export function Hero() {
           className={styles.ref}
         />
 
-        {/* The headline and the supporting line share one band rather than
-            stacking. Stacked, the two of them took 300px off the top of the
-            sheet and the drawing got what was left — which on a laptop was a
-            strip. Side by side the drawing gets the height back, and the call
-            stays above the fold. */}
-        <div className={styles.head}>
-          <h1 id="hero-heading" className={styles.heading}>
-            <RiseIn text="Heritage homes in inner Brisbane, rebuilt in timber." delay={0.15} />
-          </h1>
+        {/* Words left, drawing right. The sheet reference still runs across
+            the top of both, so the band reads as one sheet rather than as two
+            columns that happen to share a background. */}
+        <div className={styles.body}>
+          <div className={styles.copy}>
+            <h1 id="hero-heading" className={styles.heading}>
+              <RiseIn text="Heritage homes in inner Brisbane, rebuilt in timber." delay={0.15} />
+            </h1>
 
-          <div className={styles.aside}>
             <p className={[styles.lede, 'lead'].join(' ')}>
               {site.description} Around four projects a year, taken one at a time.
             </p>
@@ -75,34 +72,34 @@ export function Hero() {
               </a>
             </div>
           </div>
+
+          <div className={styles.figure}>
+            <div className={styles.plate}>
+              {/* Ground to ridge, up the right-hand edge. */}
+              <Dimension
+                figure={HERITAGE_SETOUT.height.toLocaleString('en-AU').replace(',', ' ')}
+                vertical
+                className={styles.dimV}
+              />
+
+              <SceneFrame
+                className={styles.scene}
+                label="A Queenslander cottage: the original house built, and a new wing behind it still drawn as a frame."
+                rootMargin="0px"
+                still={<HeritageStudyStill className={styles.still} />}
+              >
+                <HeritageStudy />
+              </SceneFrame>
+            </div>
+
+            {/* Read off the building, not typed in. A thin space groups the
+                thousands the way a drawing sets a figure. */}
+            <Dimension
+              figure={HERITAGE_SETOUT.depth.toLocaleString('en-AU').replace(',', ' ')}
+              className={styles.dim}
+            />
+          </div>
         </div>
-
-        <div className={styles.plate}>
-          {/* Ground to ridge, up the right-hand edge of the plate. It uses the
-              width a wide short frame cannot give the drawing anyway, and it is
-              where a real sheet carries a height. */}
-          <Dimension
-            figure={HERITAGE_SETOUT.height.toLocaleString('en-AU').replace(',', ' ')}
-            vertical
-            className={styles.dimV}
-          />
-
-          <SceneFrame
-            className={styles.scene}
-            label="A Queenslander cottage: the original house built, and a new wing behind it still drawn as a frame."
-            rootMargin="0px"
-            still={<HeritageStudyStill className={styles.still} />}
-          >
-            <HeritageStudy />
-          </SceneFrame>
-        </div>
-
-        {/* Read off the building, not typed in. A thin space groups the
-            thousands the way a drawing sets a figure. */}
-        <Dimension
-          figure={HERITAGE_SETOUT.depth.toLocaleString('en-AU').replace(',', ' ')}
-          className={styles.dim}
-        />
       </div>
     </section>
   )

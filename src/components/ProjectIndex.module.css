@@ -1,0 +1,192 @@
+/* ---------------------------------------------------------------------------
+   The drawing register.
+
+   Names on ruled lines down the left, and one photograph on a stage to the
+   right that changes as you move between them.
+
+   The plate had a turn following the cursor. It read as chaotic, which it was:
+   a photograph moving under the pointer covers the row being read and one or
+   two of the rows either side of it, so the thing you were looking at is hidden
+   by the thing you asked to see. On its own stage nothing ever overlaps
+   anything. It still moves — the plate drifts a little with the pointer and
+   crossfades between projects — but it moves inside a box of its own.
+   --------------------------------------------------------------------------- */
+
+.wrap {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 0.66fr);
+  gap: clamp(2rem, 5vw, 5rem);
+  align-items: start;
+}
+
+.list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-top: 1px solid var(--ink);
+  min-width: 0;
+}
+
+.item { border-bottom: 1px solid var(--ink); }
+
+/* Number, name and arrow on one line; the description under the name. */
+.row {
+  display: grid;
+  grid-template-columns: minmax(2.25rem, auto) minmax(0, 1fr) minmax(2.1rem, auto);
+  align-items: baseline;
+  /* Column gap only. The title and its description share a column and are two
+     implicit rows, so a row gap here would push them apart on top of the
+     description's own margin. */
+  column-gap: clamp(0.75rem, 2vw, 1.75rem);
+  row-gap: 0;
+  padding-block: clamp(1.3rem, 2.6vw, 2.1rem);
+  text-decoration: none;
+  color: var(--green);
+}
+
+.number {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: var(--t-small);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.06em;
+  opacity: 0.45;
+  transition: opacity var(--dur) var(--ease);
+}
+
+/* The one big thing in the row. It travels a little when the row is live, which
+   is the whole of the row's feedback — no fill, no underline, no box. */
+.title {
+  grid-column: 2;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(1.4rem, 0.95rem + 1.7vw, 2.75rem);
+  line-height: 1;
+  letter-spacing: -0.03em;
+  transition: transform var(--dur) var(--ease-out);
+  will-change: transform;
+}
+
+.detail {
+  grid-column: 2;
+  margin-top: clamp(0.55rem, 1.2vw, 0.85rem);
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: var(--t-small);
+  color: var(--pine);
+  opacity: 0.62;
+  transition: opacity var(--dur) var(--ease);
+}
+
+.dot {
+  display: inline-block;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: currentColor;
+  vertical-align: 0.3em;
+  margin-inline: 0.55em;
+  opacity: 0.7;
+}
+
+.arrow {
+  grid-column: 3;
+  grid-row: 1;
+  width: 2.1rem;
+  justify-self: end;
+  opacity: 0;
+  transform: translateX(-0.6rem);
+  transition:
+    opacity var(--dur) var(--ease),
+    transform var(--dur) var(--ease-out);
+}
+
+.arrow svg { width: 100%; height: auto; display: block; }
+
+/* --- The live row ----------------------------------------------------------
+   Driven by React rather than by `:hover`, so a keyboard focus lights the same
+   row and brings up the same plate. */
+.rowActive .title { transform: translateX(clamp(0.4rem, 1.2vw, 1.1rem)); }
+.rowActive .number { opacity: 1; }
+.rowActive .detail { opacity: 1; }
+
+.rowActive .arrow {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.row:focus-visible {
+  outline: 2px solid var(--green);
+  outline-offset: 4px;
+}
+
+/* --- The stage -------------------------------------------------------------
+   Sticky, so the plate stays beside whichever row you have reached rather than
+   scrolling away from the list it belongs to. */
+.stage {
+  position: sticky;
+  top: calc(var(--header-h) + 2.5rem);
+  aspect-ratio: 4 / 5;
+  min-width: 0;
+  overflow: hidden;
+  background: var(--sage-panel);
+}
+
+.plate {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  /* Oversize, so the drift never shows an edge. */
+  transform: scale(1.06);
+  transition:
+    opacity var(--dur-slow) var(--ease),
+    transform var(--dur-slow) var(--ease-out);
+  /* The same grade every photograph on the site gets. */
+  filter: saturate(0.84) contrast(1.04);
+}
+
+.plateOn { opacity: 1; }
+
+/* Nothing chosen yet: the stage holds the first project so the section is never
+   an empty rectangle waiting to be hovered. */
+.plateResting { opacity: 1; }
+
+/* The empty state, for a project with no photograph yet. Corner marks, the same
+   drawing-in-waiting the rest of the site uses. */
+.corner {
+  position: absolute;
+  inset: clamp(0.75rem, 1.6vw, 1.25rem);
+  pointer-events: none;
+  color: var(--green);
+  opacity: 0;
+  transition: opacity var(--dur) var(--ease);
+}
+
+.cornerOn { opacity: 1; }
+
+.corner::before,
+.corner::after {
+  content: '';
+  position: absolute;
+  width: clamp(1.25rem, 3vw, 2.25rem);
+  height: clamp(1.25rem, 3vw, 2.25rem);
+  border: 1px solid currentColor;
+  opacity: 0.26;
+}
+
+.corner::before { top: 0; left: 0; border-right: 0; border-bottom: 0; }
+.corner::after { right: 0; bottom: 0; border-left: 0; border-top: 0; }
+
+/* --- Narrow ----------------------------------------------------------------
+   A safety net only. `SelectedProjects` renders the swipe rail below 1000px, so
+   this component does not normally mount here at all — but a register with its
+   stage hidden is a section with no photographs in it, and that is not a state
+   worth leaving reachable by accident. */
+@media (max-width: 1000px) {
+  .wrap { grid-template-columns: minmax(0, 1fr); }
+  .stage { aspect-ratio: 16 / 10; position: static; }
+  .arrow { opacity: 1; transform: none; }
+}

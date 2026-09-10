@@ -2,8 +2,10 @@ import { Link } from 'react-router-dom'
 import { Reveal } from '../components/Reveal'
 import { SheetRef } from '../components/Sheet'
 import { ProjectCard } from '../components/ProjectCard'
+import { ProjectIndex } from '../components/ProjectIndex'
 import { SwipeRow } from '../components/SwipeRow'
 import { featuredProjects } from '../data/projects'
+import { useMediaQuery } from '../hooks/useMediaQuery'
 import styles from './SelectedProjects.module.css'
 
 /**
@@ -19,6 +21,12 @@ import styles from './SelectedProjects.module.css'
  * would undersell that badly.
  */
 export function SelectedProjects() {
+  /* A register needs two things: a pointer to reveal with, and enough width to
+     put the plate beside the names rather than under them. Below either, the
+     rail is the better section — it is the one that still has photographs in it.
+     The two never both mount, so no photograph is in the DOM twice. */
+  const canHover = useMediaQuery('(min-width: 1001px) and (pointer: fine)')
+
   return (
     <section className={['section', styles.section].join(' ')} aria-labelledby="work-heading">
       <div className="shell">
@@ -35,35 +43,39 @@ export function SelectedProjects() {
               </h2>
             }
             note="Three of them"
+            rule={false}
           />
         </Reveal>
 
-        {/* Three rows rather than a grid of six, and rows rather than the
-            full-bleed bands they were briefly: a 1440px plate is a slideshow,
-            not a selection.
+        {/* On a pointer device the work is a register: names on ruled lines,
+            and one photograph following the cursor. Everything this section has
+            been before — a grid of six, full-bleed bands, alternating rows — was
+            the same idea at a different size, and every builder's site is one of
+            them.
 
-            One column on a wide screen, a swipe rail on a phone. Stacked, three
-            rows are three screens of scrolling before the page moves on; side
-            by side they are one, and the card cut by the right edge is what
-            says the row moves. */}
-        <SwipeRow
-          as="ul"
-          label="Selected projects"
-          columns={1}
-          className={styles.list}
-        >
-          {featuredProjects.map((project, i) => (
-            <Reveal as="li" key={project.slug} delay={0.05} className={styles.cell}>
-              <ProjectCard
-                project={project}
-                index={i}
-                variant="row"
-                flip={i % 2 === 1}
-                ratio="3 / 2"
-              />
-            </Reveal>
-          ))}
-        </SwipeRow>
+            On touch there is no hover to reveal anything with, so it stays the
+            swipe rail. Three rows stacked are three screens of scrolling before
+            the page moves on; side by side they are one, and the card cut by
+            the right edge is what says the row moves. */}
+        <Reveal className={styles.list}>
+          {canHover ? (
+            <ProjectIndex projects={[...featuredProjects]} />
+          ) : (
+            <SwipeRow as="ul" label="Selected projects" columns={1}>
+              {featuredProjects.map((project, i) => (
+                <Reveal as="li" key={project.slug} delay={0.05} className={styles.cell}>
+                  <ProjectCard
+                    project={project}
+                    index={i}
+                    variant="row"
+                    flip={i % 2 === 1}
+                    ratio="3 / 2"
+                  />
+                </Reveal>
+              ))}
+            </SwipeRow>
+          )}
+        </Reveal>
 
         {/* A full-width row rather than a link floating in the middle of a lot
             of empty ground. The rule and the arrow are what say "this is the

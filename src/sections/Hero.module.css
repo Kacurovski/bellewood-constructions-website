@@ -1,15 +1,15 @@
 /* ---------------------------------------------------------------------------
-   The hero, set as a drawing sheet.
+   The hero.
 
    Deep Pine edge to edge, running up under the sticky header so the band starts
    at the top of the window and the header floats transparent on it. Without the
    pull the header sits ABOVE the hero in flow, a transparent bar shows the pale
    page behind it, and the reverse mark disappears into it.
 
-   The composition is a stack, not a split: reference, headline, drawing,
-   dimension, then the supporting line and the call. Everything runs the full
-   width of the page, so the headline is not capped at half of it and neither is
-   the house.
+   The sheet reference runs across the top of the band, then the words hold the
+   left column and the drawing holds the right. The drawing carries its own two
+   dimensions — the depth under it and the height up its side — so the marks
+   belong to the object rather than to the page.
    --------------------------------------------------------------------------- */
 
 .hero {
@@ -24,77 +24,93 @@
   display: flex;
   flex-direction: column;
   padding-block: clamp(2rem, 4vw, 3.5rem) clamp(2.5rem, 5vw, 4rem);
-  /* The whole sheet fits a screen at the sizes people actually use, so the
-     drawing is never half below the fold. The plate below gives up its height
-     first, which is what `min-height: 0` on it is for. */
   min-height: calc(100svh - var(--header-h));
   box-sizing: border-box;
 }
 
 .ref { flex: none; }
 
-/* The headline and the supporting line, on one band. Bottom-aligned, so the
-   last line of the paragraph sits on the same baseline as the last line of the
-   headline rather than floating in the middle of it. */
-.head {
-  flex: none;
+/* Words left, drawing right. The two columns are close to even: the headline
+   needs the width to be set at display scale, and the drawing needs it because
+   the camera fits the object to the panel it is given — a narrow panel is a
+   small house. */
+.body {
+  flex: 1 1 auto;
   display: grid;
-  grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
-  gap: clamp(1.5rem, 4vw, 4rem);
-  align-items: end;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.06fr);
+  gap: clamp(1.5rem, 4vw, 4.5rem);
+  align-items: center;
   margin-top: clamp(1.5rem, 3vw, 2.75rem);
+  min-height: 0;
 }
 
-/* Set at the brand's own display step rather than at whatever fits beside an
-   object, which is what a half-width column used to cap it at. */
+.copy {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: clamp(1.5rem, 3vw, 2.5rem);
+  min-width: 0;
+}
+
 .heading {
   margin: 0;
   font-family: var(--font-display);
   font-weight: 700;
-  font-size: clamp(2.4rem, 0.9rem + 4.6vw, 5.5rem);
+  font-size: clamp(2.4rem, 0.9rem + 4.2vw, 5rem);
   line-height: 0.98;
   letter-spacing: -0.04em;
   color: var(--wash);
   text-wrap: balance;
 }
 
-.aside {
-  display: flex;
-  flex-direction: column;
-  gap: clamp(1.5rem, 3vw, 2.25rem);
-  align-items: flex-start;
-  padding-bottom: 0.4rem;
+.lede {
+  margin: 0;
+  color: color-mix(in srgb, var(--wash) 78%, transparent);
+  max-width: 38ch;
 }
 
-/* The drawing plate. It takes whatever height is left after the words, and it
-   is the only part of the sheet allowed to give. */
+.actions {
+  display: flex;
+  align-items: center;
+  gap: clamp(1.25rem, 3vw, 2.25rem);
+  flex-wrap: wrap;
+}
+
+.call { color: var(--wash); }
+
+/* --- The drawing -----------------------------------------------------------
+   Its own column, running off the right edge of the screen. The gutter is given
+   back rather than a viewport width taken, so it stays in step with the shell
+   at every size. */
+.figure {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  height: 100%;
+  min-height: clamp(17rem, 44vh, 32rem);
+  margin-right: calc(var(--gutter) * -1);
+}
+
 .plate {
   position: relative;
   flex: 1 1 auto;
-  /* The drawing is the biggest thing on a drawing sheet. This floor is what
-     stops the flex layout handing the remainder to the words. */
-  /* The drawing is the biggest thing on a drawing sheet, so this floor is
-     allowed to push the sheet past a screen height rather than the other way
-     round. The call sits well above the fold either way; what falls below it is
-     the bottom dimension line, which is an invitation to scroll. */
-  min-height: clamp(18rem, 46vh, 34rem);
-  margin-top: clamp(1.5rem, 3vw, 2.5rem);
-  /* Out to both screen edges. The gutter is given back rather than a viewport
-     width taken, so it stays in step with the shell at every size. */
-  margin-inline: calc(var(--gutter) * -1);
+  min-height: 0;
 }
 
-/* The height dimension, pinned inside the right-hand gutter of the plate. It is
-   absolute so it cannot take width from the drawing. */
+/* Ground to ridge, up the right-hand edge. Absolute, so it cannot take width
+   from the drawing. */
 .dimV {
   position: absolute;
-  top: 8%;
-  bottom: 8%;
+  top: 6%;
+  bottom: 6%;
   right: var(--gutter);
   z-index: 1;
 }
 
-.scene { position: absolute; inset: 0; }
+/* Inset on the right by the width of the height dimension, so the house is
+   fitted to the space beside the line rather than underneath it. */
+.scene { position: absolute; inset: 0 clamp(2.5rem, 4.5vw, 4rem) 0 0; }
 
 .still {
   width: 100%;
@@ -103,72 +119,60 @@
   box-sizing: border-box;
 }
 
+/* The depth, under the object rather than under the page — it measures the
+   building, so it is the width of the building's panel. */
 .dim {
   flex: none;
-  margin-top: clamp(0.75rem, 1.5vw, 1.25rem);
+  margin: clamp(0.5rem, 1.2vw, 1rem) var(--gutter) 0 0;
+  width: auto;
 }
-
-.lede {
-  margin: 0;
-  color: color-mix(in srgb, var(--wash) 78%, transparent);
-  max-width: 34ch;
-}
-
-.actions {
-  display: flex;
-  align-items: center;
-  gap: clamp(1.25rem, 3vw, 2.25rem);
-  flex-wrap: wrap;
-  flex: none;
-}
-
-.call { color: var(--wash); }
 
 /* --- Narrow ----------------------------------------------------------------
-   The same stack, and it stays the same stack. The reason the old layout needed
-   a reorder here was that it was two columns on a wide screen and one on a
-   phone; this one was a single column all along, so a phone gets the sheet the
-   desktop gets and nothing has to move. */
+   One column: headline, drawing, then the supporting line and the call. */
 @media (max-width: 860px) {
   .inner {
-    /* Released, so a phone scrolls the sheet rather than compressing the
-       drawing to fit one screen with four other things. */
     min-height: 0;
     padding-block: clamp(1.5rem, 5vw, 2.5rem) clamp(2rem, 7vw, 3rem);
   }
 
-  /* The headline leads, then the drawing, then the supporting line and the
-     call. The plate is a sibling of the head, not a child of it, so the head
-     has to stop being a box before the four of them can be put in that order —
-     `display: contents` drops it out and promotes its two children into the
-     column beside the plate and the dimension. */
-  .head {
+  /* The drawing sits between the headline and the rest of the copy, so the copy
+     has to stop being one box before the three can be put in that order.
+     `display: contents` drops the grid out and promotes its children. */
+  .body {
     display: contents;
   }
+
+  .copy { display: contents; }
 
   .heading {
     order: 0;
     margin-top: clamp(1.5rem, 5vw, 2.25rem);
   }
 
-  .plate {
+  .figure {
     order: 1;
-    flex: none;
     height: clamp(15rem, 40vh, 22rem);
+    min-height: 0;
     margin-top: clamp(1.25rem, 4vw, 1.75rem);
+    /* Both edges on a phone, where there is no second column to respect. */
+    margin-inline: calc(var(--gutter) * -1);
   }
 
-  /* A phone has no spare width beside the drawing. The height dimension is the
-     one mark on this sheet that needs some, so it goes. */
+  .dim { margin-inline: var(--gutter); }
+
+  /* A phone has no spare width beside the drawing. */
   .dimV { display: none; }
 
-  .dim { order: 2; }
+  .scene { inset: 0; }
 
-  .aside {
-    order: 3;
+  .lede {
+    order: 2;
     margin-top: clamp(1.75rem, 6vw, 2.5rem);
-    padding-bottom: 0;
+    max-width: none;
   }
 
-  .lede { max-width: none; }
+  .actions {
+    order: 3;
+    margin-top: clamp(1.5rem, 5vw, 2rem);
+  }
 }
