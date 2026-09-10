@@ -230,12 +230,17 @@
 }
 
 /* --- The pointer mark ------------------------------------------------------
-   Follows the pointer across an index plate and says what clicking does.
+   Setting-out lines that follow the pointer across an index plate.
+
+   Two hairlines ruled the full width and height of the frame, crossing where
+   the pointer is, with the project number and destination read off at the
+   crossing. Fixing a position by ruling to it is what a drawing does; a disc
+   with "View" in it, which is what this was, is what every template does.
 
    Positioned from two custom properties the component writes on pointermove,
-   so nothing re-renders while it moves. It lags the pointer very slightly —
-   the transition is on `left`/`top` rather than on a transform — which is what
-   makes it read as a considered mark rather than as a cursor replacement.
+   so nothing re-renders while it moves. The lines lag the pointer very
+   slightly — the transition is on `top`/`left` rather than on a transform —
+   which is what makes them read as ruled rather than as a cursor.
 
    `contain: paint` on the frame, because six of these each tracking a pointer
    is the one place on this page a stray repaint would show. */
@@ -246,16 +251,61 @@
 
 .trace {
   position: absolute;
-  left: var(--cx, 50%);
-  top: var(--cy, 50%);
+  inset: 0;
   z-index: 2;
-  display: grid;
-  place-items: center;
-  gap: 0.3rem;
-  width: clamp(4.5rem, 7vw, 6rem);
-  aspect-ratio: 1;
-  margin: 0;
-  border-radius: 50%;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity var(--dur) var(--ease);
+}
+
+/* A wash of the brand dark over the photograph, so a hairline reads over a
+   white picket fence as well as over a shadow. Weak enough that the picture is
+   never in question. */
+.trace::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: color-mix(in srgb, var(--green) 22%, transparent);
+}
+
+.traceH,
+.traceV {
+  position: absolute;
+  background: var(--wash);
+  opacity: 0.85;
+}
+
+.traceH {
+  left: 0;
+  right: 0;
+  top: var(--cy, 50%);
+  height: 1px;
+  transform: scaleX(0);
+  transition:
+    top var(--dur-slow) var(--ease-out),
+    transform var(--dur-slow) var(--ease-out);
+}
+
+.traceV {
+  top: 0;
+  bottom: 0;
+  left: var(--cx, 50%);
+  width: 1px;
+  transform: scaleY(0);
+  transition:
+    left var(--dur-slow) var(--ease-out),
+    transform var(--dur-slow) var(--ease-out);
+}
+
+/* The readout, hung off the crossing the way a drawing tags a fixed point. */
+.traceTag {
+  position: absolute;
+  top: var(--cy, 50%);
+  left: var(--cx, 50%);
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+  padding: 0.5rem 0.9rem;
   background: var(--green);
   color: var(--wash);
   font-family: var(--font-display);
@@ -263,33 +313,33 @@
   font-size: var(--t-eyebrow);
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  pointer-events: none;
+  white-space: nowrap;
+  transform: translate(0.85rem, 0.85rem) scale(0.94);
+  transform-origin: top left;
   opacity: 0;
-  transform: translate(-50%, -50%) scale(0.72);
   transition:
-    opacity var(--dur) var(--ease),
-    transform var(--dur) var(--ease-out),
+    top var(--dur-slow) var(--ease-out),
     left var(--dur-slow) var(--ease-out),
-    top var(--dur-slow) var(--ease-out);
+    opacity var(--dur) var(--ease),
+    transform var(--dur) var(--ease-out);
 }
 
-/* A registration cross inside the disc — the same mark the sheet corners use,
-   so the affordance belongs to the drawing rather than to a UI kit. */
-.traceMark {
-  width: 0.85rem;
-  height: 0.85rem;
-  background:
-    linear-gradient(currentColor, currentColor) center / 100% 1px no-repeat,
-    linear-gradient(currentColor, currentColor) center / 1px 100% no-repeat;
-  opacity: 0.7;
+.traceNum {
+  font-variant-numeric: tabular-nums;
+  color: var(--sage);
 }
 
-.card:not(.row) .link:hover .trace {
+.card:not(.row) .link:hover .trace { opacity: 1; }
+
+.card:not(.row) .link:hover .traceH { transform: scaleX(1); }
+.card:not(.row) .link:hover .traceV { transform: scaleY(1); }
+
+.card:not(.row) .link:hover .traceTag {
   opacity: 1;
-  transform: translate(-50%, -50%) scale(1);
+  transform: translate(0.85rem, 0.85rem) scale(1);
 }
 
-/* No pointer, no mark. */
+/* No pointer, no lines. */
 @media (hover: none), (pointer: coarse) {
   .trace { display: none; }
 }

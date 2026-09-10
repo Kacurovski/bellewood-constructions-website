@@ -168,7 +168,7 @@ export function Testimonials() {
           <SheetRef
             number="A-07"
             name="In their words"
-            note={`${String(at + 1).padStart(2, '0')} / ${String(testimonials.length).padStart(2, '0')}`}
+            note="One at a time"
             rule={false}
           />
           <h2 id="said-heading" className={['section-heading', styles.heading].join(' ')}>
@@ -202,6 +202,57 @@ export function Testimonials() {
                 </figcaption>
               </motion.figure>
             </AnimatePresence>
+          </div>
+
+          {/* --- Step and count ---------------------------------------------
+              Two arrows and the position, under the words.
+
+              The band could already be swiped, tabbed and picked from the set,
+              and none of those SAY there is more than one quote here — a
+              reader who does not hover the set and does not swipe sees one
+              testimonial and no reason to think there are three. Arrows are
+              the plainest possible statement that this moves, which is why
+              every slider has had them for thirty years.
+
+              They sit under the quote rather than over the plate: floating
+              chevrons on a photograph is the stock treatment, and this band
+              is set as a sheet. */}
+          <div className={styles.nav}>
+            <button
+              type="button"
+              className={styles.step}
+              onClick={() => go(at - 1)}
+              onPointerEnter={() => setHeld(true)}
+              onPointerLeave={() => setHeld(false)}
+              onFocus={() => setHeld(true)}
+              onBlur={() => setHeld(false)}
+              aria-label="Previous quote"
+            >
+              <svg viewBox="0 0 34 10" fill="none" aria-hidden="true">
+                <path d="M34 5H2M6.5 1L2 5l4.5 4" stroke="currentColor" strokeWidth="1.2" />
+              </svg>
+            </button>
+
+            <span className={styles.count} aria-hidden="true">
+              <span className={styles.countNow}>{String(at + 1).padStart(2, '0')}</span>
+              <span className={styles.countRule} />
+              <span>{String(testimonials.length).padStart(2, '0')}</span>
+            </span>
+
+            <button
+              type="button"
+              className={styles.step}
+              onClick={() => go(at + 1)}
+              onPointerEnter={() => setHeld(true)}
+              onPointerLeave={() => setHeld(false)}
+              onFocus={() => setHeld(true)}
+              onBlur={() => setHeld(false)}
+              aria-label="Next quote"
+            >
+              <svg viewBox="0 0 34 10" fill="none" aria-hidden="true">
+                <path d="M0 5h32M27.5 1l4.5 4-4.5 4" stroke="currentColor" strokeWidth="1.2" />
+              </svg>
+            </button>
           </div>
 
           {/* --- The set ----------------------------------------------------

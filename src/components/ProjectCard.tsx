@@ -65,23 +65,31 @@ export function ProjectCard({
               it, and printing them twice reads as a mistake rather than as a
               considered empty state. */}
           <ImageSlot slot={project.hero} ratio={ratio} tone={index % 3 === 0 ? 'green' : 'sage'} />
-
           {/* The index plate's affordance, and the only thing on the site that
               follows the pointer.
 
+              It was a disc with "View" in it, which is the affordance every
+              template ships with: a button chasing the cursor. These are the
+              setting-out lines instead — two hairlines ruled the full width and
+              height of the plate, crossing where the pointer is, with the
+              project's number and destination read off at the crossing. Fixing
+              a position by ruling to it is what a drawing does.
+
               The row variant can afford a written "View project" under its
-              meta; the index cannot — six of those is a page of buttons. So the
-              index says it on the plate instead, and only while a pointer is
-              actually on one. It is drawn as a registration mark rather than a
-              button, which is the vocabulary the rest of the page is in.
+              meta; six of those in an index is a page of buttons, so the index
+              says it on the plate and only while a pointer is on one.
 
               Hidden entirely where there is no pointer to follow: on a phone it
               would either never appear or, worse, stick where the last tap
               landed. */}
           {variant === 'card' && (
             <span className={styles.trace} aria-hidden="true">
-              <span className={styles.traceMark} />
-              View
+              <span className={styles.traceH} />
+              <span className={styles.traceV} />
+              <span className={styles.traceTag}>
+                <span className={styles.traceNum}>{String(index + 1).padStart(2, '0')}</span>
+                View project
+              </span>
             </span>
           )}
         </div>

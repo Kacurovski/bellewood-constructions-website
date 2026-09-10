@@ -56,11 +56,16 @@
   align-items: flex-start;
   gap: clamp(1.5rem, 3vw, 2.5rem);
   min-width: 0;
-  /* Bottom of the band, not the middle of it. Centred, the column floated with
-     dead green above and below it and the call had no relationship to anything;
-     down here it sits on the same line as the drawing's dimension, and the space
-     above reads as air rather than as a gap. */
-  align-self: end;
+  /* Centred in the band.
+
+     It was pinned to the bottom, and the reason given was that it then sat on
+     the same line as the drawing's depth dimension. That dimension has gone, so
+     the reason has too — and what the bottom alignment left behind was a 150px
+     band of nothing between the sheet reference and the headline at 900px tall,
+     which is the emptiest thing on the page and the first thing anyone marked.
+     Centred, that space is split above and below and neither half reads as a
+     hole. */
+  align-self: center;
   padding-bottom: clamp(0.25rem, 2vh, 1.75rem);
 }
 
@@ -151,6 +156,17 @@
    towards the pointer, so these are set against the shape rather than against a
    single pixel — near enough to read as pointing at the right part, loose
    enough that the lean never makes one of them look wrong. */
+/* The pair drift with the model.
+
+   The scene leans towards the pointer by `smoothed.x * 0.15` radians of yaw;
+   these read the same normalised figure off `--px` and shift a few pixels with
+   it, at a slightly larger amplitude than the building's own apparent movement.
+   That is the whole difference between a label drawn ON the drawing and a label
+   stuck to the glass in front of it, and it is why these read as furniture
+   before.
+
+   `--px` is only ever written on a fine pointer, and the fallback of 0 is the
+   resting position, so this costs a phone nothing. */
 .note {
   position: absolute;
   display: flex;
@@ -158,6 +174,12 @@
   gap: 0.5rem;
   pointer-events: none;
   z-index: 1;
+  transform: translate3d(
+    calc(var(--px, 0) * 14px),
+    calc(var(--py, 0) * 7px),
+    0
+  );
+  transition: transform 900ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .noteDot {
@@ -173,6 +195,50 @@
   height: 1px;
   background: color-mix(in srgb, var(--wash) 40%, transparent);
   flex: none;
+  /* The cottage's row is reversed and the wing's is a column, so each one sets
+     its own origin below. This is the default for a left-to-right leader. */
+  transform-origin: left;
+}
+
+/* Drawn on in the order a person draws one: the dot lands on the thing, the
+   leader rules out from it, then the words are written at the end of the line.
+
+   `backwards` fill is what makes the delay work — without it each part is
+   visible for its own delay and then snaps to the start of its animation, which
+   is a flash of the finished annotation before it draws. The delays put the
+   whole thing after the model has built, so the house is a house before
+   anything is said about it.
+
+   The section keeps `--note-in` so the two callouts can be staggered against
+   one clock rather than by hand. */
+@media (prefers-reduced-motion: no-preference) {
+  .noteDot {
+    animation: noteDot 420ms var(--ease-out) backwards;
+    animation-delay: var(--note-in, 1.15s);
+  }
+
+  .noteLine {
+    animation: noteLine 520ms var(--ease-out) backwards;
+    animation-delay: calc(var(--note-in, 1.15s) + 180ms);
+  }
+
+  .noteText {
+    animation: noteText 620ms var(--ease-out) backwards;
+    animation-delay: calc(var(--note-in, 1.15s) + 400ms);
+  }
+}
+
+@keyframes noteDot {
+  from { transform: scale(0); opacity: 0; }
+}
+
+/* Ruled out from the dot, which is the end the leader is drawn from. */
+@keyframes noteLine {
+  from { transform: scaleX(0); }
+}
+
+@keyframes noteText {
+  from { opacity: 0; transform: translateX(-0.4rem); }
 }
 
 .noteText {
@@ -190,6 +256,16 @@
   left: 6%;
   top: 34%;
   flex-direction: row-reverse;
+  --note-in: 1.15s;
+}
+
+/* Reversed row: the dot is on the right, so the leader rules leftward from it. */
+.noteOld .noteLine { transform-origin: right; }
+
+.noteOld .noteText { animation-name: noteTextOld; }
+
+@keyframes noteTextOld {
+  from { opacity: 0; transform: translateX(0.4rem); }
 }
 
 /* The new wing sits hard against the right edge of the plate, so there is no
@@ -202,20 +278,30 @@
   flex-direction: column;
   align-items: flex-end;
   gap: 0.4rem;
+  /* The second annotation lands after the first, the way a pair get written. */
+  --note-in: 1.65s;
 }
 
 .noteNew .noteLine {
   width: 1px;
   height: clamp(1.25rem, 3vh, 2.25rem);
   margin-right: 2px;
+  /* A vertical leader, ruled down from the dot above it. */
+  transform-origin: top;
 }
 
-/* The depth, under the object rather than under the page — it measures the
-   building, so it is the width of the building's panel. */
-.dim {
-  flex: none;
-  margin: clamp(0.5rem, 1.2vw, 1rem) var(--gutter) 0 0;
-  width: auto;
+@media (prefers-reduced-motion: no-preference) {
+  .noteNew .noteLine { animation-name: noteLineDown; }
+}
+
+@keyframes noteLineDown {
+  from { transform: scaleY(0); }
+}
+
+.noteNew .noteText { animation-name: noteTextDown; }
+
+@keyframes noteTextDown {
+  from { opacity: 0; transform: translateY(-0.3rem); }
 }
 
 /* --- Narrow ----------------------------------------------------------------
@@ -249,7 +335,6 @@
     margin-inline: calc(var(--gutter) * -1);
   }
 
-  .dim { margin-inline: var(--gutter); }
 
   /* A phone has no spare width for labels hanging off the sides of the
      drawing. */

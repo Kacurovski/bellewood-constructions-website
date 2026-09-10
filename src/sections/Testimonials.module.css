@@ -136,8 +136,82 @@
 
 /* --- The set --------------------------------------------------------------
    Three plates, stacked. Picking one is visibly picking the ground. */
+/* --- Step and count -------------------------------------------------------
+   Under the words, on the same left edge, so the control belongs to the quote
+   rather than floating over the photograph. */
+.nav {
+  grid-column: 1;
+  grid-row: 2;
+  display: flex;
+  align-items: center;
+  gap: clamp(1rem, 2.4vw, 1.75rem);
+  margin-top: clamp(1.5rem, 3vw, 2.25rem);
+}
+
+.step {
+  display: grid;
+  place-items: center;
+  width: clamp(2.75rem, 4.5vw, 3.5rem);
+  aspect-ratio: 1;
+  padding: 0;
+  border: 1px solid var(--ink);
+  border-radius: 50%;
+  background: none;
+  color: var(--wash);
+  cursor: pointer;
+  transition:
+    background var(--dur) var(--ease),
+    border-color var(--dur) var(--ease),
+    color var(--dur) var(--ease);
+}
+
+.step svg {
+  width: 55%;
+  height: auto;
+  display: block;
+  /* The arrowhead travels toward the edge it points at, and the shaft is
+     clipped by the disc rather than shrunk — the same run the row variant's
+     arrow does, kept round. */
+  transition: transform var(--dur) var(--ease-out);
+}
+
+.step:hover,
+.step:focus-visible {
+  background: var(--wash);
+  border-color: var(--wash);
+  color: var(--green);
+}
+
+.step:first-of-type:hover svg,
+.step:first-of-type:focus-visible svg { transform: translateX(-0.2rem); }
+
+.step:last-of-type:hover svg,
+.step:last-of-type:focus-visible svg { transform: translateX(0.2rem); }
+
+/* The position, set as a fraction the way a sheet numbers itself. */
+.count {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: var(--t-eyebrow);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.12em;
+  color: var(--sage);
+}
+
+.countNow { color: var(--wash); }
+
+.countRule {
+  width: clamp(1.25rem, 2.5vw, 2rem);
+  height: 1px;
+  background: var(--ink);
+}
+
 .set {
   grid-column: 2;
+  grid-row: 1 / span 2;
   list-style: none;
   margin: 0;
   padding: 0;
@@ -250,10 +324,13 @@
     row-gap: clamp(1.75rem, 4vw, 2.5rem);
   }
 
-  .quoteSlot { grid-column: 1; min-height: 0; }
+  .quoteSlot { grid-column: 1; grid-row: 1; min-height: 0; }
+
+  .nav { grid-column: 1; grid-row: 2; }
 
   .set {
     grid-column: 1;
+    grid-row: 3;
     grid-auto-flow: column;
     grid-auto-columns: minmax(0, 1fr);
   }

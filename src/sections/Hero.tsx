@@ -1,11 +1,12 @@
-import { lazy } from 'react'
+import { lazy, useRef } from 'react'
+import type { PointerEvent as ReactPointerEvent } from 'react'
 import { Link } from 'react-router-dom'
 import { SceneFrame } from '../three/SceneFrame'
 import { HeritageStudyStill } from '../three/HeritageStudyStill'
-import { Dimension, SheetRef } from '../components/Sheet'
+import { SheetRef } from '../components/Sheet'
 import { RiseIn } from '../components/RiseIn'
 import { CycleWord } from '../components/CycleWord'
-import { HERITAGE_SETOUT } from '../three/heritageMembers'
+import { useReducedMotion } from '../hooks/useReducedMotion'
 import { contact, site } from '../config/site'
 import styles from './Hero.module.css'
 
@@ -46,26 +47,49 @@ const HOUSE_KINDS = ['Heritage homes', 'Queenslanders', 'Timber cottages', 'Post
  * the words and the object both have somewhere to be, and the call is where
  * somebody deciding whether to ring can see it.
  *
- * The dimension is real. It is `HERITAGE_SETOUT.depth` from
- * `three/heritageMembers.ts` — the building's overall depth on plan, verandah
- * edge to the back of the new wing, in millimetres — read off the model rather
- * than typed in here. Change the building and the figure changes with it. A
- * drawing carrying an invented dimension is worse than one carrying none.
- *
  * It had five different kinds of technical mark on it at once — a reference
  * strip with three fields, four registration crosses, a height dimension, a
  * depth dimension and two annotation callouts — which is a drawing sheet's
  * whole vocabulary spoken at the same time, and it read as clutter rather than
- * as precision. What is left is the reference, one dimension, and the two
- * callouts that actually say something: the cottage kept, the wing added. The
- * marks and the second dimension were the two that carried no meaning.
+ * as precision. The marks and both dimensions have gone.
+ *
+ * The last of them to go was the depth: a real figure, read off the model, and
+ * it still said nothing. "10 000" is millimetres to a builder and noise to the
+ * homeowner this page is written for, which is the test it failed — a mark
+ * that proves the drawing is measured, to a reader who was never in doubt.
+ *
+ * What is left is the reference and the two callouts, which are the only marks
+ * that carry an argument: the cottage kept, the wing added. Those are no longer
+ * furniture laid over the picture. They are drawn on after the house finishes
+ * building, and they drift with the pointer alongside the model, so the label
+ * and the thing it names move together as one object rather than as a caption
+ * stuck to the glass in front of it.
  *
  * The heading deliberately avoids a years-trading number. The records on file
  * disagree, and it is not going on the page until Angus settles it.
  */
 export function Hero() {
+  const band = useRef<HTMLElement>(null)
+  const reduced = useReducedMotion()
+
+  /* The pointer, normalised to -1..1 across the window — the same figure the
+     scene leans on, so the annotations and the model read the same input and
+     stay in step. Written straight to two custom properties: a pointermove
+     that re-renders the hero is a pointermove that re-renders the canvas. */
+  function onMove(event: ReactPointerEvent<HTMLElement>) {
+    const el = band.current
+    if (!el) return
+    el.style.setProperty('--px', `${(event.clientX / window.innerWidth) * 2 - 1}`)
+    el.style.setProperty('--py', `${(event.clientY / window.innerHeight) * 2 - 1}`)
+  }
+
   return (
-    <section className={['on-green', styles.hero].join(' ')} aria-labelledby="hero-heading">
+    <section
+      ref={band}
+      className={['on-green', styles.hero].join(' ')}
+      aria-labelledby="hero-heading"
+      onPointerMove={reduced ? undefined : onMove}
+    >
       <div className={['shell', styles.inner].join(' ')}>
         <SheetRef number="A-01" name="Heritage study" className={styles.ref} />
 
@@ -129,6 +153,13 @@ export function Hero() {
                   labels are that sentence pointed at the building, so the shape
                   on the screen means something before a word of it is read.
 
+                  They used to sit there from the first frame and never move,
+                  which is what made them read as furniture: the house leant
+                  towards the pointer and its own labels stayed nailed to the
+                  screen. Now the dot lands, the leader rules itself out and the
+                  words arrive after the house has finished building, and all of
+                  it drifts with the model. See the stylesheet.
+
                   Decorative — the scene already carries the whole description in
                   its own accessible label, and repeating half of it here would
                   read it out twice. */}
@@ -144,13 +175,6 @@ export function Hero() {
                 <span className={styles.noteText}>New wing</span>
               </span>
             </div>
-
-            {/* Read off the building, not typed in. A thin space groups the
-                thousands the way a drawing sets a figure. */}
-            <Dimension
-              figure={HERITAGE_SETOUT.depth.toLocaleString('en-AU').replace(',', ' ')}
-              className={styles.dim}
-            />
           </div>
         </div>
       </div>
