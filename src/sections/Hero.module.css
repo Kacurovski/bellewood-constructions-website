@@ -69,6 +69,10 @@
   text-wrap: balance;
 }
 
+/* The changing word sits on its own line above the rest of the sentence, so a
+   long kind following a short one can never reflow the lines beneath it. */
+.cycle { display: block; }
+
 .lede {
   margin: 0;
   color: color-mix(in srgb, var(--wash) 78%, transparent);

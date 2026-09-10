@@ -1,5 +1,6 @@
 import { Reveal } from '../components/Reveal'
 import { PageHead } from '../components/PageHead'
+import { ScrollWords } from '../components/ScrollWords'
 import { ComplianceLine } from '../components/ComplianceLine'
 import { ImageSlot } from '../components/ImageSlot'
 import { usePageTitle } from '../hooks/usePageTitle'
@@ -34,11 +35,14 @@ export default function About() {
       <div className={['shell', styles.body].join(' ')}>
         <Reveal className={styles.copy}>
           <div className="stack-lg">
-            <p className={styles.opening}>
-              Bellewood Constructions is run by {contact.principal}. He has been
-              building in inner Brisbane for more than two decades, almost all of it
-              on heritage and older homes, and he is on site on his own jobs.
-            </p>
+            {/* The page's argument, read in a word at a time — the same
+                treatment A-02 gets on the home page, and for the same reason:
+                it is the one sentence on this page that has to land. The accent
+                falls on the part that is the actual difference. */}
+            <ScrollWords
+              className={styles.opening}
+              text={`Bellewood Constructions is run by ${contact.principal}. He has been building in inner Brisbane for more than two decades, almost all of it on heritage and older homes, and he is *on site on his own jobs*.`}
+            />
             <p>
               The work is mostly renovations, extensions and restorations, built
               predominantly in timber. Around four projects a year, in the range

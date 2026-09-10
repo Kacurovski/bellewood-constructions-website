@@ -1,0 +1,33 @@
+/* ---------------------------------------------------------------------------
+   The changing word.
+
+   A block on its own line, clipped, with each word absolutely placed inside it.
+   Absolute placement is what stops the two lines underneath from reflowing when
+   a long word follows a short one — which is the failure that makes this device
+   look cheap everywhere it looks cheap.
+   --------------------------------------------------------------------------- */
+
+.cycle {
+  display: block;
+  position: relative;
+  overflow: hidden;
+  /* Room for descenders below the baseline. The display face is set at a
+     line-height under 1, so the box has to be taller than the line or the tail
+     of a 'g' is cut off by the clip. */
+  height: 1.14em;
+}
+
+/* An invisible copy of the resting word, in flow, holding the box open. It is
+   the only thing in here that takes part in layout. */
+.sizer {
+  visibility: hidden;
+  display: block;
+}
+
+.word {
+  position: absolute;
+  top: 0;
+  left: 0;
+  white-space: nowrap;
+  will-change: transform;
+}

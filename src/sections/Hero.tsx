@@ -4,11 +4,22 @@ import { SceneFrame } from '../three/SceneFrame'
 import { HeritageStudyStill } from '../three/HeritageStudyStill'
 import { Dimension, SheetRef } from '../components/Sheet'
 import { RiseIn } from '../components/RiseIn'
+import { CycleWord } from '../components/CycleWord'
 import { HERITAGE_SETOUT } from '../three/heritageMembers'
 import { contact, site } from '../config/site'
 import styles from './Hero.module.css'
 
 const HeritageStudy = lazy(() => import('../three/HeritageStudy'))
+
+/**
+ * The kinds of house that cycle in the headline.
+ *
+ * Every one of these is a house this business works on and every one already
+ * appears in the copy further down the page. Do not add a kind here that the
+ * site cannot back up elsewhere — the headline is the one line nobody scrolls
+ * past, and it is the worst place on the site to widen a claim.
+ */
+const HOUSE_KINDS = ['Heritage homes', 'Queenslanders', "Workers' cottages", 'Post-war homes'] as const
 
 /**
  * The hero, set as a drawing sheet.
@@ -56,8 +67,26 @@ export function Hero() {
             columns that happen to share a background. */}
         <div className={styles.body}>
           <div className={styles.copy}>
+            {/* The kind of house changes; the rest of the sentence does not.
+
+                The list is not decoration — "a worker's cottage, a Queenslander,
+                a post-war home" is already the sentence in A-02. Cycling them up
+                here is the same claim made as range: a visitor sees their own
+                house named inside eight seconds.
+
+                The heading carries a plain, complete, unchanging sentence for
+                assistive technology and for search; the animated version is
+                hidden from both. Nothing reading this page without eyes gets a
+                headline that mutates under it. */}
             <h1 id="hero-heading" className={styles.heading}>
-              <RiseIn text="Heritage homes in inner Brisbane, rebuilt in timber." delay={0.15} />
+              <span className="visually-hidden">
+                Heritage homes in inner Brisbane, rebuilt in timber.
+              </span>
+
+              <span aria-hidden="true">
+                <CycleWord words={HOUSE_KINDS} className={styles.cycle} />
+                <RiseIn text="in inner Brisbane, rebuilt in timber." delay={0.15} />
+              </span>
             </h1>
 
             <p className={[styles.lede, 'lead'].join(' ')}>

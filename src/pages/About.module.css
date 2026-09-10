@@ -11,15 +11,10 @@
 .copy { max-width: var(--measure); color: var(--pine); }
 
 /* The first paragraph is the page's argument, so it is set at a size that says
-   so. Everything after it drops to body and reads as the detail. */
+   so and read in a word at a time. Size and colour belong to ScrollWords; this
+   sets how wide it runs against the column beside it. */
 .opening {
-  font-family: var(--font-body);
-  font-weight: 400;
-  font-size: clamp(1.35rem, 1.05rem + 1.2vw, 1.95rem);
-  line-height: 1.36;
-  letter-spacing: -0.012em;
-  color: var(--green);
-  text-wrap: pretty;
+  max-width: 24ch;
 }
 
 /* The photograph holds the right column for the length of the copy rather than
