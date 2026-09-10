@@ -1,0 +1,134 @@
+/* ---------------------------------------------------------------------------
+   The key to the drawing.
+
+   The drawing holds the left, the key holds the right, and pointing at a line
+   in the key lights that material on the building. Nothing is hidden behind the
+   interaction: read without ever moving a pointer, it is still a legend.
+   --------------------------------------------------------------------------- */
+
+.section { border-top: 1px solid var(--ink); }
+
+.inner {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
+  grid-template-rows: auto 1fr;
+  column-gap: clamp(2rem, 5vw, 5rem);
+  row-gap: clamp(2rem, 4vw, 3rem);
+  /* Stretch, so the panel is as tall as the key beside it. Sized to the
+     drawing's own aspect it came out two thirds the height of the list and the
+     band finished with one column short of the other. */
+  align-items: stretch;
+}
+
+.head { grid-column: 1 / -1; }
+
+.heading {
+  margin: 0;
+  font: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
+  color: inherit;
+}
+
+/* The drawing sits on the sage panel the work register uses, so the two
+   interactive bands on this site are recognisably the same kind of thing. */
+.plate {
+  grid-column: 1;
+  grid-row: 2;
+  display: flex;
+  align-items: center;
+  background: var(--sage-panel);
+  padding: clamp(1.25rem, 3vw, 2.5rem);
+  box-sizing: border-box;
+  /* Off the left edge of the page. */
+  margin-left: calc(var(--gutter) * -1);
+  padding-left: var(--gutter);
+}
+
+.drawing {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.listWrap { grid-column: 2; grid-row: 2; min-width: 0; }
+
+.list {
+  margin: 0;
+  border-top: 1px solid var(--ink);
+}
+
+.row {
+  display: grid;
+  grid-template-columns: minmax(0, 0.62fr) minmax(0, 1fr);
+  gap: clamp(1rem, 2.5vw, 2rem);
+  padding-block: clamp(0.9rem, 1.9vw, 1.3rem);
+  border-bottom: 1px solid var(--ink);
+}
+
+.term {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-width: 0;
+}
+
+/* The drawing's own tone for that material. A ruled square, not a dot — this is
+   a legend, and a legend's swatch is the shape of the thing it stands for. */
+.swatch {
+  width: 1.1rem;
+  height: 1.1rem;
+  flex: none;
+  border: 1px solid var(--ink);
+  transition: transform var(--dur) var(--ease-out);
+}
+
+.name {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: var(--t-sub);
+  letter-spacing: -0.01em;
+  color: var(--green);
+  cursor: default;
+}
+
+.name:focus-visible {
+  outline: 2px solid var(--green);
+  outline-offset: 4px;
+}
+
+.note {
+  margin: 0;
+  font-size: var(--t-small);
+  line-height: 1.55;
+  color: var(--pine);
+  opacity: 0.6;
+  transition: opacity var(--dur) var(--ease);
+  text-wrap: pretty;
+}
+
+/* The live row. The swatch grows, the note comes up to full — the same two-part
+   answer the work register gives, so the site has one way of saying "this one". */
+.rowOn .swatch { transform: scale(1.35); }
+.rowOn .note { opacity: 1; }
+
+@media (max-width: 900px) {
+  .inner {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: none;
+  }
+
+  .head,
+  .plate,
+  .listWrap { grid-column: 1; grid-row: auto; }
+
+  /* Stacked, the panel takes the drawing's own height again. */
+  .plate { display: block; }
+
+  .plate { margin-inline: calc(var(--gutter) * -1); padding-inline: var(--gutter); }
+
+  /* No pointer, no keying — so the note is simply readable at all times. */
+  .note { opacity: 1; }
+
+  .row { grid-template-columns: minmax(0, 1fr); gap: 0.4rem; }
+}

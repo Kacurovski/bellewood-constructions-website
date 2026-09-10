@@ -29,6 +29,8 @@ export type Polygon = {
   pts: string
   depth: number
   fill: string
+  /** Which material this face belongs to, so a drawing can be keyed. */
+  mat: MaterialKey
 }
 
 const CORNERS: V3[] = [
@@ -168,6 +170,7 @@ export function projectMembers(
         pts,
         depth,
         fill: `color-mix(in srgb, ${tone.base} ${Math.round(shade * 100)}%, ${tone.shade})`,
+        mat: m.mat,
       })
     }
   })

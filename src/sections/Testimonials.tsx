@@ -35,7 +35,7 @@ export function Testimonials() {
     <section className={['section', styles.section].join(' ')} aria-labelledby="said-heading">
       <div className="shell">
         <Reveal className={styles.head}>
-          <SheetRef number="A-06" name="In their words" rule={false} />
+          <SheetRef number="A-05" name="In their words" rule={false} />
           <h2 id="said-heading" className={['section-heading', styles.heading].join(' ')}>
             What the owners say.
           </h2>

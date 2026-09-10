@@ -94,9 +94,12 @@ export function Header() {
       />
 
       <div id="mobile-nav" className={[styles.mobile, open ? styles.mobileOpen : ''].join(' ')}>
+        {/* The panel opens and the links follow it in, one after another. It
+            is the same stagger the headline uses, at the one moment on a phone
+            where the whole screen changes at once. */}
         <ul className={styles.mobileList}>
-          {nav.map((item) => (
-            <li key={item.label}>
+          {nav.map((item, i) => (
+            <li key={item.label} style={{ '--i': i } as React.CSSProperties}>
               <NavLink
                 to={{ pathname: item.to, hash: item.hash }}
                 className={styles.mobileLink}
@@ -105,7 +108,7 @@ export function Header() {
               </NavLink>
             </li>
           ))}
-          <li>
+          <li style={{ '--i': nav.length } as React.CSSProperties}>
             <a href={contact.phoneHref} className={styles.mobileLink}>
               {contact.phone}
             </a>

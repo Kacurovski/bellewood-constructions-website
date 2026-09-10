@@ -4,7 +4,6 @@ import type { Sheet } from '../components/SheetRail'
 import { Proposition } from '../sections/Proposition'
 import { SelectedProjects } from '../sections/SelectedProjects'
 import { GreenSection } from '../sections/GreenSection'
-import { Architects } from '../sections/Architects'
 import { Testimonials } from '../sections/Testimonials'
 import { Enquiry } from '../sections/Enquiry'
 import { LeadMagnet } from '../components/LeadMagnet'
@@ -16,9 +15,11 @@ import styles from './Home.module.css'
  * reference; this is the same seven numbers collected as an index, which is how
  * a set of drawings opens.
  *
- * "How it works" was A-05 and is now a route of its own at /approach, numbered
- * E-01. It moved rather than being copied: the nav item that used to scroll you
- * down this page now goes somewhere, and there is no second copy of it here.
+ * "How it works" and "For architects and designers" both live at /approach now,
+ * numbered E-01 to E-04. They moved rather than being copied: the nav item that
+ * used to scroll you down this page goes somewhere, and there is no second copy
+ * of either here. A block about how the work is done belongs on the page about
+ * how the work is done.
  *
  * `dark` marks the bands on Bellewood Green, so the rail knows to reverse as it
  * crosses onto one.
@@ -28,9 +29,8 @@ const SHEETS: Sheet[] = [
   { number: 'A-02', name: 'What we build', target: 'proposition-heading' },
   { number: 'A-03', name: 'Selected work', target: 'work-heading' },
   { number: 'A-04', name: 'The name', target: 'name-heading', dark: true },
-  { number: 'A-05', name: 'For architects', target: 'architects-heading' },
-  { number: 'A-06', name: 'In their words', target: 'said-heading' },
-  { number: 'A-07', name: 'What happens next', target: 'enquiry-heading', dark: true },
+  { number: 'A-05', name: 'In their words', target: 'said-heading' },
+  { number: 'A-06', name: 'What happens next', target: 'enquiry-heading', dark: true },
 ]
 
 export default function Home() {
@@ -43,7 +43,6 @@ export default function Home() {
       <Proposition />
       <SelectedProjects />
       <GreenSection />
-      <Architects />
       <Testimonials />
       <div className={['shell', styles.magnet].join(' ')}>
         <LeadMagnet />

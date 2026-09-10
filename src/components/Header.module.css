@@ -85,6 +85,28 @@
 
 .active { color: var(--green); }
 
+/* --- The bar answers as a group --------------------------------------------
+   Pointing at one item drops the others back. It is the difference between four
+   labels that happen to sit together and a bar that knows which one you are
+   reaching for, and it is four lines of CSS with no state and no listener.
+
+   `:has` is the whole trick: the list styles its own children based on one of
+   them being hovered. Where it is not supported nothing happens and the links
+   behave exactly as they did — which is the right way round for this. */
+.list:has(.link:hover) .link {
+  opacity: 0.45;
+}
+
+.list:has(.link:hover) .link:hover {
+  opacity: 1;
+}
+
+.link {
+  transition:
+    opacity var(--dur) var(--ease),
+    transform var(--dur) var(--ease-out);
+}
+
 /* The label lifts a hair. Small enough that nobody sees it move and everybody
    feels the link is live, which is the whole job. */
 .link,
@@ -208,6 +230,32 @@
   display: flex;
   flex-direction: column;
   gap: var(--s-1);
+}
+
+/* Each row waits its turn behind the panel. The index comes from the component
+   as `--i`, so the delay is a multiplication rather than a rule per item. */
+.mobileList li {
+  opacity: 0;
+  transform: translateY(0.55rem);
+  transition:
+    opacity var(--dur) var(--ease),
+    transform var(--dur) var(--ease-out);
+}
+
+.mobileOpen .mobileList li {
+  opacity: 1;
+  transform: none;
+  transition-delay: calc(90ms + var(--i, 0) * 55ms);
+}
+
+/* A menu that has to finish arriving before it can be read is a menu that fails
+   the people this setting exists for. */
+@media (prefers-reduced-motion: reduce) {
+  .mobileList li {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
 }
 
 .mobileLink {
