@@ -649,6 +649,19 @@ and they need his confirmation plus the bodies' own artwork.
   frames use it, so each is guaranteed to be the same building its live scene
   draws rather than a second drawing that has to be kept in step.
 
+**The still sorts MEMBERS, not faces.** A painter's algorithm over a flat list
+of faces sorts every face against every other by its own average depth, so the
+three visible faces of one board can end up split around a face belonging to
+something else. Where two members meet — the verandah roof against the cottage
+roof, the new wing against the old — that interleaving paints a far face over a
+near one and leaves what looks like a hole punched in the building. Those holes
+were visible on the page for a long time before anyone named them.
+
+A box is convex: its own visible faces cannot occlude each other, so their order
+within a member does not matter. `projectMembers` groups faces by member, orders
+whole members by their centre depth, and flattens. It is more correct and
+cheaper to sort. Do not go back to sorting the flat list.
+
 **Fitting a scene is measured, never estimated.** Both scenes solve their camera
 from the real bounds of their member list — the orthographic one by zoom, the
 perspective one by pushing back along its own axis until every corner of the

@@ -49,15 +49,6 @@
   padding-left: var(--gutter);
 }
 
-/* The one element the redraw animates. Everything inside it is static. */
-.wipe {
-  display: block;
-  width: 100%;
-  /* Declared here rather than left to the animation, so the first paint is the
-     finished state — an unclipped drawing that has not been keyed yet. */
-  clip-path: inset(0% 0% 0% 0%);
-}
-
 .drawing {
   display: block;
   width: 100%;

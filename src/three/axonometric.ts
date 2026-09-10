@@ -105,7 +105,20 @@ export function projectMembers(
   const yaw = options.yaw ?? 0
   const pad = options.padding ?? 0.3
 
-  const out: Polygon[] = []
+  /* Faces are grouped by the member they belong to, and it is the MEMBERS that
+     get sorted — not the faces.
+
+     A painter's algorithm over a flat list of faces sorts every face against
+     every other by its own average depth, so the three visible faces of one
+     board can end up split around a face belonging to something else entirely.
+     Where two members meet — the verandah roof against the cottage roof, the new
+     wing against the old — that interleaving paints a far face over a near one
+     and leaves what looks like a hole punched in the building.
+
+     A box is convex: its own visible faces cannot occlude each other, so their
+     order within the member does not matter. Keeping them together and ordering
+     whole members by their centre is both more correct and cheaper to sort. */
+  const groups: { depth: number; faces: Polygon[] }[] = []
   let minX = Infinity
   let maxX = -Infinity
   let minY = Infinity
@@ -143,6 +156,10 @@ export function projectMembers(
       return [dot(world, view.right), dot(world, view.up), dot(world, view.fwd)]
     })
 
+    // The member's centre in view space, which is what its faces are ordered by.
+    const centre = screen.reduce((s2, c) => s2 + c[2], 0) / screen.length
+    const faces: Polygon[] = []
+
     for (const f of FACES) {
       const normal = yawY(pitchX(rollZ(f.n, m.rz ?? 0), m.rx), yaw)
       if (dot(normal, view.fwd) > -0.02) continue // facing away
@@ -166,16 +183,23 @@ export function projectMembers(
       // which is invalid CSS and silently paints the face black.
       const shade = Math.min(Math.max(0.64 + lit * spread + jitter * 0.06, 0), 1)
 
-      out.push({
+      faces.push({
         pts,
         depth,
         fill: `color-mix(in srgb, ${tone.base} ${Math.round(shade * 100)}%, ${tone.shade})`,
         mat: m.mat,
       })
     }
+
+    if (faces.length) {
+      // Nearest face first within the member, so its own front face paints last.
+      faces.sort((a, b) => b.depth - a.depth)
+      groups.push({ depth: centre, faces })
+    }
   })
 
-  out.sort((a, b) => b.depth - a.depth)
+  groups.sort((a, b) => b.depth - a.depth)
+  const out = groups.flatMap((g) => g.faces)
 
   return {
     polygons: out,

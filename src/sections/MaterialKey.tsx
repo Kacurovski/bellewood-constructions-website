@@ -1,12 +1,10 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { motion, useAnimationControls } from 'framer-motion'
 import { Reveal } from '../components/Reveal'
 import { SheetRef } from '../components/Sheet'
 import { HeritageStudyStill } from '../three/HeritageStudyStill'
 import { TONE } from '../three/materials'
 import type { MaterialKey as Key } from '../three/materials'
 import { useMediaQuery } from '../hooks/useMediaQuery'
-import { useReducedMotion } from '../hooks/useReducedMotion'
 import styles from './MaterialKey.module.css'
 
 /**
@@ -69,16 +67,14 @@ const KEY: { mat: Key; name: string; note: string }[] = [
 
 export function MaterialKey() {
   const pointer = useMediaQuery('(min-width: 901px) and (pointer: fine)')
-  const reduced = useReducedMotion()
 
-  /* `asked` is what the reader has chosen; `shown` is what the drawing is
-     currently keyed to. They are two states because the change between them is
-     a transition with a middle — the drawing wipes out, the key swaps at the
-     point where nothing is visible, and it wipes back in. One value could not
-     hold both ends of that. */
-  const [asked, setAsked] = useState<Key | null>(null)
+  /* One state, and the change is immediate.
+     It had a wipe: out to the right, swap, back in from the left. It was
+     smooth and it was wrong — three quarters of a second in which the building
+     leaves the screen and returns, which reads as the drawing RELOADING every
+     time the pointer crosses a line, and which lags every move by the length of
+     it. A key has to answer at the speed you point. */
   const [shown, setShown] = useState<Key | null>(null)
-  const wipe = useAnimationControls()
 
   const plate = useRef<HTMLDivElement>(null)
   const rows = useRef<(HTMLDivElement | null)[]>([])
@@ -94,7 +90,6 @@ export function MaterialKey() {
     rows.current.forEach((el, i) => {
       if (el && el.getBoundingClientRect().top <= line) next = KEY[i].mat
     })
-    setAsked(next)
     setShown(next)
   }, [])
 
@@ -108,37 +103,6 @@ export function MaterialKey() {
       window.removeEventListener('resize', readScroll)
     }
   }, [pointer, readScroll])
-
-  // --- The redraw, where there is ------------------------------------------
-  useEffect(() => {
-    if (!pointer || asked === shown) return
-
-    if (reduced) {
-      setShown(asked)
-      return
-    }
-
-    let cancelled = false
-    void (async () => {
-      // Out to the right quickly, on a curve that accelerates away.
-      await wipe.start({
-        clipPath: 'inset(0% 0% 0% 100%)',
-        transition: { duration: 0.24, ease: [0.7, 0, 0.84, 0] },
-      })
-      if (cancelled) return
-      setShown(asked)
-      // Back in from the left, slower, on the site's settling curve — so it
-      // reads as the drawing being drawn again rather than as a flicker.
-      await wipe.start({
-        clipPath: 'inset(0% 0% 0% 0%)',
-        transition: { duration: 0.52, ease: [0.16, 1, 0.3, 1] },
-      })
-    })()
-
-    return () => {
-      cancelled = true
-    }
-  }, [pointer, asked, shown, reduced, wipe])
 
   return (
     <section className={['section', styles.section].join(' ')} aria-labelledby="materials-heading">
@@ -156,19 +120,13 @@ export function MaterialKey() {
         </Reveal>
 
         <div ref={plate} className={styles.plate}>
-          {/* The wipe is on this one element. Transitioning the drawing's own
-              nineteen hundred faces is what made the first version clunky —
-              every node in it composited on every frame. Here one wrapper's
-              clip animates and the faces underneath simply are what they are. */}
-          <motion.div className={styles.wipe} animate={wipe}>
-            <HeritageStudyStill className={styles.drawing} highlight={shown} />
-          </motion.div>
+          <HeritageStudyStill className={styles.drawing} highlight={shown} />
         </div>
 
         <Reveal delay={0.1} className={styles.listWrap}>
           <dl
             className={styles.list}
-            onPointerLeave={pointer ? () => setAsked(null) : undefined}
+            onPointerLeave={pointer ? () => setShown(null) : undefined}
           >
             {KEY.map((item, i) => (
               <div
@@ -177,7 +135,7 @@ export function MaterialKey() {
                   rows.current[i] = el
                 }}
                 className={[styles.row, shown === item.mat ? styles.rowOn : ''].join(' ')}
-                onPointerEnter={pointer ? () => setAsked(item.mat) : undefined}
+                onPointerEnter={pointer ? () => setShown(item.mat) : undefined}
               >
                 <dt className={styles.term}>
                   {/* The swatch is the drawing's own tone for that material, read
@@ -191,8 +149,8 @@ export function MaterialKey() {
                   <span
                     className={styles.name}
                     tabIndex={0}
-                    onFocus={() => setAsked(item.mat)}
-                    onBlur={() => setAsked(null)}
+                    onFocus={() => setShown(item.mat)}
+                    onBlur={() => setShown(null)}
                   >
                     {item.name}
                   </span>
