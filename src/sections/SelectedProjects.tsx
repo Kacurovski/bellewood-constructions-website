@@ -1,3 +1,5 @@
+import { useRef } from 'react'
+import type { PointerEvent as ReactPointerEvent } from 'react'
 import { Link } from 'react-router-dom'
 import { Reveal } from '../components/Reveal'
 import { SheetRef } from '../components/Sheet'
@@ -6,6 +8,7 @@ import { ProjectIndex } from '../components/ProjectIndex'
 import { SwipeRow } from '../components/SwipeRow'
 import { featuredProjects } from '../data/projects'
 import { useMediaQuery } from '../hooks/useMediaQuery'
+import { useReducedMotion } from '../hooks/useReducedMotion'
 import styles from './SelectedProjects.module.css'
 
 /**
@@ -26,9 +29,32 @@ export function SelectedProjects() {
      rail is the better section — it is the one that still has photographs in it.
      The two never both mount, so no photograph is in the DOM twice. */
   const canHover = useMediaQuery('(min-width: 1001px) and (pointer: fine)')
+  const reduced = useReducedMotion()
+  const band = useRef<HTMLElement>(null)
+
+  /* The setting-out grid behind this band is lit in a pool around the pointer.
+     The position is written straight to two custom properties on the section —
+     no state, so no React render on a mousemove, and the browser only repaints
+     a mask. At rest the pool sits where the CSS parks it, so the grid is there
+     before anybody has moved anything. */
+  function onMove(event: ReactPointerEvent<HTMLElement>) {
+    const box = band.current?.getBoundingClientRect()
+    if (!box) return
+    band.current?.style.setProperty('--mx', `${event.clientX - box.left}px`)
+    band.current?.style.setProperty('--my', `${event.clientY - box.top}px`)
+  }
 
   return (
-    <section className={['section', styles.section].join(' ')} aria-labelledby="work-heading">
+    <section
+      ref={band}
+      className={['section', styles.section].join(' ')}
+      aria-labelledby="work-heading"
+      onPointerMove={reduced || !canHover ? undefined : onMove}
+    >
+      {/* The sheet the work is set out on. Decorative — it is drawn entirely in
+          CSS and carries nothing to read. */}
+      <span className={styles.grid} aria-hidden="true" />
+
       <div className="shell">
         {/* The reference carries the heading. This band's title is two words
             and the strip already prints them — a separate 56px "Selected work"

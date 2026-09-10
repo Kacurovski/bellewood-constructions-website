@@ -1,8 +1,69 @@
 /* The action row closes the section, so it does not need a full section's worth
    of padding under it as well. */
 .section {
+  position: relative;
+  /* The grid below is a child, so the band has to be its own stacking context
+     or it would sit under the page's other layers rather than under this
+     section's own content.
+
+     No `overflow: hidden` here. It is the reflex when something inside bleeds,
+     and it is not needed: the grid is `inset: 0` and cannot overflow this box.
+     It also clips `position: sticky` on descendants, which is worth knowing
+     even though it was not what broke the stage — the stage had no travel to
+     begin with. The bleed to the right is a negative margin inside the shell
+     and the fifteen-width sweep says it does not overflow the page. */
+  isolation: isolate;
   border-top: 1px solid var(--ink);
   padding-bottom: clamp(2.5rem, 5vw, 4rem);
+}
+
+/* --- The setting-out grid --------------------------------------------------
+   The squared paper a drawing is set out on, across the whole band, lit in a
+   soft pool around the pointer.
+
+   It is the background this section was missing. A field of flat Wash reads as
+   thin no matter what is arranged on it; a sheet you can see the ruling of
+   reads as a surface — and the ruling is the one ornament this site has already
+   earned, because every rule, dimension and reference on it is drawn the same
+   way.
+
+   Two properties do all the work. The mask is a circle at `--mx`/`--my`, which
+   the section writes on pointermove; at rest it parks where this declares it,
+   so the grid is visible before anyone has moved anything. Nothing here
+   animates on a timer and nothing re-renders — the browser repaints a mask and
+   that is all. */
+.grid {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image:
+    repeating-linear-gradient(to right, var(--sheet-line) 0 1px, transparent 1px 100%),
+    repeating-linear-gradient(to bottom, var(--sheet-line) 0 1px, transparent 1px 100%);
+  background-size: clamp(3.5rem, 5vw, 5.5rem) clamp(3.5rem, 5vw, 5.5rem);
+  --sheet-line: color-mix(in srgb, var(--pine) 13%, transparent);
+  -webkit-mask-image: radial-gradient(
+    circle clamp(16rem, 30vw, 34rem) at var(--mx, 34%) var(--my, 42%),
+    #000 0%,
+    rgba(0, 0, 0, 0.45) 42%,
+    transparent 76%
+  );
+  mask-image: radial-gradient(
+    circle clamp(16rem, 30vw, 34rem) at var(--mx, 34%) var(--my, 42%),
+    #000 0%,
+    rgba(0, 0, 0, 0.45) 42%,
+    transparent 76%
+  );
+  transition: opacity var(--dur-slow) var(--ease);
+}
+
+/* No pointer, no pool. The grid parks at its resting position and simply is —
+   a background that only appears when you wave at it is worse than none. */
+@media (max-width: 1000px), (pointer: coarse) {
+  .grid {
+    -webkit-mask-image: radial-gradient(circle 60vw at 50% 40%, #000 0%, transparent 78%);
+    mask-image: radial-gradient(circle 60vw at 50% 40%, #000 0%, transparent 78%);
+  }
 }
 
 .head { padding-bottom: 0; }

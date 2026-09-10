@@ -27,6 +27,31 @@
 
 .list { grid-column: 1; grid-row: 1; }
 
+/* The live number fills the top of that ground, the way on closes the bottom of
+   it, and between them the left column now reaches the foot of the stage. */
+.mark {
+  grid-column: 1;
+  grid-row: 2;
+  align-self: start;
+  display: flex;
+  justify-content: flex-end;
+  padding-right: clamp(1rem, 3vw, 3rem);
+  pointer-events: none;
+}
+
+.markFigure {
+  display: block;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(4rem, 11vw, 9.5rem);
+  line-height: 0.82;
+  letter-spacing: -0.05em;
+  font-variant-numeric: tabular-nums;
+  /* Faint enough to be ground rather than content — it must never compete with
+     the names it belongs to. */
+  color: color-mix(in srgb, var(--green) 15%, transparent);
+}
+
 /* The way on, in the corner the three rows leave empty. */
 .footer { grid-column: 1; grid-row: 2; align-self: end; }
 
@@ -171,9 +196,14 @@
 .rowActive .edge { transform: scaleY(1); }
 
 /* --- The stage -------------------------------------------------------------
-   Sticky, so the plates stay beside whichever row you have reached rather than
-   scrolling away from the list they belong to. Sticky also makes it the
-   containing block the inset is positioned against.
+   Positioned, because the inset is placed against it.
+
+   It was `position: sticky` for several passes and it never once stuck. Sticky
+   needs somewhere to travel: the element has to be shorter than its containing
+   block. The stage is the tallest thing in this grid and spans both its rows,
+   so the wrap is exactly as tall as the stage — measured at 762px against
+   762px — and there is no room for it to move. The declaration did nothing and
+   the comment above it claimed it did, which is worse than either.
 
    It stands on a Sage panel that runs off the right edge of the screen. The band
    was one flat field of Wash from the section rule to the footer, with a
@@ -182,8 +212,7 @@
    give the plates something to be mounted ON. Sage is the brand's panel colour,
    which is exactly this job. */
 .stage {
-  position: sticky;
-  top: calc(var(--header-h) + 2.5rem);
+  position: relative;
   min-width: 0;
   margin-right: calc(var(--gutter) * -1);
   background: var(--sage-panel);
@@ -354,7 +383,8 @@
   .list,
   .footer,
   .stage { grid-column: 1; grid-row: auto; }
-  .stage { position: static; margin-right: 0; padding: 0; background: none; }
+  .mark { display: none; }
+  .stage { margin-right: 0; padding: 0; background: none; }
   .frame { aspect-ratio: 16 / 10; }
   .arrow { opacity: 1; transform: none; }
   .inset { display: none; }

@@ -123,6 +123,25 @@ export function ProjectIndex({ projects, start = 1, footer }: Props) {
         ))}
       </ol>
 
+      {/* The live project's number, at size, in the ground the three rows leave
+          empty. It is the same information the row already carries — which is
+          the point: it is not a label, it is the section acknowledging what you
+          are pointing at, in the one place there was nothing to look at. */}
+      <div className={styles.mark} aria-hidden="true">
+        <AnimatePresence initial={false} mode="wait">
+          <motion.span
+            key={shown}
+            className={styles.markFigure}
+            initial={reduced ? false : { opacity: 0, y: '0.14em' }}
+            animate={{ opacity: 1, y: '0em' }}
+            exit={reduced ? { opacity: 1 } : { opacity: 0, y: '-0.14em' }}
+            transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+          >
+            {String(start + shown).padStart(2, '0')}
+          </motion.span>
+        </AnimatePresence>
+      </div>
+
       {footer && <div className={styles.footer}>{footer}</div>}
 
       {/* The stage, and the caption that ties it to the list.
