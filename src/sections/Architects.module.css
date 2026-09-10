@@ -1,49 +1,142 @@
+/* ---------------------------------------------------------------------------
+   For architects and designers.
+
+   The one band on the site written to a professional, and it used to be set
+   like a footnote: a small heading and two sentences of body copy in a column
+   beside it. The sentences are the whole section — they are now the largest
+   thing in it.
+   --------------------------------------------------------------------------- */
+
 .section {
+  position: relative;
+  isolation: isolate;
   border-top: 1px solid var(--ink);
   background: var(--sage-panel);
 }
 
+/* --- Section hatching ------------------------------------------------------
+   The 45° ruling a drawing uses where it cuts through material, lit in a soft
+   pool around the pointer.
+
+   A-03 stands on the setting-out grid. This stands on hatch. Two bands, two
+   conventions from the same drawing vocabulary, so they belong to one set
+   without being the same move made twice — which is what a second grid would
+   have been.
+
+   The pointer position is written to two custom properties on the section, so a
+   mousemove costs no React render: the browser repaints a mask and nothing
+   else. At rest the pool parks where this declares it, because a background
+   that only exists once you wave at it is worse than none. */
+.hatch {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  --hatch-line: color-mix(in srgb, var(--pine) 12%, transparent);
+  background-image: repeating-linear-gradient(
+    45deg,
+    var(--hatch-line) 0 1px,
+    transparent 1px clamp(0.7rem, 1.1vw, 1.1rem)
+  );
+  -webkit-mask-image: radial-gradient(
+    circle clamp(14rem, 26vw, 30rem) at var(--mx, 62%) var(--my, 46%),
+    #000 0%,
+    rgba(0, 0, 0, 0.4) 44%,
+    transparent 78%
+  );
+  mask-image: radial-gradient(
+    circle clamp(14rem, 26vw, 30rem) at var(--mx, 62%) var(--my, 46%),
+    #000 0%,
+    rgba(0, 0, 0, 0.4) 44%,
+    transparent 78%
+  );
+}
+
+@media (max-width: 1000px), (pointer: coarse) {
+  .hatch {
+    -webkit-mask-image: radial-gradient(circle 70vw at 50% 45%, #000 0%, transparent 80%);
+    mask-image: radial-gradient(circle 70vw at 50% 45%, #000 0%, transparent 80%);
+  }
+}
+
 .inner {
   display: grid;
-  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
-  gap: clamp(1.5rem, 4vw, 5rem);
-  align-items: start;
+  grid-template-columns: minmax(0, 1.45fr) minmax(0, 0.55fr);
+  column-gap: clamp(2rem, 5vw, 5rem);
+  row-gap: clamp(2rem, 4vw, 3.25rem);
+  align-items: end;
 }
 
-.heading { margin-top: var(--s-4); max-width: 14ch; }
+.head { grid-column: 1 / -1; }
 
-.body {
-  max-width: 52ch;
-  /* Green on sage is 6.1:1 — fine for headings and short passages, which this
-     is. Body copy anywhere longer stays Deep Pine on Wash. */
-  color: var(--pine);
-  /* Two short paragraphs at body size left this band reading as a footnote to
-     the page. It is the only thing on the site addressed to architects, so it
-     is set to be read rather than skimmed past. */
-  font-size: var(--t-lead);
-  line-height: 1.55;
-}
-
-.link { color: var(--green); font-weight: 500; }
-
-@media (max-width: 860px) {
-  .inner { grid-template-columns: minmax(0, 1fr); gap: var(--s-5); }
-}
-
-/* --- Scale rhythm ----------------------------------------------------------
-   Addressed to one reader in a hundred. It has to be findable and it does not
-   have to be loud, so it sits below the shared step rather than on it. */
+/* The title lives in the reference strip, at the strip's own size. The two
+   sentences below are what this band is for. */
 .heading {
-  font-size: clamp(1.5rem, 1.1rem + 1.4vw, 2.25rem);
-  line-height: 1.08;
-  letter-spacing: -0.02em;
+  margin: 0;
+  font: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
+  color: inherit;
 }
 
-/* The call, set as one rather than buried at the end of a paragraph. */
-.call {
+.statementWrap { grid-column: 1; }
+
+.statement { max-width: 24ch; }
+
+/* The call, on the baseline of the statement beside it. */
+.callWrap {
+  grid-column: 2;
+  padding-bottom: 0.5rem;
+}
+
+.callLabel {
+  margin: 0;
   font-family: var(--font-display);
   font-weight: 600;
-  font-size: var(--t-small);
-  padding-top: clamp(0.9rem, 1.8vw, 1.4rem);
+  font-size: var(--t-eyebrow);
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: color-mix(in srgb, var(--pine) 66%, transparent);
+}
+
+/* The number is the point of this section for the reader who is ready, so it is
+   set as the largest thing in its column rather than as a link inside a
+   sentence. */
+.call {
+  display: flex;
+  align-items: center;
+  gap: clamp(0.75rem, 1.6vw, 1.25rem);
+  margin-top: clamp(0.6rem, 1.2vw, 0.9rem);
+  padding-top: clamp(0.7rem, 1.4vw, 1rem);
   border-top: 1px solid var(--ink);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(1.35rem, 1rem + 1.2vw, 2rem);
+  letter-spacing: -0.02em;
+  color: var(--green);
+  text-decoration: none;
+}
+
+.callArrow {
+  width: 1.9rem;
+  flex: none;
+  transition: transform var(--dur) var(--ease-out);
+}
+
+.callArrow svg { width: 100%; height: auto; display: block; }
+
+.call:hover .callArrow,
+.call:focus-visible .callArrow { transform: translateX(0.4rem); }
+
+@media (max-width: 900px) {
+  .inner {
+    grid-template-columns: minmax(0, 1fr);
+    align-items: start;
+  }
+
+  .statementWrap,
+  .callWrap { grid-column: 1; }
+
+  .statement { max-width: none; }
+  .callWrap { padding-bottom: 0; }
 }

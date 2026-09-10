@@ -87,3 +87,108 @@
   line-height: 0.98;
   letter-spacing: -0.038em;
 }
+
+/* --- One at a time ---------------------------------------------------------
+   Three columns of quotes is a page of testimonials. One at the size a client's
+   own words are worth, with the other two named beside it, is a statement — and
+   it is read last, immediately before the enquiry, by somebody deciding whether
+   to make contact.
+   --------------------------------------------------------------------------- */
+
+.stage {
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(0, 0.62fr);
+  gap: clamp(2rem, 5vw, 5rem);
+  align-items: start;
+  margin-top: clamp(2rem, 4vw, 3.25rem);
+  padding-top: clamp(2rem, 4vw, 3rem);
+  border-top: 1px solid var(--ink);
+}
+
+/* A fixed floor, so a shorter quote cannot shrink the band and make the whole
+   page jump every eight seconds. */
+.quoteSlot { min-height: clamp(11rem, 20vw, 15rem); }
+
+.stage .quote {
+  font-size: clamp(1.4rem, 1rem + 1.6vw, 2.5rem);
+  line-height: 1.28;
+  letter-spacing: -0.018em;
+}
+
+.stage .by { margin-top: clamp(1.5rem, 3vw, 2.25rem); }
+
+/* --- The set ---------------------------------------------------------------
+   Numbered like everything else on this site, and each one carries its own
+   dwell as a rule that fills. A quote that changes with no warning reads as a
+   slideshow; one that shows how long it will hold reads as a considered
+   sequence you can interrupt. */
+.set {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-top: 1px solid var(--ink);
+}
+
+.pick {
+  display: grid;
+  grid-template-columns: minmax(2.25rem, auto) minmax(0, 1fr);
+  align-items: baseline;
+  gap: clamp(0.75rem, 1.6vw, 1.25rem);
+  width: 100%;
+  padding: clamp(0.9rem, 1.8vw, 1.25rem) 0;
+  border: 0;
+  border-bottom: 1px solid var(--ink);
+  background: none;
+  text-align: left;
+  cursor: pointer;
+  font-family: var(--font-display);
+  color: var(--green);
+}
+
+.pickNumber {
+  font-weight: 600;
+  font-size: var(--t-small);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.06em;
+  opacity: 0.4;
+  transition: opacity var(--dur) var(--ease);
+}
+
+.pickName {
+  font-weight: 600;
+  font-size: var(--t-sub);
+  letter-spacing: -0.01em;
+  opacity: 0.55;
+  transition: opacity var(--dur) var(--ease);
+}
+
+.pickOn .pickNumber,
+.pickOn .pickName,
+.pick:hover .pickName,
+.pick:focus-visible .pickName { opacity: 1; }
+
+.pick:focus-visible {
+  outline: 2px solid var(--green);
+  outline-offset: 3px;
+}
+
+/* The dwell rule, sitting on the row's own bottom border. */
+.dwell {
+  grid-column: 1 / -1;
+  position: relative;
+  height: 1px;
+  margin-bottom: calc(clamp(0.9rem, 1.8vw, 1.25rem) * -1);
+  margin-top: clamp(0.9rem, 1.8vw, 1.25rem);
+}
+
+.dwellFill {
+  position: absolute;
+  inset: 0;
+  background: var(--green);
+  transform-origin: left center;
+}
+
+@media (max-width: 1100px) {
+  .stage { grid-template-columns: minmax(0, 1fr); gap: clamp(1.75rem, 4vw, 2.5rem); }
+  .quoteSlot { min-height: 0; }
+}
