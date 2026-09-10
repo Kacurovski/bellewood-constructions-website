@@ -40,6 +40,11 @@ type Props = {
  *
  * Touch devices never see this — there is no hover to reveal anything with — so
  * `SelectedProjects` renders the swipe rail instead and this never mounts.
+ *
+ * The caption under the plate is what makes the section legible standing still.
+ * Without it this is three names beside a photograph, and nothing says the two
+ * are connected until somebody happens to move the pointer over a row — which
+ * is a lot to ask of a section most people only glance at.
  */
 export function ProjectIndex({ projects, start = 1 }: Props) {
   const [active, setActive] = useState<number | null>(null)
@@ -79,7 +84,13 @@ export function ProjectIndex({ projects, start = 1 }: Props) {
           <li key={project.slug} className={styles.item}>
             <Link
               to={`/work/${project.slug}`}
-              className={[styles.row, active === i ? styles.rowActive : ''].join(' ')}
+              className={[
+                styles.row,
+                i === shown ? styles.rowActive : '',
+                // At rest the first row is the one on the stage, so it is lit —
+                // but only the row the pointer is actually on gets the travel.
+                active === i ? styles.rowHot : '',
+              ].join(' ')}
               onPointerEnter={() => setActive(i)}
               onFocus={() => setActive(i)}
               onBlur={() => setActive(null)}
@@ -101,32 +112,51 @@ export function ProjectIndex({ projects, start = 1 }: Props) {
         ))}
       </ol>
 
-      {/* Every photograph is mounted and crossfaded rather than swapped on the
-          src: swapping flashes the first time each one is reached, and a
-          register whose plate flickers is worse than one with no plate.
-          Decorative — each row is already a named link. */}
+      {/* The stage, and the caption that ties it to the list.
+
+          Without the caption the section is three names and a photograph, and
+          nothing on it says the two are connected until you happen to move the
+          pointer over a row. The caption names what is on the plate and counts
+          it against the set, so the link is legible standing still — which is
+          the state most people see it in. */}
       <div className={styles.stage} aria-hidden="true">
-        {projects.map((project, i) =>
-          project.hero.src ? (
-            <motion.img
-              key={project.slug}
-              className={[
-                styles.plate,
-                i === shown ? (active === null ? styles.plateResting : styles.plateOn) : '',
-              ].join(' ')}
-              style={reduced ? undefined : { x: driftX, y: driftY }}
-              src={project.hero.src}
-              alt=""
-              loading="eager"
-              decoding="async"
-            />
-          ) : (
-            <span
-              key={project.slug}
-              className={[styles.corner, i === shown ? styles.cornerOn : ''].join(' ')}
-            />
-          ),
-        )}
+        <div className={styles.frame}>
+          {/* Every photograph is mounted and crossfaded rather than swapped on
+              the src: swapping flashes the first time each one is reached, and a
+              register whose plate flickers is worse than one with no plate. */}
+          {projects.map((project, i) =>
+            project.hero.src ? (
+              <motion.img
+                key={project.slug}
+                className={[styles.plate, i === shown ? styles.plateOn : ''].join(' ')}
+                style={reduced ? undefined : { x: driftX, y: driftY }}
+                src={project.hero.src}
+                alt=""
+                loading="eager"
+                decoding="async"
+              />
+            ) : (
+              <span
+                key={project.slug}
+                className={[styles.corner, i === shown ? styles.cornerOn : ''].join(' ')}
+              />
+            ),
+          )}
+        </div>
+
+        <div className={styles.caption}>
+          <span className={styles.captionName}>
+            <span className={styles.captionNumber}>
+              {String(start + shown).padStart(2, '0')}
+            </span>
+            {projects[shown]?.title}
+          </span>
+          <span className={styles.captionCount}>
+            {String(start + shown).padStart(2, '0')}
+            <span className={styles.captionSlash} />
+            {String(projects.length).padStart(2, '0')}
+          </span>
+        </div>
       </div>
     </div>
   )

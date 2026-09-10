@@ -119,6 +119,74 @@
   box-sizing: border-box;
 }
 
+/* --- Annotation ------------------------------------------------------------
+   A label, a leader line and a dot, in the drawing convention. Two of them:
+   the cottage that is kept and the wing that is added, which is the whole
+   proposition of the business pointed at the object that demonstrates it.
+
+   Positions are percentages of the plate. The model leans a couple of degrees
+   towards the pointer, so these are set against the shape rather than against a
+   single pixel — near enough to read as pointing at the right part, loose
+   enough that the lean never makes one of them look wrong. */
+.note {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.noteDot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--sage);
+  flex: none;
+}
+
+.noteLine {
+  width: clamp(1.75rem, 4vw, 3.25rem);
+  height: 1px;
+  background: color-mix(in srgb, var(--wash) 40%, transparent);
+  flex: none;
+}
+
+.noteText {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: var(--t-eyebrow);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--sage);
+  white-space: nowrap;
+}
+
+/* The cottage: dot on the verandah end, label running off to the left. */
+.noteOld {
+  left: 6%;
+  top: 34%;
+  flex-direction: row-reverse;
+}
+
+/* The new wing sits hard against the right edge of the plate, so there is no
+   room for a label beside it — running one out to the right put it straight
+   through the height dimension. It hangs underneath instead, on a short
+   vertical leader, which is equally a drawing convention. */
+.noteNew {
+  right: clamp(3.5rem, 8vw, 7rem);
+  top: 58%;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.4rem;
+}
+
+.noteNew .noteLine {
+  width: 1px;
+  height: clamp(1.25rem, 3vh, 2.25rem);
+  margin-right: 2px;
+}
+
 /* The depth, under the object rather than under the page — it measures the
    building, so it is the width of the building's panel. */
 .dim {
@@ -160,8 +228,10 @@
 
   .dim { margin-inline: var(--gutter); }
 
-  /* A phone has no spare width beside the drawing. */
-  .dimV { display: none; }
+  /* A phone has no spare width beside the drawing — not for the height
+     dimension and not for labels hanging off the sides of it either. */
+  .dimV,
+  .note { display: none; }
 
   .scene { inset: 0; }
 

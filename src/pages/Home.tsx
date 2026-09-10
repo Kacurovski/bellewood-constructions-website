@@ -7,7 +7,6 @@ import { Architects } from '../sections/Architects'
 import { Testimonials } from '../sections/Testimonials'
 import { Enquiry } from '../sections/Enquiry'
 import { LeadMagnet } from '../components/LeadMagnet'
-import { Credentials } from '../components/Credentials'
 import { usePageTitle } from '../hooks/usePageTitle'
 import styles from './Home.module.css'
 
@@ -20,7 +19,6 @@ export default function Home() {
       <Proposition />
       <SelectedProjects />
       <GreenSection />
-      <Credentials />
       <Process />
       <Architects />
       <Testimonials />

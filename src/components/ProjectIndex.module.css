@@ -104,9 +104,18 @@
 .arrow svg { width: 100%; height: auto; display: block; }
 
 /* --- The live row ----------------------------------------------------------
-   Driven by React rather than by `:hover`, so a keyboard focus lights the same
-   row and brings up the same plate. */
-.rowActive .title { transform: translateX(clamp(0.4rem, 1.2vw, 1.1rem)); }
+   Two states, not one.
+
+   `rowActive` is the row the plate is currently showing — including at rest,
+   where that is the first row. It lights, so the section says which name the
+   photograph belongs to before anybody has touched it.
+
+   `rowHot` is the row the pointer is actually on. Only that one travels, so
+   moving along the list feels like picking a row rather than like the list
+   rearranging itself.
+
+   Both are driven by React rather than by `:hover`, so a keyboard focus lights
+   the same row and brings up the same plate. */
 .rowActive .number { opacity: 1; }
 .rowActive .detail { opacity: 1; }
 
@@ -114,6 +123,8 @@
   opacity: 1;
   transform: translateX(0);
 }
+
+.rowHot .title { transform: translateX(clamp(0.4rem, 1.2vw, 1.1rem)); }
 
 .row:focus-visible {
   outline: 2px solid var(--green);
@@ -126,10 +137,66 @@
 .stage {
   position: sticky;
   top: calc(var(--header-h) + 2.5rem);
-  aspect-ratio: 4 / 5;
   min-width: 0;
+}
+
+.frame {
+  position: relative;
+  aspect-ratio: 4 / 5;
   overflow: hidden;
   background: var(--sage-panel);
+}
+
+/* --- The caption -----------------------------------------------------------
+   What is on the plate, and where it sits in the set. This is the piece that
+   was missing: without it the section is three names and a photograph with
+   nothing saying they are connected until the pointer happens to cross a row. */
+.caption {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--s-4);
+  margin-top: clamp(0.8rem, 1.5vw, 1.1rem);
+  padding-top: clamp(0.7rem, 1.4vw, 1rem);
+  border-top: 1px solid var(--ink);
+}
+
+.captionName {
+  display: flex;
+  align-items: baseline;
+  gap: 0.7rem;
+  min-width: 0;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: var(--t-small);
+  color: var(--green);
+}
+
+.captionNumber {
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.08em;
+  opacity: 0.45;
+  flex: none;
+}
+
+/* The set count, tabular so it cannot reflow as it changes. */
+.captionCount {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55em;
+  flex: none;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: var(--t-fine);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.14em;
+  color: color-mix(in srgb, var(--pine) 62%, transparent);
+}
+
+.captionSlash {
+  width: 0.85rem;
+  height: 1px;
+  background: var(--ink);
 }
 
 .plate {
@@ -149,10 +216,6 @@
 }
 
 .plateOn { opacity: 1; }
-
-/* Nothing chosen yet: the stage holds the first project so the section is never
-   an empty rectangle waiting to be hovered. */
-.plateResting { opacity: 1; }
 
 /* The empty state, for a project with no photograph yet. Corner marks, the same
    drawing-in-waiting the rest of the site uses. */
@@ -187,6 +250,7 @@
    worth leaving reachable by accident. */
 @media (max-width: 1000px) {
   .wrap { grid-template-columns: minmax(0, 1fr); }
-  .stage { aspect-ratio: 16 / 10; position: static; }
+  .stage { position: static; }
+  .frame { aspect-ratio: 16 / 10; }
   .arrow { opacity: 1; transform: none; }
 }

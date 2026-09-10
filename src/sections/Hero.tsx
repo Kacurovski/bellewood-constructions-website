@@ -90,6 +90,29 @@ export function Hero() {
               >
                 <HeritageStudy />
               </SceneFrame>
+
+              {/* Annotation, the way a drawing is annotated: a label, a leader
+                  line, and a dot on the thing it names.
+
+                  This is what turns the object from a render into an argument.
+                  The headline says heritage homes rebuilt in timber; the two
+                  labels are that sentence pointed at the building, so the shape
+                  on the screen means something before a word of it is read.
+
+                  Decorative — the scene already carries the whole description in
+                  its own accessible label, and repeating half of it here would
+                  read it out twice. */}
+              <span className={[styles.note, styles.noteOld].join(' ')} aria-hidden="true">
+                <span className={styles.noteDot} />
+                <span className={styles.noteLine} />
+                <span className={styles.noteText}>Cottage, kept</span>
+              </span>
+
+              <span className={[styles.note, styles.noteNew].join(' ')} aria-hidden="true">
+                <span className={styles.noteDot} />
+                <span className={styles.noteLine} />
+                <span className={styles.noteText}>New wing</span>
+              </span>
             </div>
 
             {/* Read off the building, not typed in. A thin space groups the

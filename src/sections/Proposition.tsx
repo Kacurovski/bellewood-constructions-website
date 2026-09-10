@@ -1,6 +1,7 @@
 import { Reveal } from '../components/Reveal'
 import { SheetRef } from '../components/Sheet'
 import { ImageSlot } from '../components/ImageSlot'
+import { Credentials } from '../components/Credentials'
 import { stills } from '../data/projects'
 import styles from './Proposition.module.css'
 
@@ -31,13 +32,20 @@ export function Proposition() {
           </h2>
         </Reveal>
 
-        {/* A detail rather than another elevation: the index below is full of
-            whole houses, and this section is about how they are put together.
-            It runs off the left edge of the page at close to half the band's
-            height, because a photograph in a column is a thumbnail and this one
-            is meant to be the thing you look at. */}
+        {/* A figure, at a figure's size, with a figure's caption.
+
+            It was a half-width plate, which put a large photograph here and
+            another large photograph in the register directly below — two bands
+            running the same move back to back, and the second one lost because
+            of it. Small and captioned it belongs to the paragraph beside it
+            instead of competing with the section under it. */}
         <Reveal delay={0.06} className={styles.figure}>
-          <ImageSlot slot={stills.detail} ratio="16 / 10" tone="sage" className={styles.detail} />
+          <ImageSlot slot={stills.detail} ratio="4 / 5" tone="sage" className={styles.detail} />
+          <p className={styles.caption}>
+            <span className={styles.captionNumber}>Fig. 1</span>
+            Wall frame lifted into place. Set out from the drawings, built in the
+            same order every time.
+          </p>
         </Reveal>
 
         <Reveal delay={0.12} className={styles.bodyWrap}>
@@ -52,6 +60,14 @@ export function Proposition() {
               same standard.
             </p>
           </div>
+        </Reveal>
+
+        {/* The credentials row, at the foot of this section rather than as a
+            band of its own. This section is a heading, a figure and forty
+            words, so it had height going spare; the row was a fifth band of the
+            same weight on a page that already had too many. */}
+        <Reveal delay={0.16} className={styles.creds}>
+          <Credentials inline />
         </Reveal>
       </div>
     </section>
