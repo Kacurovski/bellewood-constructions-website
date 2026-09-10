@@ -15,7 +15,8 @@
 
 .head {
   position: relative;
-  background: var(--pine);
+  /* Bellewood Green — the brand's ground colour. See the note in Hero. */
+  background: var(--green);
   /* Up under the sticky header, and the height given back as padding, so the
      header floats on the band instead of sitting in a strip above it. */
   margin-top: calc(var(--header-h) * -1);

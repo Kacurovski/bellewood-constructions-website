@@ -1,6 +1,7 @@
 import { Reveal } from '../components/Reveal'
 import { SheetRef } from '../components/Sheet'
 import { ImageSlot } from '../components/ImageSlot'
+import { HeritageStudyStill } from '../three/HeritageStudyStill'
 import { Credentials } from '../components/Credentials'
 import { stills } from '../data/projects'
 import styles from './Proposition.module.css'
@@ -32,20 +33,35 @@ export function Proposition() {
           </h2>
         </Reveal>
 
-        {/* A figure, at a figure's size, with a figure's caption.
+        {/* Two figures, and they are the argument.
 
-            It was a half-width plate, which put a large photograph here and
-            another large photograph in the register directly below — two bands
-            running the same move back to back, and the second one lost because
-            of it. Small and captioned it belongs to the paragraph beside it
-            instead of competing with the section under it. */}
-        <Reveal delay={0.06} className={styles.figure}>
-          <ImageSlot slot={stills.detail} ratio="4 / 5" tone="sage" className={styles.detail} />
-          <p className={styles.caption}>
-            <span className={styles.captionNumber}>Fig. 1</span>
-            Wall frame lifted into place. Set out from the drawings, built in the
-            same order every time.
-          </p>
+            The section's heading says older houses taken seriously; the pair
+            under it says how. Fig. 1 is the same house the hero carries, drawn
+            as line work — every face filled with the page's own ground so the
+            hidden edges are removed and what is left is an elevation. Fig. 2 is
+            a wall frame going up. Drawn, then built, side by side, which is the
+            one claim this business makes that a photograph alone cannot.
+
+            It is also the reason this band is not another slab of photography.
+            One of the two plates is a drawing, and nobody else has it. */}
+        <Reveal delay={0.06} className={styles.figures}>
+          <figure className={styles.figure}>
+            <div className={styles.drawing}>
+              <HeritageStudyStill className={styles.line} variant="line" />
+            </div>
+            <figcaption className={styles.caption}>
+              <span className={styles.captionNumber}>Fig. 1</span>
+              The cottage and its new wing, set out.
+            </figcaption>
+          </figure>
+
+          <figure className={styles.figure}>
+            <ImageSlot slot={stills.detail} ratio="3 / 2" tone="sage" className={styles.detail} />
+            <figcaption className={styles.caption}>
+              <span className={styles.captionNumber}>Fig. 2</span>
+              The same order, on site. A wall frame going up.
+            </figcaption>
+          </figure>
         </Reveal>
 
         <Reveal delay={0.12} className={styles.bodyWrap}>

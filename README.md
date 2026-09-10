@@ -116,6 +116,24 @@ src/
 
 ---
 
+## Dark grounds are Bellewood Green, never Deep Pine
+
+The brand book assigns each colour a job, and `tokens.css` records them:
+**Green — "the mark, headings, solid grounds"**, **Pine — "body text and fine
+rules"**.
+
+Every dark field on this site was Deep Pine for several passes — the hero, the
+mastheads, the 404, the reversed lead magnet. It was chosen so the page would
+open a step darker than the footer, and it was wrong: Pine used as a field is a
+near-black that reads as a *different colour* rather than as the identity's
+dark, and the client noticed before the reasoning did. It also meant the site
+had two dark greens that were almost, but not quite, alike.
+
+They are all `--green` now. **If you add a dark band, it is `--green`.** Pine
+stays where the book puts it: type and hairlines.
+
+---
+
 ## The site is set as a drawing sheet
 
 This is the design direction, and it is load-bearing rather than decorative.

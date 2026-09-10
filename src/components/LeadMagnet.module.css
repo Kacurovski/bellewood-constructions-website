@@ -15,7 +15,8 @@
    the page says. `.on-green` handles the heading and the eyebrow; everything
    below is the parts it cannot reach — the form, which owns its own colours. */
 .green {
-  background: var(--pine);
+  /* Bellewood Green — the brand's ground colour. See the note in Hero. */
+  background: var(--green);
   border-color: transparent;
   padding: clamp(2.25rem, 5vw, 4.5rem);
 }

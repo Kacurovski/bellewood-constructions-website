@@ -1,6 +1,7 @@
 /* Opens dark like every other route, and runs up under the header. */
 .wrap {
-  background: var(--pine);
+  /* Bellewood Green — the brand's ground colour. See the note in Hero. */
+  background: var(--green);
   margin-top: calc(var(--header-h) * -1);
   padding-top: var(--header-h);
   padding-bottom: clamp(6rem, 14vw, 12rem);

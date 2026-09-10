@@ -23,9 +23,11 @@ type Props = {
 /**
  * The masthead. One opening move for every route.
  *
- * It carries `on-green` so the global reverse rules apply to anything passed
- * through `children`, and overrides the ground to Deep Pine — a step darker
- * than the footer, so the page opens at its darkest and resolves upward.
+ * It carries `on-green`, which is both the reverse text handling and the
+ * ground: Bellewood Green, the colour the brand book assigns to solid grounds.
+ * It was briefly Deep Pine, on the idea that the page should open a step darker
+ * than the footer — but Pine is the book's text-and-rules colour, and used as a
+ * field it reads as a near-black that is not quite the identity's dark.
  *
  * The header is transparent over this band (see Header.module.css), which is
  * why the band runs up underneath it rather than starting below it.

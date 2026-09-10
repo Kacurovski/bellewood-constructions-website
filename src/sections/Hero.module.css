@@ -15,7 +15,13 @@
 .hero {
   position: relative;
   overflow: hidden;
-  background: var(--pine);
+  /* Bellewood Green, which is the brand's ground colour. This was Deep Pine —
+     off-brand: the book assigns Pine to body text and fine rules, and Green to
+     "the mark, headings, solid grounds". Pine is a near-black that reads as a
+     different colour rather than as the identity's dark, which is exactly how
+     it looked. Green also puts the hero, the mesh band, the enquiry and the
+     footer on one ground instead of two that are almost but not quite alike. */
+  background: var(--green);
   margin-top: calc(var(--header-h) * -1);
   padding-top: var(--header-h);
 }
@@ -98,19 +104,10 @@
   min-height: 0;
 }
 
-/* Ground to ridge, up the right-hand edge. Absolute, so it cannot take width
-   from the drawing. */
-.dimV {
-  position: absolute;
-  top: 6%;
-  bottom: 6%;
-  right: var(--gutter);
-  z-index: 1;
-}
-
-/* Inset on the right by the width of the height dimension, so the house is
-   fitted to the space beside the line rather than underneath it. */
-.scene { position: absolute; inset: 0 clamp(2.5rem, 4.5vw, 4rem) 0 0; }
+/* The height dimension used to sit here, up the right-hand edge, and the scene
+   was inset to clear it. Both are gone — one dimension says the object is
+   measured, two say it twice — so the drawing gets the whole plate back. */
+.scene { position: absolute; inset: 0; }
 
 .still {
   width: 100%;
@@ -228,12 +225,9 @@
 
   .dim { margin-inline: var(--gutter); }
 
-  /* A phone has no spare width beside the drawing — not for the height
-     dimension and not for labels hanging off the sides of it either. */
-  .dimV,
+  /* A phone has no spare width for labels hanging off the sides of the
+     drawing. */
   .note { display: none; }
-
-  .scene { inset: 0; }
 
   .lede {
     order: 2;

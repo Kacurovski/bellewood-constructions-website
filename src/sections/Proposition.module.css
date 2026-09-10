@@ -17,7 +17,7 @@
 
 .inner {
   display: grid;
-  grid-template-columns: minmax(0, 0.44fr) minmax(0, 1fr);
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, 0.8fr);
   column-gap: clamp(2rem, 5vw, 5rem);
   row-gap: clamp(2rem, 4vw, 3.5rem);
   align-items: start;
@@ -39,9 +39,38 @@
   text-wrap: balance;
 }
 
-/* A figure in the margin, not a hero. It keeps the page's gutter — running it
-   off the edge is what made it read as a second hero image. */
-.figure { grid-column: 1; }
+/* A pair, side by side: the drawing and the photograph of the same idea. Both
+   at a figure's size, inside the page's gutter — running one off the edge is
+   what made this band read as a second hero image. */
+.figures {
+  grid-column: 1;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(1rem, 2.4vw, 2rem);
+  align-items: start;
+}
+
+.figure { margin: 0; min-width: 0; }
+
+/* The drawing sits on the page's own ground, because the line work is filled
+   with that ground — give it a panel and every face would paint the wrong
+   colour and the hidden-line removal would show.
+
+   Landscape, because the projection is: the house is half again as wide as it
+   is tall, and in a portrait frame it floated in the middle with a third of the
+   box empty above and below it. Both figures take the same ratio — a pair whose
+   two halves are different shapes is not a pair. */
+.drawing {
+  aspect-ratio: 3 / 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--ink);
+  box-sizing: border-box;
+  padding: clamp(0.5rem, 1.5vw, 1rem);
+}
+
+.line { width: 100%; height: 100%; }
 
 /* The caption. Figure number, then what is in the plate — the same convention
    the sheet references use, so a photograph on this site is labelled the way a
@@ -87,13 +116,18 @@
 }
 
 @media (max-width: 860px) {
+  /* The pair stays a pair — two figures side by side at a phone's width are
+     still legible, and stacking them would make the band twice as long for no
+     gain. */
+  .figures { gap: var(--s-4); }
+
   .inner {
     grid-template-columns: minmax(0, 1fr);
     row-gap: var(--s-6);
   }
 
   .head,
-  .figure,
+  .figures,
   .bodyWrap,
   .creds {
     grid-column: 1;
@@ -101,11 +135,7 @@
 
   .bodyWrap { padding-top: 0; }
 
-  /* Stacked, the figure keeps its size rather than growing to the column — a
-     figure that fills the screen is not a figure any more. */
-  .figure { max-width: 20rem; }
-
-  /* ImageSlot writes its ratio as an inline style, so overriding it for the
-     narrow layout has to outrank one. */
-  .detail { aspect-ratio: 4 / 3 !important; }
+  /* Both halves of the pair keep the same shape at every width — the drawing
+     is landscape by nature and the photograph follows it. */
+  .detail { aspect-ratio: 3 / 2 !important; }
 }

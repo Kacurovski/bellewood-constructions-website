@@ -2,7 +2,7 @@ import { lazy } from 'react'
 import { Link } from 'react-router-dom'
 import { SceneFrame } from '../three/SceneFrame'
 import { HeritageStudyStill } from '../three/HeritageStudyStill'
-import { Dimension, RegistrationMarks, SheetRef } from '../components/Sheet'
+import { Dimension, SheetRef } from '../components/Sheet'
 import { RiseIn } from '../components/RiseIn'
 import { HERITAGE_SETOUT } from '../three/heritageMembers'
 import { contact, site } from '../config/site'
@@ -34,21 +34,22 @@ const HeritageStudy = lazy(() => import('../three/HeritageStudy'))
  * than typed in here. Change the building and the figure changes with it. A
  * drawing carrying an invented dimension is worse than one carrying none.
  *
+ * It had five different kinds of technical mark on it at once — a reference
+ * strip with three fields, four registration crosses, a height dimension, a
+ * depth dimension and two annotation callouts — which is a drawing sheet's
+ * whole vocabulary spoken at the same time, and it read as clutter rather than
+ * as precision. What is left is the reference, one dimension, and the two
+ * callouts that actually say something: the cottage kept, the wing added. The
+ * marks and the second dimension were the two that carried no meaning.
+ *
  * The heading deliberately avoids a years-trading number. The records on file
  * disagree, and it is not going on the page until Angus settles it.
  */
 export function Hero() {
   return (
     <section className={['on-green', styles.hero].join(' ')} aria-labelledby="hero-heading">
-      <RegistrationMarks />
-
       <div className={['shell', styles.inner].join(' ')}>
-        <SheetRef
-          number="SK-01"
-          name="Heritage study — cottage and new wing"
-          note="Brisbane, QLD"
-          className={styles.ref}
-        />
+        <SheetRef number="SK-01" name="Heritage study" className={styles.ref} />
 
         {/* Words left, drawing right. The sheet reference still runs across
             the top of both, so the band reads as one sheet rather than as two
@@ -75,13 +76,6 @@ export function Hero() {
 
           <div className={styles.figure}>
             <div className={styles.plate}>
-              {/* Ground to ridge, up the right-hand edge. */}
-              <Dimension
-                figure={HERITAGE_SETOUT.height.toLocaleString('en-AU').replace(',', ' ')}
-                vertical
-                className={styles.dimV}
-              />
-
               <SceneFrame
                 className={styles.scene}
                 label="A Queenslander cottage: the original house built, and a new wing behind it still drawn as a frame."
