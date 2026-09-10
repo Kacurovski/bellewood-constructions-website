@@ -59,7 +59,19 @@ export function SelectedProjects() {
             the right edge is what says the row moves. */}
         <Reveal className={styles.list}>
           {canHover ? (
-            <ProjectIndex projects={[...featuredProjects]} />
+            <ProjectIndex
+              projects={[...featuredProjects]}
+              footer={
+                <Link to="/work" className={styles.more}>
+                  <span className={styles.moreLabel}>See all work</span>
+                  <span className={styles.moreArrow} aria-hidden="true">
+                    <svg viewBox="0 0 34 10" fill="none">
+                      <path d="M0 5h32M27.5 1l4.5 4-4.5 4" stroke="currentColor" strokeWidth="1.2" />
+                    </svg>
+                  </span>
+                </Link>
+              }
+            />
           ) : (
             <SwipeRow as="ul" label="Selected projects" columns={1}>
               {featuredProjects.map((project, i) => (
@@ -77,20 +89,20 @@ export function SelectedProjects() {
           )}
         </Reveal>
 
-        {/* A full-width row rather than a link floating in the middle of a lot
-            of empty ground. The rule and the arrow are what say "this is the
-            way on"; a bare underlined phrase in the centre of a section said
-            nothing at all. */}
-        <Reveal className={styles.foot}>
-          <Link to="/work" className={styles.more}>
-            <span className={styles.moreLabel}>See all work</span>
-            <span className={styles.moreArrow} aria-hidden="true">
-              <svg viewBox="0 0 34 10" fill="none">
-                <path d="M0 5h32M27.5 1l4.5 4-4.5 4" stroke="currentColor" strokeWidth="1.2" />
-              </svg>
-            </span>
-          </Link>
-        </Reveal>
+        {/* Only the rail needs this. On a pointer device the way on lives
+            inside the register, in the corner the list leaves empty. */}
+        {!canHover && (
+          <Reveal className={styles.foot}>
+            <Link to="/work" className={styles.more}>
+              <span className={styles.moreLabel}>See all work</span>
+              <span className={styles.moreArrow} aria-hidden="true">
+                <svg viewBox="0 0 34 10" fill="none">
+                  <path d="M0 5h32M27.5 1l4.5 4-4.5 4" stroke="currentColor" strokeWidth="1.2" />
+                </svg>
+              </span>
+            </Link>
+          </Reveal>
+        )}
       </div>
     </section>
   )

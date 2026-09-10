@@ -1,5 +1,5 @@
 import { useRef, useState } from 'react'
-import type { PointerEvent as ReactPointerEvent } from 'react'
+import type { PointerEvent as ReactPointerEvent, ReactNode } from 'react'
 import { Link } from 'react-router-dom'
 import { AnimatePresence, motion, useMotionValue, useSpring, useTransform } from 'framer-motion'
 import type { Project } from '../data/projects'
@@ -10,6 +10,13 @@ type Props = {
   projects: Project[]
   /** Where the numbering starts. The index is 1-based on the page. */
   start?: number
+  /**
+   * Rendered under the list, inside the left column. The way on to /work lives
+   * here rather than below the section: the list is three rows and the stage
+   * beside it is tall, so without this the bottom-left quarter of the band is
+   * empty ground.
+   */
+  footer?: ReactNode
 }
 
 /**
@@ -46,7 +53,7 @@ type Props = {
  * are connected until somebody happens to move the pointer over a row — which
  * is a lot to ask of a section most people only glance at.
  */
-export function ProjectIndex({ projects, start = 1 }: Props) {
+export function ProjectIndex({ projects, start = 1, footer }: Props) {
   const [active, setActive] = useState<number | null>(null)
   const reduced = useReducedMotion()
   const frame = useRef<HTMLDivElement>(null)
@@ -95,6 +102,10 @@ export function ProjectIndex({ projects, start = 1 }: Props) {
               onFocus={() => setActive(i)}
               onBlur={() => setActive(null)}
             >
+              {/* The rule that marks the live row. It draws down the left edge
+                  rather than filling or boxing anything, which is the only kind
+                  of emphasis the rest of this site uses. */}
+              <span className={styles.edge} aria-hidden="true" />
               <span className={styles.number}>{String(start + i).padStart(2, '0')}</span>
               <span className={styles.title}>{project.title}</span>
               <span className={styles.detail}>
@@ -111,6 +122,8 @@ export function ProjectIndex({ projects, start = 1 }: Props) {
           </li>
         ))}
       </ol>
+
+      {footer && <div className={styles.footer}>{footer}</div>}
 
       {/* The stage, and the caption that ties it to the list.
 
@@ -161,6 +174,40 @@ export function ProjectIndex({ projects, start = 1 }: Props) {
               />
             ),
           )}
+        </div>
+
+        {/* A second, smaller plate lapping the corner of the first, changing a
+            beat behind it. One rectangle is a picture; two overlapping, arriving
+            out of step, is a composition — and it doubles what the section
+            shows without doubling what it takes up. */}
+        <div className={styles.inset}>
+          {projects.map((project, i) => {
+            const detail = project.gallery[0]
+            return detail?.src ? (
+              <motion.img
+                key={project.slug}
+                className={styles.insetPlate}
+                animate={
+                  i === shown
+                    ? { clipPath: 'inset(0% 0% 0% 0%)', scale: 1, opacity: 1 }
+                    : { clipPath: 'inset(0% 100% 0% 0%)', scale: 1.08, opacity: 0 }
+                }
+                transition={
+                  reduced
+                    ? { duration: 0 }
+                    : {
+                        clipPath: { duration: 0.66, delay: 0.14, ease: [0.16, 1, 0.3, 1] },
+                        scale: { duration: 1, delay: 0.14, ease: [0.16, 1, 0.3, 1] },
+                        opacity: { duration: 0.2, delay: 0.14 },
+                      }
+                }
+                src={detail.src}
+                alt=""
+                loading="eager"
+                decoding="async"
+              />
+            ) : null
+          })}
         </div>
 
         <div className={styles.caption}>

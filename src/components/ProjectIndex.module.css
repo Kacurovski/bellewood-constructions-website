@@ -12,11 +12,29 @@
    crossfades between projects — but it moves inside a box of its own.
    --------------------------------------------------------------------------- */
 
+/* Two columns and two rows: the list and the way on down the left, the stage
+   holding both rows on the right. The stage runs off the right edge of the
+   screen — it is the only photograph in the band and stopping it at the gutter
+   left a rectangle floating in a field of paper. */
 .wrap {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 0.66fr);
-  gap: clamp(2rem, 5vw, 5rem);
+  grid-template-columns: minmax(0, 1fr) minmax(0, 0.78fr);
+  grid-template-rows: auto 1fr;
+  column-gap: clamp(2rem, 5vw, 5rem);
+  row-gap: clamp(2.5rem, 5vw, 4rem);
   align-items: start;
+}
+
+.list { grid-column: 1; grid-row: 1; }
+
+/* The way on, in the corner the three rows leave empty. */
+.footer { grid-column: 1; grid-row: 2; align-self: end; }
+
+/* Placement lives with the layout; the rest of the stage is defined further
+   down with the plates it holds. */
+.stage {
+  grid-column: 2;
+  grid-row: 1 / span 2;
 }
 
 .list {
@@ -31,6 +49,7 @@
 
 /* Number, name and arrow on one line; the description under the name. */
 .row {
+  position: relative;
   display: grid;
   grid-template-columns: minmax(2.25rem, auto) minmax(0, 1fr) minmax(2.1rem, auto);
   align-items: baseline;
@@ -39,7 +58,10 @@
      description's own margin. */
   column-gap: clamp(0.75rem, 2vw, 1.75rem);
   row-gap: 0;
-  padding-block: clamp(1.3rem, 2.6vw, 2.1rem);
+  /* Deep rows. They are the only thing in this band you can point at, so they
+     are worth being easy to point at — and three shallow ones left the left
+     column three hundred pixels shorter than the stage beside it. */
+  padding-block: clamp(1.6rem, 3.4vw, 2.9rem);
   text-decoration: none;
   color: var(--green);
 }
@@ -131,20 +153,73 @@
   outline-offset: 4px;
 }
 
+/* The rule that marks the live row: drawn down its left edge, out in the
+   margin where it cannot crowd the number. It grows from the top, so moving
+   between rows reads as the mark being redrawn rather than jumping. */
+.edge {
+  position: absolute;
+  left: calc(clamp(0.75rem, 2vw, 1.75rem) * -1);
+  top: 0.9rem;
+  bottom: 0.9rem;
+  width: 1px;
+  background: var(--green);
+  transform: scaleY(0);
+  transform-origin: top;
+  transition: transform var(--dur) var(--ease-out);
+}
+
+.rowActive .edge { transform: scaleY(1); }
+
 /* --- The stage -------------------------------------------------------------
-   Sticky, so the plate stays beside whichever row you have reached rather than
-   scrolling away from the list it belongs to. */
+   Sticky, so the plates stay beside whichever row you have reached rather than
+   scrolling away from the list they belong to. Sticky also makes it the
+   containing block the inset is positioned against. */
 .stage {
   position: sticky;
   top: calc(var(--header-h) + 2.5rem);
   min-width: 0;
+  margin-right: calc(var(--gutter) * -1);
 }
 
 .frame {
   position: relative;
-  aspect-ratio: 4 / 5;
+  /* A shade squarer than 4:5. The plate is the tallest thing in the band and
+     the list has to reach the bottom of it for the two columns to finish
+     together. */
+  aspect-ratio: 1 / 1.18;
   overflow: hidden;
   background: var(--sage-panel);
+}
+
+/* --- The inset -------------------------------------------------------------
+   The second plate, lapping the bottom-left corner of the first and standing
+   proud of it. It arrives a beat later and wipes from the left while the plate
+   above wipes from the top, so the two changes are legibly two rather than one
+   thing flickering. */
+.inset {
+  position: absolute;
+  left: clamp(-3.5rem, -4vw, -2rem);
+  bottom: clamp(2.5rem, 5vw, 4.5rem);
+  width: clamp(7rem, 15vw, 11rem);
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  background: var(--wash);
+  /* A hairline of the page's own ground around it, so it reads as laid on top
+     of the plate rather than cut out of it. */
+  outline: clamp(0.4rem, 0.8vw, 0.6rem) solid var(--wash);
+  z-index: 2;
+}
+
+.insetPlate {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  clip-path: inset(0% 100% 0% 0%);
+  opacity: 0;
+  filter: saturate(0.84) contrast(1.04);
+  will-change: clip-path, transform;
 }
 
 /* --- The caption -----------------------------------------------------------
@@ -261,8 +336,13 @@
    stage hidden is a section with no photographs in it, and that is not a state
    worth leaving reachable by accident. */
 @media (max-width: 1000px) {
-  .wrap { grid-template-columns: minmax(0, 1fr); }
-  .stage { position: static; }
+  .wrap { grid-template-columns: minmax(0, 1fr); grid-template-rows: none; }
+  .list,
+  .footer,
+  .stage { grid-column: 1; grid-row: auto; }
+  .stage { position: static; margin-right: 0; }
   .frame { aspect-ratio: 16 / 10; }
   .arrow { opacity: 1; transform: none; }
+  .inset { display: none; }
+  .edge { display: none; }
 }
