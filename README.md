@@ -662,6 +662,16 @@ within a member does not matter. `projectMembers` groups faces by member, orders
 whole members by their centre depth, and flattens. It is more correct and
 cheaper to sort. Do not go back to sorting the flat list.
 
+**The still skips surface detail.** `Member.detail` marks the roof
+corrugations, and `projectMembers` drops them. The live scenes keep them — they
+are most of why the object reads as sheet metal — but a flat projection cannot
+place them. Six hundred thin bars sitting two centimetres off a roof share a
+depth with that roof and with everything the roof passes, so they surfaced
+through the verandah ceiling, over the posts, and out across the cladding below
+the eave. They also cost 285 polygons, and at the size the still is shown they
+are barely a pixel apart. If you add another texture-on-a-surface member, mark
+it `detail`.
+
 **Fitting a scene is measured, never estimated.** Both scenes solve their camera
 from the real bounds of their member list — the orthographic one by zoom, the
 perspective one by pushing back along its own axis until every corner of the

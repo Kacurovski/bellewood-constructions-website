@@ -23,6 +23,8 @@ export type ProjectableMember = {
   /** Rotation about the z axis. */
   rz?: number
   mat: MaterialKey
+  /** Surface detail, which this projection skips. See the note in the loop. */
+  detail?: boolean
 }
 
 export type Polygon = {
@@ -136,6 +138,14 @@ export function projectMembers(
        single board — the backing kept surfacing through, worst of all as a dark
        band under every window sill. Skipping it is both cheaper and right. */
     if (m.mat === 'shadow') return
+
+    /* Surface detail — the roof corrugations — is for the live scene, which has
+       a depth buffer and can put six hundred thin bars two centimetres off a
+       sheet without any of them surfacing through a wall. This drawing sorts
+       whole members against each other, and a bar lying on a roof shares its
+       depth with everything that roof passes: they came through the verandah
+       ceiling, over the posts, and out across the cladding below the eave. */
+    if (m.detail) return
 
     // Deterministic per-member tone, so real timber does not read as plastic.
     const n = Math.sin(index * 12.9898) * 43758.5453

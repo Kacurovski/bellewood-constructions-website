@@ -27,6 +27,18 @@ export type Member = {
   /** Rotation about the z axis. The cottage roof slopes towards ±x. */
   rz?: number
   mat: MaterialKey
+  /**
+   * Surface detail: roof corrugations, and anything else that is a texture on
+   * another member rather than a part of the building.
+   *
+   * The live scene draws these — they are most of why the object reads as sheet
+   * metal. The flat still skips them. A painter's algorithm cannot order six
+   * hundred thin bars that sit a couple of centimetres off a surface: they share
+   * a depth with the sheet they lie on and with everything the sheet passes, so
+   * they surface through walls, posts and each other. In the still they cost
+   * more than they give.
+   */
+  detail?: boolean
 }
 
 /* --- Setting out ------------------------------------------------------------
@@ -396,6 +408,7 @@ for (const side of [-1, 1] as const) {
       rx: 0,
       rz: roofTilt(side),
       mat: 'roof',
+      detail: true,
     })
   }
 
@@ -608,6 +621,7 @@ for (let i = 0; i <= verRibs; i++) {
     s: [0.05, 0.024, VER_ROOF_SPAN],
     rx: VER_FALL,
     mat: 'roof',
+    detail: true,
   })
 }
 // Fascia, hung off the sheet's own lower edge rather than at a guessed height.
@@ -781,6 +795,7 @@ for (let i = 0; i <= extRibs; i++) {
     s: [0.05, 0.024, EXT_DEP + 0.36],
     rx: EXT_TILT,
     mat: 'roof',
+    detail: true,
   })
 }
 add({
