@@ -157,9 +157,12 @@ export function ProjectIndex({ projects, start = 1, footer }: Props) {
                   reduced
                     ? { duration: 0 }
                     : {
-                        clipPath: { duration: 0.72, ease: [0.16, 1, 0.3, 1] },
-                        scale: { duration: 1.1, ease: [0.16, 1, 0.3, 1] },
-                        opacity: { duration: 0.24 },
+                        // Slow. The plate is the largest thing that moves on
+                        // this page and it is being uncovered, not switched —
+                        // at three quarters of a second it read as a flick.
+                        clipPath: { duration: 1.25, ease: [0.16, 1, 0.3, 1] },
+                        scale: { duration: 1.9, ease: [0.16, 1, 0.3, 1] },
+                        opacity: { duration: 0.45 },
                       }
                 }
                 src={project.hero.src}
@@ -196,9 +199,11 @@ export function ProjectIndex({ projects, start = 1, footer }: Props) {
                   reduced
                     ? { duration: 0 }
                     : {
-                        clipPath: { duration: 0.66, delay: 0.14, ease: [0.16, 1, 0.3, 1] },
-                        scale: { duration: 1, delay: 0.14, ease: [0.16, 1, 0.3, 1] },
-                        opacity: { duration: 0.2, delay: 0.14 },
+                        // A fifth of a second behind the plate above, and just
+                        // as unhurried, so the two arrivals are legibly two.
+                        clipPath: { duration: 1.1, delay: 0.2, ease: [0.16, 1, 0.3, 1] },
+                        scale: { duration: 1.7, delay: 0.2, ease: [0.16, 1, 0.3, 1] },
+                        opacity: { duration: 0.4, delay: 0.2 },
                       }
                 }
                 src={detail.src}
@@ -224,7 +229,7 @@ export function ProjectIndex({ projects, start = 1, footer }: Props) {
                 initial={reduced ? false : { y: '110%' }}
                 animate={{ y: '0%' }}
                 exit={reduced ? { y: '0%' } : { y: '-110%' }}
-                transition={{ duration: 0.42, ease: [0.16, 1, 0.3, 1] }}
+                transition={{ duration: 0.62, ease: [0.16, 1, 0.3, 1] }}
               >
                 <span className={styles.captionNumber}>
                   {String(start + shown).padStart(2, '0')}
