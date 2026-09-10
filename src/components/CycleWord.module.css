@@ -1,33 +1,69 @@
 /* ---------------------------------------------------------------------------
    The changing word.
 
-   A block on its own line, clipped, with each word absolutely placed inside it.
-   Absolute placement is what stops the two lines underneath from reflowing when
-   a long word follows a short one — which is the failure that makes this device
-   look cheap everywhere it looks cheap.
+   A grid of one cell. Every word — the ghosts and the live one — is placed in
+   that same cell, so the cell is as wide as the widest word and as tall as the
+   tallest, and none of them can be cut off by it. Sizing the box from only the
+   first word is what clipped "Workers' cottages" mid-letter.
    --------------------------------------------------------------------------- */
 
 .cycle {
-  display: block;
-  position: relative;
-  overflow: hidden;
-  /* Room for descenders below the baseline. The display face is set at a
-     line-height under 1, so the box has to be taller than the line or the tail
-     of a 'g' is cut off by the clip. */
-  height: 1.14em;
+  display: grid;
+  grid-template-columns: max-content;
+  /* Items size to their text rather than stretching to the cell. Stretched,
+     every ghost measures the same and the box's true content width is
+     invisible — which is exactly the thing that has to be checked. */
+  justify-items: start;
+  /* The line box has to contain descenders, because the window below clips to
+     it. The display face is set under 1, so this is taller than its line and the
+     difference is taken back off the bottom margin. */
+  line-height: 1.14;
+  margin-bottom: -0.15em;
+
+  /* Sage, so the part of the headline that changes is visibly the part that
+     changes. Wash on Green for the fixed lines, Sage on Green for the variable
+     one — 6.1:1, which the brand book's own table sanctions for "headings and
+     short passages only", and this is one word.
+
+     Silky Oak was the obvious accent and it cannot be used here: on Bellewood
+     Green it measures 2.9:1, under the 3:1 large-text floor. It works on Wash,
+     which is why the statement in A-02 has it and this does not. */
+  color: var(--sage);
 }
 
-/* An invisible copy of the resting word, in flow, holding the box open. It is
-   the only thing in here that takes part in layout. */
-.sizer {
-  visibility: hidden;
-  display: block;
+.ghost,
+.window {
+  grid-area: 1 / 1;
+  white-space: nowrap;
+}
+
+/* In flow, invisible. `visibility` rather than `opacity` so it cannot be read
+   out, and rather than `display: none` so it still measures. */
+.ghost { visibility: hidden; }
+
+/* The clip the words rise out from.
+
+   It has to be told to fill the cell. `justify-items: start` above sizes every
+   grid item to its own content, and this one's only child is absolutely
+   positioned — so its content is nothing, it collapsed to zero width, and
+   `overflow: hidden` then hid the word completely. The ghosts still size
+   themselves; this one stretches to the cell they built. */
+.window {
+  position: relative;
+  overflow: hidden;
+  justify-self: stretch;
+  align-self: stretch;
 }
 
 .word {
+  display: block;
+  white-space: nowrap;
+  will-change: transform;
+}
+
+/* The live word has to sit on top of the ghosts rather than after them. */
+.window .word {
   position: absolute;
   top: 0;
   left: 0;
-  white-space: nowrap;
-  will-change: transform;
 }

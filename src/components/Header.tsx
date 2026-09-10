@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Link, NavLink, useLocation } from 'react-router-dom'
+import { motion, useScroll } from 'framer-motion'
 import { Logo } from './Logo'
 import { contact, nav, site } from '../config/site'
 import styles from './Header.module.css'
@@ -15,6 +16,12 @@ export function Header() {
   const [scrolled, setScrolled] = useState(false)
   const [open, setOpen] = useState(false)
   const location = useLocation()
+
+  /* How far down the page you are, drawn along the header's own bottom rule.
+     A bar of its own across the top of the window is the generic version of
+     this and it would be a tenth element on a page that already has enough;
+     the header already draws a line there, so the line is the indicator. */
+  const { scrollYProgress } = useScroll()
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24)
@@ -79,6 +86,12 @@ export function Header() {
           <span className={[styles.bar, open ? styles.barOpen : ''].join(' ')} aria-hidden="true" />
         </button>
       </div>
+
+      <motion.span
+        className={styles.progress}
+        style={{ scaleX: scrollYProgress }}
+        aria-hidden="true"
+      />
 
       <div id="mobile-nav" className={[styles.mobile, open ? styles.mobileOpen : ''].join(' ')}>
         <ul className={styles.mobileList}>

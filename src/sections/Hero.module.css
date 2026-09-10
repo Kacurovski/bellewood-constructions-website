@@ -56,22 +56,41 @@
   align-items: flex-start;
   gap: clamp(1.5rem, 3vw, 2.5rem);
   min-width: 0;
+  /* Bottom of the band, not the middle of it. Centred, the column floated with
+     dead green above and below it and the call had no relationship to anything;
+     down here it sits on the same line as the drawing's dimension, and the space
+     above reads as air rather than as a gap. */
+  align-self: end;
+  padding-bottom: clamp(0.25rem, 2vh, 1.75rem);
 }
 
 .heading {
   margin: 0;
   font-family: var(--font-display);
   font-weight: 700;
-  font-size: clamp(2.4rem, 0.9rem + 4.2vw, 5rem);
+  /* Both ends of this clamp are set by the changing word, which has to set on
+     one line inside this column. The column is narrowest relative to the type
+     just above 860px, where the two-column layout starts — the intercept came
+     down from 0.9rem to 0.62rem to clear it there, and the cap from 5rem to
+     4.6rem to clear it above 1500. `harness/cycle.mjs` measures the widest word
+     against the column at thirteen widths and fails under 16px of clearance.
+     Change either end and run it. */
+  font-size: clamp(2.4rem, 0.62rem + 4.2vw, 4.6rem);
   line-height: 0.98;
   letter-spacing: -0.04em;
   color: var(--wash);
   text-wrap: balance;
 }
 
-/* The changing word sits on its own line above the rest of the sentence, so a
-   long kind following a short one can never reflow the lines beneath it. */
-.cycle { display: block; }
+/* The changing word sits on its own line above the rest of the sentence.
+   CycleWord's own class already makes it a block — a grid one — and it must not
+   be given a `display` here: both classes land on the same element with the same
+   specificity, so whichever the bundler emits last wins. `display: block` from
+   this file was winning, which laid the four hidden sizing copies out in a ROW
+   instead of stacking them in one cell. The box came out 2157px wide inside a
+   600px column, the hero's `overflow: hidden` cut it off, and that is the
+   clipped word. Set placement here, never display. */
+.cycle { width: 100%; }
 
 .lede {
   margin: 0;

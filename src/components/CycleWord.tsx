@@ -14,28 +14,23 @@ type Props = {
 /**
  * One word of a headline that changes.
  *
- * On this site it carries the kind of house, and the list is not decoration —
- * "a worker's cottage, a Queenslander, a post-war home" is already the sentence
- * further down the page. Cycling them in the headline is the same claim made as
- * range: this builder works on all of these, and the visitor sees their own
- * house named inside eight seconds.
+ * The box is sized by every word at once, not by the first one.
  *
- * Three things keep it from being a gimmick.
+ * The first version held it open with a hidden copy of `words[0]` and placed
+ * the rest absolutely on top. "Heritage homes" is narrower than "Workers'
+ * cottages", so the box was too small for half the list and `overflow: hidden`
+ * cut the longer ones off mid-letter. Every word is now a ghost in the same
+ * grid cell as the live one, so the cell is as wide as the widest and as tall as
+ * the tallest and nothing can be clipped by it — whatever the list is changed to
+ * later.
  *
- * It never moves the layout. The word is a block on its own line inside a box
- * of a fixed height, and each one is absolutely positioned in it, so a long word
- * following a short one cannot reflow the two lines underneath. It rises out
- * from behind a hard edge, which is the same entrance the headline itself uses.
- *
- * It is `aria-hidden`, and the heading carries a plain, complete, unchanging
- * sentence for assistive technology and for search. Nothing that reads this page
- * without eyes gets a headline that mutates under it.
- *
- * And under reduced motion it does not cycle at all — it prints the first word
- * and stops. A headline that will not hold still is the exact thing that setting
- * is there to switch off.
+ * That only guarantees the box fits the words. It does not guarantee the box
+ * fits the column, and it cannot: the words have to be short enough to set on
+ * one line at the headline's size. `harness/cycle.mjs` measures the widest word
+ * against the column at every breakpoint, and it is the check to run before
+ * adding one.
  */
-export function CycleWord({ words, hold = 3200, className }: Props) {
+export function CycleWord({ words, hold = 3400, className }: Props) {
   const reduced = useReducedMotion()
   const [i, setI] = useState(0)
 
@@ -51,22 +46,29 @@ export function CycleWord({ words, hold = 3200, className }: Props) {
 
   return (
     <span className={[styles.cycle, className].filter(Boolean).join(' ')}>
-      {/* Holds the box open. The tallest word decides the height and no word
-          decides the width, so nothing below this line ever moves. */}
-      <span className={styles.sizer}>{words[0]}</span>
+      {/* Every word, in the same cell, holding the box open. They take part in
+          layout and nothing else — the grid cell ends up as wide as the widest
+          of them, which is the whole point. */}
+      {words.map((word) => (
+        <span key={word} className={styles.ghost}>
+          {word}
+        </span>
+      ))}
 
-      <AnimatePresence initial={false}>
-        <motion.span
-          key={i}
-          className={styles.word}
-          initial={{ y: '105%' }}
-          animate={{ y: '0%' }}
-          exit={{ y: '-105%' }}
-          transition={{ duration: 0.78, ease: [0.16, 1, 0.3, 1] }}
-        >
-          {words[i]}
-        </motion.span>
-      </AnimatePresence>
+      <span className={styles.window}>
+        <AnimatePresence initial={false}>
+          <motion.span
+            key={i}
+            className={styles.word}
+            initial={{ y: '105%' }}
+            animate={{ y: '0%' }}
+            exit={{ y: '-105%' }}
+            transition={{ duration: 0.78, ease: [0.16, 1, 0.3, 1] }}
+          >
+            {words[i]}
+          </motion.span>
+        </AnimatePresence>
+      </span>
     </span>
   )
 }

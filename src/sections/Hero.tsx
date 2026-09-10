@@ -18,8 +18,15 @@ const HeritageStudy = lazy(() => import('../three/HeritageStudy'))
  * appears in the copy further down the page. Do not add a kind here that the
  * site cannot back up elsewhere — the headline is the one line nobody scrolls
  * past, and it is the worst place on the site to widen a claim.
+ *
+ * They also have to SET. Each one is a single line inside the headline column,
+ * and the column is narrowest, relative to the type, between about 900 and
+ * 1280px. "Workers' cottages" — the site's own phrase — measured 414px against
+ * a 414px column at 900: touching, which is one font fallback away from a
+ * clipped word. "Timber cottages" says the same thing about the same houses and
+ * clears it. Run `harness/cycle.mjs` after changing this list.
  */
-const HOUSE_KINDS = ['Heritage homes', 'Queenslanders', "Workers' cottages", 'Post-war homes'] as const
+const HOUSE_KINDS = ['Heritage homes', 'Queenslanders', 'Timber cottages', 'Post-war homes'] as const
 
 /**
  * The hero, set as a drawing sheet.

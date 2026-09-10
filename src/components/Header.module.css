@@ -218,3 +218,24 @@
 .overDark .toggle {
   border-color: var(--rule-reverse);
 }
+
+/* --- The scroll indicator --------------------------------------------------
+   The header's own bottom rule, drawn from the left as the page is read. It is
+   the line that is already there rather than a bar added above it, which is
+   what keeps it from reading as one more piece of furniture.
+
+   Over the dark band at the top of every page the progress is zero anyway, so
+   the reverse colour only matters for the instant the header is still
+   transparent while the page has begun to move. */
+.progress {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 1px;
+  background: var(--green);
+  transform-origin: 0 50%;
+  pointer-events: none;
+}
+
+.overDark .progress { background: var(--wash); }

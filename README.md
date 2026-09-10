@@ -116,6 +116,44 @@ src/
 
 ---
 
+## The changing word in the headline
+
+`components/CycleWord.tsx` cycles the kind of house: heritage homes,
+Queenslanders, timber cottages, post-war homes. Three things about it are
+load-bearing and all three were bugs first.
+
+**Every word sizes the box, not just the first.** The words share one grid cell,
+so the cell is as wide as the widest of them. Sizing it from `words[0]` — which
+is what the first version did — clipped "Workers' cottages" mid-letter, because
+it is wider than "Heritage homes".
+
+**Never set `display` on it from a consumer's stylesheet.** Both `CycleWord`'s
+class and the section's land on the same element with the same specificity, so
+whichever the bundler emits last wins. `Hero.module.css` had `.cycle { display:
+block }`, it won, and the four hidden sizing copies laid out in a ROW: a 2157px
+box inside a 600px column, clipped by the hero's `overflow: hidden`. Set
+placement there; leave display to the component.
+
+**The clip window has to be told to fill the cell.** `justify-items: start` sizes
+each grid item to its own content, and the window's only child is absolutely
+positioned — so it collapsed to zero width and the word vanished entirely. It
+carries `justify-self: stretch` for that reason.
+
+**The list has to SET.** Each word is one line inside the headline column, and
+the column is narrowest relative to the type just above 860px where the
+two-column layout starts. `harness/cycle.mjs` measures the widest word's
+`scrollWidth` against the column at thirteen widths and fails under 16px of
+clearance. Both ends of the headline's `font-size` clamp were set by it. **Run it
+after changing the list or the clamp.**
+
+The changing word is **Sage** — the fixed lines are Wash, so the part that
+changes is visibly the part that changes. Silky Oak was the obvious accent and
+cannot be used on a green ground: it measures 2.9:1, under the 3:1 large-text
+floor. It works on Wash, which is why the statement in A-02 has it and this
+does not.
+
+---
+
 ## Dark grounds are Bellewood Green, never Deep Pine
 
 The brand book assigns each colour a job, and `tokens.css` records them:
