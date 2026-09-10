@@ -2,6 +2,7 @@ import { Reveal } from '../components/Reveal'
 import { SheetRef } from '../components/Sheet'
 import { ImageSlot } from '../components/ImageSlot'
 import { HeritageStudyStill } from '../three/HeritageStudyStill'
+import { ScrollWords } from '../components/ScrollWords'
 import { Credentials } from '../components/Credentials'
 import { stills } from '../data/projects'
 import styles from './Proposition.module.css'
@@ -26,11 +27,22 @@ export function Proposition() {
   return (
     <section className={['section', styles.section].join(' ')} aria-labelledby="proposition-heading">
       <div className={['shell', styles.inner].join(' ')}>
+        {/* The statement is the heading. "Older houses, taken seriously." used
+            to sit above it, and the two said the same thing — one in four words
+            and one in twenty-six. The sentence that actually names what the
+            work is wins.
+
+            It reads itself in as the section crosses the screen, a word at a
+            time, so the one long piece of prose on this page arrives at the
+            pace somebody reads it at rather than all at once. */}
         <Reveal className={styles.head}>
           <SheetRef number="A-02" name="What we build" rule={false} />
-          <h2 id="proposition-heading" className={styles.heading}>
-            Older houses, taken seriously.
-          </h2>
+          <ScrollWords
+            as="h2"
+            id="proposition-heading"
+            className={styles.statement}
+            text="A worker's cottage, a Queenslander, a post-war home *worth keeping*. Built predominantly in *timber*, because that is what these houses are made of."
+          />
         </Reveal>
 
         {/* Two figures, and they are the argument.
@@ -65,17 +77,10 @@ export function Proposition() {
         </Reveal>
 
         <Reveal delay={0.12} className={styles.bodyWrap}>
-          <div className={[styles.body, 'stack'].join(' ')}>
-            <p>
-              A worker's cottage, a Queenslander, a post-war home worth keeping.
-              The work is predominantly in timber, because that is what these
-              houses are made of.
-            </p>
-            <p className={styles.aside}>
-              Also apartment refurbishments, in Brisbane and on the coast, to the
-              same standard.
-            </p>
-          </div>
+          <p className={styles.aside}>
+            Also apartment refurbishments, in Brisbane and on the coast, to the
+            same standard.
+          </p>
         </Reveal>
 
         {/* The credentials row, at the foot of this section rather than as a

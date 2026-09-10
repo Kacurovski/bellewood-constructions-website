@@ -49,7 +49,7 @@ export function Hero() {
   return (
     <section className={['on-green', styles.hero].join(' ')} aria-labelledby="hero-heading">
       <div className={['shell', styles.inner].join(' ')}>
-        <SheetRef number="SK-01" name="Heritage study" className={styles.ref} />
+        <SheetRef number="A-01" name="Heritage study" className={styles.ref} />
 
         {/* Words left, drawing right. The sheet reference still runs across
             the top of both, so the band reads as one sheet rather than as two

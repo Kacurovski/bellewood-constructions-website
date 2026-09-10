@@ -35,6 +35,8 @@
 
 /* A size below the page's display scale. This is a statement, not the headline
    of the site, and at full display size it shouted. */
+.ref { margin-bottom: clamp(0.9rem, 2vw, 1.5rem); }
+
 .heading {
   max-width: 15ch;
   font-size: clamp(1.6rem, 1.15rem + 1.9vw, 2.6rem);

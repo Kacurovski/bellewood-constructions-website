@@ -18,6 +18,7 @@
 .inner {
   display: grid;
   grid-template-columns: minmax(0, 1.4fr) minmax(0, 0.8fr);
+  align-items: end;
   column-gap: clamp(2rem, 5vw, 5rem);
   row-gap: clamp(2rem, 4vw, 3.5rem);
   align-items: start;
@@ -25,18 +26,11 @@
 
 .head { grid-column: 1 / -1; }
 
-/* Well past the shared section step. Nine headings at the same 56px is why the
-   page read as one long band no matter what was done to its colour. */
-.heading {
-  margin: clamp(1.25rem, 2.5vw, 2rem) 0 0;
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: clamp(2.6rem, 0.9rem + 5.6vw, 6.75rem);
-  line-height: 0.96;
-  letter-spacing: -0.04em;
-  color: var(--green);
-  max-width: 16ch;
-  text-wrap: balance;
+/* The statement, under the reference. Its size and colour belong to
+   ScrollWords; what this sets is where it sits and how wide it runs. */
+.statement {
+  margin-top: clamp(1.5rem, 3vw, 2.5rem);
+  max-width: 26ch;
 }
 
 /* A pair, side by side: the drawing and the photograph of the same idea. Both
@@ -99,20 +93,14 @@
 /* Across both columns at the foot of the section. */
 .creds { grid-column: 1 / -1; }
 
-.body { color: var(--pine); }
-
-/* The lead line carries the section. */
-.body > p:first-child {
-  font-size: var(--t-lead);
-  line-height: 1.55;
-}
-
-/* The apartment line is a footnote to the argument, not part of it. */
+/* The apartment line is a footnote to the statement, not part of it. */
 .aside {
+  margin: 0;
   font-size: var(--t-small);
   color: color-mix(in srgb, var(--pine) 72%, transparent);
   padding-top: clamp(0.75rem, 1.5vw, 1.25rem);
   border-top: 1px solid var(--ink);
+  max-width: 34ch;
 }
 
 @media (max-width: 860px) {

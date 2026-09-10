@@ -1,0 +1,27 @@
+/* ---------------------------------------------------------------------------
+   The statement that reads itself in.
+
+   Set in the display face at a size between a heading and a headline: it is a
+   sentence, not a title, so it wants to be large enough to be the thing on the
+   screen and small enough that four lines of it still read as prose.
+   --------------------------------------------------------------------------- */
+
+.statement {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(1.5rem, 0.95rem + 2.4vw, 3.35rem);
+  line-height: 1.16;
+  letter-spacing: -0.028em;
+  color: var(--green);
+  max-width: 22ch;
+  text-wrap: pretty;
+}
+
+/* Silky Oak, the brand's accent, and the only place on the site it carries
+   type. The book calls it decorative because it fails contrast at body size —
+   at this size it is large text, where the threshold is 3:1 and it clears it.
+   Do not reuse this at anything smaller. */
+.accent {
+  color: var(--timber);
+}

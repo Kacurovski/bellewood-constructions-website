@@ -3,6 +3,7 @@ import { SceneFrame } from '../three/SceneFrame'
 import { SiteMeshStill } from '../three/SiteMeshStill'
 import { ComplianceLine } from '../components/ComplianceLine'
 import { Reveal } from '../components/Reveal'
+import { SheetRef } from '../components/Sheet'
 import { useSectionProgress } from '../hooks/useSectionProgress'
 import { compliance } from '../config/site'
 import styles from './GreenSection.module.css'
@@ -46,6 +47,7 @@ export function GreenSection() {
 
       <div className={['shell', styles.inner].join(' ')}>
         <Reveal className={styles.left}>
+          <SheetRef number="A-04" name="The name" rule={false} className={styles.ref} />
           <h2 id="name-heading" className={['headline', styles.heading].join(' ')}>
             Same builder. Same licence. New name.
           </h2>
