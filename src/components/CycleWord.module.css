@@ -20,15 +20,19 @@
   line-height: 1.14;
   margin-bottom: -0.15em;
 
-  /* Sage, so the part of the headline that changes is visibly the part that
-     changes. Wash on Green for the fixed lines, Sage on Green for the variable
-     one — 6.1:1, which the brand book's own table sanctions for "headings and
-     short passages only", and this is one word.
+  /* Wash — the brightest thing in the headline, because it is the part that
+     changes and the part worth watching.
 
-     Silky Oak was the obvious accent and it cannot be used here: on Bellewood
-     Green it measures 2.9:1, under the 3:1 large-text floor. It works on Wash,
-     which is why the statement in A-02 has it and this does not. */
-  color: var(--sage);
+     It was Sage, and that had the hierarchy upside down: the variable word was
+     the quietest thing on the line and the fixed sentence under it was the
+     loudest. The two are swapped now, and the fixed lines take Sage instead.
+
+     On Bellewood Green there are exactly two colours to choose between: Wash at
+     11.4:1 and Sage at 6.1:1, which the brand book's own table sanctions for
+     "headings and short passages only". Silky Oak is the obvious accent and
+     cannot be used here at all — 2.9:1, under the 3:1 large-text floor. It works
+     on Wash, which is why A-02's statement has it and this does not. */
+  color: var(--wash);
 }
 
 .ghost,
@@ -58,6 +62,12 @@
 .word {
   display: block;
   white-space: nowrap;
+}
+
+/* Each letter travels on its own, so each needs its own box. `inline-block` is
+   what lets a transform apply at all — an inline span ignores translate. */
+.letter {
+  display: inline-block;
   will-change: transform;
 }
 

@@ -12,7 +12,26 @@ type Props = {
 }
 
 /**
+ * One letter's part in the change.
+ *
+ * In on a weighted ease that decelerates hard, out on one that accelerates —
+ * so the arriving word settles and the leaving one is taken away. The same
+ * curve both ways reads as a conveyor belt.
+ */
+const LETTER = {
+  enter: { y: '110%' },
+  on: { y: '0%', transition: { duration: 0.66, ease: [0.16, 1, 0.3, 1] } },
+  off: { y: '-110%', transition: { duration: 0.46, ease: [0.7, 0, 0.84, 0] } },
+} as const
+
+/**
  * One word of a headline that changes.
+ *
+ * The change is per letter, not per word. The letters of the arriving word rise
+ * out from behind the clip in reading order while the leaving word's letters are
+ * drawn up out of it in the same order, so the word is written and unwritten
+ * rather than flipped like a sign. It is the same entrance the headline itself
+ * uses, one level finer.
  *
  * The box is sized by every word at once, not by the first one.
  *
@@ -60,12 +79,29 @@ export function CycleWord({ words, hold = 3400, className }: Props) {
           <motion.span
             key={i}
             className={styles.word}
-            initial={{ y: '105%' }}
-            animate={{ y: '0%' }}
-            exit={{ y: '-105%' }}
-            transition={{ duration: 0.78, ease: [0.16, 1, 0.3, 1] }}
+            initial="enter"
+            animate="on"
+            exit="off"
+            variants={{
+              // The letters go in reading order coming in and in reading order
+              // going out, so the word is always being written and unwritten
+              // left to right rather than flipping like a sign.
+              on: { transition: { staggerChildren: 0.026 } },
+              off: { transition: { staggerChildren: 0.016 } },
+            }}
           >
-            {words[i]}
+            {[...words[i]].map((glyph, n) => (
+              <motion.span
+                key={n}
+                className={styles.letter}
+                variants={LETTER}
+                // A space cannot be an inline-block on its own, and a collapsed
+                // one would close the gap between the halves of the word.
+                style={glyph === ' ' ? { width: '0.28em' } : undefined}
+              >
+                {glyph === ' ' ? ' ' : glyph}
+              </motion.span>
+            ))}
           </motion.span>
         </AnimatePresence>
       </span>

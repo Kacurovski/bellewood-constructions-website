@@ -5,6 +5,11 @@
  * and deck sit either side of it so the three read apart without becoming three
  * different colours. Roofs are Deep Pine, which keeps the darkest value on the
  * page inside the brand rather than reaching for a neutral grey.
+ *
+ * Nothing in here may be Bellewood Green. That is the colour of the ground the
+ * hero sits the house on, and a material that matches its background is not a
+ * material — the roof was #1c4129 for a long time and it only showed the day
+ * the hero moved onto Green.
  */
 
 export type MaterialKey = 'frame' | 'clad' | 'charred' | 'roof' | 'glass' | 'deck' | 'shadow'
@@ -27,7 +32,13 @@ export const MATERIALS: Record<MaterialKey, { color: string; roughness: number; 
      actually clad in, and the contrast that tells old from new at a glance. */
   charred: { color: '#2b2723', roughness: 0.74, metalness: 0 },
   deck: { color: '#8f7248', roughness: 0.9, metalness: 0 },
-  roof: { color: '#1c4129', roughness: 0.5, metalness: 0.32 },
+  /* Deep Pine, which is what the note at the top of this file always said the
+     roofs were — the value here was Bellewood Green, #1c4129, and nobody saw it
+     while the hero sat on Pine. The hero ground is Green now, so the roof was
+     the same hex as the page behind it and the house lost its lid. Pine is the
+     brand's darkest value and this is a material, not a ground, so it belongs
+     here rather than under the page. */
+  roof: { color: '#10251a', roughness: 0.5, metalness: 0.32 },
   glass: { color: '#5c6b60', roughness: 0.08, metalness: 0.1 },
   /* What sits behind the boards. The cladding is deliberately gapped so it
      reads as boards, and with nothing behind it every gap looked straight
@@ -45,7 +56,7 @@ export const TONE: Record<MaterialKey, { base: string; shade: string }> = {
   clad: { base: '#ab8354', shade: '#4f3f28' },
   charred: { base: '#3b3630', shade: '#15130f' },
   deck: { base: '#8f7248', shade: '#443722' },
-  roof: { base: '#2c503a', shade: '#0e2116' },
+  roof: { base: '#16301f', shade: '#081410' },
   glass: { base: '#ffd7a2', shade: '#b58048' },
   shadow: { base: '#4a3a25', shade: '#221a10' },
 }

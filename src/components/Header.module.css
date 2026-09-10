@@ -61,15 +61,41 @@
   height: 1px;
   background: var(--green);
   transform: scaleX(0);
-  transform-origin: left;
+  /* At rest the rule is collapsed against its RIGHT edge, and on hover it grows
+     from its left. So it wipes in from the left and, when the pointer leaves,
+     carries on out to the right instead of retracing its own path. A rule that
+     un-draws itself reads as an undo; one that passes through reads as an
+     answer. The origin is not animated — it swaps at the moment the state
+     does, which is exactly when it should. */
+  transform-origin: right;
   transition: transform var(--dur) var(--ease-out);
 }
 
 .link:hover::after,
-.link:focus-visible::after,
-.active::after { transform: scaleX(1); }
+.link:focus-visible::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+/* The live route's rule is drawn and stays drawn. */
+.active::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
 
 .active { color: var(--green); }
+
+/* The label lifts a hair. Small enough that nobody sees it move and everybody
+   feels the link is live, which is the whole job. */
+.link,
+.phone {
+  transition: transform var(--dur) var(--ease-out);
+}
+
+.link:hover,
+.link:focus-visible,
+.phone:hover,
+.phone:focus-visible { transform: translateY(-1px); }
 
 .phone {
   display: flex;
@@ -91,12 +117,34 @@
 }
 
 .phoneNumber {
+  position: relative;
   font-family: var(--font-display);
   font-weight: 600;
   font-size: var(--t-small);
   color: var(--green);
   letter-spacing: 0.01em;
   white-space: nowrap;
+}
+
+/* The number is the most valuable link in the header and it had no hover at
+   all — the same rule the nav uses, on the same pass. */
+.phoneNumber::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -0.2em;
+  height: 1px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform var(--dur) var(--ease-out);
+}
+
+.phone:hover .phoneNumber::after,
+.phone:focus-visible .phoneNumber::after {
+  transform: scaleX(1);
+  transform-origin: left;
 }
 
 /* --- Mobile ---------------------------------------------------------------- */
