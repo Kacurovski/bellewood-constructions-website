@@ -3,6 +3,7 @@ import { HERITAGE_MEMBERS, HERITAGE_OFFSET, HERITAGE_YAW } from './heritageMembe
 import { projectMembers } from './axonometric'
 import { LINE_COLOUR } from './materials'
 import type { MaterialKey } from './materials'
+import styles from './HeritageStudyStill.module.css'
 
 /**
  * The static frame for the hero.
@@ -47,27 +48,41 @@ export function HeritageStudyStill({
 
   const line = variant === 'line'
 
+  /* The faces are built once and never rebuilt.
+     `highlight` is deliberately NOT a dependency: which material is lit is
+     resolved by CSS from one attribute on the <svg>, so changing it costs a
+     single attribute write instead of reconciling eight hundred children. That
+     reconciliation is what made this clunky — React re-rendered the whole
+     drawing before a single pixel moved. */
+  const faces = useMemo(
+    () =>
+      polygons.map((p, i) => (
+        <polygon
+          key={i}
+          data-mat={p.mat}
+          points={p.pts}
+          fill={line ? 'var(--wash)' : p.fill}
+          stroke={LINE_COLOUR}
+          strokeWidth={line ? 0.016 : 0.007}
+          strokeOpacity={line ? 0.85 : 0.4}
+          strokeLinejoin="round"
+        />
+      )),
+    [polygons, line],
+  )
+
   return (
-    <svg className={className} viewBox={viewBox} aria-hidden="true" role="presentation">
-      {polygons.map((p, i) => {
-        const dimmed = highlight !== null && p.mat !== highlight
-        return (
-          <polygon
-            key={i}
-            points={p.pts}
-            fill={line ? 'var(--wash)' : p.fill}
-            stroke={LINE_COLOUR}
-            strokeWidth={line ? 0.016 : 0.007}
-            strokeOpacity={line ? 0.85 : 0.4}
-            strokeLinejoin="round"
-            /* Opacity rather than a second colour: the drawing keeps its own
-               palette and simply steps back, so what is lit is lit by contrast
-               and not by being repainted. */
-            opacity={dimmed ? 0.13 : 1}
-            style={{ transition: 'opacity 420ms cubic-bezier(0.16, 1, 0.3, 1)' }}
-          />
-        )
-      })}
+    <svg
+      className={[styles.svg, className].filter(Boolean).join(' ')}
+      viewBox={viewBox}
+      // Opacity rather than a second colour: the drawing keeps its own palette
+      // and simply steps back, so what is lit is lit by contrast rather than by
+      // being repainted.
+      data-lit={highlight ?? undefined}
+      aria-hidden="true"
+      role="presentation"
+    >
+      {faces}
     </svg>
   )
 }

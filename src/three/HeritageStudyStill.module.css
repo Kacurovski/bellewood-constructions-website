@@ -1,0 +1,47 @@
+/* ---------------------------------------------------------------------------
+   Keying the drawing.
+
+   The building is about eight hundred polygons and they have to stay in one
+   flat, depth-sorted list — the painter's algorithm sorts every face against
+   every other, so they cannot be grouped by material without breaking which
+   face covers which.
+
+   That rules out animating a handful of groups, so the dimming is done here
+   rather than in the component: one attribute changes on the <svg> and the
+   browser re-resolves the rule. React never touches the eight hundred children,
+   which is what made the first version clunky — every change re-rendered the
+   whole drawing before a single pixel moved.
+
+   The switch is instant, and that is the fix rather than a compromise. A
+   transition here means the browser animates nineteen hundred independent
+   opacity values for its whole duration — every node in the drawing composited
+   on every frame of it, which is what "slow and clunky" was. Without it there
+   is one style pass and the change lands on the next frame.
+
+   Do not put a number in this comment. Measuring it under headless software
+   rendering, with the page's two WebGL canvases live, gave 9ms to 181ms for the
+   same change and no correlation with polygon count — glass has thirty faces
+   and hit 100ms, structure has a hundred and sixty-five and hit 20. The numbers
+   were noise. What is certain is structural: nineteen hundred animating nodes
+   became none, and nineteen hundred reconciled children became none.
+
+   If this ever needs to fade, fade ONE element — a wrapper around the whole
+   svg — never the faces.
+   --------------------------------------------------------------------------- */
+
+/* Anything, once something is keyed. */
+.svg[data-lit] polygon {
+  opacity: 0.12;
+}
+
+/* And the one that is. CSS cannot compare two attributes to each other, so the
+   six materials are written out — which is six lines and no runtime cost. */
+.svg[data-lit='frame'] polygon[data-mat='frame'],
+.svg[data-lit='clad'] polygon[data-mat='clad'],
+.svg[data-lit='charred'] polygon[data-mat='charred'],
+.svg[data-lit='deck'] polygon[data-mat='deck'],
+.svg[data-lit='roof'] polygon[data-mat='roof'],
+.svg[data-lit='glass'] polygon[data-mat='glass'] {
+  opacity: 1;
+}
+

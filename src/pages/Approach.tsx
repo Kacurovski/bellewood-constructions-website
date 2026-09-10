@@ -3,7 +3,6 @@ import { PageHead } from '../components/PageHead'
 import { Reveal } from '../components/Reveal'
 import { Process } from '../sections/Process'
 import { MaterialKey } from '../sections/MaterialKey'
-import { Architects } from '../sections/Architects'
 import { ScrollWords } from '../components/ScrollWords'
 import { usePageTitle } from '../hooks/usePageTitle'
 import { contact } from '../config/site'
@@ -19,10 +18,13 @@ import styles from './Approach.module.css'
  * site, held for two and a half screens, which is a page's worth of content
  * sitting inside somebody else's page.
  *
- * The build moved here rather than being copied here. The home page does not
- * carry it any more — this is the whole reason the route exists, and a nav item
- * that leads to a second copy of a home page section is the complaint it was
- * meant to answer.
+ * The build is on the home page as well, and that is deliberate. It was moved
+ * here exclusively for a pass, on the reasoning that a nav item should not lead
+ * to a copy of a home page section — sound in general, wrong for this one: it is
+ * the signature object of the site and the home page is where most people meet
+ * it. Here it runs headless, under a masthead that says the same three things
+ * its own head would have, and it shares the page with the key to the drawing,
+ * which exists nowhere else.
  */
 export default function Approach() {
   usePageTitle('Approach')
@@ -44,8 +46,6 @@ export default function Approach() {
       <Process headless />
 
       <MaterialKey />
-
-      <Architects />
 
       <section className={['shell', styles.close].join(' ')} aria-labelledby="approach-close">
         <Reveal>
