@@ -49,6 +49,15 @@
   padding-left: var(--gutter);
 }
 
+/* The one element the redraw animates. Everything inside it is static. */
+.wipe {
+  display: block;
+  width: 100%;
+  /* Declared here rather than left to the animation, so the first paint is the
+     finished state — an unclipped drawing that has not been keyed yet. */
+  clip-path: inset(0% 0% 0% 0%);
+}
+
 .drawing {
   display: block;
   width: 100%;
@@ -152,12 +161,12 @@
   .row {
     grid-template-columns: minmax(0, 1fr);
     gap: 0.4rem;
-    /* A tap target rather than a line of text. */
     padding-block: clamp(1rem, 3.4vw, 1.5rem);
-    cursor: pointer;
   }
 
-  /* The live row, marked where there is no pointer to imply it. */
+  /* The live row, marked where there is no pointer to imply it. It is set by
+     the scroll position rather than by a tap, so this is a readout and not a
+     control — no cursor, no hover state. */
   .rowOn {
     background: color-mix(in srgb, var(--sage) 24%, transparent);
     margin-inline: calc(var(--gutter) * -0.5);

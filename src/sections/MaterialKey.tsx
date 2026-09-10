@@ -1,9 +1,12 @@
-import { useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
+import { motion, useAnimationControls } from 'framer-motion'
 import { Reveal } from '../components/Reveal'
 import { SheetRef } from '../components/Sheet'
 import { HeritageStudyStill } from '../three/HeritageStudyStill'
 import { TONE } from '../three/materials'
 import type { MaterialKey as Key } from '../three/materials'
+import { useMediaQuery } from '../hooks/useMediaQuery'
+import { useReducedMotion } from '../hooks/useReducedMotion'
 import styles from './MaterialKey.module.css'
 
 /**
@@ -11,21 +14,24 @@ import styles from './MaterialKey.module.css'
  *
  * A set of drawings carries a legend: what each hatch and each tone on the
  * sheet stands for. This is that, and it is the one thing on the site where the
- * drawing answers back — point at a line in the key and everything on the
- * building except that material steps back, so the reader can see exactly what
- * the word means on the thing itself.
+ * drawing answers back — key a material and everything on the building except
+ * that one steps back, so the reader sees exactly what the word means on the
+ * thing itself.
  *
  * It invents nothing. Every line describes a decision already recorded in
  * `three/materials.ts`: Silky Oak carries the structure, cladding and deck sit
  * either side of it, the new wing is dark so old reads apart from new, roofs are
  * Deep Pine, and the glazing is the only light in the scene.
  *
- * Under no pointer at all it simply reads as a key, which is the state it has to
- * work in first — nothing here is hidden behind an interaction.
+ * **It is keyed two different ways, because the two devices are two different
+ * things.** With a pointer you choose: hovering a line keys it. Without one you
+ * do not choose, and asking somebody to tap six times to read a legend is worse
+ * than not offering it — so on a phone the drawing sticks under the header and
+ * keys itself to whichever line has scrolled up under it. Reading the list IS
+ * the interaction.
  *
- * On a phone the drawing sticks to the top of the screen while the list scrolls
- * under it, and a tap keys a material rather than a hover. Tapping the live row
- * clears it.
+ * Under no pointer and no scroll it reads as a plain legend, which is the state
+ * it has to work in first — nothing here is hidden behind an interaction.
  */
 
 const KEY: { mat: Key; name: string; note: string }[] = [
@@ -62,7 +68,77 @@ const KEY: { mat: Key; name: string; note: string }[] = [
 ]
 
 export function MaterialKey() {
-  const [lit, setLit] = useState<Key | null>(null)
+  const pointer = useMediaQuery('(min-width: 901px) and (pointer: fine)')
+  const reduced = useReducedMotion()
+
+  /* `asked` is what the reader has chosen; `shown` is what the drawing is
+     currently keyed to. They are two states because the change between them is
+     a transition with a middle — the drawing wipes out, the key swaps at the
+     point where nothing is visible, and it wipes back in. One value could not
+     hold both ends of that. */
+  const [asked, setAsked] = useState<Key | null>(null)
+  const [shown, setShown] = useState<Key | null>(null)
+  const wipe = useAnimationControls()
+
+  const plate = useRef<HTMLDivElement>(null)
+  const rows = useRef<(HTMLDivElement | null)[]>([])
+
+  // --- Scrolling keys it, where there is no pointer -------------------------
+  const readScroll = useCallback(() => {
+    const box = plate.current?.getBoundingClientRect()
+    if (!box) return
+    // The line just under the pinned drawing. Whichever row has reached it is
+    // the one being read, so it is the one the drawing answers with.
+    const line = box.bottom + 72
+    let next: Key | null = null
+    rows.current.forEach((el, i) => {
+      if (el && el.getBoundingClientRect().top <= line) next = KEY[i].mat
+    })
+    setAsked(next)
+    setShown(next)
+  }, [])
+
+  useEffect(() => {
+    if (pointer) return
+    readScroll()
+    window.addEventListener('scroll', readScroll, { passive: true })
+    window.addEventListener('resize', readScroll)
+    return () => {
+      window.removeEventListener('scroll', readScroll)
+      window.removeEventListener('resize', readScroll)
+    }
+  }, [pointer, readScroll])
+
+  // --- The redraw, where there is ------------------------------------------
+  useEffect(() => {
+    if (!pointer || asked === shown) return
+
+    if (reduced) {
+      setShown(asked)
+      return
+    }
+
+    let cancelled = false
+    void (async () => {
+      // Out to the right quickly, on a curve that accelerates away.
+      await wipe.start({
+        clipPath: 'inset(0% 0% 0% 100%)',
+        transition: { duration: 0.24, ease: [0.7, 0, 0.84, 0] },
+      })
+      if (cancelled) return
+      setShown(asked)
+      // Back in from the left, slower, on the site's settling curve — so it
+      // reads as the drawing being drawn again rather than as a flicker.
+      await wipe.start({
+        clipPath: 'inset(0% 0% 0% 0%)',
+        transition: { duration: 0.52, ease: [0.16, 1, 0.3, 1] },
+      })
+    })()
+
+    return () => {
+      cancelled = true
+    }
+  }, [pointer, asked, shown, reduced, wipe])
 
   return (
     <section className={['section', styles.section].join(' ')} aria-labelledby="materials-heading">
@@ -75,25 +151,33 @@ export function MaterialKey() {
                 What it is made of
               </h2>
             }
-            note="Point at a material"
+            note={pointer ? 'Point at a material' : 'Scroll the list'}
           />
         </Reveal>
 
-        <Reveal delay={0.06} className={styles.plate}>
-          <HeritageStudyStill className={styles.drawing} highlight={lit} />
-        </Reveal>
+        <div ref={plate} className={styles.plate}>
+          {/* The wipe is on this one element. Transitioning the drawing's own
+              nineteen hundred faces is what made the first version clunky —
+              every node in it composited on every frame. Here one wrapper's
+              clip animates and the faces underneath simply are what they are. */}
+          <motion.div className={styles.wipe} animate={wipe}>
+            <HeritageStudyStill className={styles.drawing} highlight={shown} />
+          </motion.div>
+        </div>
 
-        <Reveal delay={0.12} className={styles.listWrap}>
-          <dl className={styles.list} onPointerLeave={() => setLit(null)}>
-            {KEY.map((item) => (
+        <Reveal delay={0.1} className={styles.listWrap}>
+          <dl
+            className={styles.list}
+            onPointerLeave={pointer ? () => setAsked(null) : undefined}
+          >
+            {KEY.map((item, i) => (
               <div
                 key={item.mat}
-                className={[styles.row, lit === item.mat ? styles.rowOn : ''].join(' ')}
-                onPointerEnter={() => setLit(item.mat)}
-                // Touch has no hover to leave, so a tap has to be able to undo
-                // itself — otherwise the drawing stays keyed to whatever was
-                // last touched with no way back.
-                onClick={() => setLit((n) => (n === item.mat ? null : item.mat))}
+                ref={(el) => {
+                  rows.current[i] = el
+                }}
+                className={[styles.row, shown === item.mat ? styles.rowOn : ''].join(' ')}
+                onPointerEnter={pointer ? () => setAsked(item.mat) : undefined}
               >
                 <dt className={styles.term}>
                   {/* The swatch is the drawing's own tone for that material, read
@@ -107,8 +191,8 @@ export function MaterialKey() {
                   <span
                     className={styles.name}
                     tabIndex={0}
-                    onFocus={() => setLit(item.mat)}
-                    onBlur={() => setLit(null)}
+                    onFocus={() => setAsked(item.mat)}
+                    onBlur={() => setAsked(null)}
                   >
                     {item.name}
                   </span>
