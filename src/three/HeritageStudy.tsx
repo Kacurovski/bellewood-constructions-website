@@ -131,19 +131,17 @@ function StudioSky() {
    taking the hue out, lighting the keyed one in the brand accent — all of them
    turned the house into a different house.
 
-   THE SIGNAL IS THE HIGHLIGHT, NOT THE FADE. Mixing the other materials
-   towards the panel is also a recolour, however gently it is done: the panel is
-   nearly white, so even a third of the way there turns warm timber into cream.
-   They are muted instead — the same hue, the same value order, just less of
-   it — which reads as quiet rather than as changed. What actually marks the
-   keyed material is that it lights up: its own colour, unchanged, lifted by an
-   emissive of that same colour so the part gets brighter without becoming a
-   different one. */
+   BOTH SIDES GO HARD. Subtlety was the other half of the problem: muting the
+   rest a little and lifting the keyed one a little left a change you had to
+   look for. It has to be obvious at a glance which part of the building the
+   row under the pointer is talking about, so the rest drops most of the way
+   back to the panel and the keyed material is lit, not merely left alone. The
+   keyed one still never changes hue — it is its own colour, brighter — which is
+   the one rule every earlier attempt broke. */
 
-/** How much chroma a material that is not being keyed keeps, and how far its
-    value lifts. Small on purpose: this is meant to read as quiet, not as pale. */
-const MUTE_S = 0.4
-const MUTE_L = 0.16
+/** How far a material that is not being keyed drops back towards the panel. */
+const FADE_TO = '#dee6da'
+const FADED = 0.76
 
 /* How hard a keyed material lights up, in its own colour.
 
@@ -153,17 +151,18 @@ const MUTE_L = 0.16
    only row that did not visibly do anything was the roof — which is the row
    whose own material makes it hardest. Scaled, every row lifts by about as
    much as every other. */
-const LIT_GLOW = 0.21
+const LIT_GLOW = 0.3
 const LIT_GLOW_MIN = 0.3
 const LIT_GLOW_MAX = 2.2
 /** The windows are already a light source, so theirs runs from a higher floor. */
 const GLASS_GLOW = 0.62
-const GLASS_GLOW_LIT = 1.15
+const GLASS_GLOW_LIT = 1.5
 
 type HSL = { h: number; s: number; l: number }
 
-/** sRGB hex to HSL and back, so muting happens where the eye is rather than in
-    the renderer's linear space, where a mid grey is not a mid grey. */
+/** sRGB hex to HSL. Only the lightness is wanted, to size each material's lift
+    — see the note on LIT_GLOW — and it has to be read where the eye is rather
+    than in the renderer's linear space, where a mid grey is not a mid grey. */
 function toHSL(hex: string): HSL {
   const n = parseInt(hex.slice(1), 16)
   const r = ((n >> 16) & 255) / 255
@@ -182,21 +181,6 @@ function toHSL(hex: string): HSL {
   return { h, s, l }
 }
 
-function fromHSL({ h, s, l }: HSL): string {
-  const f = (n: number) => {
-    const k = (n + h * 12) % 12
-    const a = s * Math.min(l, 1 - l)
-    const v = l - a * Math.max(-1, Math.min(k - 3, 9 - k, 1))
-    return Math.round(Math.max(0, Math.min(1, v)) * 255)
-  }
-  return `#${((f(0) << 16) | (f(8) << 8) | f(4)).toString(16).padStart(6, '0')}`
-}
-
-/** Same hue, same place in the value order, simply less of it. */
-function muted(hex: string): string {
-  const { h, s, l } = toHSL(hex)
-  return fromHSL({ h, s: s * MUTE_S, l: l + (1 - l) * MUTE_L })
-}
 
 /** The lift this material needs to read as lit. See the note on LIT_GLOW. */
 function glowFor(hex: string): number {
@@ -253,14 +237,15 @@ function House({
     [mats],
   )
 
-  /** True colour, and the same colour muted. */
+  /** True colour, the same colour dropped back, and the lift each one needs. */
   const tone = useMemo(() => {
     const full = {} as Record<MaterialKey, THREE.Color>
     const quiet = {} as Record<MaterialKey, THREE.Color>
     const glow = {} as Record<MaterialKey, number>
+    const back = new THREE.Color(FADE_TO)
     for (const key of MATERIAL_KEYS) {
       full[key] = new THREE.Color(MATERIALS[key].color)
-      quiet[key] = new THREE.Color(muted(MATERIALS[key].color))
+      quiet[key] = full[key].clone().lerp(back, FADED)
       glow[key] = glowFor(MATERIALS[key].color)
     }
     return { full, quiet, glow }
@@ -310,7 +295,9 @@ function House({
         key === 'glass'
           ? keyed
             ? GLASS_GLOW_LIT
-            : GLASS_GLOW
+            : quiet
+              ? 0.05
+              : GLASS_GLOW
           : keyed
             ? tone.glow[key]
             : 0
