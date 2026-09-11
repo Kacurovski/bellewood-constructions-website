@@ -60,6 +60,11 @@
   contain: paint;
 }
 
+.plateShot {
+  position: absolute;
+  inset: 0;
+}
+
 .plateImg {
   position: absolute;
   inset: 0;
@@ -67,7 +72,39 @@
   height: 100%;
   object-fit: cover;
   display: block;
+  /* Both layers run this, and they mount together, so the two photographs stay
+     registered to each other for the whole eighteen seconds. */
+  animation: push 18s linear both;
 }
+
+@keyframes push {
+  from { transform: scale(1.03); }
+  to { transform: scale(1.16); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .plateImg { animation: none; transform: scale(1.06); }
+}
+
+/* --- The house as it was ---------------------------------------------------
+   Clipped to the left of the pointer, by the same figure and with the same lag
+   as the crosshair's vertical rule, so the line being moved IS the edge of the
+   reveal. The clip belongs on this wrapper rather than on the photograph: the
+   photograph is scaled, and a clip inside a scaled box is measured in that
+   box's own stretched coordinates, so the edge would drift off the line.
+
+   Default 0, so at rest the plate is simply the finished house. */
+.beforeClip {
+  position: absolute;
+  inset: 0;
+  clip-path: inset(0 calc(100% - var(--cx, 0px)) 0 0);
+  opacity: 0;
+  transition:
+    clip-path var(--dur-slow) var(--ease-out),
+    opacity var(--dur) var(--ease);
+}
+
+.plate:hover .beforeClip { opacity: 1; }
 
 .plateCap {
   display: flex;
@@ -139,12 +176,13 @@
 }
 
 /* A wash of the brand dark over the photograph, so a hairline reads over a
-   white picket fence as well as over a shadow. */
+   white picket fence as well as over a shadow. Light: it is sitting on two
+   photographs now, not one, and the point of the reveal is to see them. */
 .trace::before {
   content: '';
   position: absolute;
   inset: 0;
-  background: color-mix(in srgb, var(--green) 22%, transparent);
+  background: color-mix(in srgb, var(--green) 10%, transparent);
 }
 
 .traceH,
@@ -206,6 +244,23 @@
   font-variant-numeric: tabular-nums;
   color: var(--sage);
 }
+
+/* The two ends of the rule, named. */
+.edge {
+  position: absolute;
+  bottom: clamp(0.75rem, 1.6vw, 1.1rem);
+  padding: 0.3rem 0.6rem;
+  background: color-mix(in srgb, var(--green) 82%, transparent);
+  color: var(--wash);
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: var(--t-eyebrow);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.edgeBefore { left: clamp(0.75rem, 1.6vw, 1.1rem); }
+.edgeAfter { right: clamp(0.75rem, 1.6vw, 1.1rem); }
 
 .plate:hover .trace { opacity: 1; }
 .plate:hover .traceH { transform: scaleX(1); }
