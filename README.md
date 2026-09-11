@@ -50,6 +50,43 @@ written out here rather than left to be discovered.
 
 ---
 
+## Photography — all seventeen files are in the repository, and none of them may publish
+
+The images live in [`public/projects/`](https://github.com/Kacurovski/bellewood-constructions-website/tree/main/public/projects)
+and are committed at full size — no Git LFS, no external host, nothing to fetch.
+A clone has them. Vite copies the folder into the build untouched, so a file
+named `paddington-after.jpg` is referenced in code as `projects/paddington-after.jpg`
+and served from the same relative path (the base is `./`, see **Routing and
+deployment**). To use one as a URL rather than a file, the raw form is:
+
+```
+https://raw.githubusercontent.com/Kacurovski/bellewood-constructions-website/main/public/projects/<name>.jpg
+```
+
+| Group | Files |
+| --- | --- |
+| Project before and after | `paddington-before`, `paddington-after`, `newfarm-before`, `newfarm-after`, `ashgrove-before`, `ashgrove-after`, `bardon-before`, `bardon-after` |
+| Project heroes | `redhill-hero`, `coastal-hero` |
+| Interiors, used in galleries | `interior-dining`, `interior-floor`, `interior-kitchen-green`, `interior-kitchen-timber`, `interior-kitchen-windows` |
+| Detail and site | `detail-timber-cladding`, `site-frame-lift` |
+
+> **Every one of these is stock, and every one shows somebody else's building.**
+> They are in the repository so the layout can be judged at full weight, and for
+> no other reason. Publishing them would present another builder's work as
+> Bellewood's, which is the one thing on this site that would actually be
+> dishonest.
+>
+> `mediaIsPlaceholder` in `src/data/projects.ts` is the single flag the site
+> reads, and it is `true`. When Angus's real library lands, replace the files,
+> write real alt text per project, set each project's `placeholder` to `false`,
+> and then flip that flag. Do not flip it first.
+
+Alt text is written per use, not per file, because the same photograph carries a
+different caption in a hero than it does in a gallery. It lives beside each path
+in `src/data/projects.ts`.
+
+---
+
 ## Quick start
 
 ```bash
