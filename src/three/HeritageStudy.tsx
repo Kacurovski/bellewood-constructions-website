@@ -119,9 +119,36 @@ function StudioSky() {
   return null
 }
 
-function House({ lean }: { lean: React.MutableRefObject<{ x: number; y: number }> }) {
+/** What a material steps back towards when another one is being keyed. */
+const STEP_BACK = '#dee6da'
+
+function House({
+  lean,
+  highlight,
+}: {
+  lean: React.MutableRefObject<{ x: number; y: number }>
+  highlight: MaterialKey | null
+}) {
   const group = useRef<THREE.Group>(null)
   const smoothed = useRef({ x: 0, y: 0 })
+
+  /* Keying, done by colour rather than by opacity.
+
+     The legend on the approach page points at one material and everything else
+     has to drop back. Transparency would do it and would also put six meshes
+     into the sorted pass and let the far side of the building show through the
+     near one. Walking the colour towards the page's own ground keeps every mesh
+     opaque, and it is the same thing the flat drawing does. */
+  const colours = useMemo(() => {
+    const out = {} as Record<MaterialKey, string>
+    const back = new THREE.Color(STEP_BACK)
+    for (const key of MATERIAL_KEYS) {
+      const c = new THREE.Color(MATERIALS[key].color)
+      if (highlight && key !== highlight) c.lerp(back, 0.8)
+      out[key] = `#${c.getHexString()}`
+    }
+    return out
+  }, [highlight])
 
   const geometries = useMemo(buildGeometries, [])
 
@@ -152,15 +179,16 @@ function House({ lean }: { lean: React.MutableRefObject<{ x: number; y: number }
       {MATERIAL_KEYS.map((key) => {
         const geometry = geometries[key]
         if (!geometry) return null
+        const dim = highlight != null && key !== highlight
         return (
           <mesh key={key} geometry={geometry} castShadow receiveShadow>
             <meshStandardMaterial
-              color={MATERIALS[key].color}
+              color={colours[key]}
               roughness={MATERIALS[key].roughness}
-              metalness={MATERIALS[key].metalness}
-              envMapIntensity={key === 'glass' ? 2.4 : 0.9}
+              metalness={dim ? 0 : MATERIALS[key].metalness}
+              envMapIntensity={key === 'glass' && !dim ? 2.4 : 0.9}
               emissive={key === 'glass' ? GLASS_EMISSIVE : '#000000'}
-              emissiveIntensity={key === 'glass' ? 0.62 : 0}
+              emissiveIntensity={key === 'glass' && !dim ? 0.62 : 0}
             />
           </mesh>
         )
@@ -275,7 +303,18 @@ function Fit() {
   return null
 }
 
-export default function HeritageStudy({ shadows = true }: { shadows?: boolean }) {
+export default function HeritageStudy({
+  shadows = true,
+  highlight = null,
+}: {
+  shadows?: boolean
+  /**
+   * Draw one material at full strength and step everything else back. The
+   * legend on the approach page drives it, so that page keys the building
+   * itself rather than a flat drawing of it.
+   */
+  highlight?: MaterialKey | null
+}) {
   const lean = useRef({ x: 0, y: 0 })
 
   useEffect(() => {
@@ -341,7 +380,7 @@ export default function HeritageStudy({ shadows = true }: { shadows?: boolean })
         </mesh>
       )}
 
-      <House lean={lean} />
+      <House lean={lean} highlight={highlight} />
     </Canvas>
   )
 }
