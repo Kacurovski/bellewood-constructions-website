@@ -116,15 +116,23 @@ export default function Work() {
               onPointerMove={pointer && !reduced ? onMove : undefined}
             >
               <AnimatePresence initial={false}>
+                {/* The photograph keeps moving the whole time it is up, rather
+                    than settling and sitting there. A plate this size that
+                    holds perfectly still reads as a slab; eighteen seconds of
+                    push means it never arrives, so the page is alive even while
+                    nobody is doing anything to it. */}
                 <motion.img
                   key={live.slug}
                   className={styles.plateImg}
                   src={live.hero.src ?? undefined}
                   alt=""
-                  initial={reduced ? { opacity: 1 } : { opacity: 0, scale: 1.06 }}
-                  animate={{ opacity: 1, scale: 1 }}
+                  initial={reduced ? { opacity: 1, scale: 1.06 } : { opacity: 0, scale: 1.03 }}
+                  animate={reduced ? { opacity: 1, scale: 1.06 } : { opacity: 1, scale: 1.16 }}
                   exit={{ opacity: 0 }}
-                  transition={{ duration: reduced ? 0 : 0.7, ease: [0.16, 1, 0.3, 1] }}
+                  transition={{
+                    opacity: { duration: reduced ? 0 : 0.7, ease: [0.16, 1, 0.3, 1] },
+                    scale: { duration: 18, ease: 'linear' },
+                  }}
                 />
               </AnimatePresence>
 
@@ -147,8 +155,23 @@ export default function Work() {
                 the two are connected. */}
             <p className={styles.plateCap}>
               <span className={styles.plateNum}>{String(at + 1).padStart(2, '0')}</span>
-              <span>{live.title}</span>
+              <span className={styles.plateTitle}>{live.title}</span>
+              <span className={styles.plateOf}>
+                {String(at + 1).padStart(2, '0')} / {String(projects.length).padStart(2, '0')}
+              </span>
             </p>
+
+            {/* How far through the index you are, drawn as a rule that fills.
+                The list is six screens tall, so without this there is nothing
+                on the page that says whether you are near the start of it or
+                near the end. */}
+            <span className={styles.rail} aria-hidden="true">
+              <motion.span
+                className={styles.railFill}
+                animate={{ scaleX: (at + 1) / projects.length }}
+                transition={{ duration: reduced ? 0 : 0.5, ease: [0.16, 1, 0.3, 1] }}
+              />
+            </span>
           </div>
 
           <ol className={styles.list}>
@@ -172,6 +195,14 @@ export default function Work() {
                       <span>{project.kind}</span>
                       <span className={styles.dot} aria-hidden="true" />
                       <span>{project.suburb}</span>
+                    </span>
+
+                    {/* The one line the data has always carried and the index
+                        has always thrown away. Six names and a suburb each is a
+                        contents page; this is what makes the list worth moving
+                        through, and it opens on the row you are actually on. */}
+                    <span className={styles.rowSummary}>
+                      <span>{project.summary}</span>
                     </span>
                   </span>
 

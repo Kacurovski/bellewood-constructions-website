@@ -90,6 +90,37 @@
   opacity: 0.5;
 }
 
+.plateTitle { min-width: 0; }
+
+/* Pushed to the right-hand end of the caption, where a sheet carries its
+   position in a set. */
+.plateOf {
+  margin-left: auto;
+  flex: none;
+  font-variant-numeric: tabular-nums;
+  color: var(--green);
+  opacity: 0.45;
+}
+
+/* --- The progress rail ----------------------------------------------------
+   How far through the six you are. The list runs to six screens, so without
+   this nothing on the page says whether you are at the top of it or the end. */
+.rail {
+  display: block;
+  height: 1px;
+  background: var(--ink);
+  overflow: hidden;
+}
+
+.railFill {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: var(--green);
+  transform-origin: left;
+  transform: scaleX(0);
+}
+
 /* --- The pointer mark -----------------------------------------------------
    Two hairlines ruled the full width and height of the plate, crossing where
    the pointer is, with the live project's number and destination read off at
@@ -284,6 +315,38 @@
   transform: translateX(clamp(0.3rem, 1vw, 0.75rem));
 }
 
+/* --- The live row's summary ------------------------------------------------
+   Opened with grid-template-rows rather than height, so it animates to its own
+   height without anything having to measure it first. The child carries the
+   overflow: a 0fr track still lets its contents paint outside it. */
+.rowSummary {
+  display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  max-width: 46ch;
+  font-family: var(--font-body);
+  font-size: var(--t-small);
+  line-height: 1.5;
+  color: var(--pine);
+  transition:
+    grid-template-rows var(--dur-slow) var(--ease-out),
+    opacity var(--dur) var(--ease);
+}
+
+.rowSummary > span {
+  overflow: hidden;
+  min-height: 0;
+}
+
+.rowOn .rowSummary {
+  grid-template-rows: 1fr;
+  opacity: 0.74;
+}
+
+/* The gap belongs to the open state, or every row carries the space for a line
+   it is not showing. */
+.rowOn .rowSummary > span { padding-top: clamp(0.6rem, 1.2vw, 0.9rem); }
+
 .rowMeta {
   display: flex;
   align-items: center;
@@ -364,6 +427,10 @@
   /* Every row is its own card here, so none of them is "the live one". */
   .rowTitle { opacity: 1; transform: none; }
   .rowNum { opacity: 1; }
+
+  /* And every row carries its own line, since there is nothing to open. */
+  .rowSummary { grid-template-rows: 1fr; opacity: 0.74; }
+  .rowSummary > span { padding-top: clamp(0.6rem, 1.2vw, 0.9rem); }
 }
 
 .magnet { padding-bottom: clamp(4rem, 8vw, 7rem); }
