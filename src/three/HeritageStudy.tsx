@@ -119,30 +119,90 @@ function StudioSky() {
   return null
 }
 
-/**
- * What a material that is NOT being keyed turns into.
- *
- * Its own value, with the colour taken out. Not a tone, not the panel, not one
- * flat sage for all six — every one of those has been tried on this section and
- * every one failed the same way: the moment the materials stop carrying their
- * own darkness the house stops looking like a house. A roof that is the same
- * value as the wall under it is not a quiet roof, it is a shape.
- *
- * So the value is exactly what it always was. The roof stays the darkest thing
- * on the building, the cladding stays mid, the glazing stays the lightest, and
- * the only thing that changes is that they are no longer brown and green. The
- * keyed material is then the one piece of colour on an otherwise monochrome
- * model, which is the whole of the effect and the reason it can be read at a
- * glance.
- *
- * A touch of sage in the grey, so a page built out of two greens does not have
- * a neutral photographic grey dropped into the middle of it.
- */
-const GHOST_TINT = '#8fa08b'
-const GHOST_TINT_MIX = 0.16
-/** The value the ghosted range is compressed towards, and by how much. */
-const GHOST_MID = 0.12
-const GHOST_RANGE = 0.6
+/* --- Keying ----------------------------------------------------------------
+   Point at a material in the legend and the building shows you where it is.
+
+   Six goes at this failed the same way, and the reason was the palette rather
+   than the treatment. Three of the six materials are nearly the same brown —
+   structure, cladding and deck are all Silky Oak either side of it — and two
+   more are nearly black. Showing the keyed material "in its own colour" cannot
+   tell those apart, and stepping the others back to a pale tone only made the
+   whole model pale. Moving from row to row barely changed anything.
+
+   So the keyed material is no longer drawn as itself. It is drawn LIT: its own
+   hue, but pulled up to a lightness and a saturation that are the same for
+   every row, so pointing at the roof is exactly as strong a signal as pointing
+   at the deck. What identifies a material is where it lights up, not what
+   shade it goes — and the list beside the drawing already carries a swatch of
+   the true colour on every row.
+
+   The rest of the building goes DARK rather than pale. That is the other half
+   of it: the contrast has to run one way, and a lit material on a dark model
+   reads at a glance where a mid-brown on a pale one never did. The house also
+   keeps a real silhouette against the panel instead of dissolving into it. */
+
+/* The keyed material is lit in SILKY OAK. Always the same colour, whichever
+   row you are on.
+
+   Lifting each material's own hue was tried twice and both attempts ran into
+   the same wall: Deep Pine's hue, taken to a lightness you can see against a
+   dark model, is a fluorescent mint. Capping the chroma only made it a paler
+   mint. There is no lightness at which Deep Pine reads as both itself and as
+   lit, because the thing that makes it Deep Pine is that it is nearly black.
+
+   So the model stops trying to say WHAT a material is and says only WHERE it
+   is. The list beside it already carries a swatch of the true colour and a
+   sentence on every row — what the drawing is for is pointing. One accent, used
+   for every row, means pointing at the roof is exactly as strong a signal as
+   pointing at the deck, and both of them are in the brand's own accent rather
+   than in a colour invented by arithmetic.
+
+   Silky Oak is what the brand book nominates for exactly this, lifted so it
+   carries against the dark. */
+const LIT_COLOUR = '#d8b078'
+
+/** Receded: the dark band everything else is compressed into. */
+const DIM_L = 0.13
+const DIM_L_GAIN = 0.13
+const DIM_S = 0.26
+
+type HSL = { h: number; s: number; l: number }
+
+/** sRGB hex to HSL, so the maths happens where the eye is rather than in the
+    renderer's linear space, where a mid grey is not a mid grey. */
+function toHSL(hex: string): HSL {
+  const n = parseInt(hex.slice(1), 16)
+  const r = ((n >> 16) & 255) / 255
+  const g = ((n >> 8) & 255) / 255
+  const b = (n & 255) / 255
+  const max = Math.max(r, g, b)
+  const min = Math.min(r, g, b)
+  const l = (max + min) / 2
+  const d = max - min
+  if (d === 0) return { h: 0, s: 0, l }
+  const s = l > 0.5 ? d / (2 - max - min) : d / (max + min)
+  let h: number
+  if (max === r) h = ((g - b) / d + (g < b ? 6 : 0)) / 6
+  else if (max === g) h = ((b - r) / d + 2) / 6
+  else h = ((r - g) / d + 4) / 6
+  return { h, s, l }
+}
+
+function fromHSL({ h, s, l }: HSL): string {
+  const f = (n: number) => {
+    const k = (n + h * 12) % 12
+    const a = s * Math.min(l, 1 - l)
+    const v = l - a * Math.max(-1, Math.min(k - 3, 9 - k, 1))
+    return Math.round(Math.max(0, Math.min(1, v)) * 255)
+  }
+  return `#${((f(0) << 16) | (f(8) << 8) | f(4)).toString(16).padStart(6, '0')}`
+}
+
+/** Everything else: the same hue, taken down into a narrow dark band. */
+function receded(hex: string): string {
+  const { h, s, l } = toHSL(hex)
+  return fromHSL({ h, s: s * DIM_S, l: DIM_L + l * DIM_L_GAIN })
+}
 
 function House({
   lean,
@@ -182,34 +242,20 @@ function House({
   }, [])
 
   const targets = useMemo(() => {
-    const full = {} as Record<MaterialKey, THREE.Color>
-    const ghost = {} as Record<MaterialKey, THREE.Color>
-    const tint = new THREE.Color(GHOST_TINT)
+    const rest = {} as Record<MaterialKey, THREE.Color>
+    const on = {} as Record<MaterialKey, THREE.Color>
+    const off = {} as Record<MaterialKey, THREE.Color>
 
     for (const key of MATERIAL_KEYS) {
-      const colour = new THREE.Color(MATERIALS[key].color)
-      full[key] = colour
-
-      /* Luminance in, grey of the same luminance out — the material's own
-         brightness with the hue taken off it, rather than an eyeballed guess at
-         it. Rec. 709 weights, applied to the colour's own components, which
-         three has already converted into the renderer's linear space. */
-      const l = 0.2126 * colour.r + 0.7152 * colour.g + 0.0722 * colour.b
-
-      /* Pulled towards the middle, not left where it was.
-
-         Taking the colour out of a material that is already almost black does
-         almost nothing to it, and the roof is Deep Pine: keyed and unkeyed it
-         came out the same near-black, so pointing at the roof did not visibly
-         do anything. Compressing the ghost's range towards a mid value keeps
-         every material in the same ORDER — roof still darkest, glazing still
-         lightest, so the house still reads — while making room for the keyed
-         one to be both the only colour and the strongest value on the model. */
-      const flat = GHOST_MID + (l - GHOST_MID) * GHOST_RANGE
-      ghost[key] = new THREE.Color().setRGB(flat, flat, flat).lerp(tint, GHOST_TINT_MIX)
+      const hex = MATERIALS[key].color
+      // Nothing keyed: the house is simply the house, which is what the hero
+      // carries and what this plate sits at until somebody points at a row.
+      rest[key] = new THREE.Color(hex)
+      on[key] = new THREE.Color(LIT_COLOUR)
+      off[key] = new THREE.Color(receded(hex))
     }
 
-    return { full, ghost }
+    return { rest, on, off }
   }, [])
 
   useEffect(
@@ -248,12 +294,26 @@ function House({
      a 120Hz phone. */
   useFrame((_, delta) => {
     const t = 1 - Math.pow(0.02, Math.min(delta, 0.1))
+
     for (const key of MATERIAL_KEYS) {
       const m = mats[key]
-      const lit = highlight == null || key === highlight
-      m.color.lerp(lit ? targets.full[key] : targets.ghost[key], t)
-      m.metalness += ((lit ? MATERIALS[key].metalness : 0) - m.metalness) * t
-      const glow = key !== 'glass' ? 0 : lit ? 0.62 : 0.1
+      const want =
+        highlight == null
+          ? targets.rest[key]
+          : key === highlight
+            ? targets.on[key]
+            : targets.off[key]
+
+      m.color.lerp(want, t)
+
+      const keyed = highlight != null && key === highlight
+      const quiet = highlight != null && key !== highlight
+      m.metalness += ((quiet ? 0 : MATERIALS[key].metalness) - m.metalness) * t
+
+      /* The windows carry the glow. Lit they are the brightest thing on the
+         model; quiet they keep a trace of it, because windows that go out
+         entirely take the one thing that says the house is lived in. */
+      const glow = key !== 'glass' ? 0 : keyed ? 1.05 : quiet ? 0.06 : 0.62
       m.emissiveIntensity += (glow - m.emissiveIntensity) * t
     }
   })
