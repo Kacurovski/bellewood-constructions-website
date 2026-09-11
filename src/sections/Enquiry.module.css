@@ -9,33 +9,69 @@
 
 .stepsHead { padding-bottom: clamp(1.25rem, 2.5vw, 2rem); }
 
+/* --- Four sheets on the table ----------------------------------------------
+   The rule above them is gone: these are objects now, not columns of a table,
+   and a line across their heads would read as something they hang from.
+
+   They tuck under each other by a few millimetres rather than sitting in a
+   grid with a gap. That overlap is the whole reason the fan reads as a pile —
+   without it four tilted rectangles look like four tilted rectangles. It is
+   kept small on purpose: every sheet carries three lines of text and none of
+   it may be covered. */
 .stepsList {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: clamp(1.25rem, 3vw, 3rem);
+  gap: 0;
   list-style: none;
   margin: 0;
-  padding: 0;
-  border-top: 1px solid var(--rule-reverse);
+  padding: 0.75rem 0;
 }
 
 .step {
-  padding-top: clamp(1rem, 2vw, 1.5rem);
-  padding-inline-end: clamp(0.5rem, 1.5vw, 1.5rem);
+  position: relative;
+  padding: clamp(1.1rem, 2.2vw, 1.6rem) clamp(1rem, 2vw, 1.4rem)
+    clamp(1.2rem, 2.4vw, 1.75rem);
+  /* Pale paper on the dark ground, so the band's own reversed text does not
+     apply inside them. */
+  background: var(--wash);
+  color: var(--pine);
+  /* Paper, so it casts. Tight and weak — this is a sheet resting on a table,
+     not a card floating above a page. */
+  box-shadow: 0 6px 18px color-mix(in srgb, #000 22%, transparent);
+  /* Each one overlaps the one before it. The first has nothing to tuck under. */
+  margin-left: clamp(-1.25rem, -1.6vw, -0.7rem);
 }
 
+.step:first-child { margin-left: 0; }
+
+/* Later sheets sit over earlier ones, which is the order a pile is dealt in.
+   Hover raises whichever one is pointed at above all of them. */
+.step:nth-child(1) { z-index: 1; }
+.step:nth-child(2) { z-index: 2; }
+.step:nth-child(3) { z-index: 3; }
+.step:nth-child(4) { z-index: 4; }
+
+/* The number in the corner, the way a sheet carries one, with the rule under
+   it that a sheet reference always has. */
 .stepNumber {
   display: block;
+  padding-bottom: clamp(0.5rem, 1vw, 0.75rem);
+  border-bottom: 1px solid var(--ink);
   font-family: var(--font-display);
   font-weight: 600;
   font-size: var(--t-eyebrow);
+  font-variant-numeric: tabular-nums;
   letter-spacing: 0.12em;
-  color: var(--sage);
-  opacity: 0.8;
+  color: var(--green);
 }
 
-.stepLabel {
-  margin: 0.5rem 0 0;
+/* Scoped to the sheet, and that is not tidiness — it is the only way it wins.
+   The band carries `on-green`, which sets every h1 to h4 inside it to Wash, and
+   that selector is a class plus an element. A bare `.stepLabel` is one class
+   and loses, so the heading came out Wash on Wash paper and simply vanished. */
+.step .stepLabel {
+  margin: clamp(0.7rem, 1.4vw, 1rem) 0 0;
+  color: var(--green);
   font-family: var(--font-display);
   font-weight: 600;
   font-size: var(--t-sub);
@@ -43,12 +79,16 @@
 }
 
 .stepNote {
-  margin-top: 0.4rem;
-  color: color-mix(in srgb, var(--wash) 74%, transparent);
+  margin-top: 0.45rem;
+  color: var(--pine);
+  opacity: 0.78;
 }
 
 @media (max-width: 900px) {
   .stepsList { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  /* Two across, so only the second of each pair has anything to tuck under. */
+  .step { margin-left: -0.6rem; }
+  .step:nth-child(odd) { margin-left: 0; }
 }
 
 @media (max-width: 520px) {
@@ -117,4 +157,13 @@
   font-size: clamp(2rem, 1.1rem + 3.2vw, 4rem);
   line-height: 1.0;
   letter-spacing: -0.035em;
+}
+
+/* One column, squared up. Four overlapping tilted sheets in a single narrow
+   column is a stack you cannot read, and the tilt is carried by framer as an
+   inline transform, so it is cancelled there rather than here. */
+@media (max-width: 560px) {
+  .stepsList { grid-template-columns: minmax(0, 1fr); row-gap: 0.9rem; }
+  .step,
+  .step:nth-child(odd) { margin-left: 0; }
 }

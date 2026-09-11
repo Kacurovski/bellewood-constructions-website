@@ -1,5 +1,8 @@
+import { motion } from 'framer-motion'
 import { EnquiryForm } from '../components/EnquiryForm'
 import { Reveal } from '../components/Reveal'
+import { useMediaQuery } from '../hooks/useMediaQuery'
+import { useReducedMotion } from '../hooks/useReducedMotion'
 import { RegistrationMarks, SheetRef } from '../components/Sheet'
 import { contact, nextSteps } from '../config/site'
 import styles from './Enquiry.module.css'
@@ -11,7 +14,23 @@ import styles from './Enquiry.module.css'
  * runs off Angus's mobile, so a call that he cannot take on site still becomes
  * a conversation — which makes the number worth as much as the form.
  */
+/**
+ * How far each sheet sits off square, in degrees.
+ *
+ * Written out rather than generated, because a fan wants to look dealt and not
+ * calculated: the angles are uneven and they do not alternate cleanly. A loop
+ * producing +2, -2, +2, -2 reads as a pattern, which is the one thing a pile of
+ * paper never does.
+ */
+const TILT = [-2.1, 1.4, -1.1, 2.3]
+
 export function Enquiry() {
+  const reduced = useReducedMotion()
+  /* One column below this, where four overlapping tilted sheets would be a
+     stack you cannot read. The tilt is an inline transform from framer, so it
+     has to be cancelled here — a stylesheet cannot reach it. */
+  const narrow = useMediaQuery('(max-width: 560px)')
+
   return (
     /* Reversed. This is the page's most important moment and it was its
        plainest — the same pale ground as everything above it, with the form
@@ -30,13 +49,38 @@ export function Enquiry() {
         <Reveal className={styles.stepsHead}>
           <SheetRef number="A-08" name="What happens next" rule={false} />
         </Reveal>
+        {/* Four sheets, dealt onto the table.
+
+            This was four columns of reversed text on the dark band and it was
+            the plainest thing on the page — which is a poor place for it, since
+            it is the part that tells somebody what happens after they send a
+            form they are nervous about sending.
+
+            They are sheets rather than cards: pale paper on the dark ground,
+            one line weight, square corners, the number where a sheet carries
+            it. A card with a rounded corner and a soft drop shadow is the house
+            style of a different kind of website, and this site is a drawing
+            set — the same idea told in its own language is a set of drawings
+            laid out on a table, slightly out of square, which is exactly how
+            they end up.
+
+            They deal in one after another as the band arrives, and the one
+            under the pointer squares up and lifts to the top of the pile. */}
         <ol className={styles.stepsList}>
           {nextSteps.map((step, i) => (
-            <Reveal as="li" key={step.label} delay={i * 0.06} className={styles.step}>
+            <motion.li
+              key={step.label}
+              className={styles.step}
+              initial={reduced ? false : { opacity: 0, y: 26, rotate: 0 }}
+              whileInView={{ opacity: 1, y: 0, rotate: narrow ? 0 : TILT[i] }}
+              viewport={{ once: true, margin: '-10% 0px' }}
+              transition={{ duration: 0.72, delay: i * 0.09, ease: [0.16, 1, 0.3, 1] }}
+              whileHover={reduced ? undefined : { rotate: 0, y: -10, zIndex: 5 }}
+            >
               <span className={styles.stepNumber}>{String(i + 1).padStart(2, '0')}</span>
               <h3 className={styles.stepLabel}>{step.label}</h3>
               <p className={['small', styles.stepNote].join(' ')}>{step.note}</p>
-            </Reveal>
+            </motion.li>
           ))}
         </ol>
       </div>
