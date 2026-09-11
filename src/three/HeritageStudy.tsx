@@ -119,8 +119,20 @@ function StudioSky() {
   return null
 }
 
-/** What a material steps back towards when another one is being keyed. */
-const STEP_BACK = '#dee6da'
+/**
+ * What a material steps back towards when another one is being keyed.
+ *
+ * Sage, darkened. It used to be the panel's own colour and the mix was eight
+ * tenths, which bleached everything that was not lit to a bone white: point at
+ * the deck and the rest of the house turned into a paper model. Stepping back
+ * is not the same as disappearing — the building still has to read as a
+ * building, and a value near the ground behind it cannot.
+ *
+ * Sitting the ghost well below the panel keeps the silhouette, keeps roof
+ * darker than wall, and keeps the whole thing on the brand's own greens rather
+ * than on white. */
+const STEP_BACK = '#93a48f'
+const STEP_BACK_MIX = 0.74
 
 function House({
   lean,
@@ -144,7 +156,7 @@ function House({
     const back = new THREE.Color(STEP_BACK)
     for (const key of MATERIAL_KEYS) {
       const c = new THREE.Color(MATERIALS[key].color)
-      if (highlight && key !== highlight) c.lerp(back, 0.8)
+      if (highlight && key !== highlight) c.lerp(back, STEP_BACK_MIX)
       out[key] = `#${c.getHexString()}`
     }
     return out
