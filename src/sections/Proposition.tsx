@@ -78,6 +78,25 @@ function Plotted({ children }: { children: ReactNode }) {
  * was stopping any one thing on this page being the thing on the screen.
  */
 export function Proposition() {
+  const reduced = useReducedMotion()
+
+  /* The leader and its tick, drawn once as the note comes up. Under reduced
+     motion they are simply there, like everything else on the page. */
+  const draws = (
+    delay: number,
+    from: Record<string, number | string>,
+    to: Record<string, number | string>,
+    duration: number,
+  ) =>
+    reduced
+      ? {}
+      : {
+          initial: from,
+          whileInView: to,
+          viewport: { once: true, margin: '-10% 0px -10% 0px' },
+          transition: { duration, delay, ease: [0.16, 1, 0.3, 1] as const },
+        }
+
   return (
     <section className={['section', styles.section].join(' ')} aria-labelledby="proposition-heading">
       <div className={['shell', styles.inner].join(' ')}>
@@ -136,11 +155,37 @@ export function Proposition() {
           </figure>
         </Reveal>
 
+        {/* The note.
+
+            It was a sentence of fine print alone in a third of the page, which
+            is what a leftover looks like. It is a general note on a drawing
+            now: labelled, at reading size, with a leader pulled out of it
+            towards the two plates it qualifies. Apartment refurbishments are
+            the work this sheet does not show, so the note is the only place on
+            the page that can say so. */}
         <Reveal delay={0.12} className={styles.bodyWrap}>
-          <p className={styles.aside}>
-            Also apartment refurbishments, in Brisbane and on the coast, to the
-            same standard.
-          </p>
+          <aside className={styles.note}>
+            <motion.span
+              aria-hidden="true"
+              className={styles.leader}
+              {...draws(0.15, { scaleX: 0 }, { scaleX: 1 }, 1.1)}
+            />
+            <motion.span
+              aria-hidden="true"
+              className={styles.leaderMark}
+              {...draws(
+                1.05,
+                { opacity: 0, scale: 0.2, rotate: 45, x: '-50%', y: '-50%' },
+                { opacity: 1, scale: 1, rotate: 45, x: '-50%', y: '-50%' },
+                0.6,
+              )}
+            />
+            <span className={['eyebrow', styles.noteLabel].join(' ')}>Note</span>
+            <p className={styles.aside}>
+              Also apartment refurbishments, in Brisbane and on the coast, to the
+              same standard.
+            </p>
+          </aside>
         </Reveal>
 
         {/* The credentials row, at the foot of this section rather than as a

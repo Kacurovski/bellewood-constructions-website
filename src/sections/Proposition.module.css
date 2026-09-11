@@ -88,19 +88,101 @@
   margin-right: 0.6em;
 }
 
-.bodyWrap { grid-column: 2; }
+/* The note sits at the foot of its column, on the same line as the two figure
+   captions, because that is where a note belongs on a sheet. Hung from the top
+   of an otherwise empty column it read as something left over rather than as
+   something placed. */
+.bodyWrap {
+  grid-column: 2;
+  align-self: end;
+}
 
 /* Across both columns at the foot of the section. */
 .creds { grid-column: 1 / -1; }
 
-/* The apartment line is a footnote to the statement, not part of it. */
+/* ---------------------------------------------------------------------------
+   The note.
+
+   A general note on a drawing: a label, the note itself, and a leader pulled
+   out of it back towards the plates it qualifies. The leader draws from the
+   right — out of the note, towards the drawing — which is the opposite
+   direction to the dimension rule below it, because it is doing the opposite
+   job.
+
+   The sentence used to be set at fine-print size in 72% pine, alone in a third
+   of the page. Small type in a large empty column does not read as restraint,
+   it reads as something left over; at body size it is a note somebody wrote.
+   --------------------------------------------------------------------------- */
+
+.note {
+  position: relative;
+  display: block;
+  padding-top: clamp(0.9rem, 1.8vw, 1.4rem);
+  max-width: 34ch;
+}
+
+.leader {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: var(--ink);
+  transform-origin: right center;
+  pointer-events: none;
+  transition: background-color 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* The oblique tick at the leader's far end, struck once the leader arrives —
+   the same mark the dimension string below uses. */
+.leaderMark {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1px;
+  height: 13px;
+  background: var(--green);
+  opacity: 0.55;
+  transform: translate(-50%, -50%) rotate(45deg);
+  transform-origin: center;
+  pointer-events: none;
+  transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.noteLabel {
+  display: block;
+  margin-bottom: 0.55rem;
+  opacity: 0.65;
+  transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
 .aside {
   margin: 0;
-  font-size: var(--t-small);
-  color: color-mix(in srgb, var(--pine) 72%, transparent);
-  padding-top: clamp(0.75rem, 1.5vw, 1.25rem);
-  border-top: 1px solid var(--ink);
-  max-width: 34ch;
+  font-size: var(--t-body);
+  line-height: 1.62;
+  color: color-mix(in srgb, var(--pine) 88%, transparent);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  /* Point at the note and the two plates step back. The note is the work this
+     sheet does not show — apartments, not cottages — so what it says is easier
+     to hear with the cottages quiet. The same rule as everywhere else on this
+     page: nothing is recoloured, the signal is what moves away. */
+  .inner:has(.note:hover) .figure { opacity: 0.5; }
+
+  .note:hover .leader {
+    background-color: color-mix(in srgb, var(--green) 60%, transparent);
+  }
+
+  .note:hover .leaderMark { opacity: 1; }
+
+  .note:hover .noteLabel { opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .leader,
+  .leaderMark,
+  .noteLabel { transition: none; }
 }
 
 @media (max-width: 860px) {
