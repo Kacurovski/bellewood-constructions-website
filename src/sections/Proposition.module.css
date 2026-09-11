@@ -117,8 +117,8 @@
 .note {
   position: relative;
   display: block;
-  padding-top: clamp(0.9rem, 1.8vw, 1.4rem);
-  max-width: 34ch;
+  padding-top: clamp(1.3rem, 2.4vw, 1.9rem);
+  max-width: 30ch;
 }
 
 .leader {
@@ -149,18 +149,26 @@
   transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.noteLabel {
+/* The same caption treatment the dimension string below uses, so the two
+   things in this corner of the sheet are annotated in one hand. */
+.note .noteLabel {
   display: block;
-  margin-bottom: 0.55rem;
-  opacity: 0.65;
-  transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  margin-bottom: clamp(0.8rem, 1.4vw, 1.15rem);
+  font-size: 0.625rem;
+  letter-spacing: 0.2em;
+  color: color-mix(in srgb, var(--green) 72%, var(--wash));
+  transition: color 0.5s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
+/* At body size in a column this wide the note made two long lines and read as
+   fine print set slightly larger. A step up the scale and a shorter measure
+   make three short ones, which is a block rather than a leftover. */
 .aside {
   margin: 0;
-  font-size: var(--t-body);
-  line-height: 1.62;
-  color: color-mix(in srgb, var(--pine) 88%, transparent);
+  font-size: var(--t-lead);
+  line-height: 1.5;
+  letter-spacing: -0.005em;
+  color: color-mix(in srgb, var(--pine) 92%, transparent);
 }
 
 @media (hover: hover) and (pointer: fine) {
@@ -176,7 +184,7 @@
 
   .note:hover .leaderMark { opacity: 1; }
 
-  .note:hover .noteLabel { opacity: 1; }
+  .note:hover .noteLabel { color: var(--green); }
 }
 
 @media (prefers-reduced-motion: reduce) {
