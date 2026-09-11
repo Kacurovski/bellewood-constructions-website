@@ -31,97 +31,35 @@
 
 .summary { max-width: 26ch; }
 
-/* The band owns the air; the section inside it owns only the column. */
-.band { padding-block: clamp(3rem, 6vw, 5.5rem); }
-
-.compare { padding-bottom: 0; }
+.compare { padding-bottom: clamp(3rem, 6vw, 5rem); }
 
 .compareHeading { margin-bottom: clamp(1.5rem, 3vw, 2.25rem); }
 
-/* `auto-fit` rather than two fixed columns. A project with one gallery frame —
-   which several of them have — used to put it in the left cell and leave the
-   right half of the band as empty page. Auto-fit collapses the track that has
-   nothing in it, so one frame runs the full width and two still sit side by
-   side. */
 .gallery {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 26rem), 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: clamp(1.5rem, 3vw, 3rem);
   padding-bottom: clamp(3rem, 6vw, 5rem);
 }
 
-/* The footer below is green as well, so without a rule the two run together
-   into one unbroken slab and the way on to the next project disappears into
-   the colophon. One drawing weight, which reverses on this ground by itself. */
-.closer {
-  padding-block: clamp(3.25rem, 6.5vw, 5.5rem);
-  border-bottom: 1px solid var(--ink);
+.next {
+  padding-block: clamp(2.5rem, 5vw, 4rem);
+  border-top: 1px solid var(--ink);
 }
-
-.next { padding-block: 0; }
 
 .nextLink {
   display: flex;
   flex-direction: column;
-  gap: clamp(0.6rem, 1.4vw, 1rem);
-  text-decoration: none;
-  color: inherit;
-}
-
-.nextLabel {
-  font-family: var(--font-display);
-  font-weight: 600;
-  font-size: var(--t-eyebrow);
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--sage);
-}
-
-.nextRow {
-  display: flex;
-  align-items: center;
-  gap: clamp(1rem, 2.5vw, 2rem);
-}
-
-.nextTitle {
-  color: var(--wash);
-  transition: transform var(--dur-slow) var(--ease-out);
-}
-
-.nextArrow {
-  width: clamp(1.75rem, 3vw, 2.75rem);
-  flex: none;
-  color: var(--wash);
-  transition: transform var(--dur-slow) var(--ease-out);
-}
-
-.nextArrow svg { width: 100%; height: auto; display: block; }
-
-.nextLink:hover .nextTitle,
-.nextLink:focus-visible .nextTitle { transform: translateX(clamp(0.25rem, 0.8vw, 0.6rem)); }
-
-.nextLink:hover .nextArrow,
-.nextLink:focus-visible .nextArrow { transform: translateX(clamp(0.5rem, 1.4vw, 1rem)); }
-
-.nextMeta {
-  display: flex;
-  align-items: center;
   gap: var(--s-3);
-  font-family: var(--font-body);
-  font-size: var(--t-small);
-  color: var(--sage);
+  text-decoration: none;
 }
 
-.dot {
-  width: 3px;
-  height: 3px;
-  border-radius: 50%;
-  background: currentColor;
-  opacity: 0.7;
-  flex: none;
-}
+.nextTitle { transition: opacity var(--dur-fast) var(--ease); }
+
+.nextLink:hover .nextTitle { opacity: 0.7; }
 
 @media (max-width: 860px) {
   .body { grid-template-columns: minmax(0, 1fr); gap: var(--s-6); }
+  .gallery { grid-template-columns: minmax(0, 1fr); }
   .summary { max-width: none; }
 }
