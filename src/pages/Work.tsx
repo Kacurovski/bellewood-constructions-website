@@ -116,39 +116,24 @@ export default function Work() {
               onPointerMove={pointer && !reduced ? onMove : undefined}
             >
               <AnimatePresence initial={false}>
-                {/* Two photographs, one on top of the other: the house as it is,
-                    and under the pointer the house as it was.
-
-                    The push is a CSS animation rather than a framer one because
-                    both layers have to run it in lockstep — they mount together,
-                    so one keyframe list keeps them registered to the pixel. A
-                    plate this size holding still reads as a slab; eighteen
-                    seconds of it means the photograph never arrives. */}
-                <motion.div
+                {/* The photograph keeps moving the whole time it is up, rather
+                    than settling and sitting there. A plate this size that
+                    holds perfectly still reads as a slab; eighteen seconds of
+                    push means it never arrives, so the page is alive even while
+                    nobody is doing anything to it. */}
+                <motion.img
                   key={live.slug}
-                  className={styles.plateShot}
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
+                  className={styles.plateImg}
+                  src={live.hero.src ?? undefined}
+                  alt=""
+                  initial={reduced ? { opacity: 1, scale: 1.06 } : { opacity: 0, scale: 1.03 }}
+                  animate={reduced ? { opacity: 1, scale: 1.06 } : { opacity: 1, scale: 1.16 }}
                   exit={{ opacity: 0 }}
-                  transition={{ duration: reduced ? 0 : 0.7, ease: [0.16, 1, 0.3, 1] }}
-                >
-                  <img className={styles.plateImg} src={live.hero.src ?? undefined} alt="" />
-
-                  {/* Clipped to the left of the pointer by the SAME figure the
-                      crosshair's vertical rule is drawn at, and with the same
-                      lag, so the line you are moving is the edge of the reveal
-                      rather than something that happens to sit near it.
-
-                      The clip is on this wrapper and not on the photograph,
-                      because the photograph is being scaled and a clip inside a
-                      scaled box is measured in that box's own stretched
-                      coordinates — the edge would drift away from the line. */}
-                  {live.before.src && (
-                    <span className={styles.beforeClip} aria-hidden="true">
-                      <img className={styles.plateImg} src={live.before.src} alt="" />
-                    </span>
-                  )}
-                </motion.div>
+                  transition={{
+                    opacity: { duration: reduced ? 0 : 0.7, ease: [0.16, 1, 0.3, 1] },
+                    scale: { duration: 18, ease: 'linear' },
+                  }}
+                />
               </AnimatePresence>
 
               {/* Setting-out lines, following the pointer across the plate.
@@ -162,19 +147,6 @@ export default function Work() {
                   <span className={styles.traceNum}>{String(at + 1).padStart(2, '0')}</span>
                   View project
                 </span>
-
-                {/* Named at the two ends of the rule, so what is happening is
-                    readable the moment the pointer lands rather than something
-                    you have to work out. Only where there is a before to show:
-                    two of the six have no photograph of the house as it was,
-                    and a label over a plate that is not revealing anything is
-                    worse than no label. */}
-                {live.before.src && (
-                  <>
-                    <span className={[styles.edge, styles.edgeBefore].join(' ')}>Before</span>
-                    <span className={[styles.edge, styles.edgeAfter].join(' ')}>After</span>
-                  </>
-                )}
               </span>
             </Link>
 
