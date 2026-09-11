@@ -122,33 +122,89 @@ function StudioSky() {
 /* --- Keying ----------------------------------------------------------------
    Point at a material in the legend and the building shows you where it is.
 
-   Nothing about the house changes colour. That was the mistake in every version
-   of this before it — stepping the other materials back to a tone, collapsing
-   them to one value, taking the hue out, and finally lighting the keyed one in
-   the brand accent. All of them changed what the house looked like in order to
-   say where something was, and all of them ended up either unreadable or
-   off-brand, because the palette cannot do that job: three of the six materials
-   are nearly the same brown and two more are nearly black.
+   Two rules, arrived at the hard way over about eight attempts.
 
-   The keyed material stays exactly as it is. Everything else FADES — same
-   colour, same shading, just taken down to a whisper — so the house is always
-   the house, the parts you asked about are the only solid thing in it, and the
-   signal is exactly as strong on the roof as it is on the deck.
+   NOTHING IS RECOLOURED. Every version that tried to say what a material is at
+   the same time as where it is failed, because the palette cannot carry it:
+   three of the six materials are nearly the same brown and two more are nearly
+   black. Stepping the others back to a tone, flattening them to one value,
+   taking the hue out, lighting the keyed one in the brand accent — all of them
+   turned the house into a different house.
 
-   Fading is done on the COLOUR, not on alpha. Real transparency was the
-   obvious reading of the word and it turns the house into an x-ray: the
-   triangles inside one merged mesh are not sorted against each other, so the
-   far wall comes through the near wall and the stumps come up through the
-   floor, with or without depth writing. What is wanted is a part that has gone
-   quiet, not a part you can see through.
+   THE SIGNAL IS THE HIGHLIGHT, NOT THE FADE. Mixing the other materials
+   towards the panel is also a recolour, however gently it is done: the panel is
+   nearly white, so even a third of the way there turns warm timber into cream.
+   They are muted instead — the same hue, the same value order, just less of
+   it — which reads as quiet rather than as changed. What actually marks the
+   keyed material is that it lights up: its own colour, unchanged, lifted by an
+   emissive of that same colour so the part gets brighter without becoming a
+   different one. */
 
-   So a faded material keeps its own colour and its own shading and is simply
-   carried most of the way to the panel behind it, which is what fading on paper
-   actually is. Every surface stays opaque, so the building keeps its solidity
-   and its silhouette, and the part being pointed at is the only thing on it
-   still at full strength. */
-const FADE_TO = '#dee6da'
-const FADED = 0.66
+/** How much chroma a material that is not being keyed keeps, and how far its
+    value lifts. Small on purpose: this is meant to read as quiet, not as pale. */
+const MUTE_S = 0.4
+const MUTE_L = 0.16
+
+/* How hard a keyed material lights up, in its own colour.
+
+   Scaled by how dark the material is, because an emissive is ADDED to the
+   surface: the same intensity on Silky Oak is a clear lift and on Deep Pine is
+   almost nothing, since there is almost nothing there to add. Left flat, the
+   only row that did not visibly do anything was the roof — which is the row
+   whose own material makes it hardest. Scaled, every row lifts by about as
+   much as every other. */
+const LIT_GLOW = 0.21
+const LIT_GLOW_MIN = 0.3
+const LIT_GLOW_MAX = 2.2
+/** The windows are already a light source, so theirs runs from a higher floor. */
+const GLASS_GLOW = 0.62
+const GLASS_GLOW_LIT = 1.15
+
+type HSL = { h: number; s: number; l: number }
+
+/** sRGB hex to HSL and back, so muting happens where the eye is rather than in
+    the renderer's linear space, where a mid grey is not a mid grey. */
+function toHSL(hex: string): HSL {
+  const n = parseInt(hex.slice(1), 16)
+  const r = ((n >> 16) & 255) / 255
+  const g = ((n >> 8) & 255) / 255
+  const b = (n & 255) / 255
+  const max = Math.max(r, g, b)
+  const min = Math.min(r, g, b)
+  const l = (max + min) / 2
+  const d = max - min
+  if (d === 0) return { h: 0, s: 0, l }
+  const s = l > 0.5 ? d / (2 - max - min) : d / (max + min)
+  let h: number
+  if (max === r) h = ((g - b) / d + (g < b ? 6 : 0)) / 6
+  else if (max === g) h = ((b - r) / d + 2) / 6
+  else h = ((r - g) / d + 4) / 6
+  return { h, s, l }
+}
+
+function fromHSL({ h, s, l }: HSL): string {
+  const f = (n: number) => {
+    const k = (n + h * 12) % 12
+    const a = s * Math.min(l, 1 - l)
+    const v = l - a * Math.max(-1, Math.min(k - 3, 9 - k, 1))
+    return Math.round(Math.max(0, Math.min(1, v)) * 255)
+  }
+  return `#${((f(0) << 16) | (f(8) << 8) | f(4)).toString(16).padStart(6, '0')}`
+}
+
+/** Same hue, same place in the value order, simply less of it. */
+function muted(hex: string): string {
+  const { h, s, l } = toHSL(hex)
+  return fromHSL({ h, s: s * MUTE_S, l: l + (1 - l) * MUTE_L })
+}
+
+/** The lift this material needs to read as lit. See the note on LIT_GLOW. */
+function glowFor(hex: string): number {
+  const { l } = toHSL(hex)
+  return Math.min(Math.max(LIT_GLOW / Math.max(l, 0.1), LIT_GLOW_MIN), LIT_GLOW_MAX)
+}
+
+
 
 function House({
   lean,
@@ -182,8 +238,8 @@ function House({
         roughness: MATERIALS[key].roughness,
         metalness: MATERIALS[key].metalness,
         envMapIntensity: key === 'glass' ? 2.4 : 0.9,
-        emissive: new THREE.Color(key === 'glass' ? GLASS_EMISSIVE : '#000000'),
-        emissiveIntensity: key === 'glass' ? 0.62 : 0,
+        emissive: new THREE.Color(key === 'glass' ? GLASS_EMISSIVE : MATERIALS[key].color),
+        emissiveIntensity: key === 'glass' ? GLASS_GLOW : 0,
       })
     }
     return out
@@ -197,16 +253,17 @@ function House({
     [mats],
   )
 
-  /** True colour, and the same colour faded back towards the panel. */
+  /** True colour, and the same colour muted. */
   const tone = useMemo(() => {
     const full = {} as Record<MaterialKey, THREE.Color>
-    const faded = {} as Record<MaterialKey, THREE.Color>
-    const back = new THREE.Color(FADE_TO)
+    const quiet = {} as Record<MaterialKey, THREE.Color>
+    const glow = {} as Record<MaterialKey, number>
     for (const key of MATERIAL_KEYS) {
       full[key] = new THREE.Color(MATERIALS[key].color)
-      faded[key] = full[key].clone().lerp(back, FADED)
+      quiet[key] = new THREE.Color(muted(MATERIALS[key].color))
+      glow[key] = glowFor(MATERIALS[key].color)
     }
-    return { full, faded }
+    return { full, quiet, glow }
   }, [])
 
   const geometries = useMemo(buildGeometries, [])
@@ -241,17 +298,26 @@ function House({
 
     for (const key of MATERIAL_KEYS) {
       const m = mats[key]
-      const lit = highlight == null || key === highlight
-      m.color.lerp(lit ? tone.full[key] : tone.faded[key], t)
+      const keyed = highlight != null && key === highlight
+      const quiet = highlight != null && !keyed
 
-      /* The windows are the one thing that reads as light rather than as
-         surface, so their glow fades with them instead of being left burning on
-         a part that has gone quiet. */
-      if (key === 'glass') {
-        m.emissiveIntensity += ((lit ? 0.62 : 0.08) - m.emissiveIntensity) * t
-      }
+      m.color.lerp(quiet ? tone.quiet[key] : tone.full[key], t)
+
+      /* The lift. An emissive of the material's OWN colour, so the part gets
+         brighter without becoming a different colour — which is the whole point
+         and the thing every earlier attempt got wrong. */
+      const glow =
+        key === 'glass'
+          ? keyed
+            ? GLASS_GLOW_LIT
+            : GLASS_GLOW
+          : keyed
+            ? tone.glow[key]
+            : 0
+      m.emissiveIntensity += (glow - m.emissiveIntensity) * t
     }
   })
+
 
 
 
