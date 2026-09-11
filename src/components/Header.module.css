@@ -15,11 +15,21 @@
   background: color-mix(in srgb, var(--wash) 94%, transparent);
 }
 
+/* The border is INSIDE the declared height, not added to it.
+
+   `--header-h` is what the rest of the site offsets by: the hero pulls up by
+   it, every sticky panel sits below it, and every in-page target scrolls to
+   clear it. So it has to be the header's whole occupied height. With the rule
+   added on top of `min-height` it was not — the header measured 85 against a
+   token of 84, the hero pulled up one pixel short of its own masthead, and a
+   hairline of page ground showed across the very top of the window. On a phone
+   the same mismatch ran the other way and left three pixels of dead space under
+   the bar. */
 .inner {
   display: flex;
   align-items: center;
   gap: var(--s-5);
-  min-height: var(--header-h);
+  min-height: calc(var(--header-h) - 1px);
 }
 
 /* Pulled back so the mark sits on the page grid, but never further than the
@@ -210,17 +220,24 @@
 .barOpen::before { transform: translateY(0) rotate(-90deg); }
 .barOpen::after { opacity: 0; }
 
+/* The rule above the panel is an inset shadow, not a border.
+
+   A border occupies layout even at `max-height: 0`, so the closed panel was
+   still a pixel tall and the header measured 77 against a token of 76 — which
+   is the hairline of page ground that showed across the top of the window,
+   because the hero pulls up by the token and landed a pixel short. A shadow
+   draws the same line and takes no height at all. */
 .mobile {
   display: none;
   overflow: hidden;
   max-height: 0;
-  border-top: 1px solid transparent;
-  transition: max-height var(--dur) var(--ease), border-color var(--dur) var(--ease);
+  box-shadow: inset 0 1px 0 transparent;
+  transition: max-height var(--dur) var(--ease), box-shadow var(--dur) var(--ease);
 }
 
 .mobileOpen {
   max-height: 22rem;
-  border-top-color: var(--rule);
+  box-shadow: inset 0 1px 0 var(--rule);
 }
 
 .mobileList {
@@ -275,7 +292,6 @@
   .phone { display: none; }
   .toggle { display: block; }
   .mobile { display: block; }
-  .inner { min-height: 4.5rem; }
 }
 
 

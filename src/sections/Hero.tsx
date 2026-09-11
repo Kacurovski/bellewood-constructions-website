@@ -1,4 +1,4 @@
-import { lazy, useRef } from 'react'
+import { lazy, useRef, useState } from 'react'
 import type { PointerEvent as ReactPointerEvent } from 'react'
 import { Link } from 'react-router-dom'
 import { SceneFrame } from '../three/SceneFrame'
@@ -7,6 +7,7 @@ import { SheetRef } from '../components/Sheet'
 import { RiseIn } from '../components/RiseIn'
 import { CycleWord } from '../components/CycleWord'
 import { useReducedMotion } from '../hooks/useReducedMotion'
+import type { MaterialKey } from '../three/materials'
 import { contact, site } from '../config/site'
 import styles from './Hero.module.css'
 
@@ -71,6 +72,20 @@ const HOUSE_KINDS = ['Heritage homes', 'Queenslanders', 'Timber cottages', 'Post
 export function Hero() {
   const band = useRef<HTMLElement>(null)
   const reduced = useReducedMotion()
+
+  /* Which material the annotation under the pointer is naming.
+
+     The two callouts used to be labels and nothing else, and they were the
+     first thing anybody marked on this screen twice over. They say the whole
+     proposition — the cottage kept, the wing added — so instead of removing
+     them they now prove it: point at one and the building shows you which part
+     of itself it means.
+
+     Both map onto a single material, which is what makes this exact rather
+     than approximate. The original cottage is the only thing on the building
+     skinned in weatherboard, and the new wing is the only thing in charred
+     timber. Nothing else has to be reasoned about. */
+  const [keyed, setKeyed] = useState<MaterialKey | null>(null)
 
   /* The pointer, normalised to -1..1 across the window — the same figure the
      scene leans on, so the annotations and the model read the same input and
@@ -140,9 +155,9 @@ export function Hero() {
                 className={styles.scene}
                 label="A Queenslander cottage: the original house built, and a new wing behind it still drawn as a frame."
                 rootMargin="0px"
-                still={<HeritageStudyStill className={styles.still} />}
+                still={<HeritageStudyStill className={styles.still} highlight={keyed} />}
               >
-                <HeritageStudy />
+                <HeritageStudy highlight={keyed} />
               </SceneFrame>
 
               {/* Annotation, the way a drawing is annotated: a label, a leader
@@ -163,17 +178,31 @@ export function Hero() {
                   Decorative — the scene already carries the whole description in
                   its own accessible label, and repeating half of it here would
                   read it out twice. */}
-              <span className={[styles.note, styles.noteOld].join(' ')} aria-hidden="true">
-                <span className={styles.noteDot} />
-                <span className={styles.noteLine} />
+              <button
+                type="button"
+                className={[styles.note, styles.noteOld, keyed === 'clad' ? styles.noteOn : ''].join(' ')}
+                onPointerEnter={() => setKeyed('clad')}
+                onPointerLeave={() => setKeyed(null)}
+                onFocus={() => setKeyed('clad')}
+                onBlur={() => setKeyed(null)}
+              >
+                <span className={styles.noteDot} aria-hidden="true" />
+                <span className={styles.noteLine} aria-hidden="true" />
                 <span className={styles.noteText}>Cottage, kept</span>
-              </span>
+              </button>
 
-              <span className={[styles.note, styles.noteNew].join(' ')} aria-hidden="true">
-                <span className={styles.noteDot} />
-                <span className={styles.noteLine} />
+              <button
+                type="button"
+                className={[styles.note, styles.noteNew, keyed === 'charred' ? styles.noteOn : ''].join(' ')}
+                onPointerEnter={() => setKeyed('charred')}
+                onPointerLeave={() => setKeyed(null)}
+                onFocus={() => setKeyed('charred')}
+                onBlur={() => setKeyed(null)}
+              >
+                <span className={styles.noteDot} aria-hidden="true" />
+                <span className={styles.noteLine} aria-hidden="true" />
                 <span className={styles.noteText}>New wing</span>
-              </span>
+              </button>
             </div>
           </div>
         </div>

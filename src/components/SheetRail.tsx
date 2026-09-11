@@ -25,10 +25,10 @@ export type Sheet = {
  * pixels long and this is the only thing on it that says how far through you
  * are or lets you jump.
  *
- * Numbers only. The sheet's name is in the DOM for the link's accessible name
- * and hidden visually: printed in the margin it made the rail wide enough to
- * overlap the page, and a position indicator that covers the thing whose
- * position it indicates is not much of one.
+ * Numbers at rest, and the name of whichever one you point at. Printed into
+ * the rail the names made it wide enough to overlap the page, so they are taken
+ * out of flow and slide out on hover instead — the rail keeps the width of a
+ * number and still reads as an index rather than as a column of codes.
  *
  * Only above 1600px, and that number is measured rather than chosen. The shell
  * is capped at 1440 and adds its own gutter, so content starts at
@@ -99,11 +99,13 @@ export function SheetRail({ sheets }: { sheets: Sheet[] }) {
             >
               <span className={styles.tick} aria-hidden="true" />
               <span className={styles.number}>{sheet.number}</span>
-              {/* The name is for the link's accessible name, not for the
-                  margin. Printed, it made the rail wide enough to land on the
-                  page — and a position indicator that covers the thing whose
-                  position it is indicating is not much of one. */}
-              <span className="visually-hidden">{sheet.name}</span>
+              {/* Named on demand. Printed into the rail it made the thing wide
+                  enough to land on the page, and a position indicator that
+                  covers what it is indicating is not much of one — so the name
+                  is taken out of flow and slides out only for the sheet under
+                  the pointer. Eight numbers is a code; one number and its name
+                  is an index you can read. */}
+              <span className={styles.name}>{sheet.name}</span>
             </a>
           </li>
         ))}

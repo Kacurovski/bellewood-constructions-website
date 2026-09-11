@@ -172,7 +172,14 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  pointer-events: none;
+  /* Interactive now, so it takes the pointer. Stripped back to nothing, since
+     a button element brings a ground, a border and a font with it. */
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
   z-index: 1;
   transform: translate3d(
     calc(var(--px, 0) * 14px),
@@ -184,6 +191,7 @@
 
 .noteDot {
   width: 5px;
+  transition: background var(--dur) var(--ease);
   height: 5px;
   border-radius: 50%;
   background: var(--sage);
@@ -195,6 +203,7 @@
   height: 1px;
   background: color-mix(in srgb, var(--wash) 40%, transparent);
   flex: none;
+  transition: background var(--dur) var(--ease);
   /* The cottage's row is reversed and the wing's is a column, so each one sets
      its own origin below. This is the default for a left-to-right leader. */
   transform-origin: left;
@@ -241,6 +250,12 @@
   from { opacity: 0; transform: translateX(-0.4rem); }
 }
 
+/* The one being pointed at comes up to full, so the label and the building
+   agree about which of them is live. */
+.noteOn .noteText { color: var(--wash); }
+.noteOn .noteDot { background: var(--wash); }
+.noteOn .noteLine { background: color-mix(in srgb, var(--wash) 75%, transparent); }
+
 .noteText {
   font-family: var(--font-display);
   font-weight: 600;
@@ -249,6 +264,7 @@
   text-transform: uppercase;
   color: var(--sage);
   white-space: nowrap;
+  transition: color var(--dur) var(--ease);
 }
 
 /* The cottage: dot on the verandah end, label running off to the left. */
