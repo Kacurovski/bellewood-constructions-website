@@ -120,21 +120,29 @@ function StudioSky() {
 }
 
 /**
- * The one tone every material that is NOT being keyed collapses to.
+ * What a material that is NOT being keyed turns into.
  *
- * One tone, not each material's own colour pulled part way towards a tone. That
- * was the mess: at three quarters of the way there, six materials still kept a
- * quarter of themselves, so the house went quiet as four different muddy
- * olives and the thing you had actually pointed at had to compete with them.
- * Collapsed to a single value the building becomes one clean model — the light
- * and the shadows still give it all its form — and the keyed material is the
- * only colour on the screen.
+ * Its own value, with the colour taken out. Not a tone, not the panel, not one
+ * flat sage for all six — every one of those has been tried on this section and
+ * every one failed the same way: the moment the materials stop carrying their
+ * own darkness the house stops looking like a house. A roof that is the same
+ * value as the wall under it is not a quiet roof, it is a shape.
  *
- * Sage, sat well below the panel behind it so the silhouette holds. Before
- * that it was the panel's own colour, which bleached the house to a paper
- * model on a pale ground.
+ * So the value is exactly what it always was. The roof stays the darkest thing
+ * on the building, the cladding stays mid, the glazing stays the lightest, and
+ * the only thing that changes is that they are no longer brown and green. The
+ * keyed material is then the one piece of colour on an otherwise monochrome
+ * model, which is the whole of the effect and the reason it can be read at a
+ * glance.
+ *
+ * A touch of sage in the grey, so a page built out of two greens does not have
+ * a neutral photographic grey dropped into the middle of it.
  */
-const GHOST = '#a4b29f'
+const GHOST_TINT = '#8fa08b'
+const GHOST_TINT_MIX = 0.16
+/** The value the ghosted range is compressed towards, and by how much. */
+const GHOST_MID = 0.12
+const GHOST_RANGE = 0.6
 
 function House({
   lean,
@@ -175,8 +183,33 @@ function House({
 
   const targets = useMemo(() => {
     const full = {} as Record<MaterialKey, THREE.Color>
-    for (const key of MATERIAL_KEYS) full[key] = new THREE.Color(MATERIALS[key].color)
-    return { full, ghost: new THREE.Color(GHOST) }
+    const ghost = {} as Record<MaterialKey, THREE.Color>
+    const tint = new THREE.Color(GHOST_TINT)
+
+    for (const key of MATERIAL_KEYS) {
+      const colour = new THREE.Color(MATERIALS[key].color)
+      full[key] = colour
+
+      /* Luminance in, grey of the same luminance out — the material's own
+         brightness with the hue taken off it, rather than an eyeballed guess at
+         it. Rec. 709 weights, applied to the colour's own components, which
+         three has already converted into the renderer's linear space. */
+      const l = 0.2126 * colour.r + 0.7152 * colour.g + 0.0722 * colour.b
+
+      /* Pulled towards the middle, not left where it was.
+
+         Taking the colour out of a material that is already almost black does
+         almost nothing to it, and the roof is Deep Pine: keyed and unkeyed it
+         came out the same near-black, so pointing at the roof did not visibly
+         do anything. Compressing the ghost's range towards a mid value keeps
+         every material in the same ORDER — roof still darkest, glazing still
+         lightest, so the house still reads — while making room for the keyed
+         one to be both the only colour and the strongest value on the model. */
+      const flat = GHOST_MID + (l - GHOST_MID) * GHOST_RANGE
+      ghost[key] = new THREE.Color().setRGB(flat, flat, flat).lerp(tint, GHOST_TINT_MIX)
+    }
+
+    return { full, ghost }
   }, [])
 
   useEffect(
@@ -218,9 +251,9 @@ function House({
     for (const key of MATERIAL_KEYS) {
       const m = mats[key]
       const lit = highlight == null || key === highlight
-      m.color.lerp(lit ? targets.full[key] : targets.ghost, t)
+      m.color.lerp(lit ? targets.full[key] : targets.ghost[key], t)
       m.metalness += ((lit ? MATERIALS[key].metalness : 0) - m.metalness) * t
-      const glow = key === 'glass' && lit ? 0.62 : 0
+      const glow = key !== 'glass' ? 0 : lit ? 0.62 : 0.1
       m.emissiveIntensity += (glow - m.emissiveIntensity) * t
     }
   })
