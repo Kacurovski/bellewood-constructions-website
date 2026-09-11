@@ -122,73 +122,27 @@ function StudioSky() {
 /* --- Keying ----------------------------------------------------------------
    Point at a material in the legend and the building shows you where it is.
 
-   Two rules, arrived at the hard way over about eight attempts.
+   One rule, arrived at the hard way over a dozen attempts: THE MATERIAL YOU
+   ARE POINTING AT IS NEVER TOUCHED. Not recoloured, not tinted, not lit. It
+   stays exactly the colour it is on the swatch beside it, because the moment
+   it changes at all the house stops being the house and the legend stops
+   telling the truth about what the building is made of. Every earlier version
+   broke this — stepping the others to a tone, flattening the palette, taking
+   the hue out, lighting the keyed one in its own colour — and every one of
+   them read as the colours changing.
 
-   NOTHING IS RECOLOURED. Every version that tried to say what a material is at
-   the same time as where it is failed, because the palette cannot carry it:
-   three of the six materials are nearly the same brown and two more are nearly
-   black. Stepping the others back to a tone, flattening them to one value,
-   taking the hue out, lighting the keyed one in the brand accent — all of them
-   turned the house into a different house.
+   So the signal comes entirely from the other five. They fall away towards the
+   colour of the panel behind them, far enough that what is left standing at
+   full strength is unmistakable. Nothing is lit; one thing is simply still
+   there while everything else has gone quiet. */
 
-   BOTH SIDES GO HARD. Subtlety was the other half of the problem: muting the
-   rest a little and lifting the keyed one a little left a change you had to
-   look for. It has to be obvious at a glance which part of the building the
-   row under the pointer is talking about, so the rest drops most of the way
-   back to the panel and the keyed material is lit, not merely left alone. The
-   keyed one still never changes hue — it is its own colour, brighter — which is
-   the one rule every earlier attempt broke. */
-
-/** How far a material that is not being keyed drops back towards the panel. */
+/** How far a material that is not being keyed falls back towards the panel. */
 const FADE_TO = '#dee6da'
-const FADED = 0.76
+const FADED = 0.84
 
-/* How hard a keyed material lights up, in its own colour.
-
-   Scaled by how dark the material is, because an emissive is ADDED to the
-   surface: the same intensity on Silky Oak is a clear lift and on Deep Pine is
-   almost nothing, since there is almost nothing there to add. Left flat, the
-   only row that did not visibly do anything was the roof — which is the row
-   whose own material makes it hardest. Scaled, every row lifts by about as
-   much as every other. */
-const LIT_GLOW = 0.3
-const LIT_GLOW_MIN = 0.3
-const LIT_GLOW_MAX = 2.2
-/** The windows are already a light source, so theirs runs from a higher floor. */
+/** The windows carry a little light of their own at rest, keyed or not; they
+    lose it along with everything else when some other material is keyed. */
 const GLASS_GLOW = 0.62
-const GLASS_GLOW_LIT = 1.5
-
-type HSL = { h: number; s: number; l: number }
-
-/** sRGB hex to HSL. Only the lightness is wanted, to size each material's lift
-    — see the note on LIT_GLOW — and it has to be read where the eye is rather
-    than in the renderer's linear space, where a mid grey is not a mid grey. */
-function toHSL(hex: string): HSL {
-  const n = parseInt(hex.slice(1), 16)
-  const r = ((n >> 16) & 255) / 255
-  const g = ((n >> 8) & 255) / 255
-  const b = (n & 255) / 255
-  const max = Math.max(r, g, b)
-  const min = Math.min(r, g, b)
-  const l = (max + min) / 2
-  const d = max - min
-  if (d === 0) return { h: 0, s: 0, l }
-  const s = l > 0.5 ? d / (2 - max - min) : d / (max + min)
-  let h: number
-  if (max === r) h = ((g - b) / d + (g < b ? 6 : 0)) / 6
-  else if (max === g) h = ((b - r) / d + 2) / 6
-  else h = ((r - g) / d + 4) / 6
-  return { h, s, l }
-}
-
-
-/** The lift this material needs to read as lit. See the note on LIT_GLOW. */
-function glowFor(hex: string): number {
-  const { l } = toHSL(hex)
-  return Math.min(Math.max(LIT_GLOW / Math.max(l, 0.1), LIT_GLOW_MIN), LIT_GLOW_MAX)
-}
-
-
 
 function House({
   lean,
@@ -222,7 +176,7 @@ function House({
         roughness: MATERIALS[key].roughness,
         metalness: MATERIALS[key].metalness,
         envMapIntensity: key === 'glass' ? 2.4 : 0.9,
-        emissive: new THREE.Color(key === 'glass' ? GLASS_EMISSIVE : MATERIALS[key].color),
+        emissive: new THREE.Color(key === 'glass' ? GLASS_EMISSIVE : '#000000'),
         emissiveIntensity: key === 'glass' ? GLASS_GLOW : 0,
       })
     }
@@ -237,18 +191,16 @@ function House({
     [mats],
   )
 
-  /** True colour, the same colour dropped back, and the lift each one needs. */
+  /** Each material's true colour, and the same colour fallen back. */
   const tone = useMemo(() => {
     const full = {} as Record<MaterialKey, THREE.Color>
     const quiet = {} as Record<MaterialKey, THREE.Color>
-    const glow = {} as Record<MaterialKey, number>
     const back = new THREE.Color(FADE_TO)
     for (const key of MATERIAL_KEYS) {
       full[key] = new THREE.Color(MATERIALS[key].color)
       quiet[key] = full[key].clone().lerp(back, FADED)
-      glow[key] = glowFor(MATERIALS[key].color)
     }
-    return { full, quiet, glow }
+    return { full, quiet }
   }, [])
 
   const geometries = useMemo(buildGeometries, [])
@@ -283,25 +235,20 @@ function House({
 
     for (const key of MATERIAL_KEYS) {
       const m = mats[key]
-      const keyed = highlight != null && key === highlight
-      const quiet = highlight != null && !keyed
+      const quiet = highlight != null && key !== highlight
 
+      /* Towards the panel if something else is keyed, otherwise back to its
+         own colour. The keyed material takes this same line and lands on
+         exactly what it always was. */
       m.color.lerp(quiet ? tone.quiet[key] : tone.full[key], t)
 
-      /* The lift. An emissive of the material's OWN colour, so the part gets
-         brighter without becoming a different colour — which is the whole point
-         and the thing every earlier attempt got wrong. */
-      const glow =
-        key === 'glass'
-          ? keyed
-            ? GLASS_GLOW_LIT
-            : quiet
-              ? 0.05
-              : GLASS_GLOW
-          : keyed
-            ? tone.glow[key]
-            : 0
-      m.emissiveIntensity += (glow - m.emissiveIntensity) * t
+      /* Glass is the one material with light of its own, so its fade has to
+         take the light with it or the windows stay bright while the walls go.
+         Keyed or at rest it sits at exactly GLASS_GLOW — never higher. */
+      if (key === 'glass') {
+        const glow = quiet ? GLASS_GLOW * (1 - FADED) : GLASS_GLOW
+        m.emissiveIntensity += (glow - m.emissiveIntensity) * t
+      }
     }
   })
 
