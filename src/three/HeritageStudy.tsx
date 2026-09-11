@@ -122,87 +122,33 @@ function StudioSky() {
 /* --- Keying ----------------------------------------------------------------
    Point at a material in the legend and the building shows you where it is.
 
-   Six goes at this failed the same way, and the reason was the palette rather
-   than the treatment. Three of the six materials are nearly the same brown —
-   structure, cladding and deck are all Silky Oak either side of it — and two
-   more are nearly black. Showing the keyed material "in its own colour" cannot
-   tell those apart, and stepping the others back to a pale tone only made the
-   whole model pale. Moving from row to row barely changed anything.
+   Nothing about the house changes colour. That was the mistake in every version
+   of this before it — stepping the other materials back to a tone, collapsing
+   them to one value, taking the hue out, and finally lighting the keyed one in
+   the brand accent. All of them changed what the house looked like in order to
+   say where something was, and all of them ended up either unreadable or
+   off-brand, because the palette cannot do that job: three of the six materials
+   are nearly the same brown and two more are nearly black.
 
-   So the keyed material is no longer drawn as itself. It is drawn LIT: its own
-   hue, but pulled up to a lightness and a saturation that are the same for
-   every row, so pointing at the roof is exactly as strong a signal as pointing
-   at the deck. What identifies a material is where it lights up, not what
-   shade it goes — and the list beside the drawing already carries a swatch of
-   the true colour on every row.
+   The keyed material stays exactly as it is. Everything else FADES — same
+   colour, same shading, just taken down to a whisper — so the house is always
+   the house, the parts you asked about are the only solid thing in it, and the
+   signal is exactly as strong on the roof as it is on the deck.
 
-   The rest of the building goes DARK rather than pale. That is the other half
-   of it: the contrast has to run one way, and a lit material on a dark model
-   reads at a glance where a mid-brown on a pale one never did. The house also
-   keeps a real silhouette against the panel instead of dissolving into it. */
+   Fading is done on the COLOUR, not on alpha. Real transparency was the
+   obvious reading of the word and it turns the house into an x-ray: the
+   triangles inside one merged mesh are not sorted against each other, so the
+   far wall comes through the near wall and the stumps come up through the
+   floor, with or without depth writing. What is wanted is a part that has gone
+   quiet, not a part you can see through.
 
-/* The keyed material is lit in SILKY OAK. Always the same colour, whichever
-   row you are on.
-
-   Lifting each material's own hue was tried twice and both attempts ran into
-   the same wall: Deep Pine's hue, taken to a lightness you can see against a
-   dark model, is a fluorescent mint. Capping the chroma only made it a paler
-   mint. There is no lightness at which Deep Pine reads as both itself and as
-   lit, because the thing that makes it Deep Pine is that it is nearly black.
-
-   So the model stops trying to say WHAT a material is and says only WHERE it
-   is. The list beside it already carries a swatch of the true colour and a
-   sentence on every row — what the drawing is for is pointing. One accent, used
-   for every row, means pointing at the roof is exactly as strong a signal as
-   pointing at the deck, and both of them are in the brand's own accent rather
-   than in a colour invented by arithmetic.
-
-   Silky Oak is what the brand book nominates for exactly this, lifted so it
-   carries against the dark. */
-const LIT_COLOUR = '#d8b078'
-
-/** Receded: the dark band everything else is compressed into. */
-const DIM_L = 0.13
-const DIM_L_GAIN = 0.13
-const DIM_S = 0.26
-
-type HSL = { h: number; s: number; l: number }
-
-/** sRGB hex to HSL, so the maths happens where the eye is rather than in the
-    renderer's linear space, where a mid grey is not a mid grey. */
-function toHSL(hex: string): HSL {
-  const n = parseInt(hex.slice(1), 16)
-  const r = ((n >> 16) & 255) / 255
-  const g = ((n >> 8) & 255) / 255
-  const b = (n & 255) / 255
-  const max = Math.max(r, g, b)
-  const min = Math.min(r, g, b)
-  const l = (max + min) / 2
-  const d = max - min
-  if (d === 0) return { h: 0, s: 0, l }
-  const s = l > 0.5 ? d / (2 - max - min) : d / (max + min)
-  let h: number
-  if (max === r) h = ((g - b) / d + (g < b ? 6 : 0)) / 6
-  else if (max === g) h = ((b - r) / d + 2) / 6
-  else h = ((r - g) / d + 4) / 6
-  return { h, s, l }
-}
-
-function fromHSL({ h, s, l }: HSL): string {
-  const f = (n: number) => {
-    const k = (n + h * 12) % 12
-    const a = s * Math.min(l, 1 - l)
-    const v = l - a * Math.max(-1, Math.min(k - 3, 9 - k, 1))
-    return Math.round(Math.max(0, Math.min(1, v)) * 255)
-  }
-  return `#${((f(0) << 16) | (f(8) << 8) | f(4)).toString(16).padStart(6, '0')}`
-}
-
-/** Everything else: the same hue, taken down into a narrow dark band. */
-function receded(hex: string): string {
-  const { h, s, l } = toHSL(hex)
-  return fromHSL({ h, s: s * DIM_S, l: DIM_L + l * DIM_L_GAIN })
-}
+   So a faded material keeps its own colour and its own shading and is simply
+   carried most of the way to the panel behind it, which is what fading on paper
+   actually is. Every surface stays opaque, so the building keeps its solidity
+   and its silhouette, and the part being pointed at is the only thing on it
+   still at full strength. */
+const FADE_TO = '#dee6da'
+const FADED = 0.66
 
 function House({
   lean,
@@ -231,6 +177,8 @@ function House({
     for (const key of MATERIAL_KEYS) {
       out[key] = new THREE.MeshStandardMaterial({
         color: new THREE.Color(MATERIALS[key].color),
+        // Opaque, always. See the note above the constants.
+        transparent: false,
         roughness: MATERIALS[key].roughness,
         metalness: MATERIALS[key].metalness,
         envMapIntensity: key === 'glass' ? 2.4 : 0.9,
@@ -241,22 +189,6 @@ function House({
     return out
   }, [])
 
-  const targets = useMemo(() => {
-    const rest = {} as Record<MaterialKey, THREE.Color>
-    const on = {} as Record<MaterialKey, THREE.Color>
-    const off = {} as Record<MaterialKey, THREE.Color>
-
-    for (const key of MATERIAL_KEYS) {
-      const hex = MATERIALS[key].color
-      // Nothing keyed: the house is simply the house, which is what the hero
-      // carries and what this plate sits at until somebody points at a row.
-      rest[key] = new THREE.Color(hex)
-      on[key] = new THREE.Color(LIT_COLOUR)
-      off[key] = new THREE.Color(receded(hex))
-    }
-
-    return { rest, on, off }
-  }, [])
 
   useEffect(
     () => () => {
@@ -264,6 +196,18 @@ function House({
     },
     [mats],
   )
+
+  /** True colour, and the same colour faded back towards the panel. */
+  const tone = useMemo(() => {
+    const full = {} as Record<MaterialKey, THREE.Color>
+    const faded = {} as Record<MaterialKey, THREE.Color>
+    const back = new THREE.Color(FADE_TO)
+    for (const key of MATERIAL_KEYS) {
+      full[key] = new THREE.Color(MATERIALS[key].color)
+      faded[key] = full[key].clone().lerp(back, FADED)
+    }
+    return { full, faded }
+  }, [])
 
   const geometries = useMemo(buildGeometries, [])
 
@@ -297,26 +241,19 @@ function House({
 
     for (const key of MATERIAL_KEYS) {
       const m = mats[key]
-      const want =
-        highlight == null
-          ? targets.rest[key]
-          : key === highlight
-            ? targets.on[key]
-            : targets.off[key]
+      const lit = highlight == null || key === highlight
+      m.color.lerp(lit ? tone.full[key] : tone.faded[key], t)
 
-      m.color.lerp(want, t)
-
-      const keyed = highlight != null && key === highlight
-      const quiet = highlight != null && key !== highlight
-      m.metalness += ((quiet ? 0 : MATERIALS[key].metalness) - m.metalness) * t
-
-      /* The windows carry the glow. Lit they are the brightest thing on the
-         model; quiet they keep a trace of it, because windows that go out
-         entirely take the one thing that says the house is lived in. */
-      const glow = key !== 'glass' ? 0 : keyed ? 1.05 : quiet ? 0.06 : 0.62
-      m.emissiveIntensity += (glow - m.emissiveIntensity) * t
+      /* The windows are the one thing that reads as light rather than as
+         surface, so their glow fades with them instead of being left burning on
+         a part that has gone quiet. */
+      if (key === 'glass') {
+        m.emissiveIntensity += ((lit ? 0.62 : 0.08) - m.emissiveIntensity) * t
+      }
     }
   })
+
+
 
   return (
     <group ref={group} position={HERITAGE_OFFSET}>
