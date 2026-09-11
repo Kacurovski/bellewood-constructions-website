@@ -127,3 +127,129 @@
      is landscape by nature and the photograph follows it. */
   .detail { aspect-ratio: 3 / 2 !important; }
 }
+
+/* ---------------------------------------------------------------------------
+   The plate sets itself out.
+
+   A clip crossing the drawing once, with a hairline pen travelling on its edge.
+   The clip is on a wrapper rather than on the SVG so the drawing rasterises
+   once and the reveal is a composite, not eight hundred polygons repainting.
+   --------------------------------------------------------------------------- */
+
+.plot {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.plotClip {
+  width: 100%;
+  height: 100%;
+}
+
+.pen {
+  position: absolute;
+  top: -4%;
+  bottom: -4%;
+  width: 1px;
+  background: var(--green);
+  pointer-events: none;
+}
+
+/* Registration marks, at two corners of the drawing plate. Two rather than
+   four: a drawing is registered, not boxed, and the plate already has its
+   hairline frame. */
+.drawing { position: relative; }
+
+.drawing::before,
+.drawing::after {
+  content: '';
+  position: absolute;
+  width: 13px;
+  height: 13px;
+  border: 1px solid var(--green);
+  opacity: 0.4;
+  pointer-events: none;
+  transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.drawing::before {
+  top: 6px;
+  left: 6px;
+  border-right: 0;
+  border-bottom: 0;
+}
+
+.drawing::after {
+  right: 6px;
+  bottom: 6px;
+  border-left: 0;
+  border-top: 0;
+}
+
+.drawing,
+.detail {
+  transition:
+    border-color 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ---------------------------------------------------------------------------
+   Keying the pair.
+
+   The drawing and the photograph are the same claim made twice, so pointing at
+   either one should say which of the two you are reading. The one under the
+   pointer is left exactly as it is and the other falls back — the same rule the
+   material legend follows, and for the same reason: nothing is recoloured, the
+   signal comes from what steps away.
+   --------------------------------------------------------------------------- */
+
+@media (hover: hover) and (pointer: fine) {
+  .figure {
+    transition:
+      opacity 0.55s cubic-bezier(0.16, 1, 0.3, 1),
+      transform 0.55s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .figures:hover .figure { opacity: 0.4; }
+
+  .figures:hover .figure:hover {
+    opacity: 1;
+    transform: translateY(-4px);
+  }
+
+  .figure:hover .drawing {
+    border-color: color-mix(in srgb, var(--green) 65%, transparent);
+  }
+
+  .figure:hover .drawing::before,
+  .figure:hover .drawing::after {
+    opacity: 1;
+  }
+
+  .figure:hover .detail {
+    box-shadow: 0 0 0 1px color-mix(in srgb, var(--green) 65%, transparent);
+  }
+
+  .figure .caption {
+    transition:
+      color 0.55s cubic-bezier(0.16, 1, 0.3, 1),
+      border-color 0.55s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .figure:hover .caption {
+    color: var(--pine);
+    border-top-color: color-mix(in srgb, var(--green) 65%, transparent);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .figure,
+  .drawing,
+  .detail,
+  .figure .caption,
+  .drawing::before,
+  .drawing::after {
+    transition: none;
+  }
+}

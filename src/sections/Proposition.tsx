@@ -1,3 +1,6 @@
+import { useEffect, useRef } from 'react'
+import type { ReactNode } from 'react'
+import { animate, motion, useInView, useMotionValue, useTransform } from 'framer-motion'
 import { Reveal } from '../components/Reveal'
 import { SheetRef } from '../components/Sheet'
 import { ImageSlot } from '../components/ImageSlot'
@@ -5,7 +8,58 @@ import { HeritageStudyStill } from '../three/HeritageStudyStill'
 import { ScrollWords } from '../components/ScrollWords'
 import { Credentials } from '../components/Credentials'
 import { stills } from '../data/projects'
+import { useReducedMotion } from '../hooks/useReducedMotion'
 import styles from './Proposition.module.css'
+
+/**
+ * A plotter pass.
+ *
+ * The caption under Fig. 1 says the cottage is "set out", so the drawing sets
+ * itself out: a pen edge crosses the plate once and the line work is there
+ * behind it. It is a clip rather than a stroke animation because the drawing
+ * does its hidden-line removal by painting each face with the page's own ground
+ * — stroke the edges on alone and every hidden edge behind them shows through.
+ * A clip reveals fill and stroke together, so what arrives is the drawing and
+ * not a wireframe of it.
+ *
+ * Once, on entry, and never again. Under reduced motion the plate is simply
+ * there.
+ */
+function Plotted({ children }: { children: ReactNode }) {
+  const reduced = useReducedMotion()
+  const ref = useRef<HTMLDivElement>(null)
+  const seen = useInView(ref, { once: true, margin: '-12% 0px -10% 0px' })
+
+  /* One value, read two ways. The clip and the pen have to be the same edge,
+     and two animations of the same length started by two observers are not the
+     same edge — they drifted far enough apart that the pen was still at the
+     left margin with the drawing most of the way in. */
+  const drawn = useMotionValue(reduced ? 1 : 0)
+  const clipPath = useTransform(drawn, (v) => `inset(0 ${(1 - v) * 100}% 0 0)`)
+  const left = useTransform(drawn, (v) => `${v * 100}%`)
+  const opacity = useTransform(drawn, [0, 0.05, 0.8, 1], [0, 1, 1, 0])
+
+  useEffect(() => {
+    if (reduced) {
+      drawn.set(1)
+      return
+    }
+    if (!seen) return
+    const run = animate(drawn, 1, { duration: 1.6, ease: [0.16, 1, 0.3, 1] })
+    return () => run.stop()
+  }, [seen, reduced, drawn])
+
+  return (
+    <div className={styles.plot} ref={ref}>
+      <motion.div className={styles.plotClip} style={{ clipPath }}>
+        {children}
+      </motion.div>
+      {/* The pen. A green hairline riding the edge of the clip, lifted off the
+          page by the time it reaches the right-hand side. */}
+      <motion.span aria-hidden="true" className={styles.pen} style={{ left, opacity }} />
+    </div>
+  )
+}
 
 /**
  * The proposition. Type-led, no imagery — which is honest, because there is no
@@ -56,10 +110,16 @@ export function Proposition() {
 
             It is also the reason this band is not another slab of photography.
             One of the two plates is a drawing, and nobody else has it. */}
+        {/* Point at one of the two and the other steps back, the same way the
+            material legend on the approach page works. Hover only, and only
+            where there is a real pointer: on a touch screen there is nothing to
+            point with and both plates stay as they are. */}
         <Reveal delay={0.06} className={styles.figures}>
           <figure className={styles.figure}>
             <div className={styles.drawing}>
-              <HeritageStudyStill className={styles.line} variant="line" />
+              <Plotted>
+                <HeritageStudyStill className={styles.line} variant="line" />
+              </Plotted>
             </div>
             <figcaption className={styles.caption}>
               <span className={styles.captionNumber}>Fig. 1</span>
@@ -87,9 +147,9 @@ export function Proposition() {
             band of its own. This section is a heading, a figure and forty
             words, so it had height going spare; the row was a fifth band of the
             same weight on a page that already had too many. */}
-        <Reveal delay={0.16} className={styles.creds}>
+        <div className={styles.creds}>
           <Credentials inline />
-        </Reveal>
+        </div>
       </div>
     </section>
   )
