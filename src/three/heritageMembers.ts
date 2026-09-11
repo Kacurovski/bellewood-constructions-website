@@ -320,39 +320,110 @@ for (const sx of [-1, 1] as const) {
   }
 }
 
-/* Gable infill: vertical boards, not the weatherboard of the walls below.
+/* Gable infill: boards laid PARALLEL TO EACH RAKE, meeting on the centre line.
 
-   That is a real Queenslander detail, and it is also the only way rectangles
-   follow a rake cleanly — a vertical board simply stops where the roof line is,
-   so the error along the pitch is one board's WIDTH. Horizontal courses got it
-   the other way round: each course was cut to the width of its own bottom edge
-   and then stood 0.21 taller, which at this pitch overshoots the rake by half a
-   metre. Every course sawtoothed out through the roof sheet, which is the row
-   of tan wedges that used to step down both sides of the roof. */
-const GABLE_STEP = 0.155
+   A chevron gable, which is a real Queenslander detail, and here it is also the
+   only geometry that gives this drawing a clean roof line.
+
+   Vertical boards were tried twice. A vertical board can only stop at a
+   horizontal cut, so a rake has to be approximated by a staircase one board
+   wide, and no matter which edge of the board the cut is taken from, the error
+   is a step. The step is meant to be closed by the barge board, and the barge
+   cannot do it: it sits under an eave that oversails it by more than a board's
+   width, so from any view above the gutter it is not on the drawing at all —
+   confirmed by colouring it and finding it nowhere on the page.
+
+   The flat still then made the step impossible to hide. It sorts whole members
+   by depth, and the gable boards run right across the building, so some of them
+   come out nearer the eye than the roof sheet above them and some do not: one
+   rake came out clean and the other came out as a staircase of tan wedges
+   standing on the roof. There is no depth key that fixes that, because the
+   boards and the sheets genuinely interleave.
+
+   Boards parallel to the rake have no step to hide. Their top edge IS the rake,
+   in one straight line, so the silhouette is right whether or not the sorting
+   above it is — which is the only way to be sure of a drawing that has no depth
+   buffer. The square ends land on the centre line and on the wall plate, where
+   one is met by the other half's boards and the other is covered by the plate. */
+const GABLE_BOARD = 0.17
+
 for (const plane of ['front', 'back'] as Plane[]) {
-  const cols = Math.ceil((HALF_L * 2) / GABLE_STEP)
-  for (let i = 0; i < cols; i++) {
-    const u0 = -HALF_L + i * GABLE_STEP
-    const u1 = Math.min(u0 + GABLE_STEP * 0.94, HALF_L)
-    /* Cut to the roof line above whichever edge is further out, so no board can
-       rise through the sheet.
+  const z = plane === 'front' ? HALF_D + CLAD_OFF : -(HALF_D + CLAD_OFF)
+  const zBack = plane === 'front' ? HALF_D + BACK_OFF : -(HALF_D + BACK_OFF)
 
-       The step this leaves — each board stopping short of the rake by the rise
-       across its own width — is nominally closed by the barge board. It is not.
-       The barge sits under an eave that oversails it by more than a board's
-       width, so from any view above the gutter line it is not on the drawing at
-       all, which was worth finding out before trying to fix the rake with it.
-       Cutting at each board's midpoint instead halves the step and changes
-       nothing you can see at the size this is drawn. */
-    const outer = Math.max(Math.abs(u0), Math.abs(u1))
-    const v1 = WALL_TOP + PITCH_RISE * (1 - outer / HALF_L)
-    if (v1 - WALL_TOP < 0.05) continue
+  for (const side of [-1, 1] as const) {
+    /* The same figure `roofTilt` gives, written out because that helper belongs
+       to the cottage roof further down the file and is still in its temporal
+       dead zone up here. */
+    const rake = side < 0 ? PITCH : -PITCH
+    const L = RAFTER_LEN
+    // Up the rake, from the eave towards the apex.
+    const ax = (-side * HALF_L) / L
+    const ay = PITCH_RISE / L
+    // Square to it, pointing down into the triangle.
+    const nx = (-side * PITCH_RISE) / L
+    const ny = -HALF_L / L
 
-    // Behind first, at the full step width so the joints between boards close.
-    const back = Math.min(u0 + GABLE_STEP, HALF_L)
-    panelOn(plane, HALF_L, HALF_D, 0, { u0, v0: WALL_TOP - 0.06, u1: back, v1 }, BACK_T, BACK_OFF, 'shadow')
-    panelOn(plane, HALF_L, HALF_D, 0, { u0, v0: WALL_TOP - 0.03, u1, v1 }, CLAD_T, CLAD_OFF, 'clad')
+    for (let j = 0; ; j++) {
+      const d = (j + 0.5) * GABLE_BOARD
+      // Where this line crosses the wall plate, and where it crosses the centre.
+      const t1 = (d * HALF_L) / PITCH_RISE
+      const t2 = L - (d * PITCH_RISE) / HALF_L
+      const len = t2 - t1
+      if (len < 0.08) break
+
+      /* One board per course, not cut into runs.
+
+         Cutting them into runs was tried, on the theory that a shorter member
+         is sorted where it actually is. It is, and it made the drawing worse:
+         each run then wins or loses against the roof strip above it on its own,
+         so instead of one ragged line there were loose pieces of board sitting
+         out on the roof. The junction is closed by the barge board below
+         instead, which is both the real detail and the only member here that
+         can be relied on to paint last. */
+      const tc = (t1 + t2) / 2
+      const u = side * HALF_L + d * nx + tc * ax
+      const v = WALL_TOP + d * ny + tc * ay
+
+      // Behind first, at the full board pitch so the joints close in the round.
+      add({
+        p: [u, v, zBack],
+        s: [len + 0.04, GABLE_BOARD, BACK_T],
+        rx: 0,
+        rz: rake,
+        mat: 'shadow',
+      })
+      add({
+        p: [u, v, z],
+        s: [len, GABLE_BOARD * 0.95, CLAD_T],
+        rx: 0,
+        rz: rake,
+        mat: 'clad',
+      })
+    }
+  }
+
+  /* A cover batten down the centre line, which is how a chevron gable is
+     actually finished — the two runs of boards meet on it rather than being
+     scribed to each other.
+
+     It earns its place twice. Both halves are cut square at the centre, so
+     their corners stagger either side of it by half a board, and the batten is
+     what closes that. It is built in segments rather than as one board because
+     the drawing sorts whole members by the depth of their middle: one batten
+     running the height of the gable would be ordered as though it sat halfway
+     up, and lose to the boards above that point. In segments each piece is
+     ordered where it is. */
+  const BATTEN_SEGS = 12
+  for (let k = 0; k < BATTEN_SEGS; k++) {
+    const v0 = WALL_TOP + (k / BATTEN_SEGS) * PITCH_RISE
+    const v1 = WALL_TOP + ((k + 1) / BATTEN_SEGS) * PITCH_RISE
+    add({
+      p: [0, (v0 + v1) / 2, z + (plane === 'front' ? 0.018 : -0.018)],
+      s: [0.14, v1 - v0, CLAD_T],
+      rx: 0,
+      mat: 'clad',
+    })
   }
 }
 
@@ -388,12 +459,19 @@ const ROOF_RUN = DEP + EAVE * 1.7
    That is the pale timber triangle that sat on the dark roof, and it put the
    verandah roof through the gable as well.
 
-   Cutting the slab into sheets fixes it because each sheet's centre is its
-   own: the ones that overhang the gable sort in front of the wall and the ones
-   behind it sort behind. It is also simply how a roof is covered — sheets run
-   up the slope and lie side by side along the ridge — so the joints the drawing
-   now shows are joints that are really there. */
-const SHEET_W = 0.762
+   Cutting the slab up fixes it because each strip's centre is its own: the ones
+   that overhang the gable sort in front of the wall and the ones behind it sort
+   behind.
+
+   The width is the CORRUGATION pitch, not sheet cover. Roofing is the one thing
+   on this building whose surface is its shape, and the flat drawing cannot
+   carry the separate rib bars the live scene uses: those are four metre members
+   lying two centimetres proud of the sheet, so they share its depth and come
+   through the verandah ceiling, over the posts and out across the cladding.
+   Drawing the roof AS its ribs costs nothing — each strip is a member the
+   drawing already has to sort — and it is the difference between a dark
+   quadrilateral and something that reads as steel. */
+const SHEET_W = 0.26
 
 for (const side of [-1, 1] as const) {
   const bed = onRoof(side, ROOF_SHIFT, 0)
@@ -443,11 +521,25 @@ add({ p: [0, APEX + 0.05, 0], s: [0.26, 0.07, DEP + EAVE * 1.8], rx: 0, mat: 'ro
    left where the vertical infill is cut to the rake. Set outside the cladding
    and inside the roof's overhang, so it reads as trim rather than structure. */
 for (const side of [-1, 1] as const) {
-  const seat = onRoof(side, ROOF_SHIFT, -0.08)
-  for (const z of [HALF_D + 0.075, -(HALF_D + 0.075)]) {
+  const seat = onRoof(side, ROOF_SHIFT, -0.11)
+  /* At the EDGE of the roof overhang, which is where a barge board goes: fixed
+     to the fly rafter that closes the end of the sheeting, not flush with the
+     wall below it.
+
+     It used to sit at the gable plane, tucked under an eave that oversails it
+     by more than a board's width, which meant it was not on the drawing at all
+     from any view above the gutter — confirmed by colouring it and finding it
+     nowhere on the page. Out here it is the furthest thing from the building on
+     this line, so it is the last thing painted, and that is what makes it
+     useful: it rules one straight board down the junction of gable and roof and
+     closes it, whatever the sorting behind it has done. A painter's algorithm
+     cannot be relied on to order a gable against the sheet that oversails it —
+     their depths are within a few centimetres of each other — so the drawing
+     should not have to rely on it. */
+  for (const z of [ROOF_RUN / 2 - 0.03, -(ROOF_RUN / 2 - 0.03)]) {
     add({
       p: [seat[0], seat[1], z],
-      s: [RAFTER_LEN + EAVE, 0.15, 0.05],
+      s: [RAFTER_LEN + EAVE, 0.24, 0.06],
       rx: 0,
       rz: roofTilt(side),
       mat: 'clad',
@@ -481,24 +573,59 @@ const VER_DECK_TOP = VER_DECK_Y + 0.018
 /* Decking. The gap between boards was 20mm, which at this size read as a stipple
    of daylight rather than as boards — you could see the ground through the
    floor. 8mm is what a chippy actually leaves. */
+/** Joist centres. The decking above is jointed over them, so both read it. */
+const verJoistCount = Math.round(LEN / 0.6)
+
 const VER_PITCH = 0.15
 const verBoards = Math.round(VER_D / VER_PITCH)
+
+/* Decking is laid in RUNS, butt-jointed over a joist and staggered course to
+   course. That is how a seven metre verandah is actually boarded — nobody has a
+   seven metre board — and in the flat drawing it is also the difference between
+   a deck and a heap of joists.
+
+   The still sorts whole members by the depth of their centre, and a board that
+   runs the full width of the building has a centre that says nothing about
+   where the board actually is. Each one was being ordered as though it sat on
+   the centre line, so the joists underneath — which are short, and honestly
+   placed — came out nearer the eye than the deck above them and painted over
+   it. The deck read as a row of bearers with daylight between them.
+
+   Cut into runs, each piece is ordered where it really is. The joints land on
+   joist centres, and alternate courses joint on a different joist so the lines
+   do not run straight across the deck. */
+const VER_JOIST_PITCH = (LEN - 0.24) / verJoistCount
+/** Which joists a course is jointed over, by course parity. */
+const DECK_JOINTS: number[][] = [
+  [3, 6, 9],
+  [2, 5, 8, 11],
+]
+
 for (let i = 0; i < verBoards; i++) {
-  add({
-    p: [0, VER_DECK_Y, VER_Z0 + VER_PITCH / 2 + i * VER_PITCH],
-    s: [LEN - 0.24, VER_BOARD_T, VER_PITCH - 0.008],
-    rx: 0,
-    mat: 'deck',
-  })
+  const z = VER_Z0 + VER_PITCH / 2 + i * VER_PITCH
+  const x0 = -(LEN - 0.24) / 2
+  const x1 = (LEN - 0.24) / 2
+  const cuts = DECK_JOINTS[i % 2].map((j) => x0 + j * VER_JOIST_PITCH)
+  const edges = [x0, ...cuts, x1]
+
+  for (let r = 0; r < edges.length - 1; r++) {
+    const a = edges[r]
+    const b = edges[r + 1]
+    add({
+      p: [(a + b) / 2, VER_DECK_Y, z],
+      s: [b - a, VER_BOARD_T, VER_PITCH - 0.008],
+      rx: 0,
+      mat: 'deck',
+    })
+  }
 }
 
 /* Joists across the verandah, on a bearer at the front and a ledger against the
    cottage. They run at right angles to the boards, which is the only way round
    that works and is what you would see through the gaps. */
-const verJoists = Math.round(LEN / 0.6)
-for (let i = 0; i <= verJoists; i++) {
+for (let i = 0; i <= verJoistCount; i++) {
   add({
-    p: [-HALF_L + 0.12 + (i * (LEN - 0.24)) / verJoists, VER_JOIST_TOP - VER_JOIST_H / 2, (VER_Z0 + VER_Z1) / 2],
+    p: [-HALF_L + 0.12 + i * VER_JOIST_PITCH, VER_JOIST_TOP - VER_JOIST_H / 2, (VER_Z0 + VER_Z1) / 2],
     s: [0.05, VER_JOIST_H, VER_D],
     rx: 0,
     mat: 'frame',
@@ -622,12 +749,20 @@ for (const x of [VER_POST_X[0], VER_POST_X[3]]) {
   balustrade(VER_Z0 + 0.1, VER_POST_Z, 'z', x)
 }
 
-add({
-  p: [0, VER_ROOF_Y, VER_ROOF_Z],
-  s: [VER_ROOF_W, 0.028, VER_ROOF_SPAN],
-  rx: VER_FALL,
-  mat: 'roof',
-})
+/* Laid in strips at the rib pitch, like the cottage roof above and for the same
+   two reasons: it reads as steel, and a seven metre slab cannot be sorted
+   against the posts and the balustrade standing under it. `rx` turns the sheet
+   about the x axis, so stepping along x needs no rotating. */
+const verSheets = Math.round(VER_ROOF_W / SHEET_W)
+const verSheetW = VER_ROOF_W / verSheets
+for (let i = 0; i < verSheets; i++) {
+  add({
+    p: [-VER_ROOF_W / 2 + (i + 0.5) * verSheetW, VER_ROOF_Y, VER_ROOF_Z],
+    s: [verSheetW, 0.028, VER_ROOF_SPAN],
+    rx: VER_FALL,
+    mat: 'roof',
+  })
+}
 const verRibs = Math.round(VER_ROOF_W / 0.26)
 for (let i = 0; i <= verRibs; i++) {
   add({
@@ -792,12 +927,18 @@ for (const wall of extWalls) {
     glazeOn(wall.plane, EXT_HALF_L, EXT_DEP / 2, EXT_MID_Z, o)
   }
 }
-add({
-  p: [0, EXT_ROOF_Y, EXT_MID_Z],
-  s: [EXT_HALF_L * 2 + 0.3, 0.03, EXT_DEP + 0.36],
-  rx: EXT_TILT,
-  mat: 'roof',
-})
+/* Strips again, at the rib pitch. */
+const EXT_ROOF_W = EXT_HALF_L * 2 + 0.3
+const extSheets = Math.round(EXT_ROOF_W / SHEET_W)
+const extSheetW = EXT_ROOF_W / extSheets
+for (let i = 0; i < extSheets; i++) {
+  add({
+    p: [-EXT_ROOF_W / 2 + (i + 0.5) * extSheetW, EXT_ROOF_Y, EXT_MID_Z],
+    s: [extSheetW, 0.03, EXT_DEP + 0.36],
+    rx: EXT_TILT,
+    mat: 'roof',
+  })
+}
 const extRibs = Math.round((EXT_HALF_L * 2 + 0.3) / 0.26)
 for (let i = 0; i <= extRibs; i++) {
   add({
