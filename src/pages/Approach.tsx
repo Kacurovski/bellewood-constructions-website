@@ -3,7 +3,6 @@ import { PageHead } from '../components/PageHead'
 import { Reveal } from '../components/Reveal'
 import { Process } from '../sections/Process'
 import { MaterialKey } from '../sections/MaterialKey'
-import { Houses } from '../sections/Houses'
 import { ScrollWords } from '../components/ScrollWords'
 import { usePageTitle } from '../hooks/usePageTitle'
 import { contact } from '../config/site'
@@ -47,8 +46,6 @@ export default function Approach() {
       <Process headless />
 
       <MaterialKey />
-
-      <Houses />
 
       <section className={['shell', styles.close].join(' ')} aria-labelledby="approach-close">
         <Reveal>

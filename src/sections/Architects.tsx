@@ -49,7 +49,7 @@ export function Architects() {
       <div className={['shell', styles.inner].join(' ')}>
         <Reveal className={styles.head}>
           <SheetRef
-            number="A-06"
+            number="A-07"
             name={
               <h2 id="architects-heading" className={styles.heading}>
                 For architects and designers

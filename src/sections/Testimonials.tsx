@@ -166,7 +166,7 @@ export function Testimonials() {
       <div className={['shell', styles.inner].join(' ')}>
         <Reveal className={styles.head}>
           <SheetRef
-            number="A-07"
+            number="A-08"
             name="In their words"
             note="One at a time"
             rule={false}
