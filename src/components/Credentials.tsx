@@ -93,12 +93,6 @@ export function Credentials({ inline = false }: { inline?: boolean } = {}) {
                 {...struck(at(i))}
               />
 
-              {/* The run this figure measures: the length of rule between
-                  this division and the next. It draws on when the fact is being
-                  read, which is the whole of what a dimension says — this
-                  number belongs to this span and to no other part of the line. */}
-              <span className={styles.span} aria-hidden="true" />
-
               {i > 0 && (
                 <motion.span
                   aria-hidden="true"

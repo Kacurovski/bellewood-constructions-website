@@ -79,8 +79,6 @@ export function HeritageStudyStill({
       // and simply steps back, so what is lit is lit by contrast rather than by
       // being repainted.
       data-lit={highlight ?? undefined}
-      // The two variants are keyed by different means — see the stylesheet.
-      data-variant={line ? 'line' : undefined}
       aria-hidden="true"
       role="presentation"
     >

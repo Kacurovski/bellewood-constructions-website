@@ -101,18 +101,20 @@
 .creds { grid-column: 1 / -1; }
 
 /* ---------------------------------------------------------------------------
-   The schedule.
+   The note.
 
-   A general note on a drawing became a schedule on one, because a sentence of
-   fine print alone in a third of the page is not restraint, it is something
-   left over. Three lines of scope, numbered, with a leader pulled out of the
-   block back towards the plates two of them point at. The leader draws from the
-   right — out of the schedule, towards the drawing — which is the opposite
+   A general note on a drawing: a label, the note itself, and a leader pulled
+   out of it back towards the plates it qualifies. The leader draws from the
+   right — out of the note, towards the drawing — which is the opposite
    direction to the dimension rule below it, because it is doing the opposite
    job.
+
+   The sentence used to be set at fine-print size in 72% pine, alone in a third
+   of the page. Small type in a large empty column does not read as restraint,
+   it reads as something left over; at body size it is a note somebody wrote.
    --------------------------------------------------------------------------- */
 
-.scope {
+.note {
   position: relative;
   display: block;
   padding-top: clamp(0.9rem, 1.8vw, 1.4rem);
@@ -128,10 +130,11 @@
   background: var(--ink);
   transform-origin: right center;
   pointer-events: none;
+  transition: background-color 0.5s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* The oblique tick at the leader's far end — the same mark the dimension string
-   below uses. */
+/* The oblique tick at the leader's far end, struck once the leader arrives —
+   the same mark the dimension string below uses. */
 .leaderMark {
   position: absolute;
   top: 0;
@@ -143,102 +146,43 @@
   transform: translate(-50%, -50%) rotate(45deg);
   transform-origin: center;
   pointer-events: none;
+  transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.scopeLabel {
+.noteLabel {
   display: block;
-  margin-bottom: clamp(0.8rem, 1.6vw, 1.1rem);
+  margin-bottom: 0.55rem;
   opacity: 0.65;
+  transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.scopeList {
-  list-style: none;
+.aside {
   margin: 0;
-  padding: 0;
+  font-size: var(--t-body);
+  line-height: 1.62;
+  color: color-mix(in srgb, var(--pine) 88%, transparent);
 }
 
-.scopeItem + .scopeItem { margin-top: 0.15rem; }
+@media (hover: hover) and (pointer: fine) {
+  /* Point at the note and the two plates step back. The note is the work this
+     sheet does not show — apartments, not cottages — so what it says is easier
+     to hear with the cottages quiet. The same rule as everywhere else on this
+     page: nothing is recoloured, the signal is what moves away. */
+  .inner:has(.note:hover) .figure { opacity: 0.5; }
 
-/* Each line of the schedule. A number, the work, and a rule that runs out to
-   the margin — which is what makes three short phrases read as a schedule
-   rather than as a list. */
-.scopeRow {
-  display: grid;
-  grid-template-columns: auto auto minmax(1.5rem, 1fr);
-  align-items: baseline;
-  gap: 0.9rem;
-  width: 100%;
-  padding: 0.5rem 0;
-  border: 0;
-  background: none;
-  text-align: left;
-  cursor: pointer;
-  color: inherit;
-  font: inherit;
+  .note:hover .leader {
+    background-color: color-mix(in srgb, var(--green) 60%, transparent);
+  }
+
+  .note:hover .leaderMark { opacity: 1; }
+
+  .note:hover .noteLabel { opacity: 1; }
 }
-
-.scopeNum {
-  font-family: var(--font-display);
-  font-weight: 600;
-  font-size: var(--t-fine);
-  letter-spacing: 0.08em;
-  color: var(--green);
-  opacity: 0.5;
-  transition: opacity 0.45s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.scopeName {
-  font-family: var(--font-display);
-  font-weight: 500;
-  font-size: var(--t-lead);
-  letter-spacing: -0.01em;
-  line-height: 1.2;
-  color: color-mix(in srgb, var(--pine) 82%, transparent);
-  transition: color 0.45s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-/* The rule runs from the end of the name out to the margin, and fills from the
-   left when the line is being read. */
-.scopeRule {
-  position: relative;
-  height: 1px;
-  align-self: center;
-  background: var(--ink);
-}
-
-.scopeRule::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: var(--green);
-  transform: scaleX(0);
-  transform-origin: left center;
-  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.scopeOn .scopeNum { opacity: 1; }
-.scopeOn .scopeName { color: var(--green); }
-.scopeOn .scopeRule::after { transform: scaleX(1); }
-
-/* The one line with nowhere to point keeps its sentence. */
-.scopeNote {
-  margin: 0 0 0 calc(var(--t-fine) * 2 + 0.9rem);
-  padding-bottom: 0.2rem;
-  font-size: var(--t-small);
-  line-height: 1.55;
-  color: color-mix(in srgb, var(--pine) 70%, transparent);
-  max-width: 30ch;
-}
-
-/* Pointing at work that is not on this sheet. Both plates step back — the same
-   rule as everywhere else here: nothing is recoloured, the signal is what moves
-   away. */
-.away .figure { opacity: 0.5; }
 
 @media (prefers-reduced-motion: reduce) {
-  .scopeNum,
-  .scopeName,
-  .scopeRule::after { transition: none; }
+  .leader,
+  .leaderMark,
+  .noteLabel { transition: none; }
 }
 
 @media (max-width: 860px) {

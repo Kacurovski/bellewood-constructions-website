@@ -45,30 +45,3 @@
   opacity: 1;
 }
 
-
-/* ---------------------------------------------------------------------------
-   Keying the LINE variant, which cannot be done by fading.
-
-   The line drawing removes its hidden edges by painting every face with the
-   page's own ground, so each face paints out the edges behind it. Drop those
-   fills to twelve per cent and they stop painting anything out: every edge
-   behind every wall comes back and the drawing becomes an x-ray of itself.
-
-   A draughtsman picking one material out of a drawing does not rub the rest
-   out. They go over it with a heavier pen. So the fills stay exactly as they
-   are and the keyed material is simply drawn harder.
-   --------------------------------------------------------------------------- */
-
-.svg[data-variant='line'][data-lit] polygon {
-  opacity: 1;
-}
-
-.svg[data-variant='line'][data-lit='frame'] polygon[data-mat='frame'],
-.svg[data-variant='line'][data-lit='clad'] polygon[data-mat='clad'],
-.svg[data-variant='line'][data-lit='charred'] polygon[data-mat='charred'],
-.svg[data-variant='line'][data-lit='deck'] polygon[data-mat='deck'],
-.svg[data-variant='line'][data-lit='roof'] polygon[data-mat='roof'],
-.svg[data-variant='line'][data-lit='glass'] polygon[data-mat='glass'] {
-  stroke-width: 0.05;
-  stroke-opacity: 1;
-}
