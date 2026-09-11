@@ -16,10 +16,53 @@
    is exactly what it looked like. It owns its own padding now and has no
    maximum, so it is full width at every size and needs no negative margin. */
 .set {
+  position: relative;
+  isolation: isolate;
   width: 100%;
   padding-block: clamp(3rem, 6vw, 5.5rem) clamp(3rem, 6vw, 5rem);
   padding-inline: clamp(1rem, 2.4vw, 2.5rem);
   box-sizing: border-box;
+}
+
+/* --- The setting-out grid --------------------------------------------------
+   The same ground the home page's register stands on. This page is that
+   register at full length, so it stands on the same paper, and the pool of
+   ruling follows the pointer the same way.
+
+   It does not compete with the plate's own crosshair: that only draws while the
+   pointer is on the photograph, and this is lit wherever the pointer is —
+   which, on this page, is mostly out over the list of names. */
+.grid {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  --sheet-line: color-mix(in srgb, var(--pine) 13%, transparent);
+  background-image:
+    repeating-linear-gradient(to right, var(--sheet-line) 0 1px, transparent 1px 100%),
+    repeating-linear-gradient(to bottom, var(--sheet-line) 0 1px, transparent 1px 100%);
+  background-size: clamp(3.5rem, 5vw, 5.5rem) clamp(3.5rem, 5vw, 5.5rem);
+  -webkit-mask-image: radial-gradient(
+    circle clamp(16rem, 30vw, 34rem) at var(--mx, 30%) var(--my, 38%),
+    #000 0%,
+    rgba(0, 0, 0, 0.45) 42%,
+    transparent 76%
+  );
+  mask-image: radial-gradient(
+    circle clamp(16rem, 30vw, 34rem) at var(--mx, 30%) var(--my, 38%),
+    #000 0%,
+    rgba(0, 0, 0, 0.45) 42%,
+    transparent 76%
+  );
+}
+
+/* No pointer, no pool. It parks where it is declared and simply is — a ground
+   that only appears once you wave at it is worse than none. */
+@media (max-width: 1000px), (pointer: coarse) {
+  .grid {
+    -webkit-mask-image: radial-gradient(circle 70vw at 50% 30%, #000 0%, transparent 80%);
+    mask-image: radial-gradient(circle 70vw at 50% 30%, #000 0%, transparent 80%);
+  }
 }
 
 /* --- Plate and list -------------------------------------------------------

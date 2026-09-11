@@ -45,6 +45,7 @@ export default function Work() {
 
   const rows = useRef<(HTMLLIElement | null)[]>([])
   const plate = useRef<HTMLAnchorElement>(null)
+  const band = useRef<HTMLDivElement>(null)
 
   /* The row being read is the last one whose top has passed a line drawn across
      the upper third of the window. Measured against the window rather than
@@ -78,6 +79,15 @@ export default function Work() {
     plate.current?.style.setProperty('--cy', `${event.clientY - box.top}px`)
   }
 
+  /* The pointer's position in the band, for the setting-out grid behind it.
+     Two custom properties, so the browser repaints a mask and nothing else. */
+  function onBand(event: ReactPointerEvent<HTMLDivElement>) {
+    const box = band.current?.getBoundingClientRect()
+    if (!box) return
+    band.current?.style.setProperty('--mx', `${event.clientX - box.left}px`)
+    band.current?.style.setProperty('--my', `${event.clientY - box.top}px`)
+  }
+
   const shown =
     projects.length < COUNT_WORDS.length ? COUNT_WORDS[projects.length] : String(projects.length)
 
@@ -98,7 +108,16 @@ export default function Work() {
       />
 
       {/* Not `shell`. See the note in the stylesheet: the two fight. */}
-      <div className={styles.set}>
+      <div
+        ref={band}
+        className={styles.set}
+        onPointerMove={pointer && !reduced ? onBand : undefined}
+      >
+        {/* The squared paper a drawing is set out on, lit in a soft pool around
+            the pointer — the same ground the home page's register stands on,
+            because this is the same thing at full length. A field of flat Wash
+            reads as thin whatever is arranged on it. */}
+        <span className={styles.grid} aria-hidden="true" />
         <div className={styles.split}>
           {/* --- The plate ------------------------------------------------
               Sticky, and a link to whichever project it is showing, so the

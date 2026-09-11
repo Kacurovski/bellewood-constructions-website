@@ -72,15 +72,24 @@ export default function ProjectDetail() {
 
       {/* Half a comparison is worse than none, so this only appears when both
           the before and the after actually exist. */}
+      {/* On its own ground.
+
+          Everything under the hero used to sit on the same pale wash — the
+          story, the comparison, the gallery and the way out — which is four
+          bands of one colour and reads as a long white page with good work
+          stranded on it. The comparison is the moment the page is actually
+          about, so it gets a ground of its own to sit in. */}
       {hasBeforeAfter(project) && (
-        <section className={['shell', styles.compare].join(' ')} aria-label="Before and after">
-          <Reveal>
-            <h2 className={['section-heading', styles.compareHeading].join(' ')}>
-              Before and after
-            </h2>
-            <BeforeAfter before={project.before} after={project.after} label={project.title} />
-          </Reveal>
-        </section>
+        <div className={['on-sage', styles.band].join(' ')}>
+          <section className={['shell', styles.compare].join(' ')} aria-label="Before and after">
+            <Reveal>
+              <h2 className={['section-heading', styles.compareHeading].join(' ')}>
+                Before and after
+              </h2>
+              <BeforeAfter before={project.before} after={project.after} label={project.title} />
+            </Reveal>
+          </section>
+        </div>
       )}
 
       {project.gallery.length > 0 && (
@@ -93,12 +102,30 @@ export default function ProjectDetail() {
         </section>
       )}
 
-      <nav className={['shell', styles.next].join(' ')} aria-label="Next project">
-        <Link to={`/work/${next.slug}`} className={styles.nextLink}>
-          <span className="eyebrow">Next project</span>
-          <span className={['section-heading', styles.nextTitle].join(' ')}>{next.title}</span>
-        </Link>
-      </nav>
+      {/* The page closes on the dark ground the site's other endings use, and
+          the next project is a destination rather than a footnote — it is the
+          only thing on the page still asking to be clicked once the reader has
+          got to the bottom. */}
+      <div className={['on-green', styles.closer].join(' ')}>
+        <nav className={['shell', styles.next].join(' ')} aria-label="Next project">
+          <Link to={`/work/${next.slug}`} className={styles.nextLink}>
+            <span className={styles.nextLabel}>Next project</span>
+            <span className={styles.nextRow}>
+              <span className={['section-heading', styles.nextTitle].join(' ')}>{next.title}</span>
+              <span className={styles.nextArrow} aria-hidden="true">
+                <svg viewBox="0 0 34 10" fill="none">
+                  <path d="M0 5h32M27.5 1l4.5 4-4.5 4" stroke="currentColor" strokeWidth="1.2" />
+                </svg>
+              </span>
+            </span>
+            <span className={styles.nextMeta}>
+              {next.kind}
+              <span className={styles.dot} aria-hidden="true" />
+              {next.suburb}
+            </span>
+          </Link>
+        </nav>
+      </div>
     </article>
   )
 }
