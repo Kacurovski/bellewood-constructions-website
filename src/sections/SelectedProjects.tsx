@@ -62,7 +62,7 @@ export function SelectedProjects() {
             twice, and the two of them collided. */}
         <Reveal className={styles.head}>
           <SheetRef
-            number="A-04"
+            number="A-03"
             name={
               <h2 id="work-heading" className={styles.heading}>
                 Selected work

@@ -65,7 +65,7 @@ export function Process({ headless = false }: { headless?: boolean } = {}) {
           {!headless && (
             <div className={styles.intro}>
               <Reveal>
-                <SheetRef number="A-06" name="How it works" rule={false} />
+                <SheetRef number="A-05" name="How it works" rule={false} />
                 <h2 id="approach-heading" className={['section-heading', styles.heading].join(' ')}>
                   Drawn, then built.
                 </h2>

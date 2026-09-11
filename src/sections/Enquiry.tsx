@@ -47,7 +47,7 @@ export function Enquiry() {
           renovation will not fill in a form that goes into the dark. */}
       <div className={['shell', styles.steps].join(' ')}>
         <Reveal className={styles.stepsHead}>
-          <SheetRef number="A-09" name="What happens next" rule={false} />
+          <SheetRef number="A-08" name="What happens next" rule={false} />
         </Reveal>
         {/* Four sheets, dealt onto the table.
 

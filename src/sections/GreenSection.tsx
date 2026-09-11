@@ -47,7 +47,7 @@ export function GreenSection() {
 
       <div className={['shell', styles.inner].join(' ')}>
         <Reveal className={styles.left}>
-          <SheetRef number="A-05" name="The name" rule={false} className={styles.ref} />
+          <SheetRef number="A-04" name="The name" rule={false} className={styles.ref} />
           <h2 id="name-heading" className={['headline', styles.heading].join(' ')}>
             Same builder. Same licence. New name.
           </h2>
