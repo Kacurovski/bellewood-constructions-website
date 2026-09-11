@@ -1,10 +1,11 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import type { ReactNode } from 'react'
 import { animate, motion, useInView, useMotionValue, useTransform } from 'framer-motion'
 import { Reveal } from '../components/Reveal'
 import { SheetRef } from '../components/Sheet'
 import { ImageSlot } from '../components/ImageSlot'
 import { HeritageStudyStill } from '../three/HeritageStudyStill'
+import type { MaterialKey } from '../three/materials'
 import { ScrollWords } from '../components/ScrollWords'
 import { Credentials } from '../components/Credentials'
 import { stills } from '../data/projects'
@@ -61,6 +62,29 @@ function Plotted({ children }: { children: ReactNode }) {
   )
 }
 
+/* The scope, as a schedule.
+
+   Every line is work the site already says Bellewood does — the first two come
+   straight out of the hero, the third is the sentence that used to sit here on
+   its own. What the schedule adds is that two of the three are IN the drawing
+   beside it: a renovation is the cottage that was kept, an extension is the new
+   wing, and each is the only thing on the building in its material. Point at a
+   line and Fig. 1 is gone over in a heavier pen exactly where that work is.
+
+   The third has nothing to point at, which is the honest thing for it to say —
+   apartment refurbishments are the work this sheet does not show — so pointing
+   at it steps both plates back instead. */
+const SCOPE: { n: string; name: string; key: MaterialKey | null; note?: string }[] = [
+  { n: '01', name: 'Renovations', key: 'clad' },
+  { n: '02', name: 'Extensions', key: 'charred' },
+  {
+    n: '03',
+    name: 'Apartment refurbishments',
+    key: null,
+    note: 'In Brisbane and on the coast, to the same standard.',
+  },
+]
+
 /**
  * The proposition. Type-led, no imagery — which is honest, because there is no
  * imagery yet, and right for the brand either way: the book asks for generous
@@ -79,6 +103,14 @@ function Plotted({ children }: { children: ReactNode }) {
  */
 export function Proposition() {
   const reduced = useReducedMotion()
+
+  /* Which line of the schedule is under the pointer. Null is nothing; a row
+     with no material of its own sets 'off', which is not a key but the absence
+     of one — both plates step back and nothing is drawn harder. */
+  const [reading, setReading] = useState<number | null>(null)
+  const row = reading == null ? null : SCOPE[reading]
+  const lit = row?.key ?? null
+  const off = row != null && row.key == null
 
   /* The leader and its tick, drawn once as the note comes up. Under reduced
      motion they are simply there, like everything else on the page. */
@@ -99,7 +131,7 @@ export function Proposition() {
 
   return (
     <section className={['section', styles.section].join(' ')} aria-labelledby="proposition-heading">
-      <div className={['shell', styles.inner].join(' ')}>
+      <div className={['shell', styles.inner, off ? styles.away : ''].join(' ').trim()}>
         {/* The statement is the heading. "Older houses, taken seriously." used
             to sit above it, and the two said the same thing — one in four words
             and one in twenty-six. The sentence that actually names what the
@@ -137,7 +169,7 @@ export function Proposition() {
           <figure className={styles.figure}>
             <div className={styles.drawing}>
               <Plotted>
-                <HeritageStudyStill className={styles.line} variant="line" />
+                <HeritageStudyStill className={styles.line} variant="line" highlight={lit} />
               </Plotted>
             </div>
             <figcaption className={styles.caption}>
@@ -155,16 +187,15 @@ export function Proposition() {
           </figure>
         </Reveal>
 
-        {/* The note.
+        {/* The schedule.
 
-            It was a sentence of fine print alone in a third of the page, which
-            is what a leftover looks like. It is a general note on a drawing
-            now: labelled, at reading size, with a leader pulled out of it
-            towards the two plates it qualifies. Apartment refurbishments are
-            the work this sheet does not show, so the note is the only place on
-            the page that can say so. */}
+            This column held one sentence of fine print and three hundred pixels
+            of nothing. It holds the scope now: three lines of work, numbered
+            the way a schedule on a drawing is, and two of the three are in the
+            plate beside them. See the note above SCOPE for why these three and
+            what each one points at. */}
         <Reveal delay={0.12} className={styles.bodyWrap}>
-          <aside className={styles.note}>
+          <div className={styles.scope}>
             <motion.span
               aria-hidden="true"
               className={styles.leader}
@@ -180,12 +211,35 @@ export function Proposition() {
                 0.6,
               )}
             />
-            <span className={['eyebrow', styles.noteLabel].join(' ')}>Note</span>
-            <p className={styles.aside}>
-              Also apartment refurbishments, in Brisbane and on the coast, to the
-              same standard.
-            </p>
-          </aside>
+
+            <span className={['eyebrow', styles.scopeLabel].join(' ')}>Scope</span>
+
+            <ul className={styles.scopeList}>
+              {SCOPE.map((item, i) => (
+                <li key={item.n} className={styles.scopeItem}>
+                  {/* A button because it does something — it draws part of the
+                      plate harder — and because a button is reachable from the
+                      keyboard, which a hovered list item is not. The hero's
+                      callouts key the same model the same way. */}
+                  <button
+                    type="button"
+                    className={[styles.scopeRow, reading === i ? styles.scopeOn : ''].join(' ').trim()}
+                    onPointerEnter={() => setReading(i)}
+                    onPointerLeave={() => setReading(null)}
+                    onFocus={() => setReading(i)}
+                    onBlur={() => setReading(null)}
+                  >
+                    <span className={styles.scopeNum} aria-hidden="true">
+                      {item.n}
+                    </span>
+                    <span className={styles.scopeName}>{item.name}</span>
+                    <span className={styles.scopeRule} aria-hidden="true" />
+                  </button>
+                  {item.note && <p className={styles.scopeNote}>{item.note}</p>}
+                </li>
+              ))}
+            </ul>
+          </div>
         </Reveal>
 
         {/* The credentials row, at the foot of this section rather than as a
