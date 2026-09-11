@@ -34,14 +34,19 @@ const HOUSES = [
 ] as const
 
 /** How long a card holds the front before the deck turns. */
-const HOLD = 6000
+const HOLD = 4500
 
 export function Houses() {
   const reduced = useReducedMotion()
   const [at, setAt] = useState(0)
-  /* Held while a pointer or a focus is anywhere in the deck. Turning a card out
-     from under somebody who has reached for it is what makes this pattern feel
-     cheap, and under reduced motion it never turns on its own at all. */
+  /* Held while a pointer is on a CARD, or a focus is anywhere in the set.
+     Turning a card out from under somebody who has reached for it is what makes
+     this pattern feel cheap, and under reduced motion it never turns at all.
+
+     On a card, not on the deck box. At full width the deck measures 1300px and
+     the front card 480 — so eight hundred pixels of empty ground either side
+     was catching the pointer and holding the whole thing still. Anyone watching
+     the section with a mouse anywhere near it saw a deck that never turned. */
   const [held, setHeld] = useState(false)
 
   const go = useCallback((n: number) => {
@@ -70,11 +75,15 @@ export function Houses() {
         </Reveal>
 
         <Reveal delay={0.06}>
-          <div
-            className={styles.deck}
-            onPointerEnter={() => setHeld(true)}
-            onPointerLeave={() => setHeld(false)}
-          >
+          {/* The pointer-catch is on the CARDS, not on this box.
+
+              It was on the deck, and the deck is a block: full width of the
+              column and the best part of twenty-four rem tall, most of it empty
+              ground either side of the cards. Anybody watching the section with
+              a mouse resting anywhere in that band held it still, so it looked
+              as though it never turned at all. The thing you are pointing at
+              should be the thing that stops. */}
+          <div className={styles.deck}>
             {HOUSES.map((house, i) => {
               const project = getProject(house.slug)
               if (!project) return null
@@ -91,6 +100,8 @@ export function Houses() {
                   className={styles.card}
                   data-pos={pos}
                   aria-hidden={pos === 0 ? undefined : true}
+                  onPointerEnter={() => setHeld(true)}
+                  onPointerLeave={() => setHeld(false)}
                 >
                   {/* The two angled cards are turned away, so their links are
                       taken out of the tab order with them — otherwise the
