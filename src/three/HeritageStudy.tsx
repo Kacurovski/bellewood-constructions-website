@@ -120,19 +120,21 @@ function StudioSky() {
 }
 
 /**
- * What a material steps back towards when another one is being keyed.
+ * The one tone every material that is NOT being keyed collapses to.
  *
- * Sage, darkened. It used to be the panel's own colour and the mix was eight
- * tenths, which bleached everything that was not lit to a bone white: point at
- * the deck and the rest of the house turned into a paper model. Stepping back
- * is not the same as disappearing — the building still has to read as a
- * building, and a value near the ground behind it cannot.
+ * One tone, not each material's own colour pulled part way towards a tone. That
+ * was the mess: at three quarters of the way there, six materials still kept a
+ * quarter of themselves, so the house went quiet as four different muddy
+ * olives and the thing you had actually pointed at had to compete with them.
+ * Collapsed to a single value the building becomes one clean model — the light
+ * and the shadows still give it all its form — and the keyed material is the
+ * only colour on the screen.
  *
- * Sitting the ghost well below the panel keeps the silhouette, keeps roof
- * darker than wall, and keeps the whole thing on the brand's own greens rather
- * than on white. */
-const STEP_BACK = '#93a48f'
-const STEP_BACK_MIX = 0.74
+ * Sage, sat well below the panel behind it so the silhouette holds. Before
+ * that it was the panel's own colour, which bleached the house to a paper
+ * model on a pale ground.
+ */
+const GHOST = '#a4b29f'
 
 function House({
   lean,
@@ -149,18 +151,40 @@ function House({
      The legend on the approach page points at one material and everything else
      has to drop back. Transparency would do it and would also put six meshes
      into the sorted pass and let the far side of the building show through the
-     near one. Walking the colour towards the page's own ground keeps every mesh
-     opaque, and it is the same thing the flat drawing does. */
-  const colours = useMemo(() => {
-    const out = {} as Record<MaterialKey, string>
-    const back = new THREE.Color(STEP_BACK)
+     near one. Changing the colour keeps every mesh opaque.
+
+     The materials are built once and mutated on the frame loop rather than
+     rebuilt from props, because the change has to be a MOVE and not a cut. Six
+     materials swapping value between two frames is what made this read as a
+     flicker; easing them over about a quarter of a second reads as the house
+     going quiet, which is what it is meant to say. */
+  const mats = useMemo(() => {
+    const out = {} as Record<MaterialKey, THREE.MeshStandardMaterial>
     for (const key of MATERIAL_KEYS) {
-      const c = new THREE.Color(MATERIALS[key].color)
-      if (highlight && key !== highlight) c.lerp(back, STEP_BACK_MIX)
-      out[key] = `#${c.getHexString()}`
+      out[key] = new THREE.MeshStandardMaterial({
+        color: new THREE.Color(MATERIALS[key].color),
+        roughness: MATERIALS[key].roughness,
+        metalness: MATERIALS[key].metalness,
+        envMapIntensity: key === 'glass' ? 2.4 : 0.9,
+        emissive: new THREE.Color(key === 'glass' ? GLASS_EMISSIVE : '#000000'),
+        emissiveIntensity: key === 'glass' ? 0.62 : 0,
+      })
     }
     return out
-  }, [highlight])
+  }, [])
+
+  const targets = useMemo(() => {
+    const full = {} as Record<MaterialKey, THREE.Color>
+    for (const key of MATERIAL_KEYS) full[key] = new THREE.Color(MATERIALS[key].color)
+    return { full, ghost: new THREE.Color(GHOST) }
+  }, [])
+
+  useEffect(
+    () => () => {
+      for (const key of MATERIAL_KEYS) mats[key].dispose()
+    },
+    [mats],
+  )
 
   const geometries = useMemo(buildGeometries, [])
 
@@ -186,23 +210,34 @@ function House({
     g.rotation.x = 0.015 + smoothed.current.y * 0.05
   })
 
+  /* Ease every material towards what it should be, frame by frame. Framerate
+     independent, so it settles in the same quarter second on a 60Hz laptop and
+     a 120Hz phone. */
+  useFrame((_, delta) => {
+    const t = 1 - Math.pow(0.02, Math.min(delta, 0.1))
+    for (const key of MATERIAL_KEYS) {
+      const m = mats[key]
+      const lit = highlight == null || key === highlight
+      m.color.lerp(lit ? targets.full[key] : targets.ghost, t)
+      m.metalness += ((lit ? MATERIALS[key].metalness : 0) - m.metalness) * t
+      const glow = key === 'glass' && lit ? 0.62 : 0
+      m.emissiveIntensity += (glow - m.emissiveIntensity) * t
+    }
+  })
+
   return (
     <group ref={group} position={HERITAGE_OFFSET}>
       {MATERIAL_KEYS.map((key) => {
         const geometry = geometries[key]
         if (!geometry) return null
-        const dim = highlight != null && key !== highlight
         return (
-          <mesh key={key} geometry={geometry} castShadow receiveShadow>
-            <meshStandardMaterial
-              color={colours[key]}
-              roughness={MATERIALS[key].roughness}
-              metalness={dim ? 0 : MATERIALS[key].metalness}
-              envMapIntensity={key === 'glass' && !dim ? 2.4 : 0.9}
-              emissive={key === 'glass' ? GLASS_EMISSIVE : '#000000'}
-              emissiveIntensity={key === 'glass' && !dim ? 0.62 : 0}
-            />
-          </mesh>
+          <mesh
+            key={key}
+            geometry={geometry}
+            material={mats[key]}
+            castShadow
+            receiveShadow
+          />
         )
       })}
     </group>
