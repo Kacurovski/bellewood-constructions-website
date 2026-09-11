@@ -1,8 +1,5 @@
-import { useRef } from 'react'
-import type { PointerEvent as ReactPointerEvent } from 'react'
 import { Link } from 'react-router-dom'
 import { ImageSlot } from './ImageSlot'
-import { useReducedMotion } from '../hooks/useReducedMotion'
 import type { Project } from '../data/projects'
 import styles from './ProjectCard.module.css'
 
@@ -14,8 +11,10 @@ type Props = {
   offset?: boolean
   ratio?: string
   /**
-   * `row` is the home page's selection: a medium plate beside its meta, the
-   * two alternating down the page. `card` is the index treatment used on /work.
+   * `row` is the home page's selection: a medium plate beside its meta, the two
+   * alternating down the page, and it is the only variant anything renders
+   * today. `card` is the plain plate-over-caption treatment; /work used it for
+   * its index until that page became a sticky plate beside a list of names.
    */
   variant?: 'card' | 'row'
   /** Puts the plate on the right instead of the left. Alternated by the list. */
@@ -30,20 +29,6 @@ export function ProjectCard({
   variant = 'card',
   flip = false,
 }: Props) {
-  const plate = useRef<HTMLDivElement>(null)
-  const reduced = useReducedMotion()
-
-  /* The pointer's position inside the plate, written straight to two custom
-     properties rather than to state: a mousemove that re-renders a card is a
-     mousemove that costs a render on every one of six cards. The browser moves
-     one transform and nothing else. */
-  function onMove(event: ReactPointerEvent<HTMLDivElement>) {
-    const box = plate.current?.getBoundingClientRect()
-    if (!box) return
-    plate.current?.style.setProperty('--cx', `${event.clientX - box.left}px`)
-    plate.current?.style.setProperty('--cy', `${event.clientY - box.top}px`)
-  }
-
   return (
     <article
       className={[
@@ -56,42 +41,11 @@ export function ProjectCard({
         .trim()}
     >
       <Link to={`/work/${project.slug}`} className={styles.link}>
-        <div
-          ref={plate}
-          className={styles.media}
-          onPointerMove={variant === 'card' && !reduced ? onMove : undefined}
-        >
+        <div className={styles.media}>
           {/* No label on the ground: the title and suburb sit directly beneath
               it, and printing them twice reads as a mistake rather than as a
               considered empty state. */}
           <ImageSlot slot={project.hero} ratio={ratio} tone={index % 3 === 0 ? 'green' : 'sage'} />
-          {/* The index plate's affordance, and the only thing on the site that
-              follows the pointer.
-
-              It was a disc with "View" in it, which is the affordance every
-              template ships with: a button chasing the cursor. These are the
-              setting-out lines instead — two hairlines ruled the full width and
-              height of the plate, crossing where the pointer is, with the
-              project's number and destination read off at the crossing. Fixing
-              a position by ruling to it is what a drawing does.
-
-              The row variant can afford a written "View project" under its
-              meta; six of those in an index is a page of buttons, so the index
-              says it on the plate and only while a pointer is on one.
-
-              Hidden entirely where there is no pointer to follow: on a phone it
-              would either never appear or, worse, stick where the last tap
-              landed. */}
-          {variant === 'card' && (
-            <span className={styles.trace} aria-hidden="true">
-              <span className={styles.traceH} />
-              <span className={styles.traceV} />
-              <span className={styles.traceTag}>
-                <span className={styles.traceNum}>{String(index + 1).padStart(2, '0')}</span>
-                View project
-              </span>
-            </span>
-          )}
         </div>
 
         <div className={styles.meta}>

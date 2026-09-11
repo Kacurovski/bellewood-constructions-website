@@ -335,8 +335,16 @@ for (const plane of ['front', 'back'] as Plane[]) {
   for (let i = 0; i < cols; i++) {
     const u0 = -HALF_L + i * GABLE_STEP
     const u1 = Math.min(u0 + GABLE_STEP * 0.94, HALF_L)
-    // Cut to the roof line above whichever edge is further out, so no board can
-    // rise through the sheet.
+    /* Cut to the roof line above whichever edge is further out, so no board can
+       rise through the sheet.
+
+       The step this leaves — each board stopping short of the rake by the rise
+       across its own width — is nominally closed by the barge board. It is not.
+       The barge sits under an eave that oversails it by more than a board's
+       width, so from any view above the gutter line it is not on the drawing at
+       all, which was worth finding out before trying to fix the rake with it.
+       Cutting at each board's midpoint instead halves the step and changes
+       nothing you can see at the size this is drawn. */
     const outer = Math.max(Math.abs(u0), Math.abs(u1))
     const v1 = WALL_TOP + PITCH_RISE * (1 - outer / HALF_L)
     if (v1 - WALL_TOP < 0.05) continue
@@ -370,14 +378,38 @@ const roofTilt = (side: -1 | 1) => (side < 0 ? PITCH : -PITCH)
 const ROOF_SHIFT = -EAVE / 2
 const ROOF_RUN = DEP + EAVE * 1.7
 
+/* Sheet cover, and the reason this roof is laid in sheets at all.
+
+   It used to be one slab per side, seven metres of it, and in the flat drawing
+   that slab could not be sorted. The still paints whole members back to front
+   by their centres, and a seven metre board has no meaningful centre: the
+   gable end wall standing at the near end of it has a centre far nearer the
+   eye, so the wall painted last — over the top of the roof that overhangs it.
+   That is the pale timber triangle that sat on the dark roof, and it put the
+   verandah roof through the gable as well.
+
+   Cutting the slab into sheets fixes it because each sheet's centre is its
+   own: the ones that overhang the gable sort in front of the wall and the ones
+   behind it sort behind. It is also simply how a roof is covered — sheets run
+   up the slope and lie side by side along the ridge — so the joints the drawing
+   now shows are joints that are really there. */
+const SHEET_W = 0.762
+
 for (const side of [-1, 1] as const) {
-  add({
-    p: onRoof(side, ROOF_SHIFT, 0),
-    s: [RAFTER_LEN + EAVE, 0.03, ROOF_RUN],
-    rx: 0,
-    rz: roofTilt(side),
-    mat: 'roof',
-  })
+  const bed = onRoof(side, ROOF_SHIFT, 0)
+  const sheets = Math.max(2, Math.round(ROOF_RUN / SHEET_W))
+  const sheetW = ROOF_RUN / sheets
+
+  for (let i = 0; i < sheets; i++) {
+    add({
+      // rz turns the sheet about z, so a shift along z needs no rotating.
+      p: [bed[0], bed[1], -ROOF_RUN / 2 + (i + 0.5) * sheetW],
+      s: [RAFTER_LEN + EAVE, 0.03, sheetW],
+      rx: 0,
+      rz: roofTilt(side),
+      mat: 'roof',
+    })
+  }
 
   // Corrugations. Every Australian roof has them, and nothing says sheet metal
   // faster — which is most of why this object reads as a house at all.
