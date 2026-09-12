@@ -52,15 +52,25 @@ written out here rather than left to be discovered.
 
 ## Photography — all seventeen files are in the repository, and none of them may publish
 
-The images live in [`public/projects/`](https://github.com/Kacurovski/bellewood-constructions-website/tree/main/public/projects)
+The images live in [`src/assets/projects/`](https://github.com/Kacurovski/bellewood-constructions-website/tree/main/src/assets/projects)
 and are committed at full size — no Git LFS, no external host, nothing to fetch.
-A clone has them. Vite copies the folder into the build untouched, so a file
-named `paddington-after.jpg` is referenced in code as `projects/paddington-after.jpg`
-and served from the same relative path (the base is `./`, see **Routing and
-deployment**). To use one as a URL rather than a file, the raw form is:
+A clone has them.
+
+**They are imported, not served from a folder**, which is the same thing that
+has always been true of the logo and the fonts. Code refers to a photograph by
+its bare name — `paddington-after`, no path and no extension — and `photo` in
+`src/data/photos.ts` turns that into the URL the bundler emitted. They used to
+sit in `public/` and be referenced as the runtime string `projects/<name>.jpg`,
+which works when the built folder is served as its own root and produces silent
+broken images anywhere the public folder does not come along for the ride. That
+is what happened when this repository was pulled into AI Studio: the logo
+arrived, the photographs did not. `public/` now holds the favicon and nothing
+else.
+
+To use one as a URL rather than a file, the raw form is:
 
 ```
-https://raw.githubusercontent.com/Kacurovski/bellewood-constructions-website/main/public/projects/<name>.jpg
+https://raw.githubusercontent.com/Kacurovski/bellewood-constructions-website/main/src/assets/projects/<name>.jpg
 ```
 
 | Group | Files |
@@ -296,7 +306,7 @@ publish until that is settled.
 
 Angus's real library does not exist yet, so the site is currently dressed with
 **stock photographs** from Unsplash (licence: free for commercial use, no
-attribution required) in `public/projects/`. They are there so the design can be
+attribution required) in `src/assets/projects/`. They are there so the design can be
 reviewed with something in it, and for no other reason.
 
 **Publishing them would present other people's buildings as Bellewood's work.**
@@ -331,9 +341,10 @@ A photograph of a stranger captioned "Angus Cowan" would be a picture of someone
 who is not him, so that slot carries a photograph of work instead until a real
 portrait exists.
 
-To swap in the real library: drop files into `public/projects/`, point `hero` /
-`before` / `after` / `gallery` at them, write real alt text, and set
-`placeholder: false`. No layout changes are needed. Every slot also still renders
+To swap in the real library: drop files into `src/assets/projects/`, point
+`hero` / `before` / `after` / `gallery` at them by bare name, write real alt
+text, and set `placeholder: false`. There is no list of files to maintain — the
+folder is read by one glob. No layout changes are needed. Every slot also still renders
 a designed brand ground when its `src` is null, so the layout holds if a project
 arrives without photography.
 

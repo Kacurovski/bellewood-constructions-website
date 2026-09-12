@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
+import { photo } from '../data/photos'
 import type { PointerEvent as ReactPointerEvent } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { Reveal } from '../components/Reveal'
@@ -44,7 +45,7 @@ const HOLD = 8000
 const PUSH = (HOLD + 2600) / 1000
 
 type Plate = {
-  /** A still, pushed in slowly. Every one is already in `public/projects`. */
+  /** A still, pushed in slowly. A bare name resolved by `photo`. */
   image?: string
   /**
    * A muted, looping clip, used in place of the still when one exists. There
@@ -61,9 +62,9 @@ type Plate = {
  * the ground is never decoration. Index for index with `testimonials`.
  */
 const PLATES: Plate[] = [
-  { image: 'projects/paddington-after.jpg' }, // Paddington · Renovation
-  { image: 'projects/ashgrove-after.jpg' }, // Ashgrove · Extension
-  { image: 'projects/interior-dining.jpg' }, // Architect · Inner Brisbane
+  { image: photo('paddington-after') }, // Paddington · Renovation
+  { image: photo('ashgrove-after') }, // Ashgrove · Extension
+  { image: photo('interior-dining') }, // Architect · Inner Brisbane
 ]
 
 export function Testimonials() {

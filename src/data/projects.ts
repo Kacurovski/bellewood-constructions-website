@@ -1,9 +1,13 @@
+import { photo } from './photos'
+
 /**
  * The project showcase.
  *
  * EVERY image on this site is a slot defined here. Swapping in the real
  * photography is a data edit, not a layout rebuild: drop files into
- * `public/projects/` and change the paths below. Nothing else changes.
+ * `src/assets/projects/` and change the names below. Nothing else changes.
+ * The names are bare — `paddington-after`, no folder and no extension — and
+ * `photo` in ./photos turns each one into the URL the bundler gave the file.
  *
  * ===========================================================================
  * THE IMAGERY BELOW IS PLACEHOLDER. IT MUST NOT PUBLISH.
@@ -22,7 +26,7 @@
  *     dates, client names or testimonials have been invented, and none should
  *     be added without Angus confirming them
  *
- * When the real library arrives, per project: replace the paths, write real alt
+ * When the real library arrives, per project: replace the files, write real alt
  * text, fill in `year` if it is known, and set `placeholder: false`.
  * ===========================================================================
  */
@@ -31,7 +35,7 @@
 export const mediaIsPlaceholder = true
 
 export type ImageSlot = {
-  /** Path under public/, or null to render the designed empty ground. */
+  /** A resolved photograph URL from `photo`, or null for the empty ground. */
   src: string | null
   alt: string
 }
@@ -71,7 +75,9 @@ export type Project = {
   featured: boolean
 }
 
-const img = (file: string, alt: string): ImageSlot => ({ src: `projects/${file}.jpg`, alt })
+/* The bare file name, not a path. `photo` resolves it through the bundler —
+   see src/data/photos.ts for why that matters. */
+const img = (file: string, alt: string): ImageSlot => ({ src: photo(file), alt })
 const none = (alt: string): ImageSlot => ({ src: null, alt })
 
 export const projects: Project[] = [
