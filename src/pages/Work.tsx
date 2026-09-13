@@ -40,6 +40,7 @@ export default function Work() {
   usePageTitle('Work')
 
   const pointer = useMediaQuery('(min-width: 941px) and (pointer: fine)')
+  const narrow = useMediaQuery('(max-width: 940px)')
   const reduced = useReducedMotion()
   const [at, setAt] = useState(0)
 
@@ -67,6 +68,52 @@ export default function Work() {
       window.removeEventListener('resize', readScroll)
     }
   }, [readScroll])
+
+  /* --- The stack, on a phone -------------------------------------------------
+     Below the split there is no sticky plate, so the projects become cards that
+     stick under the header one after another, each sliding up over the last.
+     The card being covered steps back as it goes: it shrinks a little toward
+     the top and darkens, so the stack reads as depth rather than as one picture
+     replacing another.
+
+     How far a card is covered is measured, not animated on a timer: the
+     distance the next card has travelled over it, as a share of its height.
+     Written straight to a custom property on the row, once per frame at most,
+     so scrolling the stack costs no React render at all. */
+  const frame = useRef(0)
+  const readStack = useCallback(() => {
+    cancelAnimationFrame(frame.current)
+    frame.current = requestAnimationFrame(() => {
+      const els = rows.current
+      els.forEach((el, i) => {
+        if (!el) return
+        const next = els[i + 1]
+        let cover = 0
+        if (next) {
+          const a = el.getBoundingClientRect()
+          const b = next.getBoundingClientRect()
+          cover = Math.min(1, Math.max(0, (a.bottom - b.top) / a.height))
+        }
+        el.style.setProperty('--cover', cover.toFixed(3))
+      })
+    })
+  }, [])
+
+  useEffect(() => {
+    const els = rows.current
+    if (!narrow || reduced) {
+      els.forEach((el) => el?.style.removeProperty('--cover'))
+      return
+    }
+    readStack()
+    window.addEventListener('scroll', readStack, { passive: true })
+    window.addEventListener('resize', readStack)
+    return () => {
+      cancelAnimationFrame(frame.current)
+      window.removeEventListener('scroll', readStack)
+      window.removeEventListener('resize', readStack)
+    }
+  }, [narrow, reduced, readStack])
 
   /* The pointer's position inside the plate, written straight to two custom
      properties so a mousemove costs no React render. The browser moves two
@@ -182,10 +229,18 @@ export default function Work() {
                   rows.current[i] = el
                 }}
                 className={[styles.row, i === at ? styles.rowOn : ''].join(' ')}
+                /* Each card sticks a hair lower than the one before, so the
+                   edges of the ones behind stay visible — a stack, not a swap. */
+                style={{ '--i': i } as React.CSSProperties}
                 onPointerEnter={pointer ? () => setAt(i) : undefined}
               >
                 <Link to={`/work/${project.slug}`} className={styles.rowLink}>
-                  <span className={styles.rowNum}>{String(i + 1).padStart(2, '0')}</span>
+                  <span className={styles.rowNum}>
+                    {String(i + 1).padStart(2, '0')}
+                    {/* Only the phone's card shows the total; on the desktop
+                        list the plate's caption already counts. */}
+                    <span className={styles.rowOf}> / {String(projects.length).padStart(2, '0')}</span>
+                  </span>
 
                   <span className={styles.rowBody}>
                     <span className={['sub-heading', styles.rowTitle].join(' ')}>
@@ -193,8 +248,12 @@ export default function Work() {
                     </span>
                     <span className={styles.rowMeta}>
                       <span>{project.kind}</span>
-                      <span className={styles.dot} aria-hidden="true" />
-                      <span>{project.suburb}</span>
+                      {/* The dot travels with the suburb, so on a phone the line
+                          wraps before the dot rather than stranding it. */}
+                      <span className={styles.place}>
+                        <span className={styles.dot} aria-hidden="true" />
+                        <span>{project.suburb}</span>
+                      </span>
                     </span>
 
                     {/* The one line the data has always carried and the index

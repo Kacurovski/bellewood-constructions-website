@@ -358,6 +358,15 @@
   opacity: 0.62;
 }
 
+/* The dot and the suburb, held together. The same gap as the row it sits in,
+   so the desktop line reads exactly as it did before they were grouped. */
+.place {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-3);
+  white-space: nowrap;
+}
+
 .dot {
   width: 3px;
   height: 3px;
@@ -389,48 +398,235 @@
 
 /* The inline plate belongs to the narrow layout only. */
 .rowPlate { display: none; }
+.rowOf { display: none; }
 
-/* --- Narrow ---------------------------------------------------------------
-   No sticky column and no pointer, so each row carries its own plate and the
-   list becomes the stack of cards a phone should have. */
+/* --- Narrow: the stack ---------------------------------------------------------
+   No sticky column and no pointer below this width, so the page stops being a
+   plate beside a list and becomes a stack of cards.
+
+   Each project is one card: its photograph filling the card, drifting slowly,
+   with the number up in a frosted tag and the name, the work and the one-line
+   summary set over a scrim at the foot. The cards stick under the header one
+   after another. Scrolling slides the next card up over the one before, and the
+   covered card steps back — a little smaller toward its top edge, a little
+   darker — so what you are moving through reads as a pile of photographs being
+   dealt, not a list being scrolled. Each sticks a few pixels lower than the
+   last, so the edges of the ones behind stay visible.
+
+   The covering is measured in Work.tsx and arrives here as --cover, from 0 (the
+   next card has not reached this one) to 1 (it is fully over it).
+
+   Rounded, because the header above now is: a hard-cornered card under a soft
+   capsule and a pill button read as two different sites.
+
+   The scrim is what the words are legible on, not the photograph. It runs to
+   ninety-odd per cent of Deep Pine under the text, so the words clear AA over
+   the brightest sky in any of these pictures. */
 @media (max-width: 940px) {
   .plateCol { display: none; }
 
   .split { grid-template-columns: minmax(0, 1fr); }
 
-  .rowLink {
-    grid-template-columns: auto minmax(0, 1fr);
-    align-items: start;
-    row-gap: clamp(1rem, 3vw, 1.5rem);
+  .list {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(0.75rem, 3vw, 1.1rem);
   }
 
-  .rowArrow { display: none; }
+  .row,
+  .row:last-child {
+    position: sticky;
+    top: calc(var(--header-h) + 0.75rem + var(--i, 0) * 0.5rem);
+    min-height: 0;
+    border: 0;
+  }
 
-  /* The plate in each row makes it tall enough on its own. */
-  .row { min-height: 0; }
+  .row::after { display: none; }
 
+  .rowLink {
+    position: relative;
+    isolation: isolate;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    gap: 0;
+    height: min(72svh, 34rem);
+    min-height: 26rem;
+    padding: 1.1rem 1.15rem 1.25rem;
+    border-radius: 22px;
+    overflow: hidden;
+    color: var(--wash);
+    background: var(--pine);
+    transform: scale(calc(1 - var(--cover, 0) * 0.07));
+    transform-origin: 50% 0%;
+    box-shadow: 0 -10px 30px -18px color-mix(in srgb, var(--pine) 55%, transparent);
+    will-change: transform;
+  }
+
+  /* The photograph, filling the card. */
   .rowPlate {
     display: block;
-    grid-column: 1 / -1;
-    aspect-ratio: 3 / 2;
+    position: absolute;
+    inset: 0;
+    z-index: -2;
     overflow: hidden;
-    background: color-mix(in srgb, var(--green) 12%, var(--wash));
+    background: var(--pine);
   }
 
   .rowPlate img {
+    display: block;
     width: 100%;
     height: 100%;
     object-fit: cover;
-    display: block;
+    transform: scale(1.04);
+    animation: drift 16s ease-in-out infinite alternate;
   }
 
-  /* Every row is its own card here, so none of them is "the live one". */
-  .rowTitle { opacity: 1; transform: none; }
-  .rowNum { opacity: 1; }
+  /* The scrim the words sit on. */
+  .rowLink::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    /* Eased rather than stepped. Four stops left a flat grey shelf across the
+       sky where the ramp changed pace; this many follow a smooth curve, so the
+       dark comes up out of the photograph instead of sitting on top of it. */
+    background: linear-gradient(
+      to top,
+      color-mix(in srgb, var(--pine) 95%, transparent) 0%,
+      color-mix(in srgb, var(--pine) 92%, transparent) 22%,
+      color-mix(in srgb, var(--pine) 84%, transparent) 34%,
+      color-mix(in srgb, var(--pine) 66%, transparent) 45%,
+      color-mix(in srgb, var(--pine) 44%, transparent) 54%,
+      color-mix(in srgb, var(--pine) 24%, transparent) 62%,
+      color-mix(in srgb, var(--pine) 10%, transparent) 70%,
+      color-mix(in srgb, var(--pine) 0%, transparent) 80%
+    );
+  }
 
-  /* And every row carries its own line, since there is nothing to open. */
-  .rowSummary { grid-template-rows: 1fr; opacity: 0.74; }
-  .rowSummary > span { padding-top: clamp(0.6rem, 1.2vw, 0.9rem); }
+  /* The step back. Over everything on the card, words included, and never in
+     the way of a tap. */
+  .rowLink::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 3;
+    background: var(--pine);
+    opacity: calc(var(--cover, 0) * 0.55);
+    pointer-events: none;
+  }
+
+  /* The number, as a frosted tag in the top corner. */
+  .rowNum,
+  .rowOn .rowNum {
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    display: inline-flex;
+    align-items: baseline;
+    padding: 0.4rem 0.75rem;
+    border-radius: 999px;
+    /* Dark enough to hold the Sage "/ 06" at 4.5:1 over the brightest photo
+       in the set. At 62% it fell to about 3:1 on the warm evening shot. */
+    background: color-mix(in srgb, var(--pine) 78%, transparent);
+    backdrop-filter: blur(10px) saturate(1.2);
+    border: 1px solid color-mix(in srgb, var(--wash) 22%, transparent);
+    color: var(--wash);
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    opacity: 1;
+    line-height: 1;
+  }
+
+  .rowOf {
+    display: inline;
+    color: var(--sage);
+  }
+
+  .rowBody { padding-right: 3.5rem; }
+
+  .rowTitle,
+  .rowOn .rowTitle {
+    font-size: clamp(1.65rem, 7vw, 2.25rem);
+    line-height: 1.04;
+    color: var(--wash);
+    opacity: 1;
+    transform: none;
+  }
+
+  /* Set as a line of text rather than a row of flex items. As flex items the
+     work type shrank and wrapped inside its own box, and the suburb was left
+     stranded at the far side of the card. As text, the line wraps where a
+     sentence would and the dot stays with the word it separates. */
+  .rowMeta {
+    display: block;
+    color: var(--sage);
+    opacity: 1;
+    margin-top: 0.5rem;
+    line-height: 1.45;
+  }
+
+  /* The space before the dot belongs to the end of the work type, not to the
+     start of the suburb: when the suburb wraps, a margin on it would indent the
+     new line, and a margin at the end of the old line simply is not seen. */
+  .rowMeta > span:first-child { margin-right: 0.55rem; }
+
+  .rowMeta .place {
+    display: inline-flex;
+    gap: 0.55rem;
+    vertical-align: baseline;
+  }
+
+  .rowSummary,
+  .rowOn .rowSummary {
+    grid-template-rows: 1fr;
+    color: color-mix(in srgb, var(--wash) 90%, transparent);
+    opacity: 1;
+  }
+
+  .rowSummary > span,
+  .rowOn .rowSummary > span { padding-top: 0.65rem; }
+
+  /* The way in: a round frosted button in the bottom corner, a real tap
+     target rather than an arrow drawn in the margin. */
+  .rowArrow,
+  .rowOn .rowArrow {
+    position: absolute;
+    right: 1rem;
+    bottom: 1.2rem;
+    display: grid;
+    place-items: center;
+    width: 2.9rem;
+    height: 2.9rem;
+    padding: 0.85rem;
+    box-sizing: border-box;
+    border-radius: 50%;
+    background: var(--wash);
+    color: var(--green);
+    opacity: 1;
+    transform: none;
+  }
+
+  .rowLink:active .rowArrow { transform: scale(0.94); }
+
+  .rowLink:focus-visible {
+    outline: 2px solid var(--green);
+    outline-offset: 3px;
+  }
+}
+
+@keyframes drift {
+  from { transform: scale(1.04) translate3d(0, 0, 0); }
+  to { transform: scale(1.14) translate3d(-1.5%, -1%, 0); }
+}
+
+@media (max-width: 940px) and (prefers-reduced-motion: reduce) {
+  .row,
+  .row:last-child { position: relative; top: auto; }
+
+  .rowLink { transform: none; }
+  .rowLink::after { opacity: 0; }
+  .rowPlate img { animation: none; }
 }
 
 .magnet { padding-bottom: clamp(4rem, 8vw, 7rem); }
