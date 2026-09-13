@@ -42,142 +42,274 @@
 
 .nav { margin-inline-start: auto; }
 
+/* --- The capsule ----------------------------------------------------------
+   The four routes in one soft capsule of frosted glass. Fully rounded, a
+   hairline edge, a tint just strong enough to read as a surface, and a faint
+   highlight along the top edge the way light catches the lip of a glass. The
+   colours below are for the pale header; the reverse set is with the rest of
+   the over-dark rules at the foot of the file. */
 .list {
+  position: relative;
   display: flex;
-  align-items: center;
-  gap: clamp(1.25rem, 2.4vw, 2.5rem);
+  align-items: stretch;
+  gap: 0;
   list-style: none;
   margin: 0;
-  padding: 0;
+  padding: 0.3rem;
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--green) 14%, transparent);
+  background: color-mix(in srgb, var(--green) 5%, transparent);
+  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--wash) 70%, transparent);
+  backdrop-filter: blur(14px) saturate(1.2);
+  isolation: isolate;
+  transition:
+    background-color var(--dur-fast) var(--ease),
+    border-color var(--dur-fast) var(--ease),
+    box-shadow var(--dur-fast) var(--ease);
 }
 
+.item { display: flex; }
+
+/* One line of type tall, shared by both faces of the word so the roll lands
+   exactly one line up. */
 .link {
+  --line: 1.45rem;
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  padding: 0.5rem 1.1rem;
+  border-radius: 999px;
+  text-decoration: none;
+  color: var(--pine);
+  transition: opacity var(--dur) var(--ease), color var(--dur-fast) var(--ease);
+}
+
+.linkWindow {
+  display: block;
+  height: var(--line);
+  overflow: hidden;
+}
+
+.linkRoll {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: transform 0.6s var(--ease-out);
+}
+
+.linkSans,
+.linkSerif {
+  display: block;
+  height: var(--line);
+  line-height: var(--line);
+  white-space: nowrap;
+}
+
+.linkSans {
   font-family: var(--font-display);
   font-weight: 500;
   font-size: var(--t-small);
   letter-spacing: 0.005em;
-  color: var(--pine);
-  text-decoration: none;
-  position: relative;
-  padding-block: 0.4rem;
 }
 
-.link::after {
-  content: '';
-  position: absolute;
-  left: 0;
-  bottom: 0;
-  width: 100%;
-  height: 1px;
-  background: var(--green);
-  transform: scaleX(0);
-  /* At rest the rule is collapsed against its RIGHT edge, and on hover it grows
-     from its left. So it wipes in from the left and, when the pointer leaves,
-     carries on out to the right instead of retracing its own path. A rule that
-     un-draws itself reads as an undo; one that passes through reads as an
-     answer. The origin is not animated — it swaps at the moment the state
-     does, which is exactly when it should. */
-  transform-origin: right;
-  transition: transform var(--dur) var(--ease-out);
+/* Newsreader sets smaller on the eye than Archivo at the same size, so it is
+   nudged up to meet it; the negative tracking pulls the serif's looser fit in. */
+.linkSerif {
+  font-family: var(--font-body);
+  font-weight: 400;
+  font-size: 1.08rem;
+  letter-spacing: -0.01em;
 }
 
-.link:hover::after,
-.link:focus-visible::after {
-  transform: scaleX(1);
-  transform-origin: left;
-}
-
-/* The live route's rule is drawn and stays drawn. */
-.active::after {
-  transform: scaleX(1);
-  transform-origin: left;
+.link:hover .linkRoll,
+.link:focus-visible .linkRoll {
+  transform: translateY(-50%);
 }
 
 .active { color: var(--green); }
 
+.link:focus-visible {
+  outline: 1px solid currentColor;
+  outline-offset: -2px;
+}
+
+/* The pill of light. Inside the capsule's edge, behind the words, sized and
+   placed by the component. */
+.cell {
+  position: absolute;
+  top: 0.3rem;
+  bottom: 0.3rem;
+  left: 0;
+  z-index: -1;
+  list-style: none;
+  pointer-events: none;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--green) 10%, transparent);
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, var(--green) 12%, transparent),
+    inset 0 1px 0 color-mix(in srgb, var(--wash) 60%, transparent);
+}
+
 /* --- The bar answers as a group --------------------------------------------
-   Pointing at one item drops the others back. It is the difference between four
-   labels that happen to sit together and a bar that knows which one you are
-   reaching for, and it is four lines of CSS with no state and no listener.
+   Pointing at one route drops the others back, while the pill glides to the
+   same one. :has lets the capsule style its own children off one of them being
+   hovered; where it is not supported the pill still moves and nothing fades. */
+.list:has(.link:hover) .link { opacity: 0.55; }
+.list:has(.link:hover) .link:hover { opacity: 1; }
 
-   `:has` is the whole trick: the list styles its own children based on one of
-   them being hovered. Where it is not supported nothing happens and the links
-   behave exactly as they did — which is the right way round for this. */
-.list:has(.link:hover) .link {
-  opacity: 0.45;
+/* Room is tight between the tablet breakpoint and a laptop. */
+@media (max-width: 1120px) {
+  .link { padding-inline: 0.8rem; }
 }
 
-.list:has(.link:hover) .link:hover {
-  opacity: 1;
+/* --- Call Angus ------------------------------------------------------------
+   The one filled shape in the bar. A round badge holding the handset, with a
+   ring that leaves it slowly every few seconds, then the label and number in a
+   window one line tall that rolls on hover. Pale-header colours here. */
+.call {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-inline-start: clamp(1rem, 1.8vw, 1.75rem);
+  padding: 0.35rem 1.3rem 0.35rem 0.35rem;
+  overflow: hidden;
+  border-radius: 999px;
+  background: var(--green);
+  color: var(--wash);
+  text-decoration: none;
+  transition: background-color var(--dur-fast) var(--ease), color var(--dur-fast) var(--ease);
 }
 
-.link {
-  transition:
-    opacity var(--dur) var(--ease),
-    transform var(--dur) var(--ease-out);
+.callBadge {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 2.3rem;
+  height: 2.3rem;
+  flex: none;
+  border-radius: 50%;
+  background: var(--wash);
+  color: var(--green);
+  transition: transform 0.5s var(--ease-out);
 }
 
-/* The label lifts a hair. Small enough that nobody sees it move and everybody
-   feels the link is live, which is the whole job. */
-.link,
-.phone {
-  transition: transform var(--dur) var(--ease-out);
+/* The ring. It starts at the badge's own edge and leaves it, fading as it goes:
+   a phone ringing, drawn as a line. Every four seconds, which is slow enough to
+   read as alive rather than as asking. */
+.callRing {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 1px solid var(--wash);
+  opacity: 0;
+  animation: ring-out 4s var(--ease-out) infinite;
+  pointer-events: none;
 }
 
-.link:hover,
-.link:focus-visible,
-.phone:hover,
-.phone:focus-visible { transform: translateY(-1px); }
+@keyframes ring-out {
+  0% { transform: scale(1); opacity: 0.7; }
+  45% { transform: scale(1.75); opacity: 0; }
+  100% { transform: scale(1.75); opacity: 0; }
+}
 
-.phone {
+.glyph { display: block; }
+
+/* One copy of the words tall. The roll is two copies stacked, moved up by one. */
+.callWindow {
+  display: block;
+  overflow: hidden;
+  height: 2.05rem;
+}
+
+.callRoll {
   display: flex;
   flex-direction: column;
-  gap: 0.1rem;
-  text-decoration: none;
-  padding-inline-start: clamp(1.25rem, 2.4vw, 2.5rem);
-  border-inline-start: 1px solid var(--rule);
+  transition: transform 0.6s var(--ease-out);
 }
 
-.phoneLabel {
+.callWords {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.18rem;
+  height: 2.05rem;
+}
+
+.callLabel {
   font-family: var(--font-display);
   font-weight: 600;
-  font-size: var(--t-eyebrow);
+  font-size: 0.625rem;
   text-transform: uppercase;
-  letter-spacing: 0.12em;
-  color: var(--green);
-  opacity: 0.7;
+  letter-spacing: 0.18em;
+  line-height: 1;
+  color: var(--sage);
+  /* In step with the button fill behind it. The fill fades when the header
+     flips between dark and pale; a label that changed instantly sat for that
+     quarter second in its new colour on the old fill, and read at under 4:1. */
+  transition: color var(--dur-fast) var(--ease);
 }
 
-.phoneNumber {
-  position: relative;
+.callNumber {
   font-family: var(--font-display);
   font-weight: 600;
   font-size: var(--t-small);
-  color: var(--green);
   letter-spacing: 0.01em;
+  line-height: 1.1;
   white-space: nowrap;
 }
 
-/* The number is the most valuable link in the header and it had no hover at
-   all — the same rule the nav uses, on the same pass. */
-.phoneNumber::after {
-  content: '';
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: -0.2em;
-  height: 1px;
-  background: currentColor;
-  transform: scaleX(0);
-  transform-origin: right;
-  transition: transform var(--dur) var(--ease-out);
+.call:hover .callRoll,
+.call:focus-visible .callRoll { transform: translateY(-50%); }
+
+.call:hover .callBadge,
+.call:focus-visible .callBadge { transform: rotate(-12deg) scale(1.06); }
+
+.call:hover .glyph,
+.call:focus-visible .glyph { animation: handset 0.7s var(--ease) 1; }
+
+@keyframes handset {
+  0% { transform: rotate(0); }
+  18% { transform: rotate(-16deg); }
+  36% { transform: rotate(12deg); }
+  54% { transform: rotate(-8deg); }
+  72% { transform: rotate(4deg); }
+  100% { transform: rotate(0); }
 }
 
-.phone:hover .phoneNumber::after,
-.phone:focus-visible .phoneNumber::after {
-  transform: scaleX(1);
-  transform-origin: left;
+.call:focus-visible {
+  outline: 1px solid var(--green);
+  outline-offset: 3px;
 }
+
+/* Full width, inside the mobile menu. */
+.callBlock {
+  display: flex;
+  width: 100%;
+  margin-inline-start: 0;
+  padding: 0.5rem 1.4rem 0.5rem 0.5rem;
+}
+
+.callBlock .callBadge { width: 2.75rem; height: 2.75rem; }
+.callBlock .callWindow,
+.callBlock .callWords { height: 2.6rem; }
+.callBlock .callNumber { font-size: var(--t-sub); }
+
+/* The square in the bar on a phone, filled like the button it stands in for.
+   Hidden above the breakpoint. */
+.callCompact {
+  display: none;
+  place-items: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  margin-inline-start: auto;
+  border-radius: 50%;
+  background: var(--green);
+  color: var(--wash);
+  text-decoration: none;
+}
+
+.callCompact:active { transform: scale(0.96); }
 
 /* --- Mobile ---------------------------------------------------------------- */
 
@@ -187,6 +319,7 @@
   width: 2.75rem;
   height: 2.75rem;
   margin-inline-start: auto;
+  border-radius: 50%;
   background: none;
   border: 1px solid var(--rule);
   cursor: pointer;
@@ -220,6 +353,14 @@
 .barOpen::before { transform: translateY(0) rotate(-90deg); }
 .barOpen::after { opacity: 0; }
 
+/* With the menu open the header is a solid sheet. Translucent over the dark
+   hero, the blur pulled the green up through the bottom of the panel and the
+   call button sat on a grey band that was neither ground. */
+.menuOpen {
+  background: var(--wash);
+  backdrop-filter: none;
+}
+
 /* The rule above the panel is an inset shadow, not a border.
 
    A border occupies layout even at `max-height: 0`, so the closed panel was
@@ -236,7 +377,7 @@
 }
 
 .mobileOpen {
-  max-height: 22rem;
+  max-height: 30rem;
   box-shadow: inset 0 1px 0 var(--rule);
 }
 
@@ -276,7 +417,9 @@
 }
 
 .mobileLink {
-  display: block;
+  display: flex;
+  align-items: baseline;
+  gap: 0.9rem;
   padding: var(--s-3) 0;
   font-family: var(--font-display);
   font-weight: 600;
@@ -287,10 +430,24 @@
   border-bottom: 1px solid var(--rule);
 }
 
+/* The same numbering the rest of the site uses for its sheets. */
+.mobileIndex {
+  font-size: var(--t-fine);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: color-mix(in srgb, var(--green) 72%, var(--wash));
+  min-width: 1.4rem;
+}
+
+.mobileActive .mobileIndex { color: var(--green); }
+
+.mobileCall { padding-top: var(--s-4); }
+
 @media (max-width: 880px) {
   .nav { display: none; }
-  .phone { display: none; }
-  .toggle { display: block; }
+  .call:not(.callBlock) { display: none; }
+  .callCompact { display: grid; }
+  .toggle { display: block; margin-inline-start: var(--s-2); }
   .mobile { display: block; }
 }
 
@@ -308,17 +465,42 @@
 }
 
 .overDark .link,
-.overDark .phoneNumber,
 .overDark .active {
   color: var(--wash);
 }
 
-.overDark .phoneLabel {
-  color: var(--sage);
+.overDark .list {
+  border-color: color-mix(in srgb, var(--wash) 16%, transparent);
+  background: color-mix(in srgb, var(--wash) 7%, transparent);
+  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--wash) 14%, transparent);
 }
 
-.overDark .link::after {
-  background: var(--sage);
+.overDark .cell {
+  background: color-mix(in srgb, var(--wash) 14%, transparent);
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, var(--wash) 16%, transparent),
+    inset 0 1px 0 color-mix(in srgb, var(--wash) 22%, transparent);
+}
+
+.overDark .call {
+  background: var(--wash);
+  color: var(--green);
+}
+
+.overDark .callBadge {
+  background: var(--green);
+  color: var(--wash);
+}
+
+.overDark .callRing { border-color: var(--green); }
+
+.overDark .callLabel { color: color-mix(in srgb, var(--green) 72%, var(--wash)); }
+
+.overDark .call:focus-visible { outline-color: var(--wash); }
+
+.overDark .callCompact {
+  background: var(--wash);
+  color: var(--green);
 }
 
 .overDark .bar,
@@ -351,3 +533,21 @@
 }
 
 .overDark .progress { background: var(--wash); }
+
+@media (prefers-reduced-motion: reduce) {
+  .link:hover .linkRoll,
+  .link:focus-visible .linkRoll { transform: none; }
+
+  .link,
+  .linkRoll,
+  .callRoll,
+  .callBadge { transition: none; }
+
+  .callRing { animation: none; opacity: 0; }
+
+  .call:hover .glyph,
+  .call:focus-visible .glyph { animation: none; }
+
+  .call:hover .callRoll,
+  .call:focus-visible .callRoll { transform: none; }
+}
