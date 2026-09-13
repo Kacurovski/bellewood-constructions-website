@@ -86,9 +86,16 @@ export function Footer() {
             <dt className={styles.cellLabel}>Trading as</dt>
             <dd className={styles.cellValue}>{site.name}</dd>
           </div>
+          {/* This cell was "Effective — 1 July 2027", the date the ASIC name
+              change completes. Beside "Trading as", a future date read as though
+              the business or its licence were not valid until then, and a
+              visitor has no way to know otherwise. The date is not part of what
+              the advertising rule requires — that is the licensed entity and the
+              licence number, both still here — so it gives way to the field a
+              title block always carries: who is responsible for the work. */}
           <div className={styles.cell}>
-            <dt className={styles.cellLabel}>Effective</dt>
-            <dd className={styles.cellValue}>{compliance.nameChangeDate}</dd>
+            <dt className={styles.cellLabel}>{contact.role}</dt>
+            <dd className={styles.cellValue}>{contact.principal}</dd>
           </div>
         </dl>
 
