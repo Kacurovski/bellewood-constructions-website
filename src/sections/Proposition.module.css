@@ -343,3 +343,8 @@
     transition: none;
   }
 }
+
+/* The same floor as the eyebrow token on a phone: twelve pixels. */
+@media (max-width: 640px) {
+  .note .noteLabel { font-size: 0.75rem; }
+}

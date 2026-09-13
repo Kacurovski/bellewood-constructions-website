@@ -114,3 +114,24 @@
 @media (max-width: 520px) {
   .inner { grid-template-columns: minmax(0, 1fr); gap: var(--s-6); }
 }
+
+/* On a phone the footer's links were 16px tall and stacked 28px apart: small
+   enough to miss and close enough to hit the wrong one. Invisible hit areas
+   would overlap at that spacing, so each row becomes a real 44px row instead,
+   and the gap that used to separate them is folded into the row. */
+@media (max-width: 900px) {
+  .list { gap: 0; }
+
+  .list a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  .list .plain {
+    display: flex;
+    align-items: center;
+    min-height: 44px;
+  }
+}

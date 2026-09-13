@@ -263,6 +263,23 @@ a:hover { text-decoration-color: currentColor; }
   transform-origin: left;
 }
 
+/* On a touch screen these links are about 31px tall — a line of type and its
+   rule — under the 44px a thumb reliably hits. Growing the link itself would
+   carry the rule away from the words, so instead an invisible area is laid over
+   it, 44px tall and at least 44px wide, centred on the link. It is part of the
+   link, so a tap anywhere on it follows it, and nothing visible moves. */
+@media (pointer: coarse) {
+  .link-underline::before {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: max(100%, 44px);
+    height: 44px;
+    transform: translate(-50%, -50%);
+  }
+}
+
 /* --- Utilities ------------------------------------------------------------ */
 
 .visually-hidden {

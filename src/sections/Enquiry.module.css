@@ -167,3 +167,20 @@
   .step,
   .step:nth-child(odd) { margin-left: 0; }
 }
+
+/* The phone number and email in the ledger are a line of type. On touch, an
+   invisible 44px area is laid over each; the rows are 48px tall, so the areas
+   sit inside their own row and never reach the next. */
+@media (pointer: coarse) {
+  .dd a { position: relative; }
+
+  .dd a::before {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: max(100%, 44px);
+    height: 44px;
+    transform: translate(-50%, -50%);
+  }
+}

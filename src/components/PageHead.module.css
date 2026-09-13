@@ -121,3 +121,20 @@
   .row { grid-template-columns: minmax(0, 1fr); gap: 0.2rem; }
   .label { padding-top: 0; }
 }
+
+/* Links in the ledger are a line of 15px type. On touch, an invisible 44px area
+   is laid over each, centred, so a thumb finds it; the rows are far enough apart
+   that the areas never overlap. */
+@media (pointer: coarse) {
+  .value a { position: relative; }
+
+  .value a::before {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: max(100%, 44px);
+    height: 44px;
+    transform: translate(-50%, -50%);
+  }
+}

@@ -115,3 +115,7 @@
 @media (max-width: 800px) {
   .wrap { grid-template-columns: minmax(0, 1fr); }
 }
+
+@media (pointer: coarse) {
+  .input { min-height: 44px; }
+}

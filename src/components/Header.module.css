@@ -311,6 +311,29 @@
 
 .callCompact:active { transform: scale(0.96); }
 
+/* Neither round button gives up width to the logo. At 360px the flex row
+   shrank them to 40 and 42 pixels, under the 44 a thumb reliably hits. */
+.callCompact,
+.toggle { flex: none; }
+
+/* The narrowest phones in use, 320px wide. With both round buttons held at 44px
+   there is no longer room for the lockup at full size and its clear space, and
+   the menu button was pushed 26px off the screen. So below 360px the lockup
+   scales down to 140px wide, in proportion and with its clear space scaled with
+   it. It is resized, never stretched or cropped, and 140 is above the 120px the
+   brand sets as the smallest the full lockup may ever be shown. The inline size
+   the component sets has to be overridden, hence the !important. */
+@media (max-width: 359px) {
+  .brand > span {
+    width: 140px !important;
+    height: auto !important;
+    aspect-ratio: 900 / 234;
+    --clear: calc(140px * 234 / 900 * 0.34) !important;
+  }
+
+  .inner { gap: var(--s-3); }
+}
+
 /* --- Mobile ---------------------------------------------------------------- */
 
 .toggle {
@@ -550,4 +573,9 @@
 
   .call:hover .callRoll,
   .call:focus-visible .callRoll { transform: none; }
+}
+
+/* The same floor as the eyebrow token on a phone: twelve pixels. */
+@media (max-width: 640px) {
+  .callLabel { font-size: 0.75rem; }
 }

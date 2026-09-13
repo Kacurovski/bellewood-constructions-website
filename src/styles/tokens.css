@@ -119,3 +119,11 @@
     --header-h: 4.75rem;
   }
 }
+
+/* The eyebrow is 11px, which holds up on a laptop held at arm's length and is
+   small on a phone held closer but read in worse light. Twelve on a phone. */
+@media (max-width: 640px) {
+  :root {
+    --t-eyebrow: 0.75rem;
+  }
+}

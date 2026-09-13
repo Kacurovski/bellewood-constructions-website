@@ -178,3 +178,9 @@
 }
 
 :global(.on-green) .invalid .label { color: var(--clay); }
+
+/* A 36px field is a narrow strip to land a thumb on. On touch the ruled inputs
+   grow to 44px; the rule stays at the foot, where it was. */
+@media (pointer: coarse) {
+  .input:not(.textarea) { min-height: 44px; }
+}
