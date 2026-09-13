@@ -3,6 +3,7 @@ import { PageHead } from '../components/PageHead'
 import { ScrollWords } from '../components/ScrollWords'
 import { ComplianceLine } from '../components/ComplianceLine'
 import { ImageSlot } from '../components/ImageSlot'
+import { NameStudy } from '../components/NameStudy'
 import { usePageTitle } from '../hooks/usePageTitle'
 import { compliance, contact } from '../config/site'
 import { stills } from '../data/projects'
@@ -73,6 +74,11 @@ export default function About() {
             <h2 id="name-story" className={['section-heading', styles.nameHeading].join(' ')}>
               About the name
             </h2>
+            {/* The name, taken apart: Belle and wood, each pinned to what it
+                means. It fills the ground between the heading and the licensed
+                entity that the column used to leave empty, and it says in one
+                look what the first paragraph takes a sentence to say. */}
+            <NameStudy />
             {/* The licensed entity sits at the foot of this column rather than
                 under the paragraphs. It is the thing the story is about — same
                 company, same licence — and it stops the column being a heading
