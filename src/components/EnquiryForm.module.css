@@ -56,6 +56,41 @@
   outline-offset: 4px;
 }
 
+/* --- A field that needs attention -------------------------------------------
+   The rule under the input thickens and turns, and the reason is written
+   directly beneath it, so colour is never the only thing saying something is
+   wrong. The colour is a burnt clay from the timber end of the palette rather
+   than a signal red, which would be the loudest thing on a quiet page. There is
+   no error colour in the brand book, so it is set here and nowhere else.
+
+   On the pale ground it is about 7:1; on the green, where it has to be light,
+   a pale clay of about 7.5:1. */
+.form {
+  --clay: #8a3b1f;
+}
+
+:global(.on-green) .form {
+  --clay: #f2c9b0;
+}
+
+.invalid .input,
+.invalid .input:hover {
+  border-bottom-color: var(--clay);
+  border-bottom-width: 2px;
+  padding-bottom: calc(0.55rem - 1px);
+}
+
+.invalid .label { color: var(--clay); }
+
+.error {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: var(--t-fine);
+  letter-spacing: 0.01em;
+  color: var(--clay);
+}
+
 .textarea {
   resize: vertical;
   min-height: 6rem;
@@ -134,3 +169,12 @@
 :global(.on-green) .input:focus {
   border-bottom-color: var(--wash);
 }
+
+/* The dark band restyles labels and inputs with rules of the same weight that
+   come later in this file, so the flagged state is restated here to win. */
+:global(.on-green) .invalid .input,
+:global(.on-green) .invalid .input:hover {
+  border-bottom-color: var(--clay);
+}
+
+:global(.on-green) .invalid .label { color: var(--clay); }

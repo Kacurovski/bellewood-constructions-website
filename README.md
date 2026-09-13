@@ -954,6 +954,31 @@ something to lose to a placeholder.
 Both forms carry a honeypot field. It is not a captcha and it is not perfect, but
 it is free and it does not make a real person prove anything.
 
+### What the enquiry form sends
+
+When the webhook is connected, map these fields. Every enquiry arrives as flat
+JSON with `source: "website-enquiry"`:
+
+| Field | Required | Notes |
+| --- | --- | --- |
+| `firstName` | yes | |
+| `lastName` | yes | |
+| `name` | — | `firstName` and `lastName` joined, for a mapping that wants one field |
+| `email` | yes | Must contain an `@` and a dot after it |
+| `phone` | yes | At least eight digits; spaces, brackets, dashes and a leading `+` allowed |
+| `suburb` | no | |
+| `message` | no | |
+| `submittedAt` | — | ISO timestamp, added by the pipeline |
+| `page` | — | The URL the enquiry was sent from, added by the pipeline |
+
+The required fields are enforced in `src/components/EnquiryForm.tsx`, not only
+marked. The form turns off the browser's own validation because its bubbles are
+unstyled and differ between browsers, so it checks the fields itself: a missing
+or malformed field is flagged under its own rule with the reason, focus moves to
+the first one, and nothing is sent until they are right. The format checks are
+deliberately loose. A stricter phone pattern turns away a real person who writes
+their number the way they always have.
+
 ---
 
 ## Open items
