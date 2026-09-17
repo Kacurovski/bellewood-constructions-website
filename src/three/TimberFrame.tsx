@@ -5,15 +5,16 @@ import { FRAME_BOUNDS, FRAME_MEMBERS } from './frameMembers'
 import type { MaterialKey } from './frameMembers'
 
 /**
- * Scene 3 — a Queenslander going up.
+ * Scene 3 — a Paddington cottage and its Ashgrove-style extension going up.
  *
- * An orthographic, drawing-like view of a high-set Queensland house built in
- * the order a building actually goes up: stumps and bearers, the floor, the
- * wall frame and the verandah posts, the hipped roof, then the enclosure —
- * weatherboards, sash windows, sheet roof, verandah and stair. Line-work first,
- * then solid timber, then a finished house with the lights on.
+ * An orthographic, drawing-like view of a Queensland worker's cottage with a
+ * contemporary wing behind it, built in the order a renovation reads: at every
+ * stage the old house first, then the new wing. Stumps and bearers, wall
+ * frames, the cottage's hip and bullnose and the extension's flat roof, then
+ * weatherboard on the old and charred timber and glass on the new. Line-work
+ * first, then solid timber, then a finished house with the lights on.
  *
- * Several hundred members at real sections and real centres, drawn in five
+ * Several hundred members at real sections and real centres, drawn in six
  * instanced calls plus one line buffer. That is what lets it be a building
  * rather than a diagram of one. See frameMembers.ts for the house itself.
  */
@@ -29,6 +30,8 @@ const LINE = '#1c4129'
 const MATERIALS: Record<MaterialKey, { color: string; roughness: number }> = {
   frame: { color: '#9a7b4f', roughness: 0.84 },
   clad: { color: '#ab8354', roughness: 0.88 },
+  // The extension's boards. The same charred timber as the hero's new wing.
+  charred: { color: '#2b2723', roughness: 0.78 },
   deck: { color: '#8f7248', roughness: 0.9 },
   roof: { color: '#10251a', roughness: 0.62 },
   glass: { color: '#41544c', roughness: 0.16 },
@@ -302,13 +305,13 @@ export default function TimberFrame({
  */
 function Fit() {
   const corners = useMemo(() => {
-    const { depth, height, deckZ, ground, halfWidth, centreY } = FRAME_BOUNDS
-    // The roof's eave is wider than the walls, so the width comes from the eave.
-    const hx = halfWidth + 0.2
+    const { height, ground, halfWidth, minZ, maxZ, centreY } = FRAME_BOUNDS
+    // Measured from the model: eaves, the extension and the deck included.
+    const hx = halfWidth + 0.15
     const out: THREE.Vector3[] = []
     for (const x of [-hx, hx]) {
       for (const y of [ground - 0.1 - centreY, height + 0.15 - centreY]) {
-        for (const z of [-depth / 2 - 0.7, deckZ + 0.2]) out.push(new THREE.Vector3(x, y, z))
+        for (const z of [minZ - 0.15, maxZ + 0.15]) out.push(new THREE.Vector3(x, y, z))
       }
     }
     return out

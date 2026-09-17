@@ -85,6 +85,7 @@ const KEY: V3 = [-0.55, 0.7, 0.45]
 const TONE: Record<MaterialKey, { base: string; shade: string }> = {
   frame: { base: '#9a7b4f', shade: '#4a3d2a' },
   clad: { base: '#ab8354', shade: '#4f3f28' },
+  charred: { base: '#3b352f', shade: '#161412' },
   deck: { base: '#8f7248', shade: '#443722' },
   roof: { base: '#22392c', shade: '#0b1a12' },
   glass: { base: '#ffd7a2', shade: '#b58048' },

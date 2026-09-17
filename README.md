@@ -416,7 +416,7 @@ drawing rather than a blank space:
 |---|---|---|
 | `HeritageStudy` | A Queenslander with a contemporary extension on the back. The proposition of the business as one object. | `HeritageStudyStill` |
 | `SiteMesh` | Job-site mesh: a green field carrying the reverse lockup, passing at walking pace. The signature moment, and Angus's own idea. | `SiteMeshStill` — the same field, hung flat |
-| `TimberFrame` | A traditional Queenslander going up in the order a building actually goes up. Line-work first, then solid, then lit. | `TimberFrameStill` |
+| `TimberFrame` | A Paddington worker's cottage with an Ashgrove-style extension going up: the old house first, the new wing after it. Line-work first, then solid, then lit. | `TimberFrameStill` |
 
 ### The hero object
 
@@ -451,7 +451,7 @@ each contributes:
 so each member is baked at its true size into one merged geometry per material:
 six draw calls, and roughly 240 fps under software rendering. Instancing would
 force one shared box scaled per member, and a non-uniform scale distorts a
-fillet. The Queenslander in the process section is the opposite case — its members grow
+fillet. The cottage in the process section is the opposite case — its members grow
 — so that one stays instanced.
 
 This column has been three things, and the reasons are worth keeping. A flat
@@ -873,38 +873,54 @@ being dragged.
 All of it is off under `prefers-reduced-motion`, where the photographs simply
 appear.
 
-**The timber frame is a real building**, not a diagram of one. It is a traditional
-high-set Queenslander at real sections and real centres: timber stumps, bearers
-and joists, studs at 750, then a hipped roof framed to a short ridge with a
-shallow skillion over a full-width front verandah. It finishes with weatherboards
-and corner boards, tall sash windows with hoods over the side ones, corrugated
-sheet laid strip by strip, a picket balustrade with post brackets, a central
-stair to the ground, a batten screen under the verandah, and the lights coming on
-at the very end.
+**The timber frame is a real building**, not a diagram of one, and it is the
+two houses Angus named in his review of the first draft: a **Paddington worker's
+cottage** with an **Ashgrove-style extension** behind it.
 
-It replaced a modern two-storey cabin after Angus reviewed the first draft: this
-business renovates heritage homes, and the one house it does not build is a new
-cabin. The mechanic did not change — only the model in `three/frameMembers.ts`.
+The cottage is narrow, 6.6m across the front, and raised on timber stumps, under
+a hipped roof close enough to square to read as a pyramid. Its full-width
+verandah has a **bullnose** roof, the curved sheet that is the signature of the
+style, with a batten frieze under the beam, brackets at the post heads and a
+picket balustrade. It has weatherboards and corner boards, tall sash windows with
+hoods on the side ones, and a central stair down to the street. The extension
+steps out past the cottage's side: charred vertical boards, the same charred
+timber as the hero's new wing, under a flat roof that tucks beneath the cottage's
+back eave, with a wall of sliding glass onto a deck.
 
-Two things about the roof are worth knowing before changing it. A hip is four
-planes that are not all tilted about the same axis, so members carry an optional
-`ry` and `rz` as well as `rx`, applied in three.js `YXZ` order by both the scene
-and the still. And the sheet strips draw no line-work (`lines: false`): the
-drawing stays on faintly once the house is built, in Bellewood Green, which is
-lighter than the Deep Pine roof, so every seam drew a pale streak down the slope.
-The still, which has no depth buffer, draws in `layer` order — house, verandah
-roof, main roof — because sorting by depth alone put the top weatherboards over
-the eaves.
+It goes up in the order a renovation reads. At every stage the cottage comes
+first and the new wing after it, so the section tells the story of the work:
+keep the old house, add to it. It replaced a modern two-storey cabin, which was
+the one kind of house this business does not build. The mechanic did not change,
+only the model in `three/frameMembers.ts`.
 
-Windows are real openings. `claddingRects` in `three/frameMembers.ts` subtracts
-each opening from its wall and returns the board strips that remain, so the
-cladding is generated around the glazing rather than having window shapes stuck
-on top of it. Openings are then framed with four members and glazed behind them —
+A few things are worth knowing before changing the model:
+
+- A hip is four planes that do not all tilt about the same axis, so members carry
+  an optional `ry` and `rz` as well as `rx`, applied in three.js `YXZ` order
+  by both the scene and the still.
+- The bullnose is set from its two ends, the wall and the gutter, and its radius
+  is whatever joins them. Set from a radius, its top landed above the wall and
+  the roof climbed away from the house before it turned down.
+- Roof sheet draws no line-work (`lines: false`). The drawing stays on faintly
+  once the house is built, in Bellewood Green, which is lighter than the Deep
+  Pine sheet, so every seam drew a pale streak down the slope.
+- The still has no depth buffer, so it draws in `layer` order: the house body,
+  then the lower roofs, then the cottage's hip. Sorting by depth alone put the
+  top weatherboards over the eaves.
+- Members are re-centred on the origin after they are built, and the camera fit
+  reads the measured bounds, because the extension and deck put the whole well
+  off the cottage's own centre.
+
+Windows are real openings. `cladding` in `three/frameMembers.ts` subtracts each
+opening from its wall and returns the boards that remain, so the cladding is
+generated around the glazing rather than having window shapes stuck on top of
+it. The same routine gives the cottage horizontal weatherboards and the extension
+vertical boards, by swapping the wall's two axes. Openings are then framed with four members and glazed behind them —
 a single panel behind the glass, however thin, sits in front of it on whichever
 side the camera is on and turns every window into a black rectangle.
 
-Performance comes from two things. Members are grouped by material into five
-instanced meshes plus one line buffer, so the whole building is six draw calls.
+Performance comes from two things. Members are grouped by material into six
+instanced meshes plus one line buffer, so the whole building is seven draw calls.
 And a member that has finished growing is never recomputed — across the section
 only a handful are in motion at once, which is what makes three hundred members
 affordable on a phone.
