@@ -1,9 +1,21 @@
+/* --- The bar ---------------------------------------------------------------
+   Solid, not glass.
+
+   It used to be the page ground at 86%, blurred, which looked right over a pale
+   page and was the light green Angus kept seeing everywhere else: the bar
+   floats over the dark green hero and over every page's masthead, and six or
+   fourteen per cent of transparency plus a blur is enough to pull that green up
+   through the whole bar. Measured over the About masthead it came out
+   rgb(232,236,232) — a green-grey, across the full width of the header.
+
+   Opaque, it is the page's own white wherever it is not over the dark band, and
+   there is nothing left for the green to come through. The blur goes with the
+   transparency: there is nothing behind to blur. */
 .header {
   position: sticky;
   top: 0;
   z-index: 40;
-  background: color-mix(in srgb, var(--wash) 86%, transparent);
-  backdrop-filter: blur(10px);
+  background: var(--wash);
   border-bottom: 1px solid transparent;
   transition: border-color var(--dur) var(--ease),
               background var(--dur) var(--ease);
@@ -12,7 +24,7 @@
 /* The rule appears only once the page has moved. Nothing decorative sits at rest. */
 .scrolled {
   border-bottom-color: var(--rule);
-  background: color-mix(in srgb, var(--wash) 94%, transparent);
+  background: var(--wash);
 }
 
 /* The border is INSIDE the declared height, not added to it.
@@ -62,7 +74,7 @@
      read as a faint green wash across the bar. It is now white over the page,
      and its edge is the page's own hairline rather than a green one. */
   border: 1px solid var(--rule);
-  background: color-mix(in srgb, var(--paper) 58%, transparent);
+  background: color-mix(in srgb, var(--paper) 72%, transparent);
   box-shadow: inset 0 1px 0 color-mix(in srgb, var(--wash) 70%, transparent);
   backdrop-filter: blur(14px) saturate(1.2);
   isolation: isolate;
