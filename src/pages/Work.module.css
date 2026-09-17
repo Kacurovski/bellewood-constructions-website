@@ -55,7 +55,10 @@
   height: calc(100svh - var(--header-h) - clamp(6rem, 10vw, 9rem));
   min-height: 18rem;
   overflow: hidden;
-  background: color-mix(in srgb, var(--green) 12%, var(--wash));
+  /* What shows behind the photograph while it loads, and around it if it
+       ever does not fill. A green tint here was one more light green ground, so
+       it is the same white as every other panel. */
+  background: var(--sage-panel);
   /* Six of these tracking a pointer is the one place a stray repaint shows. */
   contain: paint;
 }
