@@ -416,7 +416,7 @@ drawing rather than a blank space:
 |---|---|---|
 | `HeritageStudy` | A Queenslander with a contemporary extension on the back. The proposition of the business as one object. | `HeritageStudyStill` |
 | `SiteMesh` | Job-site mesh: a green field carrying the reverse lockup, passing at walking pace. The signature moment, and Angus's own idea. | `SiteMeshStill` — the same field, hung flat |
-| `TimberFrame` | A cabin going up in the order a building actually goes up. Line-work first, then solid, then lit. | `TimberFrameStill` |
+| `TimberFrame` | A traditional Queenslander going up in the order a building actually goes up. Line-work first, then solid, then lit. | `TimberFrameStill` |
 
 ### The hero object
 
@@ -451,7 +451,7 @@ each contributes:
 so each member is baked at its true size into one merged geometry per material:
 six draw calls, and roughly 240 fps under software rendering. Instancing would
 force one shared box scaled per member, and a non-uniform scale distorts a
-fillet. The cabin in the process section is the opposite case — its members grow
+fillet. The Queenslander in the process section is the opposite case — its members grow
 — so that one stays instanced.
 
 This column has been three things, and the reasons are worth keeping. A flat
@@ -873,11 +873,28 @@ being dragged.
 All of it is off under `prefers-reduced-motion`, where the photographs simply
 appear.
 
-**The timber frame is a real building**, not a diagram of one. It is a two-storey
-cabin of three hundred-odd members at real sections and real centres: bearers and
-joists under the floor, studs at 800, a floor between the storeys, rafters to a
-ridge with eaves, then cladding on all four walls, framed and glazed openings, a
-roof, a deck with its balustrade, and the lights coming on at the very end.
+**The timber frame is a real building**, not a diagram of one. It is a traditional
+high-set Queenslander at real sections and real centres: timber stumps, bearers
+and joists, studs at 750, then a hipped roof framed to a short ridge with a
+shallow skillion over a full-width front verandah. It finishes with weatherboards
+and corner boards, tall sash windows with hoods over the side ones, corrugated
+sheet laid strip by strip, a picket balustrade with post brackets, a central
+stair to the ground, a batten screen under the verandah, and the lights coming on
+at the very end.
+
+It replaced a modern two-storey cabin after Angus reviewed the first draft: this
+business renovates heritage homes, and the one house it does not build is a new
+cabin. The mechanic did not change — only the model in `three/frameMembers.ts`.
+
+Two things about the roof are worth knowing before changing it. A hip is four
+planes that are not all tilted about the same axis, so members carry an optional
+`ry` and `rz` as well as `rx`, applied in three.js `YXZ` order by both the scene
+and the still. And the sheet strips draw no line-work (`lines: false`): the
+drawing stays on faintly once the house is built, in Bellewood Green, which is
+lighter than the Deep Pine roof, so every seam drew a pale streak down the slope.
+The still, which has no depth buffer, draws in `layer` order — house, verandah
+roof, main roof — because sorting by depth alone put the top weatherboards over
+the eaves.
 
 Windows are real openings. `claddingRects` in `three/frameMembers.ts` subtracts
 each opening from its wall and returns the board strips that remain, so the

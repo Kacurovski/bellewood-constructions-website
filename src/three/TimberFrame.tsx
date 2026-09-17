@@ -5,16 +5,17 @@ import { FRAME_BOUNDS, FRAME_MEMBERS } from './frameMembers'
 import type { MaterialKey } from './frameMembers'
 
 /**
- * Scene 3 — the cabin going up.
+ * Scene 3 — a Queenslander going up.
  *
- * An orthographic, drawing-like view of a two-storey timber cabin built in the
- * order a building actually goes up: substructure and floor, walls, the storey
- * above, the roof, then the enclosure. Line-work first, then solid timber, then
- * a finished house with the lights on.
+ * An orthographic, drawing-like view of a high-set Queensland house built in
+ * the order a building actually goes up: stumps and bearers, the floor, the
+ * wall frame and the verandah posts, the hipped roof, then the enclosure —
+ * weatherboards, sash windows, sheet roof, verandah and stair. Line-work first,
+ * then solid timber, then a finished house with the lights on.
  *
- * Three hundred-odd members at real sections and real centres, drawn in five
+ * Several hundred members at real sections and real centres, drawn in five
  * instanced calls plus one line buffer. That is what lets it be a building
- * rather than a diagram of one.
+ * rather than a diagram of one. See frameMembers.ts for the house itself.
  */
 
 const LINE = '#1c4129'
@@ -76,7 +77,10 @@ function Building({ progress }: { progress: React.MutableRefObject<number> }) {
   const quats = useMemo(
     () =>
       FRAME_MEMBERS.map((m) =>
-        new THREE.Quaternion().setFromEuler(new THREE.Euler(m.rx, 0, 0)),
+        // 'YXZ': roll, then pitch, then yaw. The hip needs all three — a sheet
+        // on a hip end rolls, a hip rafter pitches and yaws — and a member with
+        // only a pitch comes out exactly as it did under the default order.
+        new THREE.Quaternion().setFromEuler(new THREE.Euler(m.rx, m.ry ?? 0, m.rz ?? 0, 'YXZ')),
       ),
     [],
   )
@@ -168,14 +172,16 @@ function Building({ progress }: { progress: React.MutableRefObject<number> }) {
       if (mesh) mesh.setMatrixAt(layout.slot[i], scratch.matrix)
 
       const base = i * EDGE_INDICES.length
+      // A member not yet placed, or one that draws no line (the roof sheet),
+      // collapses to a point and draws nothing.
+      const draws = t > 0.001 && m.lines !== false
       for (let e = 0; e < EDGE_INDICES.length; e++) {
         const c = UNIT_CORNERS[EDGE_INDICES[e]]
         scratch.corner.set(c[0], c[1], c[2]).applyMatrix4(scratch.matrix)
         const o = (base + e) * 3
-        // A member not yet placed collapses to a point and draws nothing.
-        arr[o] = t > 0.001 ? scratch.corner.x : 0
-        arr[o + 1] = t > 0.001 ? scratch.corner.y : 0
-        arr[o + 2] = t > 0.001 ? scratch.corner.z : 0
+        arr[o] = draws ? scratch.corner.x : 0
+        arr[o + 1] = draws ? scratch.corner.y : 0
+        arr[o + 2] = draws ? scratch.corner.z : 0
       }
     }
 
@@ -272,7 +278,9 @@ export default function TimberFrame({
         // ground rather than floating above it.
         <mesh
           rotation={[-Math.PI / 2, 0, 0]}
-          position={[0, -FRAME_BOUNDS.centreY - 0.95, 0]}
+          // On the ground, not under the floor: the house is high-set, and a
+          // shadow under the floor line would float a metre and a half up.
+          position={[0, FRAME_BOUNDS.ground - FRAME_BOUNDS.centreY - 0.005, 0]}
           receiveShadow
         >
           <planeGeometry args={[44, 44]} />
@@ -294,12 +302,13 @@ export default function TimberFrame({
  */
 function Fit() {
   const corners = useMemo(() => {
-    const { length, depth, height, deckZ, centreY } = FRAME_BOUNDS
-    const hx = length / 2 + 0.5
+    const { depth, height, deckZ, ground, halfWidth, centreY } = FRAME_BOUNDS
+    // The roof's eave is wider than the walls, so the width comes from the eave.
+    const hx = halfWidth + 0.2
     const out: THREE.Vector3[] = []
     for (const x of [-hx, hx]) {
-      for (const y of [-1.1 - centreY, height + 0.25 - centreY]) {
-        for (const z of [-depth / 2 - 0.5, deckZ + 0.2]) out.push(new THREE.Vector3(x, y, z))
+      for (const y of [ground - 0.1 - centreY, height + 0.15 - centreY]) {
+        for (const z of [-depth / 2 - 0.7, deckZ + 0.2]) out.push(new THREE.Vector3(x, y, z))
       }
     }
     return out

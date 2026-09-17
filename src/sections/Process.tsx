@@ -83,7 +83,7 @@ export function Process({ headless = false }: { headless?: boolean } = {}) {
           <div className={styles.sceneWrap}>
             <SceneFrame
               className={styles.scene}
-              label="A timber frame assembling: bearers, studs and plates, the roof pitch, then cladding."
+              label="A Queenslander going up: stumps and bearers, the wall frame, a hipped roof, then weatherboards, the verandah and the front stair."
               still={<TimberFrameStill className={styles.still} />}
             >
               <TimberFrame progress={progress} />
