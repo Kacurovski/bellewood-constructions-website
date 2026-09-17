@@ -203,6 +203,12 @@ does not.
 
 ## Dark grounds are Bellewood Green, never Deep Pine
 
+**The page ground changed on 17 September 2026 too**: the green-tinted wash
+read creamy and minty to Angus, and he confirmed a crisp white looks better, so
+`--wash` is `#F7F7F4` and every light green panel is white (`--sage-panel` is now
+Paper). Sage itself is unchanged: it is a text and mark colour on the dark bands,
+not a background.
+
 **Bellewood Green changed on 17 September 2026**, at Angus's request: it now
 matches the heritage green Finlayson's, his timber merchant, use on their site —
 `#05432A`, read off the block that carries "prices are indicative only" in white.

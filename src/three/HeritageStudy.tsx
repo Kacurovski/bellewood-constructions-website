@@ -136,8 +136,12 @@ function StudioSky() {
    full strength is unmistakable. Nothing is lit; one thing is simply still
    there while everything else has gone quiet. */
 
-/** How far a material that is not being keyed falls back towards the panel. */
-const FADE_TO = '#dee6da'
+/** How far a material that is not being keyed falls back towards the panel.
+    The panel behind this scene went white when the light green grounds did, so
+    the colour the house falls back towards followed it. Fading towards the old
+    sage tint would leave every quiet material a green-grey that no longer
+    matches anything on the page. */
+const FADE_TO = '#ffffff'
 const FADED = 0.84
 
 /** The windows carry a little light of their own at rest, keyed or not; they
@@ -428,7 +432,7 @@ export default function HeritageStudy({
 
       {/* Late afternoon. A warm key over the left shoulder, a cool fill, and the
           sky doing most of the work. */}
-      <hemisphereLight args={['#f7f9f0', '#b6c5ae', 0.55]} />
+      <hemisphereLight args={['#f7f7f4', '#b6c5ae', 0.55]} />
       <directionalLight
         position={[-9, 13, 10]}
         intensity={1.55}

@@ -258,7 +258,7 @@ export default function TimberFrame({
 
       {/* Late afternoon, not a product shot. A warm key from over the left
           shoulder, a cool sky fill, and nothing else. */}
-      <hemisphereLight args={['#f7f9f0', '#afc3b0', 1.0]} />
+      <hemisphereLight args={['#f7f7f4', '#afc3b0', 1.0]} />
       <directionalLight
         position={[-9, 12, 9]}
         intensity={1.85}

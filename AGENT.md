@@ -71,7 +71,7 @@ a purer green, and that is what he was after. Everything else below stands.
 |---|---|---|
 | Bellewood Green | `#05432A` | Primary. Mark, headings, solid grounds |
 | Deep Pine | `#10251A` | Body text, fine rules |
-| Wash | `#F7F9F0` | Page ground. Green-tinted off-white, not a warm cream |
+| Wash | `#F7F7F4` | Page ground. A crisp near-white since 17 Sep 2026; was the green-tinted `#F7F9F0` |
 | Sage | `#AFC3B0` | Panels, dividers. Never body text |
 | Silky Oak | `#9A7B4F` | Timber accent, sparingly. Fails text contrast, decorative only |
 | Paper | `#FFFFFF` | Clean print surfaces |

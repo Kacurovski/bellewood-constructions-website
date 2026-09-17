@@ -23,7 +23,12 @@
      reads as less heavy. Do not "correct" it back. */
   --green: #05432a;
   --pine: #10251a;         /* Deep Pine. Body text and fine rules */
-  --wash: #f7f9f0;         /* Wash. The brand ground. Green-tinted, NOT a warm cream */
+  /* The page ground.
+
+     Changed from #f7f9f0 on 17 September 2026, on the call: Angus found the
+     green-tinted wash creamy and minty, and confirmed a crisp white reads
+     better. This is the value he approved, taken from the preview he saw. */
+  --wash: #f7f7f4;
   --sage: #afc3b0;         /* Sage. Panels and dividers. Never body text */
   --timber: #9a7b4f;       /* Silky Oak. Accent only. Fails text contrast — decorative */
   --paper: #ffffff;        /* Documents and anything that must print clean */
@@ -38,7 +43,12 @@
      on a dark ground (see global.css) so nothing has to restate it per
      section, which is what keeps the sheet marks portable. */
   --ink: color-mix(in srgb, var(--pine) 30%, transparent);
-  --sage-panel: color-mix(in srgb, var(--sage) 34%, var(--wash));
+  /* Panels are white now, not a tint of Sage. Same call: every light green
+     surface goes white. Sage itself stays as it was — it is a text and mark
+     colour on the dark bands, not a background, and nothing there is green
+     against green. Panels sit a shade brighter than the page so a plate still
+     reads as a surface laid on the ground rather than a hole in it. */
+  --sage-panel: var(--paper);
 
   /* Safe pairs (brand book §06):
        Deep Pine on Wash    15.3:1  AAA  body, the default
