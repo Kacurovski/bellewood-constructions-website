@@ -203,6 +203,13 @@ does not.
 
 ## Dark grounds are Bellewood Green, never Deep Pine
 
+**Bellewood Green changed on 17 September 2026**, at Angus's request: it now
+matches the heritage green Finlayson's, his timber merchant, use on their site —
+`#05432A`, read off the block that carries "prices are indicative only" in white.
+It replaced `#1C4129` everywhere the green sat, the three scenes included. It is
+not lighter, whatever it looks like: the two are within one per cent of each
+other in luminance, and what changed is purity. Do not correct it back.
+
 The brand book assigns each colour a job, and `tokens.css` records them:
 **Green — "the mark, headings, solid grounds"**, **Pine — "body text and fine
 rules"**.

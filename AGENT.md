@@ -59,9 +59,17 @@ Styling: CSS Modules or vanilla CSS with custom properties. No Tailwind, no comp
 
 ## 3. Brand system, locked
 
+**One change since the brief, and it is the client's.** On 17 September 2026
+Angus asked for the primary green to match the heritage green his timber
+merchant uses: the block carrying "prices are indicative only" on
+finlayson.com.au. That colour was read off their site, not matched by eye, and
+Bellewood Green is now `#05432A` rather than `#1C4129`. It is not lighter —
+measured, the two are within one per cent of each other in luminance — but it is
+a purer green, and that is what he was after. Everything else below stands.
+
 | Name | Hex | Role |
 |---|---|---|
-| Bellewood Green | `#1C4129` | Primary. Mark, headings, solid grounds |
+| Bellewood Green | `#05432A` | Primary. Mark, headings, solid grounds |
 | Deep Pine | `#10251A` | Body text, fine rules |
 | Wash | `#F7F9F0` | Page ground. Green-tinted off-white, not a warm cream |
 | Sage | `#AFC3B0` | Panels, dividers. Never body text |

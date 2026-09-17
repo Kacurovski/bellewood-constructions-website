@@ -9,7 +9,19 @@
   /* --- Colour -------------------------------------------------------------
      Balance is roughly 60 ground / 30 green / 10 accent. The green should feel
      placed, not poured. The timber accent appears at most once per screen. */
-  --green: #1c4129;        /* Bellewood Green. The mark, headings, solid grounds */
+  /* Bellewood Green. The mark, headings, solid grounds.
+
+     Changed from #1c4129 on 17 September 2026, at Angus's request after he
+     reviewed the first draft: match the heritage green Finlayson's use, his
+     timber merchant. Read off their site rather than matched by eye — it is the
+     background of the "prices are indicative only" block on finlayson.com.au,
+     which carries white text over it.
+
+     It is not lighter, whatever it looks like: measured, the two are within one
+     per cent of each other in luminance. What changed is purity. The old green
+     carried more grey and red; this one is a cleaner green, and that is what
+     reads as less heavy. Do not "correct" it back. */
+  --green: #05432a;
   --pine: #10251a;         /* Deep Pine. Body text and fine rules */
   --wash: #f7f9f0;         /* Wash. The brand ground. Green-tinted, NOT a warm cream */
   --sage: #afc3b0;         /* Sage. Panels and dividers. Never body text */

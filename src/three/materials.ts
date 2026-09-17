@@ -62,4 +62,4 @@ export const TONE: Record<MaterialKey, { base: string; shade: string }> = {
 }
 
 /** Bellewood Green, used for every line in both scenes. */
-export const LINE_COLOUR = '#1c4129'
+export const LINE_COLOUR = '#05432a'

@@ -148,7 +148,7 @@ function useMeshTexture() {
       const ctx = canvas.getContext('2d')
       if (!ctx) return
 
-      ctx.fillStyle = '#1c4129'
+      ctx.fillStyle = '#05432a'
       ctx.fillRect(0, 0, w, h)
 
       // Perforation. Fine, regular, and slightly irregular in weight so it does
@@ -230,7 +230,7 @@ function Scrim({ progress }: { progress: React.MutableRefObject<number> }) {
       uMap: { value: null as THREE.Texture | null },
       uRepeat: { value: new THREE.Vector2(3, 3) },
       uOffset: { value: new THREE.Vector2(0, 0) },
-      uGround: { value: new THREE.Color('#1c4129') },
+      uGround: { value: new THREE.Color('#05432a') },
     }),
     [],
   )
@@ -281,7 +281,7 @@ export default function SiteMesh({ progress }: { progress: React.MutableRefObjec
       gl={{ antialias: true, alpha: false, powerPreference: 'high-performance' }}
       resize={{ scroll: false }}
     >
-      <color attach="background" args={['#1c4129']} />
+      <color attach="background" args={['#05432a']} />
       <Scrim progress={progress} />
     </Canvas>
   )

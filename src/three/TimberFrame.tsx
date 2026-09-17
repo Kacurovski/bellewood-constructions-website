@@ -19,7 +19,7 @@ import type { MaterialKey } from './frameMembers'
  * rather than a diagram of one. See frameMembers.ts for the house itself.
  */
 
-const LINE = '#1c4129'
+const LINE = '#05432a'
 
 /**
  * The palette. Silky Oak is the brand's timber accent and it carries the

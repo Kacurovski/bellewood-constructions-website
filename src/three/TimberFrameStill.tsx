@@ -172,7 +172,7 @@ export function TimberFrameStill({ className }: { className?: string }) {
           key={i}
           points={p.pts}
           fill={p.fill}
-          stroke="#1c4129"
+          stroke="#05432a"
           strokeWidth={0.008}
           strokeOpacity={0.55}
           strokeLinejoin="round"
