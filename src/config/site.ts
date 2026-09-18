@@ -146,11 +146,37 @@ export const forms = {
      `contact.email` deliberately — two addresses on one one-man business is how
      an enquiry ends up in a mailbox nobody opens. */
   notifyTo: contact.email,
+  /**
+   * The lead magnet.
+   *
+   * REPOSITIONED 17 September 2026, from the client call. It was "the 18-point
+   * checklist for first-time home builders", which came from the Service
+   * Agreement's working concept and describes a business Angus is not in: he
+   * does major renovations and extensions to older homes, not new builds. A
+   * first-home-builder checklist attracts the one enquiry he cannot take.
+   *
+   * It is now a major renovation checklist, in his words.
+   *
+   * No count in the title. He is supplying 12 to 18 points and the number is
+   * not settled; "18-point" was a promise the file could not keep. Put the
+   * count back once the points arrive and there is something to count.
+   *
+   * Email only, and that is deliberate, not an omission: he asked for no phone
+   * number on this one. Someone downloading a checklist is reading, not
+   * enquiring, and asking for a phone number at that moment costs more
+   * downloads than it wins calls. The enquiry form is where the phone number
+   * belongs, and it is required there.
+   *
+   * OPEN, all three with him:
+   *   - the 12 to 18 points
+   *   - the PDF built from them (Milestone 2)
+   *   - the email sequence it feeds, which is GHL's side of `endpoint` and
+   *     needs no code here
+   */
   leadMagnet: {
-    // Working concept per the Service Agreement. Title is not final.
-    title: 'The 18-point checklist for first-time home builders',
+    title: 'The major renovation checklist',
     blurb:
-      'The questions worth asking before you commit to a builder, and the ones most people only think of afterwards.',
+      'What to settle before you open up an older Brisbane home — the questions worth asking before you commit to a builder, and the ones most people only think of once the walls are off.',
     // OPEN: the PDF itself. Delivered with Milestone 2.
     file: null as string | null,
   },
