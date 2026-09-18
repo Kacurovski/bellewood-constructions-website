@@ -241,13 +241,13 @@ function panel(face: Face, r: Rect, thickness: number, offset: number, mat: Mate
  * same subtraction with the wall's two axes swapped, which is how the cottage
  * gets weatherboards and the extension gets upright boards from one routine.
  */
-function cladding(wall: Rect, openings: Rect[], board: number, vertical: boolean): Rect[] {
+function cladding(wall: Rect, openings: Rect[], board: number, vertical: boolean, cover = 0.94): Rect[] {
   const swap = (r: Rect): Rect => ({ u0: r.v0, v0: r.u0, u1: r.v1, v1: r.u1 })
   const w = vertical ? swap(wall) : wall
   const os = vertical ? openings.map(swap) : openings
   const out: Rect[] = []
   for (let v = w.v0; v < w.v1 - 1e-6; v += board) {
-    const vTop = Math.min(v + board * 0.92, w.v1)
+    const vTop = Math.min(v + board * cover, w.v1)
     const spans = os
       .filter((o) => o.v1 > v + 1e-6 && o.v0 < v + board - 1e-6)
       .map((o): [number, number] => [Math.max(o.u0, w.u0), Math.min(o.u1, w.u1)])
@@ -491,7 +491,21 @@ const COTTAGE_WALLS: { face: Face; openings: Rect[]; mullions?: number[][]; at0:
 ]
 
 for (const { face, openings, mullions, at0 } of COTTAGE_WALLS) {
-  const rects = cladding({ u0: face.u0, v0: -0.12, u1: face.u1, v1: face.top }, openings, WEATHERBOARD, false)
+  const wall = { u0: face.u0, v0: -0.12, u1: face.u1, v1: face.top }
+  /* A WALL BEHIND THE BOARDS.
+     Each board covers 94% of its band, and the reveal left over is what makes a
+     weatherboard wall read as boards rather than as one flat surface. But there
+     was nothing behind that reveal: the gap went straight through the wall to
+     the frame and the background, so at full size the cottage showed a slot
+     between every plank. A weatherboard laps the wall behind it; it is not a
+     slat screen. This is that wall — one panel per face, in the same material,
+     set 21mm in, so the reveal becomes the shadow line it is meant to be.
+     Openings are cut from it by the same routine, so it never crosses a
+     window. */
+  cladding(wall, openings, face.top + 0.12, false, 1).forEach((r, i) =>
+    panel(face, r, 0.016, CLAD_OFF - 0.021, 'clad', at0 - 0.004 + i * 0.001, 3),
+  )
+  const rects = cladding(wall, openings, WEATHERBOARD, false)
   rects.forEach((r, i) => panel(face, r, CLAD_T, CLAD_OFF, 'clad', at0 + (i / rects.length) * 0.06, 3))
   openings.forEach((o, i) => {
     const bars = mullions?.[i] ?? []
@@ -680,7 +694,12 @@ const EXT_WALLS: { face: Face; openings: Rect[]; mullions: number[][]; at0: numb
 ]
 
 for (const { face, openings, mullions, at0 } of EXT_WALLS) {
-  const rects = cladding({ u0: face.u0, v0: -0.12, u1: face.u1, v1: face.top }, openings, BATTEN, true)
+  const wall = { u0: face.u0, v0: -0.12, u1: face.u1, v1: face.top }
+  // The same wall behind the extension's upright boards, in its own material.
+  cladding(wall, openings, face.top + 0.12, true, 1).forEach((r, i) =>
+    panel(face, r, 0.016, CLAD_OFF - 0.021, 'charred', at0 - 0.004 + i * 0.001, 3),
+  )
+  const rects = cladding(wall, openings, BATTEN, true)
   rects.forEach((r, i) => panel(face, r, CLAD_T, CLAD_OFF, 'charred', at0 + (i / rects.length) * 0.05, 3))
   openings.forEach((o, i) => glaze(face, o, at0 + 0.04 + i * 0.004, mullions[i] ?? []))
 }
