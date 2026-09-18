@@ -213,10 +213,19 @@ two — he pointed at a plate and said that one is white and the rest is not.
 
 **So there is no longer a second light tone to separate a panel from the page
 with.** Panels that used to be a shade brighter than the ground now carry a
-hairline of `--rule` instead: the work register's plate, the band the cottage
-stands in, the offer block, an empty photo slot. If a new surface has to read as
-laid ON the page, rule it — do not tint it. The only light green left anywhere
-is inside the supplied logo artwork, which is never recoloured.
+hairline of `--rule` instead: the band the cottage stands in on Approach, the
+offer block, an empty photo slot. If a new surface has to read as laid ON the
+page, rule it — do not tint it.
+
+**With one exception, and it is deliberate: `--band`, `#DEE7DA`.** "Keep the
+light band around the Paddington cottage section, he liked that." That is the
+plate the Paddington cottage photograph stands on in A-03 on the home page, and
+it is the only light green surface left on the site that is not the logo. The
+value is a literal, not a mix, because it is a quotation: it is sampled from the
+preview he reviewed, where the panel computed to `srgb(0.8726, 0.9045, 0.8558)`
+over the old `#F7F9F0` ground. It is used in one place — `ProjectIndex .stage`
+and the two surfaces that belong to it. **A green-surface audit will flag it.
+That is correct. Do not "fix" it.**
 
 Sage itself is unchanged: it is a text and mark colour on the dark bands, not a
 background.

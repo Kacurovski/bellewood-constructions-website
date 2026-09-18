@@ -215,12 +215,10 @@
   position: relative;
   min-width: 0;
   margin-right: calc(var(--gutter) * -1);
-  /* White, like the page, inside a hairline — see --wash. The two tones this
-     comment used to describe are one tone now, and the plate is mounted on the
-     page by its rule. It runs off the right of the screen, so no right edge. */
-  background: var(--sage-panel);
-  border: 1px solid var(--rule);
-  border-right: 0;
+  /* The band. The page around it is white and this is not: it is the one
+     light green surface Angus asked to keep, and the tone is what he was
+     keeping — so it carries its own edge again and needs no rule. See --band. */
+  background: var(--band);
   padding: clamp(1.5rem, 3vw, 2.75rem);
   padding-right: var(--gutter);
   box-sizing: border-box;
@@ -233,7 +231,7 @@
      together. */
   aspect-ratio: 1 / 1.18;
   overflow: hidden;
-  background: var(--sage-panel);
+  background: var(--band);
 }
 
 /* --- The inset -------------------------------------------------------------
@@ -256,7 +254,7 @@
      out of it — and a hairline at the photograph's own edge, because where the
      inset hangs off the plate the mount is now white on white and the edge had
      nothing to be. */
-  outline: clamp(0.4rem, 0.8vw, 0.6rem) solid var(--sage-panel);
+  outline: clamp(0.4rem, 0.8vw, 0.6rem) solid var(--band);
   box-shadow: 0 0 0 1px var(--rule);
   z-index: 2;
 }
