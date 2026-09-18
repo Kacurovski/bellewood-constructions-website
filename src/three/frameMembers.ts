@@ -328,12 +328,18 @@ function wallFrame(x0: number, x1: number, z0: number, z1: number, height: numbe
   }
 }
 
-/** A grid of stumps with a bearer along each row. */
+/** A grid of stumps with a bearer along each row.
+ *
+ *  Stumps are 105mm, not 130. At 130 they read as piers rather than stumps —
+ *  heavy enough that the eye reads the underfloor as the subject, which on a
+ *  house whose whole point is the verandah above it is the wrong emphasis. A
+ *  hardwood stump is 100 to 125 square, so this is still a real section. */
 function substructure(xs: number[], zs: number[], x0: number, x1: number, at0: number) {
   const stumpH = BEARER_BOTTOM - GROUND
+  const STUMP = 0.105
   zs.forEach((z, row) => {
     xs.forEach((x, col) => {
-      add({ p: [x, GROUND + stumpH / 2, z], s: [0.13, stumpH, 0.13], rx: 0, at: at0 + row * 0.005 + col * 0.0015, stage: 0, mat: 'frame', outer: true })
+      add({ p: [x, GROUND + stumpH / 2, z], s: [STUMP, stumpH, STUMP], rx: 0, at: at0 + row * 0.005 + col * 0.0015, stage: 0, mat: 'frame', outer: true })
     })
     add({ p: [(x0 + x1) / 2, BEARER_Y, z], s: [x1 - x0 + 0.2, BEARER_H, 0.12], rx: 0, at: at0 + 0.03 + row * 0.004, stage: 0, mat: 'frame', outer: true })
   })
@@ -348,7 +354,24 @@ function substructure(xs: number[], zs: number[], x0: number, x1: number, at0: n
 function hipPlane(plane: 'front' | 'back' | 'left' | 'right', spacing: number, width: number, thick: number, up: number, mat: MaterialKey, at0: number, at1: number, stage: 0 | 1 | 2 | 3, outer: boolean, sheet = false) {
   const long = plane === 'front' || plane === 'back'
   const half = long ? LX : LZ
-  const positions = across(-half, half, spacing)
+  /* WHERE THE GAPS CAME FROM. `across` returns the interior points of a span
+     and leaves both ends out, which is right for rafters — you do not want one
+     sitting on the hip — and wrong for sheet. The outermost strip landed one
+     spacing in from the edge, so a 145mm band of each plane was never covered
+     and the hip read as a dotted orange line all the way down: the timber
+     underneath, showing through the roof.
+
+     Sheet is set out instead by band, each strip centred in its own share of
+     the plane, so the run is covered edge to edge with no sliver left at
+     either end. Strips still lap each other, and the hip capping covers where
+     two planes meet. */
+  const positions = sheet
+    ? (() => {
+        const n = Math.max(Math.round((half * 2) / spacing), 1)
+        const step = (half * 2) / n
+        return Array.from({ length: n }, (_, i) => -half + step * (i + 0.5))
+      })()
+    : across(-half, half, spacing)
   positions.forEach((c, i) => {
     const run = long ? Math.min(LZ, LX - Math.abs(c)) : LZ - Math.abs(c)
     if (run < 0.12) return
@@ -358,12 +381,15 @@ function hipPlane(plane: 'front' | 'back' | 'left' | 'right', spacing: number, w
     const y = EAVE_Y + (run / 2) * TAN + up + (sheet && i % 2 ? 0.008 : 0)
     const at = at0 + (i / positions.length) * (at1 - at0)
     const extra = sheet ? ({ lines: false, layer: 2 } as const) : {}
+    // Sheet is cut a little long so it laps its neighbour and runs over the
+    // hip line rather than stopping short of it.
+    const w = sheet ? Math.max(width, (half * 2) / positions.length + 0.03) : width
     if (long) {
       const sign = plane === 'front' ? 1 : -1
-      add({ p: [c, y, sign * (LZ - run / 2)], s: [width, thick, slope], rx: sign * PITCH, at, stage, mat, outer, ...extra })
+      add({ p: [c, y, sign * (LZ - run / 2)], s: [w, thick, slope + (sheet ? 0.04 : 0)], rx: sign * PITCH, at, stage, mat, outer, ...extra })
     } else {
       const sign = plane === 'right' ? 1 : -1
-      add({ p: [sign * (LX - run / 2), y, c], s: [slope, thick, width], rx: 0, rz: -sign * PITCH, at, stage, mat, outer, ...extra })
+      add({ p: [sign * (LX - run / 2), y, c], s: [slope + (sheet ? 0.04 : 0), thick, w], rx: 0, rz: -sign * PITCH, at, stage, mat, outer, ...extra })
     }
   })
 }
@@ -514,7 +540,7 @@ for (let i = 1; i < RISERS; i++) {
 for (const [plane, i] of [['front', 0], ['right', 1], ['back', 2], ['left', 3]] as const) {
   hipPlane(plane, 0.32, 0.345, 0.03, 0.03, 'roof', 0.815 + i * 0.01, 0.828 + i * 0.01, 3, true, true)
 }
-hipsAndRidge(0.16, 0.07, 0.07, 'roof', 0.86, 3, true)
+hipsAndRidge(0.22, 0.075, 0.075, 'roof', 0.86, 3, true)
 for (const sz of [-1, 1]) {
   add({ p: [0, EAVE_Y - 0.06, sz * (LZ + 0.04)], s: [LX * 2 + 0.1, 0.11, 0.1], rx: 0, at: 0.875, stage: 3, mat: 'roof', outer: true, layer: 2 })
 }
@@ -603,13 +629,43 @@ for (const x of [-STAIR_W / 2 - 0.02, STAIR_W / 2 + 0.02]) {
   add({ p: [x, GROUND + (RAIL_TOP + 0.05) / 2, STAIR_Z1 + 0.05], s: [0.09, RAIL_TOP + 0.05, 0.09], rx: 0, at: 0.935, stage: 3, mat: 'frame', outer: true })
 }
 
-// The batten screen under the verandah front.
+/* The skirt: battens closing the gap between the ground and the floor.
+ *
+ *  It was one flat run straight across the front, full width, with the stair
+ *  descending in front of it — so the battens carried on behind the steps and
+ *  the whole thing read as a fence somebody had put up in front of the
+ *  cottage, which is what it looked like and not what it is.
+ *
+ *  Three changes make it the house's own skirt: an opening where the stair
+ *  comes down, so the stair goes THROUGH it rather than in front of it;
+ *  returns along both sides, so it turns the corner and encloses the
+ *  underfloor instead of standing as a plane; and a rail top and bottom to
+ *  each run, so the battens are held in something. */
 {
   const top = BEARER_BOTTOM - 0.02
   const h = top - GROUND
-  across(-CX, CX, 0.16).forEach((x, i, all) => {
-    add({ p: [x, GROUND + h / 2, VZ1 - 0.1], s: [0.07, h, 0.02], rx: 0, at: 0.945 + (i / all.length) * 0.015, stage: 3, mat: 'frame', outer: true })
-  })
+  const y = GROUND + h / 2
+  const clear = STAIR_W / 2 + 0.14
+  const zFront = VZ1 - 0.1
+
+  for (const [a, b] of [[-CX, -clear], [clear, CX]] as [number, number][]) {
+    across(a, b, 0.16).forEach((x, i, all) => {
+      add({ p: [x, y, zFront], s: [0.07, h, 0.02], rx: 0, at: 0.945 + (i / all.length) * 0.008, stage: 3, mat: 'frame', outer: true })
+    })
+    for (const railY of [top - 0.07, GROUND + 0.1]) {
+      add({ p: [(a + b) / 2, railY, zFront], s: [b - a, 0.09, 0.035], rx: 0, at: 0.955, stage: 3, mat: 'frame', outer: true })
+    }
+  }
+
+  for (const sx of [-1, 1]) {
+    const z0 = CZ - 0.6
+    across(z0, zFront, 0.16).forEach((z, i, all) => {
+      add({ p: [sx * (CX - 0.08), y, z], s: [0.02, h, 0.07], rx: 0, at: 0.95 + (i / all.length) * 0.008, stage: 3, mat: 'frame', outer: true })
+    })
+    for (const railY of [top - 0.07, GROUND + 0.1]) {
+      add({ p: [sx * (CX - 0.08), railY, (z0 + zFront) / 2], s: [0.035, 0.09, zFront - z0], rx: 0, at: 0.956, stage: 3, mat: 'frame', outer: true })
+    }
+  }
 }
 
 /* --- The extension, in charred vertical boards and glass --- */
@@ -649,7 +705,12 @@ for (const { face, openings, mullions, at0 } of EXT_WALLS) {
 
 /* --- The deck off the glass --- */
 
-substructure([5.9, 7.2], [-7.2, -5.5, -3.8], EX1, DX1, 0.13)
+/* The deck's own stumps. They were at 5.9 and 7.2: the first stood within
+   200mm of the extension's own stump line at 5.0, so from the front the two
+   read as one doubled post, and the deck cantilevered 800mm past it on the
+   inside. Moved to 5.65 and 7.05 — clear of the house's line, and near enough
+   to each edge of the deck that it looks carried rather than balanced. */
+substructure([5.65, 7.05], [-7.2, -5.5, -3.8], EX1, DX1, 0.13)
 across(DZ0, DZ1, 0.15).forEach((z, i, all) => {
   add({ p: [(EX1 + DX1) / 2 + 0.05, -0.015, z], s: [DX1 - EX1 + 0.1, 0.03, 0.13], rx: 0, at: 0.92 + (i / all.length) * 0.02, stage: 3, mat: 'deck', outer: true })
 })
