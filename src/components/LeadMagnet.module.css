@@ -7,7 +7,9 @@
   border: 1px solid var(--rule);
 }
 
-.sage { background: var(--sage-panel); border-color: transparent; }
+/* Keeps its rule now. The fill used to be a shade off the page and did the
+   separating on its own; white on white, clearing the border erased the block. */
+.sage { background: var(--sage-panel); }
 
 /* --- Reversed --------------------------------------------------------------
    The palest, flattest block on the site was a sage rectangle with a one-line

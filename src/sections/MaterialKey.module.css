@@ -30,14 +30,19 @@
   color: inherit;
 }
 
-/* The drawing sits on the sage panel the work register uses, so the two
-   interactive bands on this site are recognisably the same kind of thing. */
+/* The band the cottage stands in — the one thing Angus named as worth keeping
+   when everything else went white. It used to be a panel a shade off the page
+   and it is now the page's own white inside a hairline, so the band is still
+   there and is drawn rather than tinted. It runs off the left of the screen, so
+   it has no left edge to rule. */
 .plate {
   grid-column: 1;
   grid-row: 2;
   display: flex;
   align-items: center;
   background: var(--sage-panel);
+  border: 1px solid var(--rule);
+  border-left: 0;
   /* Its own paint context. The drawing is nineteen hundred polygons, and
      without this the browser repaints all of them into the page every time the
      section moves — which is most of what made scrolling past it feel heavy. */

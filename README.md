@@ -203,11 +203,23 @@ does not.
 
 ## Dark grounds are Bellewood Green, never Deep Pine
 
-**The page ground changed on 17 September 2026 too**: the green-tinted wash
-read creamy and minty to Angus, and he confirmed a crisp white looks better, so
-`--wash` is `#F7F7F4` and every light green panel is white (`--sage-panel` is now
-Paper). Sage itself is unchanged: it is a text and mark colour on the dark bands,
-not a background.
+**The page ground is white — `#FFFFFF`, the same value as Paper.** It changed
+twice on 17 September 2026, both times from Angus. First the green-tinted wash
+came off, because it read creamy and minty to him, and `--wash` became
+`#F7F7F4`; every light green panel went white with it (`--sage-panel` is now
+Paper). Then the ground itself went white, because `#F7F7F4` under `#FFFFFF`
+plates is two tones, and beside a white plate the ground is the duller of the
+two — he pointed at a plate and said that one is white and the rest is not.
+
+**So there is no longer a second light tone to separate a panel from the page
+with.** Panels that used to be a shade brighter than the ground now carry a
+hairline of `--rule` instead: the work register's plate, the band the cottage
+stands in, the offer block, an empty photo slot. If a new surface has to read as
+laid ON the page, rule it — do not tint it. The only light green left anywhere
+is inside the supplied logo artwork, which is never recoloured.
+
+Sage itself is unchanged: it is a text and mark colour on the dark bands, not a
+background.
 
 **Bellewood Green changed on 17 September 2026**, at Angus's request: it now
 matches the heritage green Finlayson's, his timber merchant, use on their site —

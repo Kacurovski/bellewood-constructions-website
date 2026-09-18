@@ -78,6 +78,9 @@
 .sage {
   background: var(--sage-panel);
   color: var(--green);
+  /* The corner marks alone left nothing to hold the shape once the fill went
+     white, and an empty slot has to read as a slot. */
+  box-shadow: inset 0 0 0 1px var(--rule);
 }
 
 /* Drawn corner marks — line-work waiting on material. Reads as an unfinished

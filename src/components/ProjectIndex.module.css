@@ -215,7 +215,12 @@
   position: relative;
   min-width: 0;
   margin-right: calc(var(--gutter) * -1);
+  /* White, like the page, inside a hairline — see --wash. The two tones this
+     comment used to describe are one tone now, and the plate is mounted on the
+     page by its rule. It runs off the right of the screen, so no right edge. */
   background: var(--sage-panel);
+  border: 1px solid var(--rule);
+  border-right: 0;
   padding: clamp(1.5rem, 3vw, 2.75rem);
   padding-right: var(--gutter);
   box-sizing: border-box;
@@ -247,9 +252,12 @@
   aspect-ratio: 1 / 1;
   overflow: hidden;
   background: var(--wash);
-  /* A hairline of the panel it stands on, so it reads as laid on top of the
-     plate rather than cut out of it. */
+  /* A white mount, so it reads as laid on top of the plate rather than cut
+     out of it — and a hairline at the photograph's own edge, because where the
+     inset hangs off the plate the mount is now white on white and the edge had
+     nothing to be. */
   outline: clamp(0.4rem, 0.8vw, 0.6rem) solid var(--sage-panel);
+  box-shadow: 0 0 0 1px var(--rule);
   z-index: 2;
 }
 

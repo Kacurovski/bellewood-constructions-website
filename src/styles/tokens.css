@@ -23,12 +23,26 @@
      reads as less heavy. Do not "correct" it back. */
   --green: #05432a;
   --pine: #10251a;         /* Deep Pine. Body text and fine rules */
-  /* The page ground.
+  /* The page ground. WHITE. Not off-white, not near-white — #ffffff, the same
+     value as --paper.
 
-     Changed from #f7f9f0 on 17 September 2026, on the call: Angus found the
-     green-tinted wash creamy and minty, and confirmed a crisp white reads
-     better. This is the value he approved, taken from the preview he saw. */
-  --wash: #f7f7f4;
+     Two changes, both on 17 September 2026, both from Angus:
+
+       #f7f9f0 -> #f7f7f4   on the call: the green-tinted wash read creamy and
+                            minty, and he asked for a crisp white.
+       #f7f7f4 -> #ffffff   after review: "white everywhere" meant white. A
+                            ground at f7f7f4 with plates at ffffff is two tones,
+                            and next to a white plate the ground is visibly the
+                            duller of the two. He pointed at the plate and said
+                            that is white and the rest is not, which was correct.
+
+     The site used to separate a plate from the page by tone: panels were a
+     shade brighter than the ground. With one white there is no shade left to be
+     brighter by, so every one of those surfaces now carries a hairline of
+     --rule instead. Structure comes from line, which is what a set of drawings
+     does anyway. If a new panel needs to read as laid ON the page, give it a
+     rule; do not give it a tint. */
+  --wash: #ffffff;
   --sage: #afc3b0;         /* Sage. Panels and dividers. Never body text */
   --timber: #9a7b4f;       /* Silky Oak. Accent only. Fails text contrast — decorative */
   --paper: #ffffff;        /* Documents and anything that must print clean */
