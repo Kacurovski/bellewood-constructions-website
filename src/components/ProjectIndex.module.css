@@ -215,10 +215,11 @@
   position: relative;
   min-width: 0;
   margin-right: calc(var(--gutter) * -1);
-  /* The band. The page around it is white and this is not: it is the one
-     light green surface Angus asked to keep, and the tone is what he was
-     keeping — so it carries its own edge again and needs no rule. See --band. */
-  background: var(--band);
+  /* The page's own colour, and nothing else: no tint, no rule, no shadow.
+     This is the plate exactly as it stands on the preview Angus reviewed, where
+     it computed to the same value as the ground. It has never been a green
+     panel to him, so it is not one here. */
+  background: var(--wash);
   padding: clamp(1.5rem, 3vw, 2.75rem);
   padding-right: var(--gutter);
   box-sizing: border-box;
@@ -231,7 +232,7 @@
      together. */
   aspect-ratio: 1 / 1.18;
   overflow: hidden;
-  background: var(--band);
+  background: var(--wash);
 }
 
 /* --- The inset -------------------------------------------------------------
@@ -250,12 +251,9 @@
   aspect-ratio: 1 / 1;
   overflow: hidden;
   background: var(--wash);
-  /* A white mount, so it reads as laid on top of the plate rather than cut
-     out of it — and a hairline at the photograph's own edge, because where the
-     inset hangs off the plate the mount is now white on white and the edge had
-     nothing to be. */
-  outline: clamp(0.4rem, 0.8vw, 0.6rem) solid var(--band);
-  box-shadow: 0 0 0 1px var(--rule);
+  /* A mount in the page's own colour, so the inset reads as laid on top of
+     the plate rather than cut out of it. Same as the preview. */
+  outline: clamp(0.4rem, 0.8vw, 0.6rem) solid var(--wash);
   z-index: 2;
 }
 

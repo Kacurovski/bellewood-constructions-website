@@ -57,27 +57,6 @@
      on a dark ground (see global.css) so nothing has to restate it per
      section, which is what keeps the sheet marks portable. */
   --ink: color-mix(in srgb, var(--pine) 30%, transparent);
-  /* THE BAND. The single light green surface left on the site, and the only
-     one that is meant to be here.
-
-     "Replace every remaining instance of the light green background with white
-     — keep the light band around the Paddington cottage section, he liked
-     that." Everything else went white. This did not. It is the plate the
-     Paddington cottage photograph stands on in A-03 on the home page, and it is
-     the value it had when he said he liked it: Sage at 34% over the ground.
-
-     It is used in exactly one place, ProjectIndex .stage and the two surfaces
-     that belong to it. Do not reach for it for a new panel — a new panel is
-     white with a rule. If this ever looks like an oversight, it is not: read
-     the sentence above.
-
-     The value is literal, not a mix, because it is a quotation. It is sampled
-     from the preview Angus reviewed — the build at 2765982, where the panel
-     computed to srgb(0.8726, 0.9045, 0.8558) over a #F7F9F0 ground. A mix of
-     Sage over Paper lands near it but not on it, and it would move again the
-     next time either of those changed. This is the colour he pointed at. */
-  --band: #dee7da;
-
   /* Panels are white now, not a tint of Sage. Same call: every light green
      surface goes white. Sage itself stays as it was — it is a text and mark
      colour on the dark bands, not a background, and nothing there is green

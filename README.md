@@ -217,15 +217,21 @@ hairline of `--rule` instead: the band the cottage stands in on Approach, the
 offer block, an empty photo slot. If a new surface has to read as laid ON the
 page, rule it — do not tint it.
 
-**With one exception, and it is deliberate: `--band`, `#DEE7DA`.** "Keep the
-light band around the Paddington cottage section, he liked that." That is the
-plate the Paddington cottage photograph stands on in A-03 on the home page, and
-it is the only light green surface left on the site that is not the logo. The
-value is a literal, not a mix, because it is a quotation: it is sampled from the
-preview he reviewed, where the panel computed to `srgb(0.8726, 0.9045, 0.8558)`
-over the old `#F7F9F0` ground. It is used in one place — `ProjectIndex .stage`
-and the two surfaces that belong to it. **A green-surface audit will flag it.
-That is correct. Do not "fix" it.**
+**A-03 on the home page is the one place with no rule either.** "Keep the light
+band around the Paddington cottage section" was read, at one point, as a light
+green panel behind that photograph, and a `#DEE7DA` band was put back there.
+That was wrong, and the preview Angus actually reviewed settles it: on that
+build the plate computes to the same value as the page, with no border, no
+outline and no shadow. He has never seen a green panel there. So the plate is
+the page's own colour and carries nothing — which is how it looks to him.
+
+**Check the deployed preview before matching anything to "what he saw".** The
+preview he reviews is not built from this repo: it computes `--sage` as
+`#F7F7F4`, a value that exists at no commit here. Sampling a local build and
+assuming it matches that link produced the wrong colour once already.
+
+The only light green left anywhere is inside the supplied logo artwork, which is
+never recoloured.
 
 Sage itself is unchanged: it is a text and mark colour on the dark bands, not a
 background.

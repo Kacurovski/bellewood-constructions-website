@@ -5,13 +5,13 @@ import type { SubmitResult } from '../lib/pipeline'
 import { contact } from '../config/site'
 import styles from './EnquiryForm.module.css'
 
-/** The fields a person has to fill in before the enquiry will send. */
-type Required = 'firstName' | 'lastName' | 'email' | 'phone'
-type Errors = Partial<Record<Required, string>>
+/** The fields the form checks. Phone is checked for shape, not for presence. */
+type Checked = 'firstName' | 'lastName' | 'email' | 'phone'
+type Errors = Partial<Record<Checked, string>>
 
 /* The order a person meets them in, top to bottom and left to right, so the
    first one to fix is the one focus lands on. */
-const REQUIRED_ORDER: Required[] = ['firstName', 'lastName', 'email', 'phone']
+const CHECK_ORDER: Checked[] = ['firstName', 'lastName', 'email', 'phone']
 
 /**
  * Checks one field. Deliberately forgiving about format: an email needs an @
@@ -20,7 +20,7 @@ const REQUIRED_ORDER: Required[] = ['firstName', 'lastName', 'email', 'phone']
  * turns away a real person who writes their number the way they always have,
  * and one lost enquiry costs more than a malformed one that Angus can ring back.
  */
-function check(field: Required, raw: string): string | undefined {
+function check(field: Checked, raw: string): string | undefined {
   const value = raw.trim()
   switch (field) {
     case 'firstName':
@@ -31,7 +31,9 @@ function check(field: Required, raw: string): string | undefined {
       if (!value) return 'Please add your email.'
       return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value) ? undefined : 'That email does not look quite right.'
     case 'phone': {
-      if (!value) return 'Please add a phone number.'
+      /* Optional. Left blank it passes; filled in badly it does not, because a
+         number that cannot be rung is worse than no number at all. */
+      if (!value) return undefined
       const digits = value.replace(/\D/g, '')
       const shape = /^[\d\s+()-]+$/.test(value)
       return shape && digits.length >= 8 ? undefined : 'That number does not look quite right.'
@@ -54,9 +56,13 @@ function check(field: Required, raw: string): string | undefined {
  * stopped anything and an empty form sent. It checks them itself now: every
  * missing or malformed field is marked and explained under its own rule, focus
  * goes to the first one, and the enquiry does not leave until they are right.
- * Phone is required because Angus answers enquiries by ringing them, and the
- * missed-call text-back on his number is the first thing this engagement
- * switched on.
+ * PHONE IS OPTIONAL, changed 17 September 2026. It was required, on the
+ * reasoning that Angus answers enquiries by ringing them. The call went the
+ * other way: he does not want a phone number to be the price of getting in
+ * touch. It is still asked for, still first in the pair, and still checked for
+ * shape when it is filled in — an unringable number is worse than none — but an
+ * enquiry with only an email now sends. If this is ever reversed, put 'phone'
+ * back to returning a message when empty and restore `required` on the field.
  *
  * First and last name travel separately, because that is how the CRM stores a
  * contact. The combined `name` still goes too, so a webhook mapping built
@@ -78,7 +84,7 @@ export function EnquiryForm({ compact = false }: { compact?: boolean }) {
   /* Once a field has been flagged, it is re-checked as it is typed into, so the
      message goes away the moment it is fixed rather than on the next submit.
      A field that was never flagged is left alone while someone is typing. */
-  function recheck(field: Required, value: string) {
+  function recheck(field: Checked, value: string) {
     if (!errors[field]) return
     setErrors((current) => ({ ...current, [field]: check(field, value) }))
   }
@@ -98,13 +104,13 @@ export function EnquiryForm({ compact = false }: { compact?: boolean }) {
     }
 
     const found: Errors = {}
-    for (const field of REQUIRED_ORDER) {
+    for (const field of CHECK_ORDER) {
       const message = check(field, read(field))
       if (message) found[field] = message
     }
     setErrors(found)
 
-    const first = REQUIRED_ORDER.find((field) => found[field])
+    const first = CHECK_ORDER.find((field) => found[field])
     if (first) {
       setStatus('invalid')
       form.querySelector<HTMLInputElement>(`[name="${first}"]`)?.focus()
@@ -174,7 +180,6 @@ export function EnquiryForm({ compact = false }: { compact?: boolean }) {
           label="Phone"
           type="tel"
           autoComplete="tel"
-          required
           error={errors.phone}
           onValue={(v) => recheck('phone', v)}
         />
