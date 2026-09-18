@@ -11,11 +11,17 @@
  * specific things, and this is both of them:
  *
  *   THE COTTAGE (Paddington). Narrow — 6.6m across the front — and raised on
- *   timber stumps. A hipped roof so near to square it is almost a pyramid. A
- *   full-width front verandah under a BULLNOSE roof, the curved sheet that is
- *   the signature of the style, with a batten frieze under its beam, brackets
- *   at the post heads and a picket balustrade. Weatherboards, corner boards,
- *   tall sash windows, a central door and a stair down to the street.
+ *   timber stumps. A hipped roof at 27 degrees: low and long, the way the type
+ *   sits, not the steeper roof this started with. A full-width front verandah
+ *   under a BULLNOSE roof, the curved sheet that is the signature of the style,
+ *   with a batten frieze under its beam, quarter-fan brackets at the post heads
+ *   and a picket balustrade. Weatherboards, corner boards, a central door with
+ *   a pair of French doors either side of it opening onto the verandah, sash
+ *   windows to the side walls, and a stair down to the street.
+ *
+ *   The pitch, the French doors and the weight of the fretwork are all from
+ *   Angus's second review: the read was close but the roof was too tall, the
+ *   verandah too plain and the front windows too ordinary for the type.
  *
  *   THE EXTENSION (Ashgrove). Behind the cottage, and stepping out past its
  *   side: a contemporary wing in charred vertical boards under a flat roof, a
@@ -128,7 +134,13 @@ const POST_Z = VZ1 - 0.06
 const BEAM_Y = 2.2
 
 /* The cottage roof: a hip, all four planes at one pitch. */
-const PITCH = (33 * Math.PI) / 180
+/* 27 degrees, not 33. A hip at 33 reads as a modern roof: tall, and pointed
+   enough that the eye takes the ridge as the subject. The type is lower and
+   longer — a Paddington cottage hip sits nearer 25 to 28, and an Ashgrove hip
+   the same. Six degrees off takes the ridge down 0.42m over this footprint, and
+   the roof stops competing with the verandah, which is the part that actually
+   says Queenslander. */
+const PITCH = (27 * Math.PI) / 180
 const TAN = Math.tan(PITCH)
 const EAVE = 0.5
 const LX = CX + EAVE
@@ -254,7 +266,7 @@ function cladding(wall: Rect, openings: Rect[], board: number, vertical: boolean
  *  and glass set back behind them. A filled panel, however thin, sits in front
  *  of the glass on whichever side the camera is on and turns every window
  *  black. */
-function glaze(face: Face, o: Rect, at: number, mullions: number[] = []) {
+function glaze(face: Face, o: Rect, at: number, mullions: number[] = [], rails: number[] = []) {
   const b = 0.07
   const frames: Rect[] = [
     { u0: o.u0 - b, v0: o.v1, u1: o.u1 + b, v1: o.v1 + b },
@@ -262,6 +274,8 @@ function glaze(face: Face, o: Rect, at: number, mullions: number[] = []) {
     { u0: o.u0 - b, v0: o.v0, u1: o.u0, v1: o.v1 },
     { u0: o.u1, v0: o.v0, u1: o.u1 + b, v1: o.v1 },
     ...mullions.map((u) => ({ u0: u - 0.025, v0: o.v0, u1: u + 0.025, v1: o.v1 })),
+    // Horizontal glazing bars. A French door is panes, not a sheet of glass.
+    ...rails.map((v) => ({ u0: o.u0, v0: v - 0.018, u1: o.u1, v1: v + 0.018 })),
   ]
   for (const f of frames) panel(face, f, CLAD_T + 0.03, CLAD_OFF, 'roof', at, 3)
   panel(face, o, 0.02, CLAD_OFF - 0.03, 'glass', at + 0.006, 3)
@@ -269,6 +283,26 @@ function glaze(face: Face, o: Rect, at: number, mullions: number[] = []) {
 
 /** Tall and narrow, the proportion of a double-hung sash. */
 const sash = (centre: number, width = 0.9): Rect => ({ u0: centre - width / 2, v0: 0.85, u1: centre + width / 2, v1: 2.35 })
+
+/**
+ * A pair of French doors: full height, from just above the verandah floor to
+ * the head, split down the middle by a mullion and barred across into panes.
+ *
+ * This is what opens onto the verandah of one of these houses. The front wall
+ * carried plain sashes with a sill at 850, which is a bedroom window, and it
+ * left the verandah as somewhere to walk past rather than somewhere the house
+ * opens onto. Glass to the floor also lets the interior light reach the boards
+ * at the end of the build, which is the one thing the scene has to show: a
+ * house being lived in.
+ */
+const frenchDoors = (centre: number, width = 1.25): Rect => ({
+  u0: centre - width / 2,
+  v0: 0.06,
+  u1: centre + width / 2,
+  v1: 2.25,
+})
+/** Where the glazing bars cross a French door. Two, not four: see the frieze. */
+const FRENCH_RAILS = [0.78, 1.5]
 
 /** A rectangular wall frame: plates top and bottom on all four sides, studs
  *  between. */
@@ -418,17 +452,24 @@ along(EZ0, EZ1, 0.6).forEach((z, i, all) => {
 
 /* --- The cottage, in weatherboard --- */
 
-const COTTAGE_WALLS: { face: Face; openings: Rect[]; at0: number }[] = [
-  { face: COTTAGE_FRONT, openings: [{ u0: -0.5, v0: 0.05, u1: 0.5, v1: 2.25 }, sash(-2.1, 1.0), sash(2.1, 1.0)], at0: 0.725 },
+const COTTAGE_WALLS: { face: Face; openings: Rect[]; mullions?: number[][]; at0: number }[] = [
+  {
+    face: COTTAGE_FRONT,
+    // The door in the middle, a pair of French doors either side of it.
+    openings: [{ u0: -0.5, v0: 0.05, u1: 0.5, v1: 2.25 }, frenchDoors(-2.1), frenchDoors(2.1)],
+    mullions: [[], [-2.1], [2.1]],
+    at0: 0.725,
+  },
   { face: COTTAGE_RIGHT, openings: [sash(-1.4), sash(1.2)], at0: 0.74 },
   { face: COTTAGE_LEFT, openings: [sash(-1.2), sash(1.3)], at0: 0.75 },
 ]
 
-for (const { face, openings, at0 } of COTTAGE_WALLS) {
+for (const { face, openings, mullions, at0 } of COTTAGE_WALLS) {
   const rects = cladding({ u0: face.u0, v0: -0.12, u1: face.u1, v1: face.top }, openings, WEATHERBOARD, false)
   rects.forEach((r, i) => panel(face, r, CLAD_T, CLAD_OFF, 'clad', at0 + (i / rects.length) * 0.06, 3))
   openings.forEach((o, i) => {
-    glaze(face, o, at0 + 0.05 + i * 0.004)
+    const bars = mullions?.[i] ?? []
+    glaze(face, o, at0 + 0.05 + i * 0.004, bars, bars.length ? FRENCH_RAILS : [])
     // The meeting rail across the middle of a sash. The door has none.
     if (o.v0 > 0.5) {
       const mid = (o.v0 + o.v1) / 2
@@ -516,26 +557,42 @@ for (let i = 0; i < POST_XS.length - 1; i++) {
 }
 for (const x of [-3.25, 3.25]) balustrade(VZ0 + 0.08, POST_Z, x, false, 0.9)
 
-// The frieze: a band of battens under the verandah beam, between the posts.
-// With the bullnose it is the detail that most says an old Brisbane cottage.
+/* The frieze: a band of battens under the verandah beam, between the posts,
+   closed top and bottom by a rail. With the bullnose it is the detail that most
+   says an old Brisbane cottage.
+
+   DEEPER AND COARSER THAN IT WAS, deliberately. It ran 320mm deep in 25mm
+   battens at 100 centres, which is about right on a real house and wrong here:
+   at the size this renders, battens that fine and that close average out into a
+   grey smear under the beam and read as nothing at all. 420mm deep, 32mm
+   battens at 118 centres is the same comb with gaps the eye can resolve. The
+   rule for anything added to this scene is that detail has to survive being
+   small — if it cannot be seen it is only polygons. */
 {
-  const top = BEAM_Y - 0.1
-  const bottom = BEAM_Y - 0.42
+  const top = BEAM_Y - 0.08
+  const bottom = BEAM_Y - 0.5
   for (let i = 0; i < POST_XS.length - 1; i++) {
     const a = POST_XS[i] + 0.06
     const b = POST_XS[i + 1] - 0.06
-    add({ p: [(a + b) / 2, bottom, POST_Z], s: [b - a, 0.045, 0.05], rx: 0, at: 0.91, stage: 3, mat: 'frame', outer: true })
-    across(a, b, 0.1).forEach((x, k) => {
-      add({ p: [x, (top + bottom) / 2, POST_Z], s: [0.025, top - bottom, 0.025], rx: 0, at: 0.912 + k * 0.0005, stage: 3, mat: 'frame', outer: true })
+    for (const y of [bottom, top]) {
+      add({ p: [(a + b) / 2, y, POST_Z], s: [b - a, 0.05, 0.05], rx: 0, at: 0.91, stage: 3, mat: 'frame', outer: true })
+    }
+    across(a, b, 0.118).forEach((x, k) => {
+      add({ p: [x, (top + bottom) / 2, POST_Z], s: [0.032, top - bottom, 0.028], rx: 0, at: 0.912 + k * 0.0005, stage: 3, mat: 'frame', outer: true })
     })
   }
 }
 
-// Brackets at the post heads, under the frieze.
+/* Brackets at the post heads, under the frieze. Two members to each one, a
+   diagonal and a shorter piece outboard of it, so the bracket reads as the
+   filled quarter-fan these verandahs carry rather than as a single stick
+   leaning on the post. Larger than it was for the same reason the frieze is
+   coarser: at this size a 340mm bracket is a few pixels of nothing. */
 POST_XS.forEach((x, i) => {
   for (const side of [-1, 1]) {
     if ((i === 0 && side < 0) || (i === POST_XS.length - 1 && side > 0)) continue
-    add({ p: [x + side * 0.16, BEAM_Y - 0.56, POST_Z], s: [0.045, 0.34, 0.045], rx: 0, rz: -side * (Math.PI / 4), at: 0.93 + i * 0.003, stage: 3, mat: 'frame', outer: true })
+    add({ p: [x + side * 0.19, BEAM_Y - 0.64, POST_Z], s: [0.05, 0.46, 0.05], rx: 0, rz: -side * (Math.PI / 4), at: 0.93 + i * 0.003, stage: 3, mat: 'frame', outer: true })
+    add({ p: [x + side * 0.31, BEAM_Y - 0.62, POST_Z], s: [0.035, 0.3, 0.04], rx: 0, rz: -side * (Math.PI / 4), at: 0.932 + i * 0.003, stage: 3, mat: 'frame', outer: true })
   }
 })
 
