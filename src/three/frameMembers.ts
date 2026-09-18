@@ -250,10 +250,21 @@ function panel(face: Face, r: Rect, thickness: number, offset: number, mat: Mate
  * same subtraction with the wall's two axes swapped, which is how the cottage
  * gets weatherboards and the extension gets upright boards from one routine.
  */
-/* `cover` is how much of its band a board fills. 0.97 leaves a 6mm reveal on a
-   200mm board, which is a shadow line; 0.94 left 12mm, which was wide enough to
-   see the lit top face of the board below through it. */
-function cladding(wall: Rect, openings: Rect[], board: number, vertical: boolean, cover = 0.93): Rect[] {
+/* `cover` is how much of its band a board fills, and the boards OVERLAP.
+   A reveal was how this wall used to say "boards" — but a reveal is a hole. It
+   needed a wall behind it to stop the background showing through, that wall
+   landed inside the studs, and the two fought for the same pixels, which is
+   what put dashes along every board and around every window. The boards say
+   "boards" by being tilted instead.
+
+   1.04, not 1.00, and the four per cent is the whole point: a tilted board is
+   SHORTER in elevation than the band it fills, by cos(tilt). At exactly 1.00
+   that left a 1.5mm sliver between every pair of boards with nothing behind
+   it, and those slivers are what kept getting reported as gaps. Overlapping
+   the bands closes them for good. Overlap is safe where a reveal was not: two
+   solid boards of one material meeting at an angle give a clean intersection,
+   whereas two coplanar faces fight for the pixel. */
+function cladding(wall: Rect, openings: Rect[], board: number, vertical: boolean, cover = 1.04): Rect[] {
   const swap = (r: Rect): Rect => ({ u0: r.v0, v0: r.u0, u1: r.v1, v1: r.u1 })
   const w = vertical ? swap(wall) : wall
   const os = vertical ? openings.map(swap) : openings
@@ -398,10 +409,10 @@ function hipPlane(plane: 'front' | 'back' | 'left' | 'right', spacing: number, w
     const w = sheet ? Math.max(width, (half * 2) / positions.length + 0.03) : width
     if (long) {
       const sign = plane === 'front' ? 1 : -1
-      add({ p: [c, y, sign * (LZ - run / 2)], s: [w, thick, slope + (sheet ? 0.04 : 0)], rx: sign * PITCH, at, stage, mat, outer, ...extra })
+      add({ p: [c, y, sign * (LZ - run / 2)], s: [w, thick, slope + (sheet ? 0.015 : 0)], rx: sign * PITCH, at, stage, mat, outer, ...extra })
     } else {
       const sign = plane === 'right' ? 1 : -1
-      add({ p: [sign * (LX - run / 2), y, c], s: [slope + (sheet ? 0.04 : 0), thick, w], rx: 0, rz: -sign * PITCH, at, stage, mat, outer, ...extra })
+      add({ p: [sign * (LX - run / 2), y, c], s: [slope + (sheet ? 0.015 : 0), thick, w], rx: 0, rz: -sign * PITCH, at, stage, mat, outer, ...extra })
     }
   })
 }
@@ -504,19 +515,6 @@ const COTTAGE_WALLS: { face: Face; openings: Rect[]; mullions?: number[][]; at0:
 
 for (const { face, openings, mullions, at0 } of COTTAGE_WALLS) {
   const wall = { u0: face.u0, v0: -0.12, u1: face.u1, v1: face.top }
-  /* A WALL BEHIND THE BOARDS.
-     Each board covers 94% of its band, and the reveal left over is what makes a
-     weatherboard wall read as boards rather than as one flat surface. But there
-     was nothing behind that reveal: the gap went straight through the wall to
-     the frame and the background, so at full size the cottage showed a slot
-     between every plank. A weatherboard laps the wall behind it; it is not a
-     slat screen. This is that wall — one panel per face, in the same material,
-     set 21mm in, so the reveal becomes the shadow line it is meant to be.
-     Openings are cut from it by the same routine, so it never crosses a
-     window. */
-  cladding(wall, openings, face.top + 0.12, false, 1).forEach((r, i) =>
-    panel(face, r, 0.016, CLAD_OFF - 0.021, 'clad', at0 - 0.004 + i * 0.001, 3),
-  )
   const rects = cladding(wall, openings, WEATHERBOARD, false)
   /* WHY THE BOARDS ARE TILTED.
      A weatherboard is not a flat plank pinned to a wall: it laps the one below
@@ -721,12 +719,14 @@ const EXT_WALLS: { face: Face; openings: Rect[]; mullions: number[][]; at0: numb
 
 for (const { face, openings, mullions, at0 } of EXT_WALLS) {
   const wall = { u0: face.u0, v0: -0.12, u1: face.u1, v1: face.top }
-  // The same wall behind the extension's upright boards, in its own material.
-  cladding(wall, openings, face.top + 0.12, true, 1).forEach((r, i) =>
-    panel(face, r, 0.016, CLAD_OFF - 0.021, 'charred', at0 - 0.004 + i * 0.001, 3),
-  )
   const rects = cladding(wall, openings, BATTEN, true)
-  rects.forEach((r, i) => panel(face, r, CLAD_T, CLAD_OFF, 'charred', at0 + (i / rects.length) * 0.05, 3, false))
+  /* The extension's boards are upright, so a tilt would lean them sideways and
+     look wrong. Every second board stands 4mm proud instead: two depths, two
+     shades under the same light, and the wall reads as boards without a single
+     line or a single gap. */
+  rects.forEach((r, i) =>
+    panel(face, r, CLAD_T, CLAD_OFF + (i % 2 ? 0.004 : 0), 'charred', at0 + (i / rects.length) * 0.05, 3, false),
+  )
   openings.forEach((o, i) => glaze(face, o, at0 + 0.04 + i * 0.004, mullions[i] ?? []))
 }
 

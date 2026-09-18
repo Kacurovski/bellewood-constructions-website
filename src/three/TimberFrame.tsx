@@ -115,10 +115,22 @@ function Building({ progress }: { progress: React.MutableRefObject<number> }) {
     const p = progress.current
 
     if (lineMat.current) {
-      // The drawing hands over to solid material through the middle of the
-      // section, and a trace of it stays: the drawing does not stop being true
-      // once the thing is built.
-      lineMat.current.opacity = 1 - smoothstep(0.48, 0.9, p) * 0.8
+      /* The drawing hands over to solid material through the middle of the
+         section, and by the end it is gone.
+
+         It used to keep a fifth of its strength, on the idea that the drawing
+         does not stop being true once the thing is built. That reads well on
+         paper and badly here: the line is Bellewood Green, and Bellewood Green
+         is LIGHTER than the roof sheet, the charred boards and timber in
+         shade. Every edge on every dark surface came out as a pale dash, and
+         the finished house looked like it had gaps in it — which is exactly
+         how it was reported, three times, in three different places. The roof
+         sheets already opted out of line-work for this reason; this is the
+         same fix applied to the whole drawing rather than one part of it.
+
+         The section is called "Drawn, then built". It is allowed to finish
+         built. */
+      lineMat.current.opacity = 1 - smoothstep(0.48, 0.9, p)
     }
 
     const solidOpacity = smoothstep(0.34, 0.68, p)
