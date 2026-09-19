@@ -174,8 +174,8 @@ const STAIR_Z1 = VZ1 + (RISERS - 1) * GOING
 
 /* The deck off the extension's glazed side. */
 const DX1 = 7.3
-const DZ0 = -7.4
-const DZ1 = -3.6
+const DZ0 = -7.8
+const DZ1 = -3.2
 
 const members: Member[] = []
 const add = (m: Member) => members.push(m)
@@ -708,64 +708,64 @@ for (const { face, openings, mullions, at0 } of EXT_WALLS) {
 
 /* --- The deck off the glass --- */
 
-/* The deck, built the way a deck off a house is built: it HANGS FROM THE
-   HOUSE on a ledger and stands on posts only along its outer edge.
+/* The deck, carried on the extension's own structure.
 
-   It used to be its own free-standing grid of stumps, and whatever way those
-   were set out, some of them stood in a cluster beside the extension's own
-   stumps where the two meet — the one place the eye goes. A ledger removes
-   the problem instead of rearranging it: nothing stands at the house side at
-   all, and the only posts are three in a line under the outer edge, under the
-   balustrade.
+   Every row of stumps under the extension has its bearer run straight on out,
+   past the wall, to a post under the deck's outer edge. So each row reads as
+   one line from the house to the edge of the deck — stump, bearer, post — and
+   there is nothing standing at the junction but the extension's own stumps,
+   in the rows they were already in. The deck runs the full length of the
+   extension's side so that its rows ARE those rows.
 
-   Ledger on the wall, one bearer on the posts, joists spanning between them,
-   boards laid on the joists parallel to the house, and a fascia across the
-   outer ends of the joists. */
+   It sits a step below the floor, on joists that bear on the bearers, which
+   is how a deck off a raised house is built. Boards run out from the house,
+   set out edge to edge by band — `across` drops both end positions, and the
+   gap it left at the edge showed the joists through as pale dashes. */
 {
+  const ROWS = [-7.7, -6.4, -5.0, -3.4] // the extension's stump rows
   const OUT = DX1 - 0.15
   const JOIST_H = 0.15
-  const jBottom = JOIST_Y - JOIST_H / 2
-  // The bearer sits under the joists, and the posts under the bearer.
-  const bearerY = jBottom - BEARER_H / 2
-  const postTop = bearerY - BEARER_H / 2
-  const postH = postTop - GROUND
+  const bearerTop = BEARER_Y + BEARER_H / 2
+  const joistY = bearerTop + JOIST_H / 2
+  const deckY = joistY + JOIST_H / 2 + 0.015
+  const deckTop = deckY + 0.015
+  const postH = BEARER_BOTTOM - GROUND
 
-  for (const z of [DZ0 + 0.25, (DZ0 + DZ1) / 2, DZ1 - 0.25]) {
+  for (const z of ROWS) {
     add({ p: [OUT, GROUND + postH / 2, z], s: [0.11, postH, 0.11], rx: 0, at: 0.13, stage: 0, mat: 'frame', outer: true })
+    // The bearer, from the extension's last stump out to the deck's post.
+    const b0 = EX1 + 0.1
+    const b1 = OUT + 0.06
+    add({ p: [(b0 + b1) / 2, BEARER_Y, z], s: [b1 - b0, BEARER_H, 0.12], rx: 0, at: 0.16, stage: 0, mat: 'frame', outer: true })
   }
-  add({ p: [OUT, bearerY, (DZ0 + DZ1) / 2], s: [0.12, BEARER_H, DZ1 - DZ0], rx: 0, at: 0.16, stage: 0, mat: 'frame', outer: true })
-  // The ledger, against the extension's wall.
-  add({ p: [EX1 + CLAD_OFF + 0.04, JOIST_Y, (DZ0 + DZ1) / 2], s: [0.045, JOIST_H, DZ1 - DZ0], rx: 0, at: 0.165, stage: 0, mat: 'frame', outer: true })
-  // Joists from the ledger out over the bearer.
-  const j0 = EX1 + CLAD_OFF + 0.06
-  along(DZ0 + 0.03, DZ1 - 0.03, 0.45).forEach((z, i, all) => {
-    add({ p: [(j0 + DX1) / 2, JOIST_Y, z], s: [DX1 - j0, JOIST_H, 0.045], rx: 0, at: 0.175 + (i / all.length) * 0.02, stage: 0, mat: 'frame', outer: true })
+
+  // Joists along the deck, on the bearers; the last one is the outer edge.
+  const jx0 = EX1 + CLAD_OFF + 0.05
+  along(jx0, DX1 - 0.025, 0.45).forEach((x, i, all) => {
+    add({ p: [x, joistY, (DZ0 + DZ1) / 2], s: [0.045, JOIST_H, DZ1 - DZ0], rx: 0, at: 0.175 + (i / all.length) * 0.02, stage: 0, mat: 'frame', outer: true })
   })
-  // Fascia across the joist ends.
-  add({ p: [DX1, JOIST_Y, (DZ0 + DZ1) / 2], s: [0.03, JOIST_H, DZ1 - DZ0 + 0.03], rx: 0, at: 0.198, stage: 0, mat: 'frame', outer: true })
-  /* Boards, parallel to the house, edge to edge from the wall to the fascia.
-     Set out by band, each board centred in its own share of the width, because
-     `across` leaves both ends out: the last board stopped 36mm short of the
-     edge, the joist tops showed in that strip, and being lit from above they
-     drew a row of pale dashes along the edge, one per joist. Butted rather than
-     gapped for the same reason — a gap at this size is a pale dash, not
-     decking. The line-work draws the seams. */
-  const bx0 = j0 - 0.02
-  const bx1 = DX1 + 0.015
-  const n = Math.ceil((bx1 - bx0) / 0.14)
-  const step = (bx1 - bx0) / n
-  for (let i = 0; i < n; i++) {
-    const x = bx0 + step * (i + 0.5)
-    add({ p: [x, JOIST_Y + JOIST_H / 2 + 0.015, (DZ0 + DZ1) / 2], s: [step + 0.004, 0.03, DZ1 - DZ0 - 0.015], rx: 0, at: 0.92 + (i / n) * 0.02, stage: 3, mat: 'deck', outer: true })
+  // Rim boards across the joist ends.
+  for (const z of [DZ0 + 0.0225, DZ1 - 0.0225]) {
+    add({ p: [(jx0 + DX1) / 2, joistY, z], s: [DX1 - jx0, JOIST_H, 0.045], rx: 0, at: 0.198, stage: 0, mat: 'frame', outer: true })
   }
-}
-// A slim steel balustrade, the new wing's answer to the cottage's pickets.
-{
+
+  // Boards, running out from the house, edge to edge.
+  const z0 = DZ0
+  const z1 = DZ1
+  const n = Math.ceil((z1 - z0) / 0.14)
+  const step = (z1 - z0) / n
+  for (let i = 0; i < n; i++) {
+    const z = z0 + step * (i + 0.5)
+    add({ p: [(jx0 + DX1) / 2, deckY, z], s: [DX1 - jx0, 0.03, step + 0.004], rx: 0, at: 0.92 + (i / n) * 0.02, stage: 3, mat: 'deck', outer: true })
+  }
+
+  // A slim steel balustrade, the new wing's answer to the cottage's pickets,
+  // standing on the deck rather than on the house floor.
   const corners: [number, number][] = [[DX1 - 0.05, DZ0 + 0.05], [DX1 - 0.05, DZ1 - 0.05], [EX1 + 0.3, DZ1 - 0.05]]
   for (const [x, z] of corners) {
-    add({ p: [x, 0.5, z], s: [0.05, 1.0, 0.05], rx: 0, at: 0.95, stage: 3, mat: 'roof', outer: true })
+    add({ p: [x, deckTop + 0.5, z], s: [0.05, 1.0, 0.05], rx: 0, at: 0.95, stage: 3, mat: 'roof', outer: true })
   }
-  for (const y of [0.5, 0.97]) {
+  for (const y of [deckTop + 0.5, deckTop + 0.97]) {
     add({ p: [DX1 - 0.05, y, (DZ0 + DZ1) / 2], s: [0.04, 0.04, DZ1 - DZ0 - 0.1], rx: 0, at: 0.955, stage: 3, mat: 'roof', outer: true })
     add({ p: [(EX1 + 0.3 + DX1 - 0.05) / 2, y, DZ1 - 0.05], s: [DX1 - EX1 - 0.35, 0.04, 0.04], rx: 0, at: 0.955, stage: 3, mat: 'roof', outer: true })
   }
