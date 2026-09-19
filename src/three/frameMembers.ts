@@ -708,41 +708,57 @@ for (const { face, openings, mullions, at0 } of EXT_WALLS) {
 
 /* --- The deck off the glass --- */
 
-/* The deck's structure, laid out as a builder would: stumps, a bearer across
-   each row of them, joists on the bearers, boards on the joists.
+/* The deck, built the way a deck off a house is built: it HANGS FROM THE
+   HOUSE on a ledger and stands on posts only along its outer edge.
 
-   It had no joists at all, so the boards floated 300mm above the bearers with
-   daylight between. Its bearers also ran through the shared generator, which
-   lets every bearer run 100mm past its outer stumps: on the deck that put the
-   inner end under the extension's wall, right beside the extension's own
-   bearer, and the pair read as one beam jutting out. They stop at the deck's
-   own footprint now. */
+   It used to be its own free-standing grid of stumps, and whatever way those
+   were set out, some of them stood in a cluster beside the extension's own
+   stumps where the two meet — the one place the eye goes. A ledger removes
+   the problem instead of rearranging it: nothing stands at the house side at
+   all, and the only posts are three in a line under the outer edge, under the
+   balustrade.
+
+   Ledger on the wall, one bearer on the posts, joists spanning between them,
+   boards laid on the joists parallel to the house, and a fascia across the
+   outer ends of the joists. */
 {
-  const STUMP = 0.13
-  const xs = [5.55, 7.05]
-  const zs = [-7.2, -5.5, -3.8]
-  const stumpH = BEARER_BOTTOM - GROUND
-  const bx0 = EX1 + 0.05
-  const bx1 = DX1 - 0.02
-  zs.forEach((z, row) => {
-    xs.forEach((x, col) => {
-      add({ p: [x, GROUND + stumpH / 2, z], s: [STUMP, stumpH, STUMP], rx: 0, at: 0.13 + row * 0.005 + col * 0.0015, stage: 0, mat: 'frame', outer: true })
-    })
-    add({ p: [(bx0 + bx1) / 2, BEARER_Y, z], s: [bx1 - bx0, BEARER_H, 0.12], rx: 0, at: 0.16 + row * 0.004, stage: 0, mat: 'frame', outer: true })
+  const OUT = DX1 - 0.15
+  const JOIST_H = 0.15
+  const jBottom = JOIST_Y - JOIST_H / 2
+  // The bearer sits under the joists, and the posts under the bearer.
+  const bearerY = jBottom - BEARER_H / 2
+  const postTop = bearerY - BEARER_H / 2
+  const postH = postTop - GROUND
+
+  for (const z of [DZ0 + 0.25, (DZ0 + DZ1) / 2, DZ1 - 0.25]) {
+    add({ p: [OUT, GROUND + postH / 2, z], s: [0.11, postH, 0.11], rx: 0, at: 0.13, stage: 0, mat: 'frame', outer: true })
+  }
+  add({ p: [OUT, bearerY, (DZ0 + DZ1) / 2], s: [0.12, BEARER_H, DZ1 - DZ0], rx: 0, at: 0.16, stage: 0, mat: 'frame', outer: true })
+  // The ledger, against the extension's wall.
+  add({ p: [EX1 + CLAD_OFF + 0.04, JOIST_Y, (DZ0 + DZ1) / 2], s: [0.045, JOIST_H, DZ1 - DZ0], rx: 0, at: 0.165, stage: 0, mat: 'frame', outer: true })
+  // Joists from the ledger out over the bearer.
+  const j0 = EX1 + CLAD_OFF + 0.06
+  along(DZ0 + 0.03, DZ1 - 0.03, 0.45).forEach((z, i, all) => {
+    add({ p: [(j0 + DX1) / 2, JOIST_Y, z], s: [DX1 - j0, JOIST_H, 0.045], rx: 0, at: 0.175 + (i / all.length) * 0.02, stage: 0, mat: 'frame', outer: true })
   })
-  // Joists across the bearers, the full depth of the deck, under the boards.
-  along(bx0 + 0.05, bx1 - 0.05, 0.45).forEach((x, i, all) => {
-    add({ p: [x, JOIST_Y, (DZ0 + DZ1) / 2], s: [0.045, 0.15, DZ1 - DZ0], rx: 0, at: 0.175 + (i / all.length) * 0.02, stage: 0, mat: 'frame', outer: true })
-  })
-  // A rim board across each end, so the edge is a clean line rather than a
-  // row of joist ends.
-  for (const z of [DZ0 + 0.02, DZ1 - 0.02]) {
-    add({ p: [(bx0 + bx1) / 2, JOIST_Y, z], s: [bx1 - bx0, 0.15, 0.045], rx: 0, at: 0.198, stage: 0, mat: 'frame', outer: true })
+  // Fascia across the joist ends.
+  add({ p: [DX1, JOIST_Y, (DZ0 + DZ1) / 2], s: [0.03, JOIST_H, DZ1 - DZ0 + 0.03], rx: 0, at: 0.198, stage: 0, mat: 'frame', outer: true })
+  /* Boards, parallel to the house, edge to edge from the wall to the fascia.
+     Set out by band, each board centred in its own share of the width, because
+     `across` leaves both ends out: the last board stopped 36mm short of the
+     edge, the joist tops showed in that strip, and being lit from above they
+     drew a row of pale dashes along the edge, one per joist. Butted rather than
+     gapped for the same reason — a gap at this size is a pale dash, not
+     decking. The line-work draws the seams. */
+  const bx0 = j0 - 0.02
+  const bx1 = DX1 + 0.015
+  const n = Math.ceil((bx1 - bx0) / 0.14)
+  const step = (bx1 - bx0) / n
+  for (let i = 0; i < n; i++) {
+    const x = bx0 + step * (i + 0.5)
+    add({ p: [x, JOIST_Y + JOIST_H / 2 + 0.015, (DZ0 + DZ1) / 2], s: [step + 0.004, 0.03, DZ1 - DZ0 - 0.015], rx: 0, at: 0.92 + (i / n) * 0.02, stage: 3, mat: 'deck', outer: true })
   }
 }
-across(DZ0, DZ1, 0.15).forEach((z, i, all) => {
-  add({ p: [(EX1 + DX1) / 2 + 0.05, -0.015, z], s: [DX1 - EX1 + 0.1, 0.03, 0.13], rx: 0, at: 0.92 + (i / all.length) * 0.02, stage: 3, mat: 'deck', outer: true })
-})
 // A slim steel balustrade, the new wing's answer to the cottage's pickets.
 {
   const corners: [number, number][] = [[DX1 - 0.05, DZ0 + 0.05], [DX1 - 0.05, DZ1 - 0.05], [EX1 + 0.3, DZ1 - 0.05]]
