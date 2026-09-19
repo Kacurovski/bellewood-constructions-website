@@ -141,7 +141,7 @@ function StudioSky() {
     the colour the house falls back towards followed it. Fading towards the old
     sage tint would leave every quiet material a green-grey that no longer
     matches anything on the page. */
-const FADE_TO = '#ffffff'
+const FADE_TO = '#f7f7f4'
 const FADED = 0.84
 
 /** The windows carry a little light of their own at rest, keyed or not; they

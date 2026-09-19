@@ -203,13 +203,12 @@ does not.
 
 ## Dark grounds are Bellewood Green, never Deep Pine
 
-**The page ground is white — `#FFFFFF`, the same value as Paper.** It changed
-twice on 17 September 2026, both times from Angus. First the green-tinted wash
-came off, because it read creamy and minty to him, and `--wash` became
-`#F7F7F4`; every light green panel went white with it (`--sage-panel` is now
-Paper). Then the ground itself went white, because `#F7F7F4` under `#FFFFFF`
-plates is two tones, and beside a white plate the ground is the duller of the
-two — he pointed at a plate and said that one is white and the rest is not.
+**The page ground is `#F7F7F4` — the crisp white Angus approved on the 17
+September call** — and Paper (every panel) is the same value, so the page is one
+even tone. The green-tinted wash came off on the call because it read creamy and
+minty to him. We went to pure `#FFFFFF` briefly, after our own pure-white panels
+made the page look duller beside them; the fix for that is panels matching the
+ground, not a brighter ground, so it is back on exactly what he signed off.
 
 **So there is no longer a second light tone to separate a panel from the page
 with.** Panels that used to be a shade brighter than the ground now carry a

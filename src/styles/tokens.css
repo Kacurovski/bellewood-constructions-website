@@ -23,29 +23,23 @@
      reads as less heavy. Do not "correct" it back. */
   --green: #05432a;
   --pine: #10251a;         /* Deep Pine. Body text and fine rules */
-  /* The page ground. WHITE. Not off-white, not near-white — #ffffff, the same
-     value as --paper.
+  /* The page ground: the crisp white Angus approved on the 17 September call.
 
-     Two changes, both on 17 September 2026, both from Angus:
-
+     History, all 17 September 2026:
        #f7f9f0 -> #f7f7f4   on the call: the green-tinted wash read creamy and
-                            minty, and he asked for a crisp white.
-       #f7f7f4 -> #ffffff   after review: "white everywhere" meant white. A
-                            ground at f7f7f4 with plates at ffffff is two tones,
-                            and next to a white plate the ground is visibly the
-                            duller of the two. He pointed at the plate and said
-                            that is white and the rest is not, which was correct.
+                            minty; he confirmed this white looks better.
+       #f7f7f4 -> #ffffff   briefly, after our own panels (pure white) made the
+                            page look duller beside them.
+       #ffffff -> #f7f7f4   back to exactly what he signed off, with every panel
+                            matched to it (--paper below) so the page is one
+                            even tone and nothing looks whiter than the ground.
 
-     The site used to separate a plate from the page by tone: panels were a
-     shade brighter than the ground. With one white there is no shade left to be
-     brighter by, so every one of those surfaces now carries a hairline of
-     --rule instead. Structure comes from line, which is what a set of drawings
-     does anyway. If a new panel needs to read as laid ON the page, give it a
-     rule; do not give it a tint. */
-  --wash: #ffffff;
+     Do not "brighten" this to pure white. The two-tone problem is solved by
+     --paper matching it, not by moving the ground. */
+  --wash: #f7f7f4;
   --sage: #afc3b0;         /* Sage. Panels and dividers. Never body text */
   --timber: #9a7b4f;       /* Silky Oak. Accent only. Fails text contrast — decorative */
-  --paper: #ffffff;        /* Documents and anything that must print clean */
+  --paper: #f7f7f4;        /* Panels and surfaces. Matches --wash: one even white */
 
   /* Derived, for rules and washes only. Never used for text. */
   --rule: color-mix(in srgb, var(--pine) 16%, transparent);
@@ -60,8 +54,8 @@
   /* Panels are white now, not a tint of Sage. Same call: every light green
      surface goes white. Sage itself stays as it was — it is a text and mark
      colour on the dark bands, not a background, and nothing there is green
-     against green. Panels sit a shade brighter than the page so a plate still
-     reads as a surface laid on the ground rather than a hole in it. */
+     against green. Panels are the same white as the page; where a plate has
+     to read as laid on the ground, it carries a hairline of --rule. */
   --sage-panel: var(--paper);
 
   /* Safe pairs (brand book §06):
