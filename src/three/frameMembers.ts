@@ -118,14 +118,7 @@ const STUD_W = 0.09
 const PLATE = 0.045
 const WALL_TOP = PLATE + WALL_H + STUD_W
 
-/* Board thickness. 16mm, down from 24.
-   A board here is a box, so it has a flat top face, and that face is very
-   nearly horizontal — it catches more light than anything else on the wall and
-   flared pale through the reveal above it. Read at full size that looked like a
-   row of white slots between the planks, which is how it was reported, twice.
-   Thinner board, smaller top face, and what is left of it now reads as the
-   shadowed lap of a weatherboard rather than a gap. */
-const CLAD_T = 0.016
+const CLAD_T = 0.024
 const CLAD_OFF = STUD_W / 2 + CLAD_T / 2
 /** Weatherboard exposure on the cottage. Narrow, which is most of what makes a
  *  wall read as old. */
@@ -232,16 +225,14 @@ const EXT_LEFT: Face = { axis: 'x', at: EX0, sign: -1, u0: EZ0, u1: EZ1, top: EX
 const EXT_FRONT: Face = { axis: 'z', at: EZ1, sign: 1, u0: CX, u1: EX1, top: EXT_H + 0.1 }
 
 /** Places a wall-local rectangle as a panel on a face. */
-function panel(face: Face, r: Rect, thickness: number, offset: number, mat: MaterialKey, at: number, stage: 0 | 1 | 2 | 3, lines?: false, tilt = 0) {
+function panel(face: Face, r: Rect, thickness: number, offset: number, mat: MaterialKey, at: number, stage: 0 | 1 | 2 | 3) {
   const u = (r.u0 + r.u1) / 2
   const v = (r.v0 + r.v1) / 2
   const uw = Math.max(r.u1 - r.u0, 0.01)
   const vh = Math.max(r.v1 - r.v0, 0.01)
   const plane = face.at + face.sign * offset
-  const extra = lines === false ? ({ lines: false } as const) : {}
-  if (face.axis === 'z')
-    add({ p: [u, v, plane], s: [uw, vh, thickness], rx: face.sign * tilt, at, stage, mat, outer: true, ...extra })
-  else add({ p: [plane, v, u], s: [thickness, vh, uw], rx: 0, rz: -face.sign * tilt, at, stage, mat, outer: true, ...extra })
+  if (face.axis === 'z') add({ p: [u, v, plane], s: [uw, vh, thickness], rx: 0, at, stage, mat, outer: true })
+  else add({ p: [plane, v, u], s: [thickness, vh, uw], rx: 0, at, stage, mat, outer: true })
 }
 
 /**
@@ -250,27 +241,16 @@ function panel(face: Face, r: Rect, thickness: number, offset: number, mat: Mate
  * same subtraction with the wall's two axes swapped, which is how the cottage
  * gets weatherboards and the extension gets upright boards from one routine.
  */
-/* `cover` is how much of its band a board fills, and the boards OVERLAP.
-   A reveal was how this wall used to say "boards" — but a reveal is a hole. It
-   needed a wall behind it to stop the background showing through, that wall
-   landed inside the studs, and the two fought for the same pixels, which is
-   what put dashes along every board and around every window. The boards say
-   "boards" by being tilted instead.
-
-   1.04, not 1.00, and the four per cent is the whole point: a tilted board is
-   SHORTER in elevation than the band it fills, by cos(tilt). At exactly 1.00
-   that left a 1.5mm sliver between every pair of boards with nothing behind
-   it, and those slivers are what kept getting reported as gaps. Overlapping
-   the bands closes them for good. Overlap is safe where a reveal was not: two
-   solid boards of one material meeting at an angle give a clean intersection,
-   whereas two coplanar faces fight for the pixel. */
-function cladding(wall: Rect, openings: Rect[], board: number, vertical: boolean, cover = 1.04): Rect[] {
+function cladding(wall: Rect, openings: Rect[], board: number, vertical: boolean): Rect[] {
   const swap = (r: Rect): Rect => ({ u0: r.v0, v0: r.u0, u1: r.v1, v1: r.u1 })
   const w = vertical ? swap(wall) : wall
   const os = vertical ? openings.map(swap) : openings
   const out: Rect[] = []
   for (let v = w.v0; v < w.v1 - 1e-6; v += board) {
-    const vTop = Math.min(v + board * cover, w.v1)
+    // Boards fill their band and lap 2% into the next. At 92% there was an open
+    // slot between every pair with nothing behind it. The line-work still draws
+    // each seam, so the wall still reads as boards.
+    const vTop = Math.min(v + board * 1.02, w.v1)
     const spans = os
       .filter((o) => o.v1 > v + 1e-6 && o.v0 < v + board - 1e-6)
       .map((o): [number, number] => [Math.max(o.u0, w.u0), Math.min(o.u1, w.u1)])
@@ -409,10 +389,10 @@ function hipPlane(plane: 'front' | 'back' | 'left' | 'right', spacing: number, w
     const w = sheet ? Math.max(width, (half * 2) / positions.length + 0.03) : width
     if (long) {
       const sign = plane === 'front' ? 1 : -1
-      add({ p: [c, y, sign * (LZ - run / 2)], s: [w, thick, slope + (sheet ? 0.015 : 0)], rx: sign * PITCH, at, stage, mat, outer, ...extra })
+      add({ p: [c, y, sign * (LZ - run / 2)], s: [w, thick, slope + (sheet ? 0.04 : 0)], rx: sign * PITCH, at, stage, mat, outer, ...extra })
     } else {
       const sign = plane === 'right' ? 1 : -1
-      add({ p: [sign * (LX - run / 2), y, c], s: [slope + (sheet ? 0.015 : 0), thick, w], rx: 0, rz: -sign * PITCH, at, stage, mat, outer, ...extra })
+      add({ p: [sign * (LX - run / 2), y, c], s: [slope + (sheet ? 0.04 : 0), thick, w], rx: 0, rz: -sign * PITCH, at, stage, mat, outer, ...extra })
     }
   })
 }
@@ -514,23 +494,8 @@ const COTTAGE_WALLS: { face: Face; openings: Rect[]; mullions?: number[][]; at0:
 ]
 
 for (const { face, openings, mullions, at0 } of COTTAGE_WALLS) {
-  const wall = { u0: face.u0, v0: -0.12, u1: face.u1, v1: face.top }
-  const rects = cladding(wall, openings, WEATHERBOARD, false)
-  /* WHY THE BOARDS ARE TILTED.
-     A weatherboard is not a flat plank pinned to a wall: it laps the one below
-     it, so it stands off at the bottom and its face points a few degrees down.
-     Here that matters for a reason beyond accuracy. The boards used to be drawn
-     by the line-work, and Bellewood Green is lighter than this timber in shade,
-     so every board edge came out as a pale dash and the wall read as though it
-     had white slots between the planks. Line-work off, a flat board is a flat
-     slab — there is no shadow at 6mm for a shadow map covering eighteen metres
-     to catch.
-
-     Tilted, each board is a plane at a different angle from its neighbour and
-     from the wall behind, so the LIGHTING draws the boards. That works at any
-     size, needs no lines and no shadow map, and is what the wall actually does.
-     ~7 degrees. */
-  rects.forEach((r, i) => panel(face, r, CLAD_T, CLAD_OFF, 'clad', at0 + (i / rects.length) * 0.06, 3, false, 0.12))
+  const rects = cladding({ u0: face.u0, v0: -0.12, u1: face.u1, v1: face.top }, openings, WEATHERBOARD, false)
+  rects.forEach((r, i) => panel(face, r, CLAD_T, CLAD_OFF, 'clad', at0 + (i / rects.length) * 0.06, 3))
   openings.forEach((o, i) => {
     const bars = mullions?.[i] ?? []
     glaze(face, o, at0 + 0.05 + i * 0.004, bars, bars.length ? FRENCH_RAILS : [])
@@ -718,15 +683,8 @@ const EXT_WALLS: { face: Face; openings: Rect[]; mullions: number[][]; at0: numb
 ]
 
 for (const { face, openings, mullions, at0 } of EXT_WALLS) {
-  const wall = { u0: face.u0, v0: -0.12, u1: face.u1, v1: face.top }
-  const rects = cladding(wall, openings, BATTEN, true)
-  /* The extension's boards are upright, so a tilt would lean them sideways and
-     look wrong. Every second board stands 4mm proud instead: two depths, two
-     shades under the same light, and the wall reads as boards without a single
-     line or a single gap. */
-  rects.forEach((r, i) =>
-    panel(face, r, CLAD_T, CLAD_OFF + (i % 2 ? 0.004 : 0), 'charred', at0 + (i / rects.length) * 0.05, 3, false),
-  )
+  const rects = cladding({ u0: face.u0, v0: -0.12, u1: face.u1, v1: face.top }, openings, BATTEN, true)
+  rects.forEach((r, i) => panel(face, r, CLAD_T, CLAD_OFF, 'charred', at0 + (i / rects.length) * 0.05, 3))
   openings.forEach((o, i) => glaze(face, o, at0 + 0.04 + i * 0.004, mullions[i] ?? []))
 }
 
