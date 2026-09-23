@@ -3,6 +3,7 @@ import { PageHead } from '../components/PageHead'
 import { Reveal } from '../components/Reveal'
 import { Process } from '../sections/Process'
 import { MaterialKey } from '../sections/MaterialKey'
+import { Questions } from '../sections/Questions'
 import { ScrollWords } from '../components/ScrollWords'
 import { usePageTitle } from '../hooks/usePageTitle'
 import { contact } from '../config/site'
@@ -46,6 +47,10 @@ export default function Approach() {
       <Process headless />
 
       <MaterialKey />
+
+      {/* The plain-language half of this page: what the drawing says, said in
+          words, plus everything people ring up to ask before they commit. */}
+      <Questions number="E-04" />
 
       <section className={['shell', styles.close].join(' ')} aria-labelledby="approach-close">
         <Reveal>

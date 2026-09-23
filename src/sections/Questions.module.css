@@ -1,0 +1,101 @@
+/* ---------------------------------------------------------------------------
+   Questions.
+
+   The one section on the site that is written to be READ rather than looked at,
+   so it is set like a page of a specification: a rule between every item, the
+   question in the display face, the answer in the body serif at a comfortable
+   measure. No accordions. A person deciding whether to keep their house should
+   not have to click eleven times to read eleven answers, and a closed accordion
+   hides the very thing that makes this section worth having.
+   --------------------------------------------------------------------------- */
+
+.section {
+  border-top: 1px solid var(--ink);
+}
+
+.head {
+  margin-bottom: clamp(2rem, 4vw, 3.25rem);
+}
+
+.heading {
+  font-family: var(--font-display);
+  font-size: var(--t-section);
+  line-height: var(--lh-heading);
+  letter-spacing: -0.01em;
+  margin: 0;
+  color: var(--green);
+}
+
+.list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-top: 1px solid var(--rule);
+}
+
+.item {
+  display: grid;
+  /* Number, question, answer. The question and the answer sit side by side so
+     the band uses the page rather than running as one narrow column with half
+     the width empty beside it — which is what a single column looked like at
+     1440. */
+  grid-template-columns: 3.5rem minmax(0, 0.85fr) minmax(0, 1.15fr);
+  gap: clamp(1rem, 2.5vw, 2.5rem);
+  align-items: start;
+  padding-block: clamp(1.5rem, 3vw, 2.5rem);
+  border-bottom: 1px solid var(--rule);
+}
+
+/* The item number, set as a drawing reference rather than a list bullet. */
+.num {
+  font-family: var(--font-display);
+  font-size: var(--t-fine);
+  letter-spacing: 0.08em;
+  color: color-mix(in srgb, var(--green) 72%, var(--wash));
+  padding-top: 0.4rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.q {
+  font-family: var(--font-display);
+  font-size: var(--t-sub);
+  line-height: var(--lh-heading);
+  letter-spacing: -0.005em;
+  color: var(--green);
+  margin: 0;
+  max-width: 22ch;
+}
+
+.a {
+  margin: 0;
+  max-width: var(--measure);
+  color: var(--pine);
+}
+
+.a + .a {
+  margin-top: 0.85rem;
+}
+
+/* Below the fold of a phone the two-column setting costs more than it gives:
+   the number column eats a fifth of the width and the answers get narrow. */
+/* One column below the width where three stop being readable: the question
+   sits over its answer, with the number inline above it. */
+@media (max-width: 900px) {
+  .item {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.6rem;
+  }
+
+  .num {
+    padding-top: 0;
+  }
+
+  .q {
+    max-width: var(--measure-tight);
+  }
+}
+
+/* The answer column. */
+.answer {
+  display: block;
+}
