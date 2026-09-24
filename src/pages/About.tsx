@@ -48,11 +48,11 @@ export default function About() {
               The work is mostly renovations, extensions and restorations, built
               predominantly in timber. Around four projects a year, in the range
               where the detail matters and the drawings are worth following
-              carefully. Alongside the housing there are apartment refurbishments,
-              in Brisbane and on the coast.
+              carefully. We also take on apartment refurbishments, in Brisbane and
+              on the Sunshine Coast.
             </p>
             <p>
-              He is QBCC licensed, and has been for the whole of it. The licence
+              He is QBCC licensed, and has been throughout. The licence
               number is at the bottom of every page on this site, and it is the
               same number it has always been.
             </p>
@@ -115,10 +115,9 @@ export default function About() {
               <p>
                 It is a name change and nothing else. The same company, the same
                 ABN, the same QBCC licence, the same person on site. Every project
-                already in the diary continues exactly as it was. The change takes
-                effect formally on {compliance.nameChangeDate}, and until then you
-                will see both names together: on this site, on signage, and on the
-                job boards out the front of our work.
+                already in the diary continues exactly as it was. For a while you
+                will see both names together — on this site, on signage, and on
+                the job boards out the front of our work.
               </p>
               <p>
                 If you have worked with us before, nothing about that changes. If

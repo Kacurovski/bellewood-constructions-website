@@ -42,7 +42,7 @@ export const services: Service[] = [
     title: 'Lift and build-under',
     lead: 'Raising the house and building a new level beneath it.',
     body:
-      'The Brisbane way to double a house without touching its face. The original goes up on new stumps, a new ground floor is framed in timber underneath, and the house you see from the street is the same house, higher.',
+      'The Brisbane way to double a house without changing its front. The original goes up on new stumps, a new ground floor is framed in timber beneath it, and the house you see from the street is the same house, a level higher.',
   },
   {
     title: 'Restoration',
@@ -60,6 +60,6 @@ export const services: Service[] = [
     title: 'Apartment refurbishment',
     lead: 'Full interior refurbishments, in Brisbane and on the Sunshine Coast.',
     body:
-      'Not the main work, but done to the same standard, and by the same builder. Apartments bring their own constraints — body corporate, access, working hours — and those are handled as part of the job rather than as surprises.',
+      'Not the main work, but done to the same standard by the same builder. Apartments bring their own constraints — body corporate, access, working hours — and those are handled as part of the job rather than arriving as surprises.',
   },
 ]

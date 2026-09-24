@@ -63,7 +63,7 @@ export function Architects() {
         <Reveal delay={0.06} className={styles.statementWrap}>
           <ScrollWords
             className={styles.statement}
-            text="Questions come early, in writing, *before they become variations*. Site is kept in a state *you can bring a client to*."
+            text="Questions come early, in writing, *before they become variations*. The site is kept in a state *you can bring a client to*."
           />
         </Reveal>
 

@@ -38,7 +38,7 @@ export const faq: Question[] = [
     q: 'What kind of work do you take on?',
     a: [
       'Renovations, extensions and restorations to houses in inner Brisbane, and most of them are heritage or older homes — worker’s cottages, Queenslanders, post-war houses worth keeping. Lifting a house and building under it is part of that. So is opening the back of a cottage to the north without touching what the street sees.',
-      'Alongside the houses there are apartment refurbishments, in Brisbane and on the coast, done to the same standard.',
+      'Alongside the houses there are apartment refurbishments, in Brisbane and on the Sunshine Coast, done to the same standard.',
     ],
   },
   {

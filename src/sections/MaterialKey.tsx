@@ -50,12 +50,12 @@ const KEY: { mat: Key; name: string; note: string }[] = [
   {
     mat: 'frame',
     name: 'Structure',
-    note: 'Bearers, stumps, studs, plates and rafters. Silky Oak, the brand accent, because the frame is the part of a house nobody sees and every part of it depends on.',
+    note: 'Bearers, stumps, studs, plates and rafters: the part of a house nobody sees, and the part everything else depends on.',
   },
   {
     mat: 'clad',
     name: 'Cladding',
-    note: 'Weatherboards, gapped so they read as boards rather than as a wall. What the original cottage is skinned in.',
+    note: 'Weatherboards, the skin of the original cottage — kept and repaired rather than replaced.',
   },
   {
     mat: 'charred',
@@ -65,7 +65,7 @@ const KEY: { mat: Key; name: string; note: string }[] = [
   {
     mat: 'roof',
     name: 'Roof',
-    note: 'Sheet steel, run over the cottage, the verandah and the new wing. Deep Pine, the darkest value the brand holds.',
+    note: 'Sheet steel, run over the cottage, the verandah and the new wing, so old and new sit under one roof.',
   },
   {
     mat: 'deck',
@@ -129,7 +129,7 @@ export function MaterialKey() {
                 What it is made of
               </h2>
             }
-            note={pointer ? 'Point at a material' : 'Scroll the list'}
+            note={pointer ? 'Hover over a material' : 'Scroll the list'}
           />
         </Reveal>
 

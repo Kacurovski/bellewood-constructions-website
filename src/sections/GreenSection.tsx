@@ -5,7 +5,7 @@ import { ComplianceLine } from '../components/ComplianceLine'
 import { Reveal } from '../components/Reveal'
 import { SheetRef } from '../components/Sheet'
 import { useSectionProgress } from '../hooks/useSectionProgress'
-import { compliance } from '../config/site'
+import { } from '../config/site'
 import styles from './GreenSection.module.css'
 
 const SiteMesh = lazy(() => import('../three/SiteMesh'))
@@ -57,8 +57,8 @@ export function GreenSection() {
           <div className={['stack', styles.body].join(' ')}>
             <p>
               Angus Cowan Constructions is becoming Bellewood Constructions. Same
-              company, same licence, same person on site — an ASIC name change,
-              formally on {compliance.nameChangeDate}, and nothing else.
+              company, same licence, same person on site. A change of name, and
+              nothing else.
             </p>
           </div>
 

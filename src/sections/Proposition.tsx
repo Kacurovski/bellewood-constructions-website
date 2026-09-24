@@ -182,8 +182,8 @@ export function Proposition() {
             />
             <span className={['eyebrow', styles.noteLabel].join(' ')}>Note</span>
             <p className={styles.aside}>
-              Also apartment refurbishments, in Brisbane and on the coast, to the
-              same standard.
+              We also take on apartment refurbishments, in Brisbane and on the
+              Sunshine Coast, to the same standard.
             </p>
           </aside>
         </Reveal>

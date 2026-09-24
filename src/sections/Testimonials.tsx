@@ -169,11 +169,11 @@ export function Testimonials() {
           <SheetRef
             number="A-07"
             name="In their words"
-            note="One at a time"
+            note="Clients and architects"
             rule={false}
           />
           <h2 id="said-heading" className={['section-heading', styles.heading].join(' ')}>
-            What the owners say.
+            What clients say.
           </h2>
         </Reveal>
 

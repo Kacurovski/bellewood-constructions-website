@@ -77,6 +77,7 @@ export const compliance = {
   licensedEntity: 'Angus Cowan Constructions Pty Ltd',
   tradingNameClause: 'a trading name of Angus Cowan Constructions Pty Ltd',
   // Set to null on 1 July 2027, when the ASIC name change takes effect.
+  // Not shown on the page: the site names the change without dating it.
   nameChangeDate: '1 July 2027',
 
   /**
@@ -239,7 +240,7 @@ export const nextSteps = [
 export const credentials = [
   { label: 'Licensed', value: `QBCC ${compliance.licenceNumber}` },
   { label: 'Insured', value: 'Home warranty cover' },
-  { label: 'Where we build', value: 'Brisbane and the coast' },
+  { label: 'Where we build', value: 'Brisbane and the Sunshine Coast' },
   { label: 'Capacity', value: 'Four projects a year' },
 ] as const
 

@@ -68,7 +68,7 @@ export function SelectedProjects() {
                 Selected work
               </h2>
             }
-            note="Three of them"
+            note="A selection"
             rule={false}
           />
         </Reveal>
