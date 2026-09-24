@@ -1,5 +1,6 @@
 import { useRef, useState } from 'react'
 import { ImageSlot } from './ImageSlot'
+import { beforeIsPlaceholder } from '../data/projects'
 import type { ImageSlot as Slot } from '../data/projects'
 import styles from './BeforeAfter.module.css'
 
@@ -54,17 +55,20 @@ export function BeforeAfter({ before, after, label = 'Before and after', ratio =
             moves, which is enough to read as two planes and leaves no gap at
             the edges for the ground behind to show through. */}
         <div className={styles.plane}>
-          <ImageSlot slot={before} ratio={ratio} tone="sage" className={styles.img} parallax={false} />
+          <ImageSlot slot={after} ratio={ratio} tone="green" className={styles.img} parallax={false} />
         </div>
 
-        {/* The state being revealed comes forward as it is revealed. The labels
-            live in the caption below, not on the planes: the front plane covers
-            the back one's caption, so putting them here would show only one. */}
+        {/* The front plane is clipped to the LEFT `split` per cent, so it is the
+            plane that sits under the "Before" label — it has to hold the
+            before. It held the after, which put the finished house on the
+            left under "Before" and nobody saw, because the stock pairs were
+            two different houses. The labels live in the caption below, not on
+            the planes: the front plane covers the back one's caption. */}
         <div
           className={[styles.plane, styles.front].join(' ')}
           style={{ ['--depth' as string]: `${(value / 100) * 0.02}` }}
         >
-          <ImageSlot slot={after} ratio={ratio} tone="green" className={styles.img} parallax={false} />
+          <ImageSlot slot={before} ratio={ratio} tone="sage" className={styles.img} parallax={false} />
         </div>
 
         <span className={styles.seam} aria-hidden="true" />
@@ -82,7 +86,10 @@ export function BeforeAfter({ before, after, label = 'Before and after', ratio =
       </div>
 
       <figcaption className={['small', styles.caption].join(' ')}>
-        <span>Before</span>
+        {/* While the before photographs are stand-ins, the caption says so:
+            a faded copy of the finished house is a demonstration of the
+            control, not a record of the job. */}
+        <span>{beforeIsPlaceholder ? 'Before — placeholder, photo to come' : 'Before'}</span>
         <span className={styles.hint}>Drag to compare</span>
         <span>After</span>
       </figcaption>

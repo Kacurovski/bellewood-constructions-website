@@ -28,6 +28,18 @@ import { photo } from './photos'
  *  on the site is the client's own. Testimonials have their own flag. */
 export const mediaIsPlaceholder = false
 
+/**
+ * THE BEFORE PHOTOGRAPHS ARE PLACEHOLDERS. Angus sent finished photographs
+ * only, so every project's `before` is its own `after` faded to monochrome —
+ * named `<slug>-before-placeholder` — standing in so the comparison can be
+ * reviewed. The comparison labels itself as a placeholder while this is true.
+ * When a real before photograph lands for a project, point its `before` at
+ * the real file; when the last one does, set this to false and delete the
+ * `-before-placeholder` files. Never pair a stock photograph with his: that
+ * would present somebody else's house as the start of his job.
+ */
+export const beforeIsPlaceholder = true
+
 export type ImageSlot = {
   /** A resolved photograph URL from `photo`, or null for the empty ground. */
   src: string | null
@@ -83,7 +95,11 @@ export type Project = {
 /* The bare file name, not a path. `photo` resolves it through the bundler —
    see src/data/photos.ts for why that matters. */
 const img = (file: string, alt: string): ImageSlot => ({ src: photo(file), alt })
+/* An empty slot, for a photograph that does not exist yet. Unused while every
+   slot on the site holds a photograph; kept for the next project without one. */
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const none = (alt: string): ImageSlot => ({ src: null, alt })
+export { none as emptySlot }
 
 /* WRITING THE REAL STORIES. Each entry's `story` is placeholder until Angus
    supplies the job; the shape to write to is: what the house was, what the
@@ -103,8 +119,8 @@ export const projects: Project[] = [
       'Double verandahs across the full width of the house, on turned posts with fretwork brackets at every head, and French doors opening onto the upper deck. The whole house in one pale colour under a corrugated roof, and a picket fence and gate to the street in the same white as the balustrades.',
     ],
     hero: img('kalinga-1', 'A two-storey Queenslander with verandahs on both levels, behind a white picket fence'),
-    before: none('The Kalinga house before work'),
-    after: none('The Kalinga house after work'),
+    before: img('kalinga-before-placeholder', 'Placeholder for the before photograph, which is still to come: the finished house, faded to monochrome'),
+    after: img('kalinga-1', 'The finished house'),
     gallery: [],
     placeholder: false,
     featured: true,
@@ -121,8 +137,8 @@ export const projects: Project[] = [
       'Inside, the house is lined in vertical boards throughout — the kitchen with its long island and pendant lights, the stair landing with its timber handrail, the hallway with a glazed door onto the wine room, and the bathroom with its patterned wallpaper. The upper verandah is furnished as a room, with the city on the skyline.',
     ],
     hero: img('auchenflower-5', 'The rear of a two-storey Queenslander: a gabled upper verandah over an open lower level, the weatherboard wing beside it'),
-    before: none('The Auchenflower house before work'),
-    after: none('The Auchenflower house after work'),
+    before: img('auchenflower-before-placeholder', 'Placeholder for the before photograph, which is still to come: the finished house, faded to monochrome'),
+    after: img('auchenflower-5', 'The finished house'),
     gallery: [
       img('auchenflower-4', 'The upper verandah furnished as an outdoor room, with the city on the skyline beyond the balustrade'),
       img('auchenflower-2', 'A kitchen lined in vertical boards, with a long navy island under two pendant lights'),
@@ -144,8 +160,8 @@ export const projects: Project[] = [
       'The street front: a full-width verandah on the upper level with a timber balustrade on turned posts, a lattice frieze beneath it, two round windows either side of the entry, and a low fence with a wrought-iron gate. The lights are on inside.',
     ],
     hero: img('clayfield-1', 'The front of a two-storey character home at dusk, verandah and lattice lit from within, a wrought-iron gate at the street'),
-    before: none('The Clayfield house before work'),
-    after: none('The Clayfield house after work'),
+    before: img('clayfield-before-placeholder', 'Placeholder for the before photograph, which is still to come: the finished house, faded to monochrome'),
+    after: img('clayfield-1', 'The finished house'),
     gallery: [],
     placeholder: false,
     featured: true,
@@ -161,8 +177,8 @@ export const projects: Project[] = [
       'The entry: a pair of glazed doors in deep navy under a fanlight, on a verandah lined in vertical boards. Inside, the front room is lined the same way, with a window seat set into the bay under three sash windows and the timber floor running through.',
     ],
     hero: img('ascot-2', 'A front room with a cushioned window seat set into a bay of three sash windows, timber floor and lined walls'),
-    before: none('The Ascot house before work'),
-    after: none('The Ascot house after work'),
+    before: img('ascot-before-placeholder', 'Placeholder for the before photograph, which is still to come: the finished house, faded to monochrome'),
+    after: img('ascot-2', 'The finished house'),
     gallery: [img('ascot-1', 'A pair of navy glazed front doors under a fanlight, on a verandah lined in vertical boards')],
     placeholder: false,
     featured: false,
@@ -178,8 +194,8 @@ export const projects: Project[] = [
       'One long room: a coffered ceiling overhead, wide timber boards underfoot, a stone-clad fireplace wall with the television set into it, timber shelving beside it, and full-height glazing along the far side opening onto a deck with the suburb below.',
     ],
     hero: img('windsor-1', 'A living room under a coffered ceiling, with a stone fireplace wall, timber shelving and full-height glass onto a deck'),
-    before: none('The Windsor house before work'),
-    after: none('The Windsor house after work'),
+    before: img('windsor-before-placeholder', 'Placeholder for the before photograph, which is still to come: the finished house, faded to monochrome'),
+    after: img('windsor-1', 'The finished house'),
     gallery: [],
     placeholder: false,
     featured: false,
@@ -195,8 +211,8 @@ export const projects: Project[] = [
       'Two houses on neighbouring blocks, photographed at dusk with the lights on: one in horizontal weatherboard with a timber-screened balcony over a garage, the other in vertical board over a brick base. The one departure on this site from older homes.',
     ],
     hero: img('camp-hill-1', 'Two new homes side by side at dusk, one in weatherboard with a timber-screened balcony, the other in vertical board over brick'),
-    before: none('The Camp Hill homes before work'),
-    after: none('The Camp Hill homes after work'),
+    before: img('camp-hill-before-placeholder', 'Placeholder for the before photograph, which is still to come: the finished house, faded to monochrome'),
+    after: img('camp-hill-1', 'The finished house'),
     gallery: [],
     placeholder: false,
     featured: false,
