@@ -117,6 +117,12 @@
   display: block;
 }
 
+/* On a desk the card wrapper is invisible to the grid: its children take
+   their own columns. On a phone it becomes the card. */
+.card {
+  display: contents;
+}
+
 .para {
   margin: 0;
   max-width: var(--measure);
@@ -191,50 +197,48 @@
     display: none;
   }
 
-  /* Each stage a plate: the ring on top, the title, the account. Every
-     stage sits at full weight — the swipe already says which one you are
-     on, and a dimmed plate beside a lit one reads as disabled. */
+  /* Each stage: a strip with the ring on top, and the card beneath it. The
+     plate itself has no border and no padding — the CARD has those — so the
+     line through the rings runs above the cards rather than through their
+     edges, a timeline along the top of the row. */
   .item {
     flex: 0 0 82%;
     scroll-snap-align: start;
     display: flex;
     flex-direction: column;
-    gap: 0.75rem;
-    padding: clamp(1.5rem, 5vw, 1.75rem);
-    padding-bottom: clamp(1.5rem, 5vw, 1.75rem);
-    border: 1px solid var(--rule);
+    gap: 0;
+    padding: 0;
+    padding-bottom: 0;
+    border: 0;
     opacity: 1;
   }
 
   /* --- The spine, turned sideways ----------------------------------------
-     On a desk the spine runs down the reference column and fills as you
-     scroll. Here it runs ACROSS the row through the rings: each plate draws
-     its own length of the line at ring height in two parts, up to its ring
-     and past it, and the parts go green as the swipe reaches them — so the
-     line is green behind you, grey ahead, and stops at the ring you are on.
-     The rings sit on a wash ground so the line passes behind them. */
+     The line runs across the row at ring height, in two parts per stage: up
+     to its ring and past it, going green as the swipe reaches them — green
+     behind you, grey ahead, stopping at the ring you are on. */
   .item::before,
   .item::after {
     content: '';
     position: absolute;
-    top: calc(clamp(1.5rem, 5vw, 1.75rem) + 1rem);
+    top: 1rem;
     height: 1px;
     background: var(--rule);
     transition: background var(--dur) var(--ease);
     pointer-events: none;
   }
 
-  /* Up to the ring: from past the plate's left edge (across the gap, so the
-     line is continuous between plates) to the ring's centre. */
+  /* Up to the ring: from past the stage's left edge (across the gap, so the
+     line is continuous between stages) to the ring's centre. */
   .item::before {
-    left: calc(-0.75rem - 2px);
-    width: calc(0.75rem + 2px + clamp(1.5rem, 5vw, 1.75rem) + 1rem);
+    left: -0.75rem;
+    width: 1.75rem;
   }
 
-  /* Past the ring: from the ring's centre to the plate's right edge. */
+  /* Past the ring: from the ring's centre to the stage's right edge. */
   .item::after {
-    left: calc(clamp(1.5rem, 5vw, 1.75rem) + 1rem);
-    right: -1px;
+    left: 1rem;
+    right: 0;
   }
 
   .itemDone::before,
@@ -252,6 +256,16 @@
     padding-top: 0;
     position: relative;
     z-index: 1;
+    margin-bottom: 1rem;
+  }
+
+  .card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    flex: 1;
+    padding: clamp(1.5rem, 5vw, 1.75rem);
+    border: 1px solid var(--rule);
   }
 
   .title,

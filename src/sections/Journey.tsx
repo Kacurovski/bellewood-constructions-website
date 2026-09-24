@@ -131,13 +131,15 @@ export function Journey({ number = 'E-04' }: { number?: string }) {
                       {String(i + 1).padStart(2, '0')}
                     </Ref>
                   </span>
-                  <h3 className={styles.title}>{stage.title}</h3>
-                  <div className={styles.body}>
-                    {stage.body.map((para) => (
-                      <p key={para} className={['small', styles.para].join(' ')}>
-                        {para}
-                      </p>
-                    ))}
+                  <div className={styles.card}>
+                    <h3 className={styles.title}>{stage.title}</h3>
+                    <div className={styles.body}>
+                      {stage.body.map((para) => (
+                        <p key={para} className={['small', styles.para].join(' ')}>
+                          {para}
+                        </p>
+                      ))}
+                    </div>
                   </div>
                   <DrawnRule className={styles.rule} delay={0.1 + Math.min(i * 0.03, 0.18)} />
                 </>
