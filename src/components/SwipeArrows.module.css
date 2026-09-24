@@ -1,0 +1,64 @@
+/* The two arrows on a phone rail. See SwipeArrows.tsx. */
+
+.pair {
+  display: inline-flex;
+  gap: 0.5rem;
+  flex: none;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--green) 40%, var(--wash));
+  color: var(--green);
+  cursor: pointer;
+  transition:
+    box-shadow var(--dur-fast) var(--ease),
+    background var(--dur-fast) var(--ease),
+    color var(--dur-fast) var(--ease),
+    opacity var(--dur-fast) var(--ease);
+}
+
+.btn svg {
+  width: 1.1rem;
+  height: 1.1rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.btn:active {
+  background: var(--green);
+  color: var(--wash);
+  box-shadow: inset 0 0 0 1px var(--green);
+}
+
+.btn:focus-visible {
+  outline: 2px solid var(--green);
+  outline-offset: 2px;
+}
+
+/* At the end of the rail the arrow sits back. It stays where it is — a pair
+   that loses a button jumps, and a thumb that was heading for it lands on
+   nothing. */
+.btn:disabled {
+  opacity: 0.3;
+  cursor: default;
+}
+
+@media (hover: hover) {
+  .btn:not(:disabled):hover {
+    background: var(--green);
+    color: var(--wash);
+    box-shadow: inset 0 0 0 1px var(--green);
+  }
+}

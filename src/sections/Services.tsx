@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { motion } from 'framer-motion'
 import { Reveal } from '../components/Reveal'
 import { SheetRef } from '../components/Sheet'
+import { SwipeArrows } from '../components/SwipeArrows'
 import { useReducedMotion } from '../hooks/useReducedMotion'
 import { services } from '../data/services'
 import { pictograms } from './servicePictograms'
@@ -97,6 +98,13 @@ export function Services({ number = 'B-08' }: { number?: string }) {
     return () => mq.removeEventListener('change', on)
   }, [])
 
+  // One plate along, either way.
+  const move = (dir: 1 | -1) => {
+    const el = rail.current
+    if (!el) return
+    el.scrollBy({ left: dir * (el.scrollWidth / services.length), behavior: 'smooth' })
+  }
+
   // Which plate the swipe is on, and how far through the row it is. Only the
   // phone layout scrolls sideways; on a desk these never change from zero.
   useEffect(() => {
@@ -178,14 +186,16 @@ export function Services({ number = 'B-08' }: { number?: string }) {
           </ol>
         </Reveal>
 
-        {/* The rail: phone only. Where you are in the six, and how far. */}
-        <div className={styles.rail} aria-hidden="true">
-          <span className={styles.railCount}>
+        {/* The rail: phone only. Where you are in the six, how far, and the
+            arrows to move along. */}
+        <div className={styles.rail}>
+          <span className={styles.railCount} aria-hidden="true">
             <span className={styles.railAt}>{String(at + 1).padStart(2, '0')}</span> / {String(services.length).padStart(2, '0')}
           </span>
-          <span className={styles.railTrack}>
+          <span className={styles.railTrack} aria-hidden="true">
             <span className={styles.railFill} style={{ transform: `scaleX(${Math.max(progress, 1 / services.length)})` }} />
           </span>
+          <SwipeArrows onPrev={() => move(-1)} onNext={() => move(1)} atStart={at <= 0} atEnd={at >= services.length - 1} label="kind of work" />
         </div>
       </div>
     </section>

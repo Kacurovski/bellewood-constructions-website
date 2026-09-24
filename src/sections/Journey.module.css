@@ -206,9 +206,52 @@
     opacity: 1;
   }
 
+  /* --- The spine, turned sideways ----------------------------------------
+     On a desk the spine runs down the reference column and fills as you
+     scroll. Here it runs ACROSS the row through the rings: each plate draws
+     its own length of the line at ring height in two parts, up to its ring
+     and past it, and the parts go green as the swipe reaches them — so the
+     line is green behind you, grey ahead, and stops at the ring you are on.
+     The rings sit on a wash ground so the line passes behind them. */
+  .item::before,
+  .item::after {
+    content: '';
+    position: absolute;
+    top: calc(clamp(1.5rem, 5vw, 1.75rem) + 1rem);
+    height: 1px;
+    background: var(--rule);
+    transition: background var(--dur) var(--ease);
+    pointer-events: none;
+  }
+
+  /* Up to the ring: from past the plate's left edge (across the gap, so the
+     line is continuous between plates) to the ring's centre. */
+  .item::before {
+    left: calc(-0.75rem - 2px);
+    width: calc(0.75rem + 2px + clamp(1.5rem, 5vw, 1.75rem) + 1rem);
+  }
+
+  /* Past the ring: from the ring's centre to the plate's right edge. */
+  .item::after {
+    left: calc(clamp(1.5rem, 5vw, 1.75rem) + 1rem);
+    right: -1px;
+  }
+
+  .itemDone::before,
+  .itemDone::after {
+    background: var(--green);
+  }
+
+  /* The stage you are on: green up to its ring, grey beyond it. */
+  .itemActive::after {
+    background: var(--rule);
+  }
+
   .refCol {
-    background: transparent;
+    background: var(--wash);
     padding-top: 0;
+    position: relative;
+    z-index: 1;
   }
 
   .title,
@@ -222,7 +265,7 @@
 
   .rail {
     display: grid;
-    grid-template-columns: auto minmax(0, 1fr);
+    grid-template-columns: auto minmax(0, 1fr) auto;
     gap: 1rem;
     align-items: center;
     margin-top: 1.25rem;

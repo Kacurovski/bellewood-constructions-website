@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState, type ReactNode } from 'react'
+import { SwipeArrows } from './SwipeArrows'
 import styles from './SwipeRow.module.css'
 
 type Props = {
@@ -67,6 +68,17 @@ export function SwipeRow({
     setActive(step > 0 ? Math.round(el.scrollLeft / step) : 0)
   }, [])
 
+  // One plate along, either way. The step is the first child's width plus
+  // the gap, which is what the counter already measures by.
+  const move = useCallback((dir: 1 | -1) => {
+    const el = track.current
+    const first = el?.firstElementChild
+    if (!el || !first) return
+    const gap = parseFloat(getComputedStyle(el).columnGap) || 0
+    const step = first.getBoundingClientRect().width + gap
+    el.scrollBy({ left: dir * step, behavior: 'smooth' })
+  }, [])
+
   useEffect(() => {
     const el = track.current
     if (!el) return
@@ -108,15 +120,22 @@ export function SwipeRow({
       {/* Purely an orientation cue — every card is in the DOM either way, so
           there is nothing here for a screen reader to gain. */}
       {rail && count > 1 && (
-        <div className={styles.meter} aria-hidden="true">
-          <span className={styles.count}>
+        <div className={styles.meter}>
+          <span className={styles.count} aria-hidden="true">
             {String(Math.min(active + 1, count)).padStart(2, '0')}
             <span className={styles.of} />
             {String(count).padStart(2, '0')}
           </span>
-          <span className={styles.bar} style={{ '--cells': count } as React.CSSProperties}>
+          <span className={styles.bar} aria-hidden="true" style={{ '--cells': count } as React.CSSProperties}>
             <span className={styles.fill} style={{ transform: `translateX(${active * 100}%)` }} />
           </span>
+          <SwipeArrows
+            onPrev={() => move(-1)}
+            onNext={() => move(1)}
+            atStart={active <= 0}
+            atEnd={active >= count - 1}
+            label={label.toLowerCase()}
+          />
         </div>
       )}
     </div>

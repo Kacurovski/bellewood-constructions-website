@@ -3,6 +3,7 @@ import { motion, useMotionValueEvent, useScroll, useSpring } from 'framer-motion
 import { Reveal } from '../components/Reveal'
 import { SheetRef } from '../components/Sheet'
 import { DrawnRule, Ref } from '../components/Drawn'
+import { SwipeArrows } from '../components/SwipeArrows'
 import { useReducedMotion } from '../hooks/useReducedMotion'
 import { journey } from '../data/journey'
 import styles from './Journey.module.css'
@@ -46,6 +47,13 @@ export function Journey({ number = 'E-04' }: { number?: string }) {
     mq.addEventListener('change', on)
     return () => mq.removeEventListener('change', on)
   }, [])
+
+  // One stage along, either way.
+  const move = (dir: 1 | -1) => {
+    const el = list.current
+    if (!el) return
+    el.scrollBy({ left: dir * (el.scrollWidth / journey.length), behavior: 'smooth' })
+  }
 
   // The swipe's position, for the rail and the rings on a phone.
   useEffect(() => {
@@ -148,14 +156,16 @@ export function Journey({ number = 'E-04' }: { number?: string }) {
             })}
           </ol>
 
-          {/* The rail: phone only. Where you are in the seven, and how far. */}
-          <div className={styles.rail} aria-hidden="true">
-            <span className={styles.railCount}>
+          {/* The rail: phone only. Where you are in the seven, how far, and
+              the arrows to move along. */}
+          <div className={styles.rail}>
+            <span className={styles.railCount} aria-hidden="true">
               <span className={styles.railAt}>{String(at + 1).padStart(2, '0')}</span> / {String(journey.length).padStart(2, '0')}
             </span>
-            <span className={styles.railTrack}>
+            <span className={styles.railTrack} aria-hidden="true">
               <span className={styles.railFill} style={{ transform: `scaleX(${Math.max(progress, 1 / journey.length)})` }} />
             </span>
+            <SwipeArrows onPrev={() => move(-1)} onNext={() => move(1)} atStart={at <= 0} atEnd={at >= journey.length - 1} label="stage" />
           </div>
         </div>
       </div>
