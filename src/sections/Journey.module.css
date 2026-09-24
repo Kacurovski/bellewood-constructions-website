@@ -1,9 +1,11 @@
 /* ---------------------------------------------------------------------------
    From the first call to handover.
 
-   The same ledger setting as the questions section beneath it — number, title,
-   account, a rule between each — so the two read as one document rather than
-   two designs on one page.
+   A ledger with a spine. The reference column carries a vertical hairline the
+   height of the list; a green fill grows down it with the scroll, and each
+   stage's ring fills as the spine reaches it. The stage the reader is on sits
+   at full weight, the rest a step back — the treatment the build's own steps
+   use, so the two halves of the page behave as one document.
    --------------------------------------------------------------------------- */
 
 .section {
@@ -23,6 +25,39 @@
   color: var(--green);
 }
 
+.ledger {
+  position: relative;
+}
+
+/* --- The spine ---------------------------------------------------------- */
+.spine {
+  position: absolute;
+  /* Down the centre of the ring column: the ring is 2rem wide. */
+  left: 1rem;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: var(--rule);
+  transform: translateX(-0.5px);
+  pointer-events: none;
+}
+
+.spineFill {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: var(--green);
+  transform-origin: top center;
+  transform: scaleY(0);
+}
+
+.spineFull {
+  transform: scaleY(1);
+}
+
+/* --- The list ----------------------------------------------------------- */
 .list {
   list-style: none;
   margin: 0;
@@ -31,21 +66,36 @@
 }
 
 .item {
+  position: relative;
   display: grid;
   grid-template-columns: 3.5rem minmax(0, 0.85fr) minmax(0, 1.15fr);
   gap: clamp(1rem, 2.5vw, 2.5rem);
   align-items: start;
   padding-block: clamp(1.5rem, 3vw, 2.5rem);
-  border-bottom: 1px solid var(--rule);
+  padding-bottom: calc(clamp(1.5rem, 3vw, 2.5rem) + 1px);
+  transition: opacity var(--dur) var(--ease);
 }
 
-.num {
-  font-family: var(--font-display);
-  font-size: var(--t-fine);
-  letter-spacing: 0.08em;
-  color: color-mix(in srgb, var(--green) 72%, var(--wash));
-  padding-top: 0.4rem;
-  font-variant-numeric: tabular-nums;
+/* Stages not yet reached sit back; the current one and those passed sit
+   at full weight. The rings do the rest. */
+.item {
+  opacity: 0.62;
+}
+
+.itemDone,
+.itemActive {
+  opacity: 1;
+}
+
+.refCol {
+  display: flex;
+  align-items: flex-start;
+  /* Lift the ring so its centre lines up with the title's first line, and
+     give it a ground so the spine passes behind it, not through it. */
+  padding-top: 0.1rem;
+  background: var(--wash);
+  z-index: 1;
+  width: 2rem;
 }
 
 .title {
@@ -56,29 +106,57 @@
   color: var(--green);
   margin: 0;
   max-width: 22ch;
+  transition: transform var(--dur) var(--ease);
 }
 
+/* The current stage is told by its ring and its weight, not by a shift: a
+   title that sits 4px off the others in a still page reads as a mistake. The
+   shift is kept for hover, where the pointer explains it. */
+
 .body {
+  display: block;
+}
+
+.para {
   margin: 0;
   max-width: var(--measure);
   color: var(--pine);
 }
 
-.body + .body {
+.para + .para {
   margin-top: 0.85rem;
+}
+
+.rule {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+@media (hover: hover) {
+  .item:hover { opacity: 1; }
+  .item:hover .title { transform: translateX(4px); }
 }
 
 @media (max-width: 900px) {
   .item {
-    grid-template-columns: minmax(0, 1fr);
-    gap: 0.6rem;
+    grid-template-columns: 2.75rem minmax(0, 1fr);
+    gap: 0.75rem clamp(0.75rem, 3vw, 1.25rem);
   }
 
-  .num {
-    padding-top: 0;
-  }
-
+  /* The title takes the top row beside the ring; the body drops beneath and
+     spans the text column, leaving the spine clear on the left. */
   .title {
+    grid-column: 2;
     max-width: var(--measure-tight);
+  }
+
+  .body {
+    grid-column: 2;
+  }
+
+  .spine {
+    left: 1rem;
   }
 }

@@ -1,5 +1,6 @@
 import { Reveal } from '../components/Reveal'
 import { SheetRef } from '../components/Sheet'
+import { DrawnRule } from '../components/Drawn'
 import { faq } from '../data/faq'
 import styles from './Questions.module.css'
 
@@ -14,7 +15,9 @@ import styles from './Questions.module.css'
  *
  * It is set as a plain ruled list rather than an accordion. Everything here is
  * meant to be read, and a closed accordion hides exactly the material that
- * makes the section worth having.
+ * makes the section worth having. Each row's rule draws itself in as the row
+ * arrives, and under a pointer the number fills and the question lifts —
+ * the same quiet treatment the sections above it use.
  */
 export function Questions({ number = 'E-04' }: { number?: string }) {
   return (
@@ -47,6 +50,7 @@ export function Questions({ number = 'E-04' }: { number?: string }) {
                   </p>
                 ))}
               </div>
+              <DrawnRule className={styles.rule} delay={0.1 + Math.min(i * 0.03, 0.18)} />
             </Reveal>
           ))}
         </ol>

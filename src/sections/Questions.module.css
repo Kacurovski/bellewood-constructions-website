@@ -7,6 +7,9 @@
    measure. No accordions. A person deciding whether to keep their house should
    not have to click eleven times to read eleven answers, and a closed accordion
    hides the very thing that makes this section worth having.
+
+   Each row's rule draws itself from the left as the row arrives, and a pointer
+   over a row fills its number and lifts the question by four pixels.
    --------------------------------------------------------------------------- */
 
 .section {
@@ -34,16 +37,16 @@
 }
 
 .item {
+  position: relative;
   display: grid;
   /* Number, question, answer. The question and the answer sit side by side so
      the band uses the page rather than running as one narrow column with half
-     the width empty beside it — which is what a single column looked like at
-     1440. */
+     the width empty beside it. */
   grid-template-columns: 3.5rem minmax(0, 0.85fr) minmax(0, 1.15fr);
   gap: clamp(1rem, 2.5vw, 2.5rem);
   align-items: start;
   padding-block: clamp(1.5rem, 3vw, 2.5rem);
-  border-bottom: 1px solid var(--rule);
+  padding-bottom: calc(clamp(1.5rem, 3vw, 2.5rem) + 1px);
 }
 
 /* The item number, set as a drawing reference rather than a list bullet. */
@@ -51,9 +54,10 @@
   font-family: var(--font-display);
   font-size: var(--t-fine);
   letter-spacing: 0.08em;
-  color: color-mix(in srgb, var(--green) 72%, var(--wash));
+  color: color-mix(in srgb, var(--green) 60%, var(--wash));
   padding-top: 0.4rem;
   font-variant-numeric: tabular-nums;
+  transition: color var(--dur-fast) var(--ease);
 }
 
 .q {
@@ -64,6 +68,11 @@
   color: var(--green);
   margin: 0;
   max-width: 22ch;
+  transition: transform var(--dur) var(--ease);
+}
+
+.answer {
+  display: block;
 }
 
 .a {
@@ -76,8 +85,20 @@
   margin-top: 0.85rem;
 }
 
-/* Below the fold of a phone the two-column setting costs more than it gives:
-   the number column eats a fifth of the width and the answers get narrow. */
+.rule {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  transition: background var(--dur) var(--ease);
+}
+
+@media (hover: hover) {
+  .item:hover .num { color: var(--green); }
+  .item:hover .q { transform: translateX(4px); }
+  .item:hover .rule { background: color-mix(in srgb, var(--green) 45%, var(--wash)); }
+}
+
 /* One column below the width where three stop being readable: the question
    sits over its answer, with the number inline above it. */
 @media (max-width: 900px) {
@@ -93,9 +114,4 @@
   .q {
     max-width: var(--measure-tight);
   }
-}
-
-/* The answer column. */
-.answer {
-  display: block;
 }

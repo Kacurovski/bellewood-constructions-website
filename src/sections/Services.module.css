@@ -2,8 +2,10 @@
    What we take on.
 
    Six kinds of work in a ruled grid: three across on a desk, two on a tablet,
-   one on a phone. Rules rather than cards, so it reads as one list set out on
-   the sheet and not as six boxes competing for attention.
+   one on a phone. Each item is a detail on the sheet — a line drawing, a
+   reference number, a title, an account — with a rule that draws itself
+   beneath. Rules rather than cards, so it reads as one list set out on the
+   sheet and not as six boxes competing for attention.
    --------------------------------------------------------------------------- */
 
 .section {
@@ -34,19 +36,34 @@
 }
 
 .item {
+  position: relative;
   display: flex;
   flex-direction: column;
   gap: 0.6rem;
-  padding-block: clamp(1.5rem, 3vw, 2.25rem);
-  border-bottom: 1px solid var(--rule);
+  padding-block: clamp(1.75rem, 3vw, 2.5rem) clamp(1.75rem, 3vw, 2.5rem);
+  /* Room for the drawn rule, which sits on the item's bottom edge. */
+  padding-bottom: calc(clamp(1.75rem, 3vw, 2.5rem) + 1px);
+}
+
+/* The drawing and the reference number share the top line. */
+.top {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+}
+
+.sketch {
+  transition: transform var(--dur) var(--ease);
 }
 
 .num {
   font-family: var(--font-display);
   font-size: var(--t-fine);
   letter-spacing: 0.08em;
-  color: color-mix(in srgb, var(--green) 72%, var(--wash));
+  color: color-mix(in srgb, var(--green) 60%, var(--wash));
   font-variant-numeric: tabular-nums;
+  transition: color var(--dur-fast) var(--ease);
 }
 
 .title {
@@ -56,6 +73,7 @@
   letter-spacing: -0.005em;
   color: var(--green);
   margin: 0;
+  transition: transform var(--dur) var(--ease);
 }
 
 .lead {
@@ -69,6 +87,24 @@
   margin: 0.15rem 0 0;
   color: var(--pine);
   max-width: 40ch;
+}
+
+.rule {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  transition: background var(--dur) var(--ease);
+}
+
+/* Under a pointer: the number fills, the title and drawing lift by four
+   pixels, the rule brightens. A settle, not a highlight. Pointer-only, so a
+   phone never shows a hover state stuck on after a tap. */
+@media (hover: hover) {
+  .item:hover .num { color: var(--green); }
+  .item:hover .title { transform: translateY(-2px); }
+  .item:hover .sketch { transform: translateY(-3px); }
+  .item:hover .rule { background: color-mix(in srgb, var(--green) 45%, var(--wash)); }
 }
 
 @media (max-width: 1024px) {

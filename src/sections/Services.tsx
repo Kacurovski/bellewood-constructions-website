@@ -1,17 +1,22 @@
 import { Reveal } from '../components/Reveal'
 import { SheetRef } from '../components/Sheet'
+import { DrawnRule, Sketch } from '../components/Drawn'
 import { services } from '../data/services'
+import { pictograms } from './servicePictograms'
 import styles from './Services.module.css'
 
 /**
  * What we take on.
  *
- * Six kinds of work, each with a line and a short paragraph, so a person can
- * find their own job in the list. The copy is in `src/data/services.ts`.
+ * Six kinds of work, each with a line drawing, a headline and a short
+ * paragraph, so a person can find their own job in the list. Copy is in
+ * `src/data/services.ts`; the drawings are in `servicePictograms.ts`.
  *
- * It sits at the foot of the project index: the projects show the work, this
- * names it. Set as a ruled grid rather than cards — cards would make six
- * boxes, and this is one list.
+ * Each item is a detail on the sheet: the pictogram draws its outline as it
+ * comes into view, then the rule beneath it draws from the left. The same
+ * "line-work first" idea the house on the home page is built on, at the scale
+ * of a list. Under a pointer the number fills and the title lifts a touch —
+ * enough to say the row is a thing, not enough to say it is a button.
  */
 export function Services({ number = 'B-08' }: { number?: string }) {
   return (
@@ -32,13 +37,17 @@ export function Services({ number = 'B-08' }: { number?: string }) {
 
         <ol className={styles.grid}>
           {services.map((item, i) => (
-            <Reveal key={item.title} as="li" className={styles.item} delay={Math.min(i * 0.04, 0.2)}>
-              <span className={styles.num} aria-hidden="true">
-                {String(i + 1).padStart(2, '0')}
-              </span>
+            <Reveal key={item.title} as="li" className={styles.item} delay={Math.min(i * 0.05, 0.25)}>
+              <div className={styles.top}>
+                <Sketch paths={pictograms[item.title] ?? []} className={styles.sketch} delay={Math.min(i * 0.05, 0.25)} />
+                <span className={styles.num} aria-hidden="true">
+                  {String(i + 1).padStart(2, '0')}
+                </span>
+              </div>
               <h3 className={styles.title}>{item.title}</h3>
               <p className={styles.lead}>{item.lead}</p>
               <p className={['small', styles.body].join(' ')}>{item.body}</p>
+              <DrawnRule className={styles.rule} delay={0.15 + Math.min(i * 0.05, 0.25)} />
             </Reveal>
           ))}
         </ol>
