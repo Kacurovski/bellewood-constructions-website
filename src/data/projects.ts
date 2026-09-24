@@ -91,6 +91,12 @@ export type Project = {
 const img = (file: string, alt: string): ImageSlot => ({ src: photo(file), alt })
 const none = (alt: string): ImageSlot => ({ src: null, alt })
 
+/* WRITING THE REAL STORIES. Each entry's `story` is placeholder until Angus
+   supplies the job; the shape to write to is: what the house was, what the
+   constraint was, what was kept, what was rebuilt, and how it lives now. Where
+   a before photograph exists, lead with it — heritage before-and-after is the
+   strongest material this business owns. Guidance lives HERE and not in the
+   story arrays: a note in the array renders on the page, and it did. */
 export const projects: Project[] = [
   {
     slug: 'paddington-workers-cottage',
@@ -103,7 +109,6 @@ export const projects: Project[] = [
     story: [
       'The cottage had been added to twice before we got to it, both times badly, and both times in a way that turned its back on the north. The brief was to undo that without changing what the street sees.',
       'The front three rooms were kept and repaired: boards lifted, numbered and relaid, sashes rebuilt, the verandah brought back to its proper line. Everything new sits behind and stops short of the ridge, so the original roof still reads from the footpath.',
-      'Placeholder copy. Replace with the real account once the details are confirmed. The shape to write to: what the house was, what the constraint was, what was kept, what was rebuilt, and how it lives now.',
     ],
     hero: img('paddington-after', 'A restored timber cottage at dusk behind a white picket fence'),
     before: img('paddington-before', 'A weatherboard cottage before work, paint failed and the yard overgrown'),
@@ -122,7 +127,6 @@ export const projects: Project[] = [
       'Original VJ walls and hoop pine floors retained, with a new kitchen and living wing set behind.',
     story: [
       'A Queenslander that had been tenanted for thirty years and maintained for none of them. Structurally it was sound, which is usually the way with these houses. Everything else needed doing.',
-      'Placeholder copy. Replace once confirmed. Heritage before and after is the strongest material this business owns, so where a before photograph exists, lead with it.',
     ],
     hero: img('newfarm-after', 'A Queenslander on stumps with a corrugated roof and timber battens'),
     before: img('newfarm-before', 'A weathered timber house with a failing corrugated roof'),
@@ -141,7 +145,6 @@ export const projects: Project[] = [
       'The house raised, a new lower level framed in timber, and the street elevation left as it was found.',
     story: [
       'Lifting a house is the least interesting part of lifting a house. What matters is what goes in underneath, and whether the result still looks like it was always there.',
-      'Placeholder copy. Replace once confirmed.',
     ],
     hero: img('ashgrove-after', 'A brick and render home with a tiled roof behind established hedges'),
     before: img('ashgrove-before', 'An older house overgrown and closed up before work began'),
@@ -160,7 +163,6 @@ export const projects: Project[] = [
       'A steep site handled with a light timber structure that steps down rather than cutting in.',
     story: [
       'The cheap way to build on a slope is to cut a flat pad and retain it. The better way, and the one the drawings called for, is to let the building step and leave the ground doing what it was doing.',
-      'Placeholder copy. Replace once confirmed.',
     ],
     hero: img('detail-timber-cladding', 'Vertical timber cladding meeting a rendered wall on the extension'),
     before: img('bardon-before', 'A tired timber building on an open site before work'),
@@ -182,7 +184,6 @@ export const projects: Project[] = [
       'Original detail repaired and matched rather than replaced, with the services brought up to standard behind it.',
     story: [
       'Restoration work is mostly patience. Profiles get matched, not approximated. Where a board could be repaired it was repaired, and where it could not, the replacement was milled to the original section.',
-      'Placeholder copy. Replace once confirmed.',
     ],
     hero: img('redhill-hero', 'A dining room in a restored cottage, dark walls and warm timber'),
     before: none('The Red Hill cottage before restoration'),
@@ -201,7 +202,6 @@ export const projects: Project[] = [
       'A full interior refurbishment carried out to the same standard as the housing work.',
     story: [
       'An apartment is a different set of constraints to a house and the same set of standards. Everything comes up in a lift, nothing can be noisy before eight, and the finish still has to be right.',
-      'Placeholder copy. Replace once confirmed.',
     ],
     hero: img('interior-kitchen-timber', 'An apartment kitchen with a long timber table and pendant lighting'),
     before: none('The coastal apartment before refurbishment'),
