@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState } from 'react'
 import { motion } from 'framer-motion'
 import { Reveal } from '../components/Reveal'
 import { SheetRef } from '../components/Sheet'
@@ -24,6 +25,13 @@ import styles from './Services.module.css'
  *
  * Under reduced motion the drawings render complete and the hover fill is
  * still there, without the sweep.
+ *
+ * ON A PHONE the grid becomes a swipe: the plates in a row, native
+ * scroll-snap, the next one peeking in from the right, and a rail beneath —
+ * a counter and a line that fills as you go — so you always know where you
+ * are in the six. Six plates stacked is most of two thousand pixels of
+ * scrolling; a swipe is one screen. The scroller is the browser's own, so it
+ * has real momentum and costs nothing.
  */
 
 const EASE = [0.16, 1, 0.3, 1] as const
@@ -76,6 +84,45 @@ function Drawing({ paths, delay, reduced }: { paths: string[]; delay: number; re
 
 export function Services({ number = 'B-08' }: { number?: string }) {
   const reduced = useReducedMotion()
+  const rail = useRef<HTMLOListElement>(null)
+  const [at, setAt] = useState(0)
+  const [progress, setProgress] = useState(0)
+  const [narrow, setNarrow] = useState(false)
+
+  useEffect(() => {
+    const mq = window.matchMedia('(max-width: 640px)')
+    const on = () => setNarrow(mq.matches)
+    on()
+    mq.addEventListener('change', on)
+    return () => mq.removeEventListener('change', on)
+  }, [])
+
+  // Which plate the swipe is on, and how far through the row it is. Only the
+  // phone layout scrolls sideways; on a desk these never change from zero.
+  useEffect(() => {
+    const el = rail.current
+    if (!el) return
+    let raf = 0
+    const read = () => {
+      raf = 0
+      const max = el.scrollWidth - el.clientWidth
+      if (max <= 0) return
+      const step = el.scrollWidth / services.length
+      setAt(Math.min(services.length - 1, Math.round(el.scrollLeft / step)))
+      setProgress(el.scrollLeft / max)
+    }
+    const onScroll = () => {
+      if (!raf) raf = requestAnimationFrame(read)
+    }
+    el.addEventListener('scroll', onScroll, { passive: true })
+    window.addEventListener('resize', onScroll)
+    read()
+    return () => {
+      el.removeEventListener('scroll', onScroll)
+      window.removeEventListener('resize', onScroll)
+      if (raf) cancelAnimationFrame(raf)
+    }
+  }, [])
 
   return (
     <section className={['section', styles.section].join(' ')} aria-labelledby="services-heading">
@@ -93,27 +140,53 @@ export function Services({ number = 'B-08' }: { number?: string }) {
           />
         </Reveal>
 
-        <ol className={styles.grid}>
-          {services.map((item, i) => {
-            const delay = Math.min(i * 0.05, 0.25)
-            return (
-              <Reveal key={item.title} as="li" className={styles.plate} delay={delay}>
-                {/* The green plane that rises under the pointer. */}
-                <span className={styles.fill} aria-hidden="true" />
-                <span className={styles.watermark} aria-hidden="true">
-                  {String(i + 1).padStart(2, '0')}
-                </span>
+        {/* On a desk each plate settles in on its own as it enters view. On a
+            phone the ROW settles in once and every plate is solid from then
+            on: a plate that fades in as it slides in reads as a card
+            appearing from nothing, and plates off to the right of a swipe
+            are never "in view" until they are already arriving. */}
+        <Reveal as="div" className={narrow ? undefined : styles.rowStatic}>
+          <ol ref={rail} className={styles.grid}>
+            {services.map((item, i) => {
+              const delay = Math.min(i * 0.05, 0.25)
+              const content = (
+                <>
+                  {/* The green plane that rises under the pointer. */}
+                  <span className={styles.fill} aria-hidden="true" />
+                  <span className={styles.watermark} aria-hidden="true">
+                    {String(i + 1).padStart(2, '0')}
+                  </span>
 
-                <div className={styles.inner}>
-                  <Drawing paths={pictograms[item.title] ?? []} delay={delay} reduced={reduced} />
-                  <h3 className={styles.title}>{item.title}</h3>
-                  <p className={styles.lead}>{item.lead}</p>
-                  <p className={['small', styles.body].join(' ')}>{item.body}</p>
-                </div>
-              </Reveal>
-            )
-          })}
-        </ol>
+                  <div className={styles.inner}>
+                    <Drawing paths={pictograms[item.title] ?? []} delay={narrow ? 0 : delay} reduced={reduced} />
+                    <h3 className={styles.title}>{item.title}</h3>
+                    <p className={styles.lead}>{item.lead}</p>
+                    <p className={['small', styles.body].join(' ')}>{item.body}</p>
+                  </div>
+                </>
+              )
+              return narrow ? (
+                <li key={item.title} className={styles.plate}>
+                  {content}
+                </li>
+              ) : (
+                <Reveal key={item.title} as="li" className={styles.plate} delay={delay}>
+                  {content}
+                </Reveal>
+              )
+            })}
+          </ol>
+        </Reveal>
+
+        {/* The rail: phone only. Where you are in the six, and how far. */}
+        <div className={styles.rail} aria-hidden="true">
+          <span className={styles.railCount}>
+            <span className={styles.railAt}>{String(at + 1).padStart(2, '0')}</span> / {String(services.length).padStart(2, '0')}
+          </span>
+          <span className={styles.railTrack}>
+            <span className={styles.railFill} style={{ transform: `scaleX(${Math.max(progress, 1 / services.length)})` }} />
+          </span>
+        </div>
       </div>
     </section>
   )
