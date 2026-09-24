@@ -52,6 +52,17 @@ export type Project = {
   summary: string
   /** Long-form story, set in Newsreader. */
   story: string[]
+  /**
+   * The facts of the job, for when they are known. All optional, and nothing
+   * renders until they are filled — so a real write-up drops straight in
+   * without a layout change. The shape to fill: what was done (three to six
+   * short items), who drew it, and how long it took on site.
+   */
+  scope?: string[]
+  /** The architect or designer, credited by name only with their agreement. */
+  architect?: string | null
+  /** Time on site, in his words: "seven months", "a year with the lift". */
+  duration?: string | null
   hero: ImageSlot
   before: ImageSlot
   after: ImageSlot

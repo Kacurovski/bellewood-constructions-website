@@ -3,6 +3,7 @@ import { PageHead } from '../components/PageHead'
 import { Reveal } from '../components/Reveal'
 import { Process } from '../sections/Process'
 import { MaterialKey } from '../sections/MaterialKey'
+import { Journey } from '../sections/Journey'
 import { Questions } from '../sections/Questions'
 import { ScrollWords } from '../components/ScrollWords'
 import { usePageTitle } from '../hooks/usePageTitle'
@@ -50,7 +51,8 @@ export default function Approach() {
 
       {/* The plain-language half of this page: what the drawing says, said in
           words, plus everything people ring up to ask before they commit. */}
-      <Questions number="E-04" />
+      <Journey number="E-04" />
+      <Questions number="E-05" />
 
       <section className={['shell', styles.close].join(' ')} aria-labelledby="approach-close">
         <Reveal>

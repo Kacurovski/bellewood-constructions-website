@@ -1,0 +1,84 @@
+/* ---------------------------------------------------------------------------
+   From the first call to handover.
+
+   The same ledger setting as the questions section beneath it — number, title,
+   account, a rule between each — so the two read as one document rather than
+   two designs on one page.
+   --------------------------------------------------------------------------- */
+
+.section {
+  border-top: 1px solid var(--ink);
+}
+
+.head {
+  margin-bottom: clamp(2rem, 4vw, 3.25rem);
+}
+
+.heading {
+  font-family: var(--font-display);
+  font-size: var(--t-section);
+  line-height: var(--lh-heading);
+  letter-spacing: -0.01em;
+  margin: 0;
+  color: var(--green);
+}
+
+.list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-top: 1px solid var(--rule);
+}
+
+.item {
+  display: grid;
+  grid-template-columns: 3.5rem minmax(0, 0.85fr) minmax(0, 1.15fr);
+  gap: clamp(1rem, 2.5vw, 2.5rem);
+  align-items: start;
+  padding-block: clamp(1.5rem, 3vw, 2.5rem);
+  border-bottom: 1px solid var(--rule);
+}
+
+.num {
+  font-family: var(--font-display);
+  font-size: var(--t-fine);
+  letter-spacing: 0.08em;
+  color: color-mix(in srgb, var(--green) 72%, var(--wash));
+  padding-top: 0.4rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.title {
+  font-family: var(--font-display);
+  font-size: var(--t-sub);
+  line-height: var(--lh-heading);
+  letter-spacing: -0.005em;
+  color: var(--green);
+  margin: 0;
+  max-width: 22ch;
+}
+
+.body {
+  margin: 0;
+  max-width: var(--measure);
+  color: var(--pine);
+}
+
+.body + .body {
+  margin-top: 0.85rem;
+}
+
+@media (max-width: 900px) {
+  .item {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.6rem;
+  }
+
+  .num {
+    padding-top: 0;
+  }
+
+  .title {
+    max-width: var(--measure-tight);
+  }
+}

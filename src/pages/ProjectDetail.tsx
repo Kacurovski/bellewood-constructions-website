@@ -67,6 +67,38 @@ export default function ProjectDetail() {
 
         <Reveal delay={0.08} className={styles.summaryCol}>
           <p className={['pull-quote', styles.summary].join(' ')}>{project.summary}</p>
+
+          {/* The facts of the job. Only what is known is shown: an empty scope
+              list, an unnamed architect or an unconfirmed duration renders
+              nothing rather than a placeholder. */}
+          {(project.scope?.length || project.architect || project.duration) && (
+            <dl className={styles.facts}>
+              {project.scope?.length ? (
+                <div className={styles.fact}>
+                  <dt>Scope</dt>
+                  <dd>
+                    <ul className={styles.scope}>
+                      {project.scope.map((line) => (
+                        <li key={line}>{line}</li>
+                      ))}
+                    </ul>
+                  </dd>
+                </div>
+              ) : null}
+              {project.architect ? (
+                <div className={styles.fact}>
+                  <dt>Architect</dt>
+                  <dd>{project.architect}</dd>
+                </div>
+              ) : null}
+              {project.duration ? (
+                <div className={styles.fact}>
+                  <dt>On site</dt>
+                  <dd>{project.duration}</dd>
+                </div>
+              ) : null}
+            </dl>
+          )}
         </Reveal>
       </div>
 

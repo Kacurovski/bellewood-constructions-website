@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom'
 import { AnimatePresence, motion } from 'framer-motion'
 import { PageHead } from '../components/PageHead'
 import { LeadMagnet } from '../components/LeadMagnet'
+import { Services } from '../sections/Services'
 import { projects } from '../data/projects'
 import { contact } from '../config/site'
 import { usePageTitle } from '../hooks/usePageTitle'
@@ -284,6 +285,10 @@ export default function Work() {
           </ol>
         </div>
       </div>
+
+      {/* The projects show the work; this names it. Numbered after the last
+          project page, since the index is B-01 and each project is B-02 on. */}
+      <Services number={`B-${String(projects.length + 2).padStart(2, '0')}`} />
 
       <div className={['shell', styles.magnet].join(' ')}>
         <LeadMagnet tone="green" />

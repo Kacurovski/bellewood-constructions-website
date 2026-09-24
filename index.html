@@ -13,11 +13,14 @@
     <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
     <meta name="theme-color" content="#05432a" />
 
-    <!-- Open Graph. OPEN: the social share image is a Milestone 1 deliverable
-         (1000x1000 avatar and a landscape card). Until it exists there is no
-         og:image tag rather than a broken one. -->
+    <!-- Open Graph and Twitter cards: what a pasted link shows in Messenger,
+         WhatsApp, LinkedIn and the rest. The image is public/og.png, 1200x630,
+         built from the reverse lockup on Bellewood Green. It is an absolute URL
+         because share crawlers do not resolve relative ones; if the domain ever
+         changes, change it here. -->
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="Bellewood Constructions" />
+    <meta property="og:url" content="https://bellewood.com.au/" />
     <meta
       property="og:title"
       content="Bellewood Constructions — heritage renovations in inner Brisbane"
@@ -26,6 +29,14 @@
       property="og:description"
       content="Renovations and extensions to heritage and older homes in inner Brisbane, built predominantly in timber."
     />
+    <meta property="og:image" content="https://bellewood.com.au/og.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Bellewood Constructions — renovations and extensions to heritage homes in inner Brisbane" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Bellewood Constructions — heritage renovations in inner Brisbane" />
+    <meta name="twitter:description" content="Renovations and extensions to heritage and older homes in inner Brisbane, built predominantly in timber." />
+    <meta name="twitter:image" content="https://bellewood.com.au/og.png" />
 
     <!-- The brand ground is painted before any CSS arrives, so the first frame
          is never white. -->
