@@ -42,3 +42,8 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
+
+# The client's original photographs, as sent: 100MB of full-size files whose
+# names carry his clients' surnames. Web-size, suburb-named copies are made
+# from them into src/assets/projects/ (see scratch resize script in the README).
+src/assets/project_photos/

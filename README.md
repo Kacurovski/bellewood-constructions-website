@@ -50,49 +50,49 @@ written out here rather than left to be discovered.
 
 ---
 
-## Photography — all seventeen files are in the repository, and none of them may publish
+## Photography — Angus's own, twelve files, six jobs
 
 The images live in [`src/assets/projects/`](https://github.com/Kacurovski/bellewood-constructions-website/tree/main/src/assets/projects)
-and are committed at full size — no Git LFS, no external host, nothing to fetch.
-A clone has them.
+and are committed at web size (long edge 2400px, about 5.6MB in total). A clone
+has them.
 
 **They are imported, not served from a folder**, which is the same thing that
 has always been true of the logo and the fonts. Code refers to a photograph by
-its bare name — `paddington-after`, no path and no extension — and `photo` in
+its bare name — `kalinga-1`, no path and no extension — and `photo` in
 `src/data/photos.ts` turns that into the URL the bundler emitted. They used to
-sit in `public/` and be referenced as the runtime string `projects/<name>.jpg`,
-which works when the built folder is served as its own root and produces silent
-broken images anywhere the public folder does not come along for the ride. That
-is what happened when this repository was pulled into AI Studio: the logo
-arrived, the photographs did not. `public/` now holds the favicon and nothing
-else.
+sit in `public/`, which produced silent broken images anywhere the public folder
+did not come along for the ride (AI Studio). `public/` holds the favicon, the
+share card and robots.txt, nothing else.
 
-To use one as a URL rather than a file, the raw form is:
-
-```
-https://raw.githubusercontent.com/Kacurovski/bellewood-constructions-website/main/src/assets/projects/<name>.jpg
-```
-
-| Group | Files |
+| Job | Files |
 | --- | --- |
-| Project before and after | `paddington-before`, `paddington-after`, `newfarm-before`, `newfarm-after`, `ashgrove-before`, `ashgrove-after`, `bardon-before`, `bardon-after` |
-| Project heroes | `redhill-hero`, `coastal-hero` |
-| Interiors, used in galleries | `interior-dining`, `interior-floor`, `interior-kitchen-green`, `interior-kitchen-timber`, `interior-kitchen-windows` |
-| Detail and site | `detail-timber-cladding`, `site-frame-lift` |
+| Kalinga | `kalinga-1` — also the home page hero |
+| Auchenflower | `auchenflower-1` to `-6` |
+| Clayfield | `clayfield-1` |
+| Ascot | `ascot-1`, `ascot-2` |
+| Windsor | `windsor-1` |
+| Camp Hill | `camp-hill-1` |
 
-> **Every one of these is stock, and every one shows somebody else's building.**
-> They are in the repository so the layout can be judged at full weight, and for
-> no other reason. Publishing them would present another builder's work as
-> Bellewood's, which is the one thing on this site that would actually be
-> dishonest.
->
-> `mediaIsPlaceholder` in `src/data/projects.ts` is the single flag the site
-> reads, and it is `true`. When Angus's real library lands, replace the files,
-> write real alt text per project, set each project's `placeholder` to `false`,
-> and then flip that flag. Do not flip it first.
+**Where they came from.** Angus sent twelve full-size originals (99.5MB) on 25
+September 2026, named with his clients' surnames. Those originals sit in
+`src/assets/project_photos/`, which is **ignored by git** — the surnames stay
+off the site and out of the repository. The web-size copies were made from
+them with Pillow: EXIF applied then stripped, long edge 2400, JPEG quality 82,
+named by suburb. Add a photograph the same way: resize it, name it by suburb,
+drop it in `src/assets/projects/`, reference it in `src/data/projects.ts`.
+
+**What is and is not known.** He sent photographs, not job details. Each
+project entry in `src/data/projects.ts` describes what is in the photograph
+and nothing more — no dates, no scope, no before-and-after (there are no before
+photographs). `scope`, `architect`, `duration` and `year` are waiting for him.
+`mediaIsPlaceholder` is `false`: every photograph on the site is his.
+
+> **The testimonials are still written, not collected.** The photographs behind
+> them are real houses; the quotes in front of them are not real quotes. See
+> `src/data/testimonials.ts`, which carries its own flag.
 
 Alt text is written per use, not per file, because the same photograph carries a
-different caption in a hero than it does in a gallery. It lives beside each path
+different caption in a hero than it does in a gallery. It lives beside each name
 in `src/data/projects.ts`.
 
 ---
@@ -1060,7 +1060,7 @@ None of these is invented in code. Each is marked `OPEN:` at the point it matter
 | # | Item | Blocks | Where |
 |---|---|---|---|
 | ~~1~~ | ~~QBCC licence number~~ — **RESOLVED.** The kickoff capture list records the licence as held by the **company**, which is the entity named in the compliance line, so **1014350** is correct. 78490 is Angus's individual licence. | — | — |
-| 2 | **Project photo library** — currently zero images | The showcase, the socials, launch | `data/projects.ts` |
+| ~~2~~ | ~~Project photo library~~ — **twelve photographs across six jobs landed 25 September 2026.** Job details, before photographs and more jobs still to come. | — | — |
 | ~~3~~ | ~~Domain spelling~~ — **effectively resolved.** `bellewood.com.au` resolves and serves a live GoDaddy "Launching Soon" page, so the correct spelling is the one registered. The capture-list field was never filled in, so have Angus confirm on his GoDaddy screen if you want it on paper. | — | — |
 | 4 | **Years trading** — 25 in one record, 27 in another. No number appears on the site; copy reads "more than two decades" | About copy | `pages/About.tsx` |
 | 5 | **Tagline** — "Quality that's built in" is in use but not carried into the brand book, so it is not in the hero | Hero copy | `config/site.ts` → `site.tagline` |
@@ -1076,7 +1076,7 @@ None of these is invented in code. Each is marked `OPEN:` at the point it matter
 | 16 | **Analytics and conversion tracking** — none is installed. Nothing on this site is measured yet | Reporting, and the monthly performance report the SLA commits to | not yet built |
 | 18 | **The existing site carries the wrong ABN.** `anguscowanconstructions.com.au` shows ABN 39 113 772 535, which belongs to Trilogiq Australia Pty Ltd (Kilsyth VIC, deregistered 2017), plus a Victorian address, a Melbourne phone and fax, and **no QBCC licence number at all**. Angus's real details are ABN 19 512 919 083 / ACN 101 528 698. Worth checking whether the same wrong ABN is on his invoices, quotes and contracts. | Compliance, on the live site today | outside this repo |
 | 17 | **bellewood.com.au is already live** on GoDaddy's website builder with a "Launching Soon" page and its own contact form. Going live means repointing it, and any addresses collected there need retrieving | Launch | DNS / GoDaddy |
-| 13 | **Replace every placeholder photograph** and flip `mediaIsPlaceholder` | Publishing anything at all | `data/projects.ts` |
+| ~~13~~ | ~~Replace every placeholder photograph~~ — **done; `mediaIsPlaceholder` is `false`.** | — | — |
 | 14 | **A portrait of Angus**, if he wants one on the About page | About page | `data/projects.ts` → `stills.onSite` |
 | 15 | **Industry memberships** — Master Builders, HIA or similar, if he holds any | The credentials row | `config/site.ts` → `credentials` |
 

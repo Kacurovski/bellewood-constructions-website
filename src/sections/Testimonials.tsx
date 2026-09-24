@@ -62,9 +62,11 @@ type Plate = {
  * the ground is never decoration. Index for index with `testimonials`.
  */
 const PLATES: Plate[] = [
-  { image: photo('paddington-after') }, // Paddington · Renovation
-  { image: photo('ashgrove-after') }, // Ashgrove · Extension
-  { image: photo('interior-dining') }, // Architect · Inner Brisbane
+  // Angus's own photographs. The quotes in front of them are still written
+  // placeholders (see data/testimonials.ts); the houses behind them are real.
+  { image: photo('kalinga-1') },
+  { image: photo('auchenflower-4') },
+  { image: photo('clayfield-1') },
 ]
 
 export function Testimonials() {

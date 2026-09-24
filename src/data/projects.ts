@@ -3,36 +3,30 @@ import { photo } from './photos'
 /**
  * The project showcase.
  *
- * EVERY image on this site is a slot defined here. Swapping in the real
- * photography is a data edit, not a layout rebuild: drop files into
- * `src/assets/projects/` and change the names below. Nothing else changes.
- * The names are bare — `paddington-after`, no folder and no extension — and
- * `photo` in ./photos turns each one into the URL the bundler gave the file.
+ * EVERY image on this site is a slot defined here. Adding a photograph is a
+ * data edit, not a layout rebuild: drop the file into `src/assets/projects/`
+ * and name it below. The names are bare — `kalinga-1`, no folder and no
+ * extension — and `photo` in ./photos turns each one into the URL the bundler
+ * gave the file.
  *
- * ===========================================================================
- * THE IMAGERY BELOW IS PLACEHOLDER. IT MUST NOT PUBLISH.
+ * THE PHOTOGRAPHS ARE ANGUS'S OWN. Twelve arrived on 25 September 2026,
+ * covering six jobs. They are named by suburb only: the files he sent carry
+ * his clients' surnames, and those stay off the site and out of the
+ * repository (the originals are ignored by git; see .gitignore).
  *
- * These are stock photographs (Unsplash licence: free for commercial use, no
- * attribution required) standing in until Angus supplies the real library. They
- * are here so the design can be reviewed with something in it, and for no other
- * reason.
- *
- * Publishing them would present other people's buildings as Bellewood's work.
- * That is the one thing on this site that would actually be dishonest, so:
- *
- *   - every entry keeps `placeholder: true` until its real photography lands
- *   - `mediaIsPlaceholder` below is the single flag the site reads
- *   - the titles, suburbs and copy are STRUCTURE, not fact. No dollar values,
- *     dates, client names or testimonials have been invented, and none should
- *     be added without Angus confirming them
- *
- * When the real library arrives, per project: replace the files, write real alt
- * text, fill in `year` if it is known, and set `placeholder: false`.
- * ===========================================================================
+ * WHAT IS AND IS NOT KNOWN. He sent photographs, not job details. So each
+ * entry describes what is in the photograph and nothing more — no dates, no
+ * scope he has not stated, no story of what the house was before. `kind` is
+ * the kind of house, not the kind of work, for the same reason. When he
+ * confirms what each job involved, `scope`, `architect`, `duration` and
+ * `year` are waiting, and the stories can grow. Before-and-after pairs need
+ * before photographs, which he has not sent; the comparison hides itself
+ * until both halves exist.
  */
 
-/** True while any project is still carrying stock imagery. Flip when they all land. */
-export const mediaIsPlaceholder = true
+/** True while any project is carrying stock imagery. None is: every photograph
+ *  on the site is the client's own. Testimonials have their own flag. */
+export const mediaIsPlaceholder = false
 
 export type ImageSlot = {
   /** A resolved photograph URL from `photo`, or null for the empty ground. */
@@ -99,115 +93,112 @@ const none = (alt: string): ImageSlot => ({ src: null, alt })
    story arrays: a note in the array renders on the page, and it did. */
 export const projects: Project[] = [
   {
-    slug: 'paddington-workers-cottage',
-    title: 'Paddington cottage',
-    suburb: 'Paddington',
-    kind: 'Renovation and rear extension',
+    slug: 'kalinga',
+    title: 'Kalinga',
+    suburb: 'Kalinga',
+    kind: 'Two-storey Queenslander',
     year: null,
-    summary:
-      'A tight character block, an original cottage kept at the front and opened to the north at the rear.',
+    summary: 'A two-storey Queenslander behind a white picket fence, verandahs on both levels.',
     story: [
-      'The cottage had been added to twice before we got to it, both times badly, and both times in a way that turned its back on the north. The brief was to undo that without changing what the street sees.',
-      'The front three rooms were kept and repaired: boards lifted, numbered and relaid, sashes rebuilt, the verandah brought back to its proper line. Everything new sits behind and stops short of the ridge, so the original roof still reads from the footpath.',
+      'Double verandahs across the full width of the house, on turned posts with fretwork brackets at every head, and French doors opening onto the upper deck. The whole house in one pale colour under a corrugated roof, and a picket fence and gate to the street in the same white as the balustrades.',
     ],
-    hero: img('paddington-after', 'A restored timber cottage at dusk behind a white picket fence'),
-    before: img('paddington-before', 'A weatherboard cottage before work, paint failed and the yard overgrown'),
-    after: img('paddington-after', 'The same cottage after restoration, lit from within at dusk'),
-    gallery: [img('interior-dining', 'A dining room with timber floors and lined walls')],
-    placeholder: true,
+    hero: img('kalinga-1', 'A two-storey Queenslander with verandahs on both levels, behind a white picket fence'),
+    before: none('The Kalinga house before work'),
+    after: none('The Kalinga house after work'),
+    gallery: [],
+    placeholder: false,
     featured: true,
   },
   {
-    slug: 'new-farm-queenslander',
-    title: 'New Farm Queenslander',
-    suburb: 'New Farm',
-    kind: 'Full renovation',
+    slug: 'auchenflower',
+    title: 'Auchenflower',
+    suburb: 'Auchenflower',
+    kind: 'Queenslander, two levels',
     year: null,
-    summary:
-      'Original VJ walls and hoop pine floors retained, with a new kitchen and living wing set behind.',
+    summary: 'A Queenslander over two levels, with a verandah that looks across the suburb to the city.',
     story: [
-      'A Queenslander that had been tenanted for thirty years and maintained for none of them. Structurally it was sound, which is usually the way with these houses. Everything else needed doing.',
+      'From the garden: a gabled verandah on the upper level, the house carried on posts over an open lower floor with the dining table under it, and the original weatherboard wing running off to the side with its sash windows and window hoods.',
+      'Inside, the house is lined in vertical boards throughout — the kitchen with its long island and pendant lights, the stair landing with its timber handrail, the hallway with a glazed door onto the wine room, and the bathroom with its patterned wallpaper. The upper verandah is furnished as a room, with the city on the skyline.',
     ],
-    hero: img('newfarm-after', 'A Queenslander on stumps with a corrugated roof and timber battens'),
-    before: img('newfarm-before', 'A weathered timber house with a failing corrugated roof'),
-    after: img('newfarm-after', 'The Queenslander after renovation, roof and battens made good'),
-    gallery: [img('interior-kitchen-windows', 'A kitchen opening to the garden through full-height windows')],
-    placeholder: true,
-    featured: true,
-  },
-  {
-    slug: 'ashgrove-post-war-lift',
-    title: 'Ashgrove lift and build-under',
-    suburb: 'Ashgrove',
-    kind: 'Lift, build-under and extension',
-    year: null,
-    summary:
-      'The house raised, a new lower level framed in timber, and the street elevation left as it was found.',
-    story: [
-      'Lifting a house is the least interesting part of lifting a house. What matters is what goes in underneath, and whether the result still looks like it was always there.',
-    ],
-    hero: img('ashgrove-after', 'A brick and render home with a tiled roof behind established hedges'),
-    before: img('ashgrove-before', 'An older house overgrown and closed up before work began'),
-    after: img('ashgrove-after', 'The house after lifting, building under and landscaping'),
-    gallery: [img('interior-floor', 'Timber flooring running through to the kitchen')],
-    placeholder: true,
-    featured: false,
-  },
-  {
-    slug: 'bardon-hillside-extension',
-    title: 'Bardon hillside extension',
-    suburb: 'Bardon',
-    kind: 'Extension',
-    year: null,
-    summary:
-      'A steep site handled with a light timber structure that steps down rather than cutting in.',
-    story: [
-      'The cheap way to build on a slope is to cut a flat pad and retain it. The better way, and the one the drawings called for, is to let the building step and leave the ground doing what it was doing.',
-    ],
-    hero: img('detail-timber-cladding', 'Vertical timber cladding meeting a rendered wall on the extension'),
-    before: img('bardon-before', 'A tired timber building on an open site before work'),
-    after: img('detail-timber-cladding', 'The completed extension, timber cladding against render'),
+    hero: img('auchenflower-5', 'The rear of a two-storey Queenslander: a gabled upper verandah over an open lower level, the weatherboard wing beside it'),
+    before: none('The Auchenflower house before work'),
+    after: none('The Auchenflower house after work'),
     gallery: [
-      img('bardon-after', 'The extension settled into established subtropical planting'),
-      img('interior-kitchen-green', 'A kitchen with glazed green tiles and timber joinery'),
+      img('auchenflower-4', 'The upper verandah furnished as an outdoor room, with the city on the skyline beyond the balustrade'),
+      img('auchenflower-2', 'A kitchen lined in vertical boards, with a long navy island under two pendant lights'),
+      img('auchenflower-3', 'A stair landing with a timber handrail, white balusters and sash windows'),
+      img('auchenflower-6', 'A hallway with a glazed door onto a lit wine room'),
+      img('auchenflower-1', 'A bathroom vanity with a marble top, brass tapware and patterned wallpaper'),
     ],
-    placeholder: true,
+    placeholder: false,
     featured: true,
   },
   {
-    slug: 'red-hill-cottage-restoration',
-    title: 'Red Hill restoration',
-    suburb: 'Red Hill',
-    kind: 'Restoration',
+    slug: 'clayfield',
+    title: 'Clayfield',
+    suburb: 'Clayfield',
+    kind: 'Two-storey character home',
     year: null,
-    summary:
-      'Original detail repaired and matched rather than replaced, with the services brought up to standard behind it.',
+    summary: 'A two-storey character home at dusk, its verandah and lattice lit from within.',
     story: [
-      'Restoration work is mostly patience. Profiles get matched, not approximated. Where a board could be repaired it was repaired, and where it could not, the replacement was milled to the original section.',
+      'The street front: a full-width verandah on the upper level with a timber balustrade on turned posts, a lattice frieze beneath it, two round windows either side of the entry, and a low fence with a wrought-iron gate. The lights are on inside.',
     ],
-    hero: img('redhill-hero', 'A dining room in a restored cottage, dark walls and warm timber'),
-    before: none('The Red Hill cottage before restoration'),
-    after: none('The Red Hill cottage after restoration'),
-    gallery: [img('interior-dining', 'A dining room lined and lit, the restored floor running through')],
-    placeholder: true,
+    hero: img('clayfield-1', 'The front of a two-storey character home at dusk, verandah and lattice lit from within, a wrought-iron gate at the street'),
+    before: none('The Clayfield house before work'),
+    after: none('The Clayfield house after work'),
+    gallery: [],
+    placeholder: false,
+    featured: true,
+  },
+  {
+    slug: 'ascot',
+    title: 'Ascot',
+    suburb: 'Ascot',
+    kind: 'Character home',
+    year: null,
+    summary: 'A character home in Ascot: a navy front door under a fanlight, and a window seat in the front room.',
+    story: [
+      'The entry: a pair of glazed doors in deep navy under a fanlight, on a verandah lined in vertical boards. Inside, the front room is lined the same way, with a window seat set into the bay under three sash windows and the timber floor running through.',
+    ],
+    hero: img('ascot-2', 'A front room with a cushioned window seat set into a bay of three sash windows, timber floor and lined walls'),
+    before: none('The Ascot house before work'),
+    after: none('The Ascot house after work'),
+    gallery: [img('ascot-1', 'A pair of navy glazed front doors under a fanlight, on a verandah lined in vertical boards')],
+    placeholder: false,
     featured: false,
   },
   {
-    slug: 'coastal-apartment-refurbishment',
-    title: 'Coastal apartment',
-    suburb: 'Sunshine Coast',
-    kind: 'Apartment refurbishment',
+    slug: 'windsor',
+    title: 'Windsor',
+    suburb: 'Windsor',
+    kind: 'Family home',
     year: null,
-    summary:
-      'A full interior refurbishment carried out to the same standard as the housing work.',
+    summary: 'A living room under a coffered ceiling, opening through full-height glass to the deck and the view.',
     story: [
-      'An apartment is a different set of constraints to a house and the same set of standards. Everything comes up in a lift, nothing can be noisy before eight, and the finish still has to be right.',
+      'One long room: a coffered ceiling overhead, wide timber boards underfoot, a stone-clad fireplace wall with the television set into it, timber shelving beside it, and full-height glazing along the far side opening onto a deck with the suburb below.',
     ],
-    hero: img('interior-kitchen-timber', 'An apartment kitchen with a long timber table and pendant lighting'),
-    before: none('The coastal apartment before refurbishment'),
-    after: none('The coastal apartment after refurbishment'),
-    gallery: [img('coastal-hero', 'The island and joinery running the length of the kitchen')],
-    placeholder: true,
+    hero: img('windsor-1', 'A living room under a coffered ceiling, with a stone fireplace wall, timber shelving and full-height glass onto a deck'),
+    before: none('The Windsor house before work'),
+    after: none('The Windsor house after work'),
+    gallery: [],
+    placeholder: false,
+    featured: false,
+  },
+  {
+    slug: 'camp-hill',
+    title: 'Camp Hill',
+    suburb: 'Camp Hill',
+    kind: 'New homes',
+    year: null,
+    summary: 'A pair of new homes side by side, in weatherboard, brick and timber.',
+    story: [
+      'Two houses on neighbouring blocks, photographed at dusk with the lights on: one in horizontal weatherboard with a timber-screened balcony over a garage, the other in vertical board over a brick base. The one departure on this site from older homes.',
+    ],
+    hero: img('camp-hill-1', 'Two new homes side by side at dusk, one in weatherboard with a timber-screened balcony, the other in vertical board over brick'),
+    before: none('The Camp Hill homes before work'),
+    after: none('The Camp Hill homes after work'),
+    gallery: [],
+    placeholder: false,
     featured: false,
   },
 ]
@@ -224,25 +215,19 @@ export const hasBeforeAfter = (p: Project) => Boolean(p.before.src && p.after.sr
 export const stills = {
   /**
    * The hero photograph sets the colour of the entire page, so it is chosen
-   * against the brand as much as for the subject: warm, heritage, and out of
-   * blue. The market this business is leaving is blue and grey, and a hero that
-   * reads blue would undo the single most valuable decision in the identity.
+   * against the brand as much as for the subject: warm, heritage, out of blue.
+   * Kalinga — a two-storey Queenslander in one pale colour behind a white
+   * picket fence — is the house this business is about.
    */
-  hero: img('paddington-after', 'A restored cottage at dusk, lit from within, behind a white picket fence'),
-  onSite: img('detail-timber-cladding', 'Vertical timber cladding meeting a rendered wall'),
+  hero: img('kalinga-1', 'A two-storey Queenslander with verandahs on both levels, behind a white picket fence'),
+  /** The About page plate: the Auchenflower verandah, a room with the city in it. */
+  onSite: img('auchenflower-4', 'A verandah furnished as an outdoor room, with the city on the skyline beyond the balustrade'),
   /**
-   * The detail plate on the home page. It used to reach into Paddington's
-   * gallery by index, which coupled a home page section to the second item of
-   * one project's array — reorder that array and the home page changes. It is a
-   * still in its own right now.
-   *
-   * It was `detail-roof-timber`, which at thumbnail size read as an exposed
-   * timber roof and at full size was the Sydney Opera House. A recognisable
-   * landmark on a Brisbane builder's page is worse than a generic stock photo:
-   * generic reads as a placeholder, a landmark reads as a lie. That file is out
-   * of the repo. **Check every placeholder at full size, not on a contact
-   * sheet** — this one survived several passes because it was only ever looked
-   * at small.
+   * The detail plate on the home page, beside the drawing of the cottage. It
+   * was a stock photograph of a wall frame being lifted, captioned as the
+   * build going up; there is no photograph of that yet. The Auchenflower stair
+   * stands in — lined walls, sash windows, a timber rail — and the caption
+   * says what it shows.
    */
-  detail: img('site-frame-lift', 'A timber wall frame being lifted into place on site'),
+  detail: img('auchenflower-3', 'A stair landing lined in vertical boards, with a timber handrail and sash windows'),
 }

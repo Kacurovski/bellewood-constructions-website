@@ -150,7 +150,7 @@ export function Proposition() {
             <ImageSlot slot={stills.detail} ratio="3 / 2" tone="sage" className={styles.detail} />
             <figcaption className={styles.caption}>
               <span className={styles.captionNumber}>Fig. 2</span>
-              The same order, on site. A wall frame going up.
+              The same house, finished. Lined walls, a timber rail, sash windows.
             </figcaption>
           </figure>
         </Reveal>

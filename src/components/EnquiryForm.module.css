@@ -182,5 +182,7 @@
 /* A 36px field is a narrow strip to land a thumb on. On touch the ruled inputs
    grow to 44px; the rule stays at the foot, where it was. */
 @media (pointer: coarse) {
-  .input:not(.textarea) { min-height: 44px; }
+  /* 45, not 44: a 44px box rounds to 43.99 on some phones and fails the
+     tap-target floor by a hair. */
+  .input:not(.textarea) { min-height: 45px; }
 }
