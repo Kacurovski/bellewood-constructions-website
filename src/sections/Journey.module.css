@@ -139,6 +139,11 @@
   .item:hover .title { transform: translateX(4px); }
 }
 
+/* --- The rail: phone only ------------------------------------------------- */
+.rail {
+  display: none;
+}
+
 @media (max-width: 900px) {
   .item {
     grid-template-columns: 2.75rem minmax(0, 1fr);
@@ -158,5 +163,95 @@
 
   .spine {
     left: 1rem;
+  }
+}
+
+/* --- The swipe -------------------------------------------------------------- */
+@media (max-width: 640px) {
+  .spine {
+    display: none;
+  }
+
+  .list {
+    display: flex;
+    gap: 0.75rem;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: var(--gutter);
+    margin-inline: calc(var(--gutter) * -1);
+    padding-inline: var(--gutter);
+    padding-bottom: 0.25rem;
+    border-top: 0;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .list::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Each stage a plate: the ring on top, the title, the account. Every
+     stage sits at full weight — the swipe already says which one you are
+     on, and a dimmed plate beside a lit one reads as disabled. */
+  .item {
+    flex: 0 0 82%;
+    scroll-snap-align: start;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    padding: clamp(1.5rem, 5vw, 1.75rem);
+    padding-bottom: clamp(1.5rem, 5vw, 1.75rem);
+    border: 1px solid var(--rule);
+    opacity: 1;
+  }
+
+  .refCol {
+    background: transparent;
+    padding-top: 0;
+  }
+
+  .title,
+  .body {
+    grid-column: auto;
+  }
+
+  .rule {
+    display: none;
+  }
+
+  .rail {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 1rem;
+    align-items: center;
+    margin-top: 1.25rem;
+  }
+
+  .railCount {
+    font-family: var(--font-display);
+    font-size: var(--t-fine);
+    letter-spacing: 0.1em;
+    font-variant-numeric: tabular-nums;
+    color: color-mix(in srgb, var(--green) 60%, var(--wash));
+  }
+
+  .railAt {
+    color: var(--green);
+  }
+
+  .railTrack {
+    position: relative;
+    display: block;
+    height: 1px;
+    background: var(--rule);
+  }
+
+  .railFill {
+    position: absolute;
+    inset: 0;
+    background: var(--green);
+    transform-origin: left center;
+    transition: transform var(--dur-fast) var(--ease);
   }
 }
