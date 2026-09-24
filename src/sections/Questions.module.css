@@ -1,15 +1,10 @@
 /* ---------------------------------------------------------------------------
    Questions.
 
-   The one section on the site that is written to be READ rather than looked at,
-   so it is set like a page of a specification: a rule between every item, the
-   question in the display face, the answer in the body serif at a comfortable
-   measure. No accordions. A person deciding whether to keep their house should
-   not have to click eleven times to read eleven answers, and a closed accordion
-   hides the very thing that makes this section worth having.
-
-   Each row's rule draws itself from the left as the row arrives, and a pointer
-   over a row fills its number and lifts the question by four pixels.
+   A reading pane with a running head. Right: the answers, numbered, ruled.
+   Left, sticky: a counter, the current question in large type, and a compact
+   index of all ten with the current one lit. On a phone the head goes and the
+   question sits over its answer, one column, read straight down.
    --------------------------------------------------------------------------- */
 
 .section {
@@ -29,46 +24,173 @@
   color: var(--green);
 }
 
-.list {
+.pane {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: clamp(2rem, 5vw, 5rem);
+  align-items: start;
+  border-top: 1px solid var(--rule);
+}
+
+/* --- The running head ----------------------------------------------------- */
+.headCol {
+  position: relative;
+  align-self: stretch;
+}
+
+.sticky {
+  position: sticky;
+  top: calc(var(--header-h) + 1.5rem);
+  padding-top: clamp(1.5rem, 3vw, 2.5rem);
+}
+
+.counter {
+  font-family: var(--font-display);
+  font-size: var(--t-eyebrow);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--green) 72%, var(--wash));
+  margin: 0 0 1.25rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.counterNum {
+  color: var(--green);
+}
+
+.counterOf {
+  color: color-mix(in srgb, var(--green) 55%, var(--wash));
+}
+
+/* Room for the tallest question, so the index beneath does not jump as the
+   head changes. */
+.current {
+  min-height: 3.2em;
+  margin-bottom: clamp(1.5rem, 3vw, 2.25rem);
+}
+
+.currentQ {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: var(--t-section);
+  line-height: var(--lh-heading);
+  letter-spacing: -0.01em;
+  color: var(--green);
+  margin: 0;
+  max-width: 18ch;
+}
+
+.index {
   list-style: none;
   margin: 0;
   padding: 0;
   border-top: 1px solid var(--rule);
 }
 
+.indexItem {
+  display: grid;
+  grid-template-columns: 2.25rem minmax(0, 1fr);
+  gap: 0.5rem;
+  align-items: baseline;
+  width: 100%;
+  padding: 0.55rem 0;
+  border: 0;
+  border-bottom: 1px solid var(--rule);
+  background: transparent;
+  text-align: left;
+  cursor: pointer;
+  font: inherit;
+  color: color-mix(in srgb, var(--pine) 58%, var(--wash));
+  transition: color var(--dur-fast) var(--ease);
+}
+
+.indexNum {
+  font-family: var(--font-display);
+  font-size: var(--t-fine);
+  letter-spacing: 0.08em;
+  font-variant-numeric: tabular-nums;
+  color: color-mix(in srgb, var(--green) 50%, var(--wash));
+  transition: color var(--dur-fast) var(--ease);
+}
+
+.indexQ {
+  font-family: var(--font-display);
+  font-size: var(--t-small);
+  line-height: 1.35;
+  transition: transform var(--dur) var(--ease);
+}
+
+.indexPast {
+  color: color-mix(in srgb, var(--pine) 74%, var(--wash));
+}
+
+.indexActive {
+  color: var(--green);
+}
+
+.indexActive .indexNum {
+  color: var(--green);
+}
+
+.indexActive .indexQ {
+  transform: translateX(4px);
+}
+
+@media (hover: hover) {
+  .indexItem:hover {
+    color: var(--green);
+  }
+  .indexItem:hover .indexNum {
+    color: var(--green);
+  }
+}
+
+/* --- The answers ---------------------------------------------------------- */
+.list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
 .item {
   position: relative;
   display: grid;
-  /* Number, question, answer. The question and the answer sit side by side so
-     the band uses the page rather than running as one narrow column with half
-     the width empty beside it. */
-  grid-template-columns: 3.5rem minmax(0, 0.85fr) minmax(0, 1.15fr);
-  gap: clamp(1rem, 2.5vw, 2.5rem);
+  grid-template-columns: 2.75rem minmax(0, 1fr);
+  gap: 0.5rem clamp(1rem, 2vw, 1.75rem);
   align-items: start;
   padding-block: clamp(1.5rem, 3vw, 2.5rem);
   padding-bottom: calc(clamp(1.5rem, 3vw, 2.5rem) + 1px);
 }
 
-/* The item number, set as a drawing reference rather than a list bullet. */
+/* Where the running head measures from. */
+.anchor {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 0;
+}
+
 .num {
   font-family: var(--font-display);
   font-size: var(--t-fine);
   letter-spacing: 0.08em;
   color: color-mix(in srgb, var(--green) 60%, var(--wash));
-  padding-top: 0.4rem;
+  padding-top: 0.35rem;
   font-variant-numeric: tabular-nums;
   transition: color var(--dur-fast) var(--ease);
 }
 
+/* On a desk the question is carried by the running head, so here it is for
+   readers who cannot see it: kept in the document, taken out of the layout. */
 .q {
-  font-family: var(--font-display);
-  font-size: var(--t-sub);
-  line-height: var(--lh-heading);
-  letter-spacing: -0.005em;
-  color: var(--green);
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
   margin: 0;
-  max-width: 22ch;
-  transition: transform var(--dur) var(--ease);
 }
 
 .answer {
@@ -95,13 +217,20 @@
 
 @media (hover: hover) {
   .item:hover .num { color: var(--green); }
-  .item:hover .q { transform: translateX(4px); }
   .item:hover .rule { background: color-mix(in srgb, var(--green) 45%, var(--wash)); }
 }
 
-/* One column below the width where three stop being readable: the question
-   sits over its answer, with the number inline above it. */
+/* --- One column ----------------------------------------------------------- */
 @media (max-width: 900px) {
+  .pane {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0;
+  }
+
+  .headCol {
+    display: none;
+  }
+
   .item {
     grid-template-columns: minmax(0, 1fr);
     gap: 0.6rem;
@@ -111,7 +240,19 @@
     padding-top: 0;
   }
 
+  /* The question comes back into the layout, over its answer. */
   .q {
+    position: static;
+    width: auto;
+    height: auto;
+    overflow: visible;
+    clip: auto;
+    white-space: normal;
+    font-family: var(--font-display);
+    font-size: var(--t-sub);
+    line-height: var(--lh-heading);
+    letter-spacing: -0.005em;
+    color: var(--green);
     max-width: var(--measure-tight);
   }
 }
