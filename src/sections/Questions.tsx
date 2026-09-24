@@ -1,8 +1,8 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useId, useRef, useState } from 'react'
+import type { KeyboardEvent } from 'react'
 import { motion } from 'framer-motion'
 import { Reveal } from '../components/Reveal'
 import { SheetRef } from '../components/Sheet'
-import { DrawnRule } from '../components/Drawn'
 import { useReducedMotion } from '../hooks/useReducedMotion'
 import { faq } from '../data/faq'
 import styles from './Questions.module.css'
@@ -13,61 +13,95 @@ import styles from './Questions.module.css'
  * Ten questions, answered plainly, in the voice the rest of the site uses.
  * Copy lives in `src/data/faq.ts` — one file, no markup.
  *
- * SET AS A READING PANE WITH A RUNNING HEAD. On a desk the section is two
- * columns. The right column is the answers, numbered, each under a rule that
- * draws itself in. The left column is sticky and carries three things: a
- * counter, the question the reader is currently on in large type — it
- * crossfades to the next one as the answers scroll past — and beneath it a
- * compact index of all ten, the current one lit, each a link that scrolls
- * its answer into view. A specification's running head, for a page of
- * answers.
+ * ONE QUESTION, ONE ANSWER. On a desk the questions are a list down the left
+ * and the answer to the chosen one fills the right. Choose a question and the
+ * marker slides to it, the answer crossfades in under its own heading, and a
+ * link at its foot goes to the next. Arrow keys move through the list. There
+ * is never any matching of numbers across columns to know what you are
+ * reading: the question you chose is the heading over the answer you get.
  *
- * Which answer is "current" is the one whose top has most recently passed a
- * line a third of the way down the window. That line, not the top edge, so
- * the head changes when the reader's eye reaches the new answer rather than
- * when its heading scrapes the header.
+ * On a phone the two columns become one accordion, one answer open at a time,
+ * the question as the button. Same state, same copy.
  *
- * On a phone there is no room for a running head, so the question sits over
- * its answer in one column — the same list, read straight down. Under reduced
- * motion the head still tracks the scroll but switches without a fade.
+ * The earlier version scrolled all ten answers past a sticky index. It was
+ * clever and it was unclear: the answers carried no headings, so the reader
+ * had to check the number. This trades the scroll-linking for legibility.
  */
 export function Questions({ number = 'E-04' }: { number?: string }) {
   const reduced = useReducedMotion()
-  const answers = useRef<(HTMLLIElement | null)[]>([])
+  const id = useId()
   const [active, setActive] = useState(0)
+  const [narrow, setNarrow] = useState(false)
+  const tabs = useRef<(HTMLButtonElement | null)[]>([])
 
   useEffect(() => {
-    let raf = 0
-    const update = () => {
-      raf = 0
-      const line = window.innerHeight * 0.34
-      let idx = 0
-      answers.current.forEach((el, i) => {
-        if (el && el.getBoundingClientRect().top <= line) idx = i
-      })
-      setActive((cur) => (cur === idx ? cur : idx))
-    }
-    const onScroll = () => {
-      if (!raf) raf = requestAnimationFrame(update)
-    }
-    update()
-    window.addEventListener('scroll', onScroll, { passive: true })
-    window.addEventListener('resize', onScroll)
-    return () => {
-      window.removeEventListener('scroll', onScroll)
-      window.removeEventListener('resize', onScroll)
-      if (raf) cancelAnimationFrame(raf)
-    }
+    const mq = window.matchMedia('(max-width: 900px)')
+    const on = () => setNarrow(mq.matches)
+    on()
+    mq.addEventListener('change', on)
+    return () => mq.removeEventListener('change', on)
   }, [])
 
-  const jump = (i: number) => {
-    const el = answers.current[i]
-    if (!el) return
-    const top = el.getBoundingClientRect().top + window.scrollY - window.innerHeight * 0.3
-    window.scrollTo({ top, behavior: reduced ? 'auto' : 'smooth' })
+  const go = (i: number, focus = false) => {
+    const n = (i + faq.length) % faq.length
+    setActive(n)
+    if (focus) tabs.current[n]?.focus()
+  }
+
+  const onKey = (e: KeyboardEvent, i: number) => {
+    if (e.key === 'ArrowDown' || e.key === 'ArrowRight') {
+      e.preventDefault()
+      go(i + 1, true)
+    } else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
+      e.preventDefault()
+      go(i - 1, true)
+    } else if (e.key === 'Home') {
+      e.preventDefault()
+      go(0, true)
+    } else if (e.key === 'End') {
+      e.preventDefault()
+      go(faq.length - 1, true)
+    }
   }
 
   const current = faq[active]
+  const pad = (n: number) => String(n + 1).padStart(2, '0')
+
+  /* --- The answer, shared by both layouts ------------------------------- */
+  const Answer = ({ i, heading }: { i: number; heading: boolean }) => {
+    const item = faq[i]
+    const body = (
+      <>
+        {heading && <h3 className={styles.answerQ}>{item.q}</h3>}
+        {item.a.map((para) => (
+          <p key={para} className={styles.answerP}>
+            {para}
+          </p>
+        ))}
+        {!narrow && (
+          <button type="button" className={styles.next} onClick={() => go(i + 1, true)}>
+            <span className={styles.nextLabel}>Next</span>
+            <span className={styles.nextQ}>{faq[(i + 1) % faq.length].q}</span>
+            <span className={styles.nextArrow} aria-hidden="true">
+              →
+            </span>
+          </button>
+        )}
+      </>
+    )
+    if (reduced) return <div className={styles.answerInner}>{body}</div>
+    return (
+      <motion.div
+        key={i}
+        className={styles.answerInner}
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
+      >
+        {body}
+      </motion.div>
+    )
+  }
 
   return (
     <section className={['section', styles.section].join(' ')} aria-labelledby="questions-heading">
@@ -85,82 +119,92 @@ export function Questions({ number = 'E-04' }: { number?: string }) {
           />
         </Reveal>
 
-        <div className={styles.pane}>
-          {/* --- The running head ------------------------------------- */}
-          <div className={styles.headCol} aria-hidden="true">
-            <div className={styles.sticky}>
-              <p className={styles.counter}>
-                Question <span className={styles.counterNum}>{String(active + 1).padStart(2, '0')}</span>
-                <span className={styles.counterOf}> of {String(faq.length).padStart(2, '0')}</span>
-              </p>
-
-              <div className={styles.current}>
-                {reduced ? (
-                  <p className={styles.currentQ}>{current.q}</p>
-                ) : (
-                  /* Remounted on change and faded in; no exit animation. An
-                     exit-then-enter sequence stalls when the key changes
-                     faster than the exit can finish — which is exactly what
-                     a fast scroll does — and leaves the head blank. */
-                  <motion.p
-                    key={active}
-                    className={styles.currentQ}
-                    initial={{ opacity: 0, y: 8 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+        {narrow ? (
+          /* --- One column: an accordion, one open at a time --------------- */
+          <Reveal className={styles.accordion}>
+            {faq.map((item, i) => {
+              const open = i === active
+              return (
+                <div key={item.q} className={[styles.accItem, open ? styles.accOpen : ''].join(' ')}>
+                  <button
+                    type="button"
+                    className={styles.accBtn}
+                    aria-expanded={open}
+                    aria-controls={`${id}-acc-${i}`}
+                    onClick={() => setActive(open ? -1 : i)}
                   >
-                    {current.q}
-                  </motion.p>
-                )}
-              </div>
-
-              <ol className={styles.index}>
-                {faq.map((item, i) => (
-                  <li key={item.q}>
-                    <button
-                      type="button"
-                      className={[styles.indexItem, i === active ? styles.indexActive : '', i < active ? styles.indexPast : ''].join(' ')}
-                      onClick={() => jump(i)}
-                      tabIndex={-1}
-                    >
-                      <span className={styles.indexNum}>{String(i + 1).padStart(2, '0')}</span>
-                      <span className={styles.indexQ}>{item.q}</span>
-                    </button>
-                  </li>
-                ))}
-              </ol>
-            </div>
-          </div>
-
-          {/* --- The answers ------------------------------------------ */}
-          <ol className={styles.list}>
-            {faq.map((item, i) => (
-              <Reveal key={item.q} as="li" className={styles.item} delay={Math.min(i * 0.03, 0.18)}>
-                <div
-                  ref={(el) => {
-                    answers.current[i] = el as HTMLLIElement | null
-                  }}
-                  className={styles.anchor}
-                />
-                <span className={styles.num} aria-hidden="true">
-                  {String(i + 1).padStart(2, '0')}
-                </span>
-                {/* The question is a real heading for readers and screen
-                    readers; on a desk it is visually carried by the running
-                    head instead, so it is hidden there and shown on a phone. */}
-                <h3 className={styles.q}>{item.q}</h3>
-                <div className={styles.answer}>
-                  {item.a.map((para) => (
-                    <p key={para} className={['small', styles.a].join(' ')}>
-                      {para}
-                    </p>
-                  ))}
+                    <span className={styles.accNum}>{pad(i)}</span>
+                    <span className={styles.accQ}>{item.q}</span>
+                    <span className={styles.accMark} aria-hidden="true" />
+                  </button>
+                  <div id={`${id}-acc-${i}`} className={styles.accPanel} hidden={!open}>
+                    {open && <Answer i={i} heading={false} />}
+                  </div>
                 </div>
-                <DrawnRule className={styles.rule} delay={0.1 + Math.min(i * 0.03, 0.18)} />
-              </Reveal>
-            ))}
-          </ol>
-        </div>
+              )
+            })}
+          </Reveal>
+        ) : (
+          /* --- Two columns: a list that selects, one answer -------------- */
+          <div className={styles.pane}>
+            <Reveal className={styles.listCol}>
+              <ol className={styles.list} role="tablist" aria-orientation="vertical" aria-label="Questions">
+                {faq.map((item, i) => {
+                  const on = i === active
+                  return (
+                    <li key={item.q} className={styles.listItem}>
+                      <button
+                        ref={(el) => {
+                          tabs.current[i] = el
+                        }}
+                        type="button"
+                        role="tab"
+                        id={`${id}-tab-${i}`}
+                        aria-selected={on}
+                        aria-controls={`${id}-panel`}
+                        tabIndex={on ? 0 : -1}
+                        className={[styles.tab, on ? styles.tabOn : ''].join(' ')}
+                        onClick={() => go(i)}
+                        onKeyDown={(e) => onKey(e, i)}
+                      >
+                        {on &&
+                          (reduced ? (
+                            <span className={styles.marker} aria-hidden="true" />
+                          ) : (
+                            <motion.span
+                              layoutId={`${id}-marker`}
+                              className={styles.marker}
+                              aria-hidden="true"
+                              transition={{ type: 'spring', stiffness: 380, damping: 36, mass: 0.8 }}
+                            />
+                          ))}
+                        <span className={styles.tabNum}>{pad(i)}</span>
+                        <span className={styles.tabQ}>{item.q}</span>
+                      </button>
+                    </li>
+                  )
+                })}
+              </ol>
+            </Reveal>
+
+            <Reveal delay={0.08} className={styles.answerCol}>
+              <div
+                id={`${id}-panel`}
+                role="tabpanel"
+                aria-labelledby={`${id}-tab-${active}`}
+                className={styles.answer}
+              >
+                <span className={styles.watermark} aria-hidden="true">
+                  {pad(active)}
+                </span>
+                <p className={styles.counter}>
+                  <span className={styles.counterNum}>{pad(active)}</span> / {String(faq.length).padStart(2, '0')}
+                </p>
+                <Answer key={current.q} i={active} heading />
+              </div>
+            </Reveal>
+          </div>
+        )}
       </div>
     </section>
   )
