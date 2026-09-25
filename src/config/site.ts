@@ -46,13 +46,24 @@ export const contact = {
   serviceArea: 'Brisbane and the Sunshine Coast',
 } as const
 
+/**
+ * Social links. An entry with an empty `href` is NOT rendered — the footer and
+ * the contact page skip it — so a network we do not yet have the URL for is
+ * simply absent rather than pointing somewhere wrong. Facebook and LinkedIn
+ * used to point at the bare facebook.com and linkedin.com, which sends a
+ * logged-in visitor to their own feed and looks like the site is linking to
+ * them personally. Paste the real page URL in and the link appears.
+ */
 export const social = [
   // Instagram is being rebranded, not replaced, so the existing handle and its
   // following carry over. Handles are finalised under Bellewood at the name change.
   { label: 'Instagram', href: 'https://www.instagram.com/anguscowan_constructions/' },
-  { label: 'Facebook', href: 'https://www.facebook.com/' }, // OPEN: page URL
-  { label: 'LinkedIn', href: 'https://www.linkedin.com/' }, // OPEN: company page URL
+  { label: 'Facebook', href: '' }, // OPEN: page URL — hidden until set
+  { label: 'LinkedIn', href: '' }, // OPEN: company page URL — hidden until set
 ] as const
+
+/** The social links that actually have somewhere to go. Render this, not `social`. */
+export const socialLinks = social.filter((s) => s.href)
 
 /**
  * Legal — Queensland law requires the licensed name and licence number to appear

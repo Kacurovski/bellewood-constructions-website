@@ -2,7 +2,7 @@ import { EnquiryForm } from '../components/EnquiryForm'
 import { Reveal } from '../components/Reveal'
 import { PageHead } from '../components/PageHead'
 import { usePageTitle } from '../hooks/usePageTitle'
-import { contact, social } from '../config/site'
+import { contact, socialLinks } from '../config/site'
 import styles from './Contact.module.css'
 
 export default function Contact() {
@@ -21,7 +21,7 @@ export default function Contact() {
           { label: 'Where we work', value: contact.serviceArea },
           {
             label: 'Follow',
-            value: social.map((item, i) => (
+            value: socialLinks.map((item, i) => (
               <span key={item.label}>
                 {i > 0 && (
                   <span className={styles.sep} aria-hidden="true">

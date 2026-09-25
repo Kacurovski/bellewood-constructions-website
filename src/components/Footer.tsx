@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom'
 import { Logo } from './Logo'
 import { ComplianceLine } from './ComplianceLine'
-import { compliance, contact, nav, site, social } from '../config/site'
+import { compliance, contact, nav, site, socialLinks } from '../config/site'
 import styles from './Footer.module.css'
 
 /**
@@ -61,7 +61,7 @@ export function Footer() {
         <div className={styles.column}>
           <h2 className={['eyebrow', styles.columnHeading].join(' ')}>Follow</h2>
           <ul className={styles.list}>
-            {social.map((item) => (
+            {socialLinks.map((item) => (
               <li key={item.label}>
                 <a href={item.href} target="_blank" rel="noreferrer noopener">
                   {item.label}
