@@ -201,8 +201,18 @@ export function ProjectIndex({ projects, start = 1, footer }: Props) {
         {/* A second, smaller plate lapping the corner of the first, changing a
             beat behind it. One rectangle is a picture; two overlapping, arriving
             out of step, is a composition — and it doubles what the section
-            shows without doubling what it takes up. */}
-        <div className={styles.inset}>
+            shows without doubling what it takes up.
+
+            ONLY when the project on show has a second photograph. The plate is
+            an opaque wash square, and for a project whose gallery is empty it
+            sat on the photo's corner with nothing in it — an empty notch that
+            read as a broken image at any screen size. It fades away with the
+            photograph it has nothing to show. */}
+        <motion.div
+          className={styles.inset}
+          animate={{ opacity: projects[shown]?.gallery[0]?.src ? 1 : 0 }}
+          transition={reduced ? { duration: 0 } : { duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+        >
           {projects.map((project, i) => {
             const detail = project.gallery[0]
             return detail?.src ? (
@@ -232,7 +242,7 @@ export function ProjectIndex({ projects, start = 1, footer }: Props) {
               />
             ) : null
           })}
-        </div>
+        </motion.div>
 
         <div className={styles.caption}>
           {/* The name is swapped by rising out from behind the caption rule,
