@@ -1,6 +1,7 @@
 import { useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { motion, useScroll, useMotionValueEvent } from 'framer-motion'
+import { motion, useScroll, useTransform, useMotionValueEvent } from 'framer-motion'
+import type { MotionValue } from 'framer-motion'
 import { SheetRef } from '../components/Sheet'
 import { RiseIn } from '../components/RiseIn'
 import { CycleWord } from '../components/CycleWord'
@@ -94,13 +95,21 @@ const FRAME_COPY: { eyebrow: string; title: string; body: string }[] = [
 ]
 
 /**
- * The hero: one finished house, told in five photographs as you scroll.
+ * The hero: one finished house, walked through in five photographs.
  *
- * The band is a track five screens tall with a pinned viewport inside it, so
- * the page scrolls but the picture holds still and changes instead. Scroll
- * position picks the frame — nothing autoplays, nothing loops, and scrolling
- * back up walks back through the same frames — so the visitor is always in
- * charge of the pace.
+ * The band is a track five screens tall with a pinned viewport inside it, and
+ * the scroll wheel is the camera dolly. Every visible photograph is always
+ * growing as you scroll down — the room you are in pushes slowly towards you,
+ * and at each handover the next room rises out of the middle of the current
+ * one, small at first and swelling to full frame — so the whole band reads as
+ * one continuous move deeper into the house rather than a slideshow. Scroll
+ * back up and the camera backs out the way it came.
+ *
+ * Nothing is animated on a clock. Opacity and scale are pure functions of
+ * scroll position, scrubbed through `useTransform`, which is what makes it
+ * feel like footage: hold the scroll and the picture holds, creep the scroll
+ * and the picture creeps. Only the words run on springs, arriving once per
+ * room.
  *
  * This replaced the 3D heritage-study drawing. The drawing argued the
  * proposition as a diagram; the photographs argue it as evidence, which only
@@ -118,9 +127,88 @@ const FRAME_COPY: { eyebrow: string; title: string; body: string }[] = [
  *
  * For assistive technology the heading is one plain, unchanging sentence, the
  * frame texts are all in the document in order, and the images carry real
- * alt text. Under reduced motion the crossfades and text entrances become
- * cuts — scroll still changes the frame, but nothing animates.
+ * alt text. Under reduced motion the dolly is retired: the photographs sit at
+ * rest and hand over in a short scroll-positioned fade, and the text arrives
+ * without travel.
  */
+
+/* How much of a segment the handover occupies, and how far the camera
+   travels. The numbers are in room-units: the scroll from one room to the
+   next is 1. A handover that starts 0.45 before the next room and lands 0.05
+   before it leaves each room just over half a segment to be looked at on its
+   own. PUSH is the scale a room reaches by the time the next one has fully
+   covered it. A room's scale starts at exactly 1 — full bleed, never
+   smaller — because a frame under full bleed shows its own hard edge against
+   the room behind it, and the walk collapses into a growing inset picture.
+   Every room on screen growing at once is what reads as one camera moving
+   forward. */
+const BLEND = 0.45
+const LANDED = 0.06
+const PUSH = 1.22
+
+/**
+ * One photograph of the walk, scrubbed by scroll.
+ *
+ * The layers stack in order, so a room only ever fades IN — the room before
+ * it is simply covered, which keeps the handover from dipping to ground in
+ * the middle. The wrapper carries the opacity and the veil; the image inside
+ * carries the scale, so the veil never zooms.
+ */
+function HeroLayer({
+  frame,
+  index,
+  progress,
+  reduced,
+}: {
+  frame: (typeof FRAMES)[number]
+  index: number
+  progress: MotionValue<number>
+  reduced: boolean
+}) {
+  const span = FRAMES.length - 1
+  /* Room-units -> progress-units. */
+  const at = (t: number) => Math.max(0, Math.min(1, t / span))
+
+  /* The first layer is the floor of the stack and is always lit; under
+     reduced motion the fade shortens to a cut-length blend and the scale
+     pins to rest. Framer clamps outside the given range. */
+  const opacity = useTransform(
+    progress,
+    index === 0
+      ? [0, 1]
+      : reduced
+        ? [at(index - 0.18), at(index - 0.1)]
+        : [at(index - BLEND), at(index - LANDED)],
+    index === 0 ? [1, 1] : [0, 1],
+  )
+
+  /* From full bleed the moment it starts fading in, to PUSH as the next room
+     finishes covering it: one straight line, so the growth never pauses at
+     the landing and the move never changes speed mid-room. */
+  const scale = useTransform(
+    progress,
+    [at(index - BLEND), at(index + 1)],
+    reduced ? [1, 1] : [1, PUSH],
+  )
+
+  return (
+    <motion.div
+      className={[styles.photo, frame.side === 'right' ? styles.veilRight : styles.veilLeft].join(
+        ' ',
+      )}
+      style={{ opacity }}
+    >
+      <motion.img
+        src={frame.src}
+        alt={frame.alt}
+        className={styles.img}
+        style={{ scale }}
+        decoding="async"
+        {...(index === 0 ? { fetchpriority: 'high' as const } : {})}
+      />
+    </motion.div>
+  )
+}
 export function Hero() {
   const track = useRef<HTMLElement>(null)
   const reduced = useReducedMotion()
@@ -131,8 +219,14 @@ export function Hero() {
     offset: ['start start', 'end end'],
   })
 
+  /* Which room the words belong to. The walk is continuous, so the words
+     change hands in the middle of a handover — when the incoming room is the
+     one you are mostly looking at. */
   useMotionValueEvent(scrollYProgress, 'change', (v) => {
-    const next = Math.min(FRAMES.length - 1, Math.floor(v * FRAMES.length))
+    const t = v * (FRAMES.length - 1)
+    /* floor(t + c) steps up at t = i - c; c of half the blend window puts the
+       step at the middle of the handover. */
+    const next = Math.max(0, Math.min(FRAMES.length - 1, Math.floor(t + (BLEND + LANDED) / 2)))
     setFrame(next)
   })
 
@@ -153,26 +247,11 @@ export function Hero() {
       aria-labelledby="hero-heading"
     >
       <div className={styles.pin}>
-        {/* The photographs, stacked. Every frame is in the DOM from the start —
-            they crossfade rather than mount, so there is never a flash of
+        {/* The rooms, stacked in walking order and scrubbed by scroll. Every
+            frame is in the DOM from the start, so there is never a flash of
             ground while a new image decodes. */}
         {FRAMES.map((f, i) => (
-          <div
-            key={f.src}
-            className={[
-              styles.photo,
-              i === frame ? styles.photoOn : '',
-              f.side === 'right' ? styles.veilRight : styles.veilLeft,
-            ].join(' ')}
-          >
-            <img
-              src={f.src}
-              alt={f.alt}
-              className={styles.img}
-              decoding="async"
-              {...(i === 0 ? { fetchpriority: 'high' as const } : {})}
-            />
-          </div>
+          <HeroLayer key={f.src} frame={f} index={i} progress={scrollYProgress} reduced={reduced} />
         ))}
 
         {/* The veils: green behind the words, a scrim up top so the header
