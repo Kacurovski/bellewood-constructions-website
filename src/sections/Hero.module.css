@@ -1,52 +1,165 @@
 /* ---------------------------------------------------------------------------
-   The hero.
+   The hero: one finished house, told in five photographs as you scroll.
 
-   Deep Pine edge to edge, running up under the sticky header so the band starts
-   at the top of the window and the header floats transparent on it. Without the
-   pull the header sits ABOVE the hero in flow, a transparent bar shows the pale
-   page behind it, and the reverse mark disappears into it.
+   The section is a track five screens tall; `.pin` is the screen that sticks
+   inside it. The page keeps scrolling — Lenis, the scrollbar and the keyboard
+   all work untouched, because nothing here hijacks scroll — but while the
+   track passes, the viewport holds and the frame changes.
 
-   The sheet reference runs across the top of the band, then the words hold the
-   left column and the drawing holds the right. The drawing carries its own two
-   dimensions — the depth under it and the height up its side — so the marks
-   belong to the object rather than to the page.
+   The band still runs up under the sticky header so the photographs start at
+   the very top of the window and the header floats transparent on them; the
+   top scrim is what keeps the header legible over a white ceiling.
    --------------------------------------------------------------------------- */
 
 .hero {
   position: relative;
-  overflow: hidden;
-  /* Bellewood Green, which is the brand's ground colour. This was Deep Pine —
-     off-brand: the book assigns Pine to body text and fine rules, and Green to
-     "the mark, headings, solid grounds". Pine is a near-black that reads as a
-     different colour rather than as the identity's dark, which is exactly how
-     it looked. Green also puts the hero, the mesh band, the enquiry and the
-     footer on one ground instead of two that are almost but not quite alike. */
   background: var(--green);
   margin-top: calc(var(--header-h) * -1);
-  padding-top: var(--header-h);
+  /* One screen per frame. The last frame gets its screen too — the track is
+     N screens tall and the pin occupies one, so there are N-1 screens of
+     travel: frame changes land at every full screen of scroll. */
+  height: calc(5 * 100svh);
 }
 
+.pin {
+  position: sticky;
+  top: 0;
+  height: 100svh;
+  overflow: hidden;
+}
+
+/* --- The photographs -------------------------------------------------------
+   Stacked full-bleed, crossfaded by class. The active frame also eases from a
+   slight enlargement back to rest — a slow settle, not a zoom — so a held
+   frame is never a frozen one. */
+.photo {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 700ms var(--ease);
+  z-index: 0;
+}
+
+.photoOn { opacity: 1; }
+
+.img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .img {
+    transform: scale(1.045);
+    transition: transform 1200ms var(--ease);
+  }
+
+  .photoOn .img {
+    transform: scale(1);
+    /* The settle takes the whole dwell of a frame, so the picture is still
+       breathing however long it is held. */
+    transition: transform 6000ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .photo { transition: none; }
+}
+
+/* --- The veils -------------------------------------------------------------
+   Bellewood Green laid over the side the words sit, dense behind the text and
+   gone by mid-frame. Painted on the photo element itself so it crossfades as
+   one object with its photograph — a veil that faded separately would flash
+   the raw image for half a beat on every change. */
+.veilLeft::after,
+.veilRight::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
+.veilLeft::after {
+  background: linear-gradient(
+    100deg,
+    color-mix(in srgb, var(--green) 93%, transparent) 0%,
+    color-mix(in srgb, var(--green) 74%, transparent) 28%,
+    color-mix(in srgb, var(--green) 38%, transparent) 52%,
+    transparent 74%
+  );
+}
+
+.veilRight::after {
+  background: linear-gradient(
+    -100deg,
+    color-mix(in srgb, var(--green) 93%, transparent) 0%,
+    color-mix(in srgb, var(--green) 74%, transparent) 28%,
+    color-mix(in srgb, var(--green) 38%, transparent) 52%,
+    transparent 74%
+  );
+}
+
+/* The header floats transparent over the band, and these are white ceilings
+   behind it: a short green scrim keeps the mark and the nav reading at the
+   top, and a lower one grounds the frame counter. Fixed furniture, above the
+   crossfading photos. */
+.topScrim,
+.footScrim {
+  position: absolute;
+  left: 0;
+  right: 0;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.topScrim {
+  top: 0;
+  height: calc(var(--header-h) + 6rem);
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--green) 80%, transparent) 0%,
+    color-mix(in srgb, var(--green) 55%, transparent) 55%,
+    transparent 100%
+  );
+}
+
+.footScrim {
+  bottom: 0;
+  height: 7rem;
+  background: linear-gradient(
+    0deg,
+    color-mix(in srgb, var(--green) 45%, transparent),
+    transparent
+  );
+}
+
+/* --- The words -------------------------------------------------------------
+   One column of copy, held to whichever side the frame assigns, over the
+   dense end of the veil. */
 .inner {
+  position: relative;
+  z-index: 3;
+  height: 100%;
   display: flex;
   flex-direction: column;
-  padding-block: clamp(2rem, 4vw, 3.5rem) clamp(2.5rem, 5vw, 4rem);
-  min-height: calc(100svh - var(--header-h));
   box-sizing: border-box;
+  padding-top: calc(var(--header-h) + clamp(1.25rem, 3vh, 2.25rem));
+  padding-bottom: clamp(1.5rem, 4vh, 2.5rem);
 }
 
 .ref { flex: none; }
 
-/* Words left, drawing right. The two columns are close to even: the headline
-   needs the width to be set at display scale, and the drawing needs it because
-   the camera fits the object to the panel it is given — a narrow panel is a
-   small house. */
+/* The sheet reference sits over photographs here, not over flat green, and
+   the sage the on-green rules give it washes out against a white ceiling.
+   The child selector out-specifies Sheet's `.on-green .ref` and lifts the
+   strip to wash. */
+.hero .ref > div { color: var(--wash); }
+
 .body {
   flex: 1 1 auto;
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1.06fr);
-  gap: clamp(1.5rem, 4vw, 4.5rem);
+  display: flex;
   align-items: center;
-  margin-top: clamp(1.5rem, 3vw, 2.75rem);
   min-height: 0;
 }
 
@@ -54,55 +167,32 @@
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: clamp(1.5rem, 3vw, 2.5rem);
-  min-width: 0;
-  /* Centred in the band.
-
-     It was pinned to the bottom, and the reason given was that it then sat on
-     the same line as the drawing's depth dimension. That dimension has gone, so
-     the reason has too — and what the bottom alignment left behind was a 150px
-     band of nothing between the sheet reference and the headline at 900px tall,
-     which is the emptiest thing on the page and the first thing anyone marked.
-     Centred, that space is split above and below and neither half reads as a
-     hole. */
-  align-self: center;
-  padding-bottom: clamp(0.25rem, 2vh, 1.75rem);
+  gap: clamp(1.1rem, 2.5vw, 1.75rem);
+  max-width: clamp(28rem, 42vw, 38rem);
 }
+
+/* The words swap sides with the veil. */
+.bodyRight { justify-content: flex-end; }
 
 .heading {
   margin: 0;
   font-family: var(--font-display);
   font-weight: 700;
-  /* Both ends of this clamp are set by the changing word, which has to set on
-     one line inside this column. The column is narrowest relative to the type
-     just above 860px, where the two-column layout starts — the intercept came
-     down from 0.9rem to 0.62rem to clear it there, and the cap from 5rem to
-     4.6rem to clear it above 1500. `harness/cycle.mjs` measures the widest word
-     against the column at thirteen widths and fails under 16px of clearance.
-     Change either end and run it. */
   font-size: clamp(2.4rem, 0.62rem + 4.2vw, 4.6rem);
   line-height: 0.98;
   letter-spacing: -0.04em;
-  /* The fixed part of the sentence, quieter than the word that changes above
-     it. Sage on Green is 6.1:1 — the brand book allows it for headings and
-     short passages, and this is three words on one line. */
   color: var(--sage);
   text-wrap: balance;
 }
 
-/* The changing word sits on its own line above the rest of the sentence.
-   CycleWord's own class already makes it a block — a grid one — and it must not
-   be given a `display` here: both classes land on the same element with the same
-   specificity, so whichever the bundler emits last wins. `display: block` from
-   this file was winning, which laid the four hidden sizing copies out in a ROW
-   instead of stacking them in one cell. The box came out 2157px wide inside a
-   600px column, the hero's `overflow: hidden` cut it off, and that is the
-   clipped word. Set placement here, never display. */
+/* CycleWord is a grid block of its own — set placement here, never display.
+   See the note in the old hero: a `display` from this class lays its hidden
+   sizing copies out in a row and clips the word. */
 .cycle { width: 100%; }
 
 .lede {
   margin: 0;
-  color: color-mix(in srgb, var(--wash) 78%, transparent);
+  color: color-mix(in srgb, var(--wash) 86%, transparent);
   max-width: 38ch;
 }
 
@@ -115,255 +205,108 @@
 
 .call { color: var(--wash); }
 
-/* --- The drawing -----------------------------------------------------------
-   Its own column, running off the right edge of the screen. The gutter is given
-   back rather than a viewport width taken, so it stays in step with the shell
-   at every size. */
-.figure {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  min-width: 0;
-  height: 100%;
-  min-height: clamp(17rem, 44vh, 32rem);
-  margin-right: calc(var(--gutter) * -1);
-}
-
-.plate {
-  position: relative;
-  flex: 1 1 auto;
-  min-height: 0;
-}
-
-/* The height dimension used to sit here, up the right-hand edge, and the scene
-   was inset to clear it. Both are gone — one dimension says the object is
-   measured, two say it twice — so the drawing gets the whole plate back. */
-.scene { position: absolute; inset: 0; }
-
-.still {
-  width: 100%;
-  height: 100%;
-  padding: 3%;
-  box-sizing: border-box;
-}
-
-/* --- Annotation ------------------------------------------------------------
-   A label, a leader line and a dot, in the drawing convention. Two of them:
-   the cottage that is kept and the wing that is added, which is the whole
-   proposition of the business pointed at the object that demonstrates it.
-
-   Positions are percentages of the plate. The model leans a couple of degrees
-   towards the pointer, so these are set against the shape rather than against a
-   single pixel — near enough to read as pointing at the right part, loose
-   enough that the lean never makes one of them look wrong. */
-/* The pair drift with the model.
-
-   The scene leans towards the pointer by `smoothed.x * 0.15` radians of yaw;
-   these read the same normalised figure off `--px` and shift a few pixels with
-   it, at a slightly larger amplitude than the building's own apparent movement.
-   That is the whole difference between a label drawn ON the drawing and a label
-   stuck to the glass in front of it, and it is why these read as furniture
-   before.
-
-   `--px` is only ever written on a fine pointer, and the fallback of 0 is the
-   resting position, so this costs a phone nothing. */
-.note {
-  position: absolute;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  /* Interactive now, so it takes the pointer. Stripped back to nothing, since
-     a button element brings a ground, a border and a font with it. */
-  padding: 0;
-  border: 0;
-  background: none;
-  color: inherit;
-  font: inherit;
-  cursor: pointer;
-  z-index: 1;
-  transform: translate3d(
-    calc(var(--px, 0) * 14px),
-    calc(var(--py, 0) * 7px),
-    0
-  );
-  transition: transform 900ms cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.noteDot {
-  width: 5px;
-  transition: background var(--dur) var(--ease);
-  height: 5px;
-  border-radius: 50%;
-  background: var(--sage);
-  flex: none;
-}
-
-.noteLine {
-  width: clamp(1.75rem, 4vw, 3.25rem);
-  height: 1px;
-  background: color-mix(in srgb, var(--wash) 40%, transparent);
-  flex: none;
-  transition: background var(--dur) var(--ease);
-  /* The cottage's row is reversed and the wing's is a column, so each one sets
-     its own origin below. This is the default for a left-to-right leader. */
-  transform-origin: left;
-}
-
-/* Drawn on in the order a person draws one: the dot lands on the thing, the
-   leader rules out from it, then the words are written at the end of the line.
-
-   `backwards` fill is what makes the delay work — without it each part is
-   visible for its own delay and then snaps to the start of its animation, which
-   is a flash of the finished annotation before it draws. The delays put the
-   whole thing after the model has built, so the house is a house before
-   anything is said about it.
-
-   The section keeps `--note-in` so the two callouts can be staggered against
-   one clock rather than by hand. */
-@media (prefers-reduced-motion: no-preference) {
-  .noteDot {
-    animation: noteDot 420ms var(--ease-out) backwards;
-    animation-delay: var(--note-in, 1.15s);
-  }
-
-  .noteLine {
-    animation: noteLine 520ms var(--ease-out) backwards;
-    animation-delay: calc(var(--note-in, 1.15s) + 180ms);
-  }
-
-  .noteText {
-    animation: noteText 620ms var(--ease-out) backwards;
-    animation-delay: calc(var(--note-in, 1.15s) + 400ms);
-  }
-}
-
-@keyframes noteDot {
-  from { transform: scale(0); opacity: 0; }
-}
-
-/* Ruled out from the dot, which is the end the leader is drawn from. */
-@keyframes noteLine {
-  from { transform: scaleX(0); }
-}
-
-@keyframes noteText {
-  from { opacity: 0; transform: translateX(-0.4rem); }
-}
-
-/* The one being pointed at comes up to full, so the label and the building
-   agree about which of them is live. */
-.noteOn .noteText { color: var(--wash); }
-.noteOn .noteDot { background: var(--wash); }
-.noteOn .noteLine { background: color-mix(in srgb, var(--wash) 75%, transparent); }
-
-.noteText {
+/* Frames 2–5: an eyebrow, one line at display scale, one sentence. */
+.eyebrow {
+  margin: 0;
   font-family: var(--font-display);
   font-weight: 600;
   font-size: var(--t-eyebrow);
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--sage);
-  white-space: nowrap;
-  transition: color var(--dur) var(--ease);
 }
 
-/* The cottage: dot on the verandah end, label running off to the left. */
-.noteOld {
-  left: 6%;
-  top: 34%;
-  flex-direction: row-reverse;
-  --note-in: 1.15s;
+.frameTitle {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(2rem, 1rem + 2.8vw, 3.6rem);
+  line-height: 1.02;
+  letter-spacing: -0.03em;
+  color: var(--wash);
+  text-wrap: balance;
 }
 
-/* Reversed row: the dot is on the right, so the leader rules leftward from it. */
-.noteOld .noteLine { transform-origin: right; }
-
-.noteOld .noteText { animation-name: noteTextOld; }
-
-@keyframes noteTextOld {
-  from { opacity: 0; transform: translateX(0.4rem); }
+.frameBody {
+  margin: 0;
+  font-size: var(--t-lead, 1.125rem);
+  line-height: 1.55;
+  color: color-mix(in srgb, var(--wash) 86%, transparent);
+  max-width: 44ch;
 }
 
-/* The new wing sits hard against the right edge of the plate, so there is no
-   room for a label beside it — running one out to the right put it straight
-   through the height dimension. It hangs underneath instead, on a short
-   vertical leader, which is equally a drawing convention. */
-.noteNew {
-  right: clamp(3.5rem, 8vw, 7rem);
-  top: 58%;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 0.4rem;
-  /* The second annotation lands after the first, the way a pair get written. */
-  --note-in: 1.65s;
+/* --- The meter -------------------------------------------------------------
+   The page's slider convention — a counter and a filling rail — saying where
+   the walk is up to, with the one word of instruction the pattern needs. */
+.meter {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
 }
 
-.noteNew .noteLine {
-  width: 1px;
-  height: clamp(1.25rem, 3vh, 2.25rem);
-  margin-right: 2px;
-  /* A vertical leader, ruled down from the dot above it. */
-  transform-origin: top;
+.meterCount {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: var(--t-eyebrow);
+  letter-spacing: 0.14em;
+  color: var(--wash);
+  font-variant-numeric: tabular-nums;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .noteNew .noteLine { animation-name: noteLineDown; }
+.meterRail {
+  width: clamp(5rem, 10vw, 9rem);
+  height: 1px;
+  background: color-mix(in srgb, var(--wash) 30%, transparent);
+  overflow: hidden;
 }
 
-@keyframes noteLineDown {
-  from { transform: scaleY(0); }
+.meterFill {
+  display: block;
+  height: 100%;
+  background: var(--wash);
+  transform-origin: left;
+  transition: transform 500ms var(--ease);
 }
 
-.noteNew .noteText { animation-name: noteTextDown; }
-
-@keyframes noteTextDown {
-  from { opacity: 0; transform: translateY(-0.3rem); }
+.meterHint {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: var(--t-eyebrow);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--wash) 55%, transparent);
 }
 
 /* --- Narrow ----------------------------------------------------------------
-   One column: headline, drawing, then the supporting line and the call. */
+   The veil can't hold a side on a phone — there is no spare width — so the
+   words drop to the foot of the frame over a bottom-up veil, whichever side
+   the frame names. */
 @media (max-width: 860px) {
-  .inner {
-    min-height: 0;
-    padding-block: clamp(1.5rem, 5vw, 2.5rem) clamp(2rem, 7vw, 3rem);
+  .veilLeft::after,
+  .veilRight::after {
+    background: linear-gradient(
+      0deg,
+      color-mix(in srgb, var(--green) 90%, transparent) 0%,
+      color-mix(in srgb, var(--green) 55%, transparent) 38%,
+      transparent 62%
+    );
   }
 
-  /* The drawing sits between the headline and the rest of the copy, so the copy
-     has to stop being one box before the three can be put in that order.
-     `display: contents` drops the grid out and promotes its children. */
-  .body {
-    display: contents;
+  .body,
+  .bodyRight {
+    justify-content: flex-start;
+    align-items: flex-end;
   }
 
-  .copy { display: contents; }
-
-  .heading {
-    order: 0;
-    margin-top: clamp(1.5rem, 5vw, 2.25rem);
-  }
-
-  .figure {
-    order: 1;
-    height: clamp(15rem, 40vh, 22rem);
-    min-height: 0;
-    margin-top: clamp(1.25rem, 4vw, 1.75rem);
-    /* Both edges on a phone, where there is no second column to respect. */
-    margin-inline: calc(var(--gutter) * -1);
-  }
-
-
-  /* A phone has no spare width for labels hanging off the sides of the
-     drawing. */
-  .note { display: none; }
-
-  .lede {
-    order: 2;
-    margin-top: clamp(1.75rem, 6vw, 2.5rem);
+  .copy {
     max-width: none;
+    gap: 1rem;
+    padding-bottom: 0.75rem;
   }
 
-  .actions {
-    order: 3;
-    margin-top: clamp(1.5rem, 5vw, 2rem);
-  }
+  .heading { font-size: clamp(2.1rem, 9vw, 2.8rem); }
+  .frameTitle { font-size: clamp(1.7rem, 7.5vw, 2.4rem); }
+
+  .footScrim { display: none; }
 }
