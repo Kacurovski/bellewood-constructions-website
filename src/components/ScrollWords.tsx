@@ -88,7 +88,7 @@ export function ScrollWords({ text, as = 'p', id, className }: Props) {
           progress={scrollYProgress}
           // Each word owns a slice of the scroll, and the slices overlap by half
           // so the sentence comes up as a wave rather than as a row of switches.
-          range={[i / words.length, (i + 1.6) / words.length]}
+          range={[i / words.length, Math.min((i + 1.6) / words.length, 1)]}
           accent={w.accent}
         >
           {w.space ? ' ' : ''}

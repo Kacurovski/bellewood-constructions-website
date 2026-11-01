@@ -4,6 +4,7 @@ import { ScrollWords } from '../components/ScrollWords'
 import { ComplianceLine } from '../components/ComplianceLine'
 import { BuilderFolioTest } from '../components/BuilderFolioTest'
 import { NameStudy } from '../components/NameStudy'
+import { AboutClosing } from '../sections/AboutClosing'
 import { usePageTitle } from '../hooks/usePageTitle'
 import { compliance, contact } from '../config/site'
 import styles from './About.module.css'
@@ -57,18 +58,12 @@ export default function About() {
             </p>
             <p>
               Most of the work arrives through architects and designers, and
-              through people who have had a neighbour’s house done. The drawings
-              are followed as drawn. Where something on site does not agree with
-              them — and in a hundred-year-old house something usually does not —
-              the question goes back in writing while it is still a question,
-              rather than turning up later as a variation.
+              through people who have had a neighbour’s house done.
             </p>
             <p>
               One builder means one conversation. The person who looks at your
               house is the person who prices it, and the person on site while it
-              is being built. It also means the diary is honest: around four
-              projects a year is what one builder can run without the last week
-              of a job being worse than the first.
+              is being built.
             </p>
           </div>
         </Reveal>
@@ -123,6 +118,8 @@ export default function About() {
           </Reveal>
         </div>
       </section>
+
+      <AboutClosing />
     </>
   )
 }

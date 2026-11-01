@@ -168,6 +168,14 @@ after How it works (clearly marked in preparation), adds a contact invitation at
 the end of Work, and keeps one photographic closing on Approach. Approach's
 introduction retains the message about drawings, sequence and consistent care.
 
+About ends with a combined "Working with Bellewood" section before the footer.
+`src/sections/AboutClosing.tsx` and its CSS Module reuse the former process and
+architects statements as one composition: an animated drawings promise, care
+from first week to last, early written questions, and one contact area. Repeated
+passages in the About introduction are shortened. The drawing hatch responds to
+a mouse and stays static for touch and reduced motion. This is a reversible
+design test; the previous About layout remains in Git history.
+
 ---
 
 ## Stack

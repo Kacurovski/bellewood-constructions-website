@@ -1,0 +1,131 @@
+.section {
+  position: relative;
+  isolation: isolate;
+  overflow: clip;
+  padding-block: clamp(3rem, 5.5vw, 5.5rem);
+  background: var(--wash);
+  color: var(--green);
+  border-block: 1px solid var(--ink);
+  scroll-margin-top: calc(var(--header-h) + 20px);
+}
+
+/* The architects section's drawing hatch, visible at rest and gently following
+   a mouse. Text and controls remain on the same flat, readable page ground. */
+.hatch {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: repeating-linear-gradient(45deg,
+    color-mix(in srgb, var(--green) 11%, transparent) 0 1px,
+    transparent 1px 18px);
+  -webkit-mask-image: radial-gradient(circle clamp(17rem, 30vw, 34rem)
+    at var(--hatch-x, 77%) var(--hatch-y, 18%), #000, transparent 78%);
+  mask-image: radial-gradient(circle clamp(17rem, 30vw, 34rem)
+    at var(--hatch-x, 77%) var(--hatch-y, 18%), #000, transparent 78%);
+}
+
+.inner {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(0, 0.8fr);
+  column-gap: clamp(3rem, 6vw, 7rem);
+  row-gap: clamp(2rem, 3.5vw, 3.5rem);
+  align-items: start;
+}
+
+.header { grid-column: 1 / -1; }
+.promise { min-width: 0; }
+.statement {
+  max-width: 22ch;
+  font-size: clamp(2rem, 4.1vw, 4rem);
+  line-height: 1.12;
+  text-wrap: pretty;
+}
+.care {
+  margin-top: clamp(1.25rem, 2.2vw, 2rem);
+  max-width: 39ch;
+  font: 400 clamp(1.125rem, 1.45vw, 1.375rem)/1.5 var(--font-body);
+  color: var(--pine);
+}
+
+.detail { width: 100%; max-width: 26rem; justify-self: end; }
+.audience {
+  margin: 0 0 1rem;
+  font: 500 0.6875rem/1.5 var(--font-display);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--green);
+}
+.copy {
+  color: var(--pine);
+  font: 400 clamp(1.125rem, 1.5vw, 1.375rem)/1.5 var(--font-body);
+}
+.contact {
+  margin-top: clamp(1.5rem, 2.6vw, 2.5rem);
+  padding-top: 1.125rem;
+  border-top: 1px solid var(--ink);
+}
+.invitation {
+  font: 500 0.8125rem/1.5 var(--font-display);
+  color: var(--green);
+}
+.phone {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  column-gap: 1rem;
+  min-height: 56px;
+  padding-block: 0.5rem;
+  color: var(--green);
+  font: 600 clamp(1.5rem, 2.1vw, 2rem)/1.2 var(--font-display);
+  letter-spacing: -0.025em;
+  text-decoration: none;
+}
+.phone svg { width: 2.75rem; height: 1.25rem; flex: none; transition: transform 450ms var(--ease-out); }
+.phone:hover svg, .phone:focus-visible svg { transform: translateX(5px); }
+.enquiry {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 1rem;
+  min-height: 44px;
+  color: var(--green);
+  font: 500 0.8125rem/1.4 var(--font-display);
+  text-decoration: none;
+}
+.enquiry::after {
+  content: '';
+  position: absolute;
+  inset: auto 0 6px;
+  height: 1px;
+  background: currentColor;
+  transform: scaleX(0.26);
+  transform-origin: left;
+  transition: transform 500ms var(--ease-out);
+}
+.enquiry:hover::after, .enquiry:focus-visible::after { transform: scaleX(1); }
+.phone:focus-visible, .enquiry:focus-visible { outline: 2px solid var(--green); outline-offset: 5px; }
+
+@media (max-width: 860px) {
+  .inner { grid-template-columns: minmax(0, 1fr); row-gap: 2rem; }
+  .statement { max-width: 23ch; }
+  .detail { max-width: 34rem; justify-self: start; }
+  .audience { margin-bottom: 0.75rem; }
+  .contact { max-width: 26rem; }
+}
+@media (max-width: 600px) {
+  .section { padding-block: 2.75rem; }
+  .inner { row-gap: 1.75rem; }
+  .care { margin-top: 1.25rem; }
+  .contact { margin-top: 1.5rem; }
+}
+@media (pointer: coarse), (prefers-reduced-motion: reduce) {
+  .hatch {
+    -webkit-mask-image: radial-gradient(circle 26rem at 95% 22%, #000, transparent 78%);
+    mask-image: radial-gradient(circle 26rem at 95% 22%, #000, transparent 78%);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .phone svg, .enquiry::after { transition: none; }
+  .phone:hover svg, .phone:focus-visible svg { transform: none; }
+}
