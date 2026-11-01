@@ -176,6 +176,17 @@ passages in the About introduction are shortened. The drawing hatch responds to
 a mouse and stays static for touch and reduced motion. This is a reversible
 design test; the previous About layout remains in Git history.
 
+Approach's renovation study is now a single model with three directly labelled
+points: the original house, old meets new, and openings & shelter. It replaces
+the nested chapter/material controls in `RenovationDetails`. The quieter model
+palette takes cues from the approved Auchenflower and Bardon photographs;
+the geometry is explicitly an imagined cottage and addition, not a documented
+before-and-after or a replica of either project. No simulated project photos
+are introduced. Hover, keyboard focus and tap select the same explanation and
+highlight, with matching static rendering for reduced motion or no WebGL.
+This is a reversible design test; other pages and the Kalinga assembly remain
+unchanged.
+
 ---
 
 ## Stack

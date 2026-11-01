@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef } from 'react'
+import { useEffect, useLayoutEffect, useMemo, useRef } from 'react'
 import { Canvas, useFrame, useThree } from '@react-three/fiber'
 import { Html } from '@react-three/drei'
 import hotspotStyles from './HeritageHotspots.module.css'
@@ -12,8 +12,20 @@ import {
   HERITAGE_OFFSET,
   HERITAGE_YAW,
 } from './heritageMembers'
+import type { Member } from './heritageMembers'
 import { GLASS_EMISSIVE, MATERIALS, MATERIAL_KEYS } from './materials'
 import type { MaterialKey } from './materials'
+import {
+  heritageFocusGroups,
+  heritageMaquetteFrame,
+  MAQUETTE_EYE,
+  MAQUETTE_GROUND,
+  MAQUETTE_MATERIALS,
+  MAQUETTE_OFFSET,
+  MAQUETTE_SOFTEN,
+  MAQUETTE_TARGET,
+} from './heritageMaquette'
+import type { HeritageFocus, HeritagePresentation } from './heritageMaquette'
 
 /**
  * Scene 1 — the heritage study, in the hero.
@@ -47,9 +59,8 @@ const EXPLORE_POINTS: { id: HeritagePart; label: string; point: [number, number,
 ]
 
 
-function buildGeometries() {
-  const buckets = {} as Record<MaterialKey, THREE.BufferGeometry[]>
-  for (const k of MATERIAL_KEYS) buckets[k] = []
+function buildGeometries(groupBy: (member: Member) => string = (member) => member.mat) {
+  const buckets: Record<string, THREE.BufferGeometry[]> = {}
 
   const matrix = new THREE.Matrix4()
   const position = new THREE.Vector3()
@@ -71,15 +82,86 @@ function buildGeometries() {
     matrix.compose(position, quaternion, one)
     geometry.applyMatrix4(matrix)
 
-    buckets[m.mat].push(geometry)
+    const key = groupBy(m)
+    ;(buckets[key] ??= []).push(geometry)
   }
 
-  const merged = {} as Record<MaterialKey, THREE.BufferGeometry | null>
-  for (const k of MATERIAL_KEYS) {
+  const merged: Record<string, THREE.BufferGeometry | null> = {}
+  for (const k of Object.keys(buckets)) {
     merged[k] = buckets[k].length ? mergeGeometries(buckets[k], false) : null
     for (const g of buckets[k]) g.dispose()
   }
   return merged
+}
+
+/**
+ * The calm study has its own palette and fixed pose. Split by semantic group
+ * and material so an entire part can be emphasised without making any surface
+ * transparent or losing depth. The original rotating presentation is untouched.
+ */
+function MaquetteHouse({ focus }: { focus: HeritageFocus | null }) {
+  const batches = useMemo(() => {
+    const geometries = buildGeometries((member) => `${member.mat}|${heritageFocusGroups(member).join(' ')}`)
+    const ground = new THREE.Color(MAQUETTE_GROUND)
+    return Object.entries(geometries).flatMap(([id, geometry]) => {
+      if (!geometry) return []
+      const [key, groups] = id.split('|')
+      const spec = MAQUETTE_MATERIALS[key as MaterialKey]
+      const full = new THREE.Color(spec.color)
+      return [{
+        id,
+        groups: groups.split(' '),
+        geometry,
+        full,
+        quiet: full.clone().lerp(ground, MAQUETTE_SOFTEN),
+        material: new THREE.MeshStandardMaterial({
+          ...spec,
+          transparent: false,
+          envMapIntensity: key === 'glass' ? 1.1 : 0.55,
+          emissiveIntensity: 0,
+        }),
+      }]
+    })
+  }, [])
+
+  useEffect(() => () => {
+    batches.forEach(({ geometry, material }) => { geometry.dispose(); material.dispose() })
+  }, [batches])
+
+  useFrame((_, delta) => {
+    const amount = 1 - Math.pow(0.005, Math.min(delta, 0.1))
+    batches.forEach((batch) => {
+      const quiet = focus !== null && !batch.groups.includes(focus)
+      batch.material.color.lerp(quiet ? batch.quiet : batch.full, amount)
+    })
+  })
+
+  return (
+    <group position={MAQUETTE_OFFSET} rotation={[0, HERITAGE_YAW, 0]}>
+      {batches.map(({ id, geometry, material }) => (
+        <mesh key={id} geometry={geometry} material={material} castShadow receiveShadow />
+      ))}
+    </group>
+  )
+}
+
+/** Match the SVG's contain fit exactly; resizing cannot detach a DOM callout. */
+function MaquetteFit() {
+  const { camera, size } = useThree()
+  useLayoutEffect(() => {
+    if (!(camera instanceof THREE.OrthographicCamera)) return
+    const { width, height } = heritageMaquetteFrame(size.width / Math.max(size.height, 1))
+    camera.left = -width / 2
+    camera.right = width / 2
+    camera.top = height / 2
+    camera.bottom = -height / 2
+    camera.zoom = 1
+    camera.position.copy(new THREE.Vector3(...MAQUETTE_EYE).normalize().multiplyScalar(24))
+    camera.position.add(new THREE.Vector3(...MAQUETTE_TARGET))
+    camera.lookAt(...MAQUETTE_TARGET)
+    camera.updateProjectionMatrix()
+  }, [camera, size.width, size.height])
+  return null
 }
 
 /**
@@ -414,7 +496,11 @@ export default function HeritageStudy({
   highlight = null,
   selectedPart,
   onPartSelect,
+  presentation = 'default',
+  focus = null,
 }: {
+  presentation?: HeritagePresentation
+  focus?: HeritageFocus | null
   selectedPart?: HeritagePart
   onPartSelect?: (part: HeritagePart) => void
   shadows?: boolean
@@ -426,8 +512,10 @@ export default function HeritageStudy({
   highlight?: MaterialKey | null
 }) {
   const lean = useRef({ x: 0, y: 0 })
+  const maquette = presentation === 'maquette'
 
   useEffect(() => {
+    if (maquette) return
     if (!window.matchMedia('(pointer: fine)').matches) return
     const onMove = (event: PointerEvent) => {
       lean.current.x = (event.clientX / window.innerWidth) * 2 - 1
@@ -435,10 +523,11 @@ export default function HeritageStudy({
     }
     window.addEventListener('pointermove', onMove, { passive: true })
     return () => window.removeEventListener('pointermove', onMove)
-  }, [])
+  }, [maquette])
 
   return (
     <Canvas
+      orthographic={maquette}
       // A long lens rather than an orthographic camera: the process section
       // further down is a drawing, and this one should read as an object.
       camera={{ position: [8.5, 4.9, 12], fov: 26, near: 0.5, far: 140 }}
@@ -456,16 +545,16 @@ export default function HeritageStudy({
       style={{ background: 'transparent' }}
       resize={{ scroll: false }}
     >
-      <Fit />
+      {maquette ? <MaquetteFit /> : <Fit />}
       <StudioSky />
 
       {/* Late afternoon. A warm key over the left shoulder, a cool fill, and the
           sky doing most of the work. */}
-      <hemisphereLight args={['#f7f7f4', '#b6c5ae', 0.55]} />
+      <hemisphereLight args={['#f7f7f4', '#b6c5ae', maquette ? 0.7 : 0.55]} />
       <directionalLight
         position={[-9, 13, 10]}
-        intensity={1.55}
-        color="#fff3de"
+        intensity={maquette ? 1.15 : 1.55}
+        color={maquette ? '#fffdf6' : '#fff3de'}
         castShadow={shadows}
         shadow-mapSize={[2048, 2048]}
         shadow-radius={5}
@@ -490,7 +579,9 @@ export default function HeritageStudy({
         </mesh>
       )}
 
-      <House lean={lean} highlight={highlight} selectedPart={selectedPart} onPartSelect={onPartSelect} />
+      {maquette
+        ? <MaquetteHouse focus={focus} />
+        : <House lean={lean} highlight={highlight} selectedPart={selectedPart} onPartSelect={onPartSelect} />}
     </Canvas>
   )
 }

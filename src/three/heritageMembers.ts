@@ -17,7 +17,11 @@
 
 import type { MaterialKey } from './materials'
 
+export type HeritageRegion = 'original' | 'verandah' | 'extension'
+
 export type Member = {
+  /** Construction region, assigned by the generator block rather than guessed from a material. */
+  region: HeritageRegion
   /** Centre position [x, y, z], metres. */
   p: [number, number, number]
   /** Full size [w, h, d], metres. */
@@ -80,7 +84,8 @@ const EXT_LOW = FLOOR + 2.18 // at the far end
 const EXT_FALL = Math.atan2(EXT_HIGH - EXT_LOW, EXT_DEP)
 
 const members: Member[] = []
-const add = (m: Member) => members.push(m)
+let region: HeritageRegion = 'original'
+const add = (m: Omit<Member, 'region'>) => members.push({ ...m, region })
 
 type Rect = { u0: number; v0: number; u1: number; v1: number }
 type Plane = 'front' | 'back' | 'left' | 'right'
@@ -548,6 +553,7 @@ for (const side of [-1, 1] as const) {
 }
 
 /* --- Verandah --------------------------------------------------------------- */
+region = 'verandah'
 
 /* Set out downwards from the deck surface, so every layer under it lands where
    the one above needs it. The verandah stumps used to be the same height as the
@@ -831,6 +837,7 @@ for (const x of [-(STAIR_W / 2 - 0.05), STAIR_W / 2 - 0.05]) {
 /* --- The extension ----------------------------------------------------------
    Dark charred boards, run vertically, and a wall of glass at the far end. The
    contrast with the weatherboards at the front is the point of the object. */
+region = 'extension'
 
 for (const x of [-EXT_HALF_L + 0.4, 0, EXT_HALF_L - 0.4]) {
   for (const z of [EXT_Z0 + 0.4, EXT_Z1 - 0.4]) {

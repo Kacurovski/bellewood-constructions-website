@@ -45,3 +45,22 @@
   opacity: 1;
 }
 
+/* The maquette keeps opaque faces and the same depth order as the unkeyed
+   drawing. Only their fills soften: no holes, per-face animation or flashing
+   geometry reconciliation when someone explores the three architectural ideas. */
+.maquette {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.maquette[data-focus] polygon {
+  fill: var(--quiet-face);
+}
+
+.maquette[data-focus='original'] polygon[data-groups~='original'],
+.maquette[data-focus='connection'] polygon[data-groups~='connection'],
+.maquette[data-focus='outdoors'] polygon[data-groups~='outdoors'] {
+  fill: var(--face);
+}
+

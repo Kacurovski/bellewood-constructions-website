@@ -23,6 +23,8 @@ export type ProjectableMember = {
   /** Rotation about the z axis. */
   rz?: number
   mat: MaterialKey
+  /** Optional space-separated presentation groups; geometry sorting is unchanged. */
+  groups?: string
   /** Surface detail, which this projection skips. See the note in the loop. */
   detail?: boolean
 }
@@ -33,6 +35,7 @@ export type Polygon = {
   fill: string
   /** Which material this face belongs to, so a drawing can be keyed. */
   mat: MaterialKey
+  groups?: string
 }
 
 const CORNERS: V3[] = [
@@ -100,7 +103,7 @@ const KEY: V3 = [-0.55, 0.7, 0.45]
 
 export function projectMembers(
   members: ProjectableMember[],
-  options: { eye: V3; offset?: V3; yaw?: number; padding?: number },
+  options: { eye: V3; offset?: V3; yaw?: number; padding?: number; tones?: typeof TONE },
 ): { polygons: Polygon[]; viewBox: string } {
   const view = viewFrom(options.eye)
   const offset = options.offset ?? [0, 0, 0]
@@ -186,7 +189,7 @@ export function projectMembers(
         .join(' ')
 
       const depth = f.idx.reduce((s, i) => s + screen[i][2], 0) / f.idx.length
-      const tone = TONE[m.mat]
+      const tone = (options.tones ?? TONE)[m.mat]
       const spread = m.mat === 'glass' ? 0.1 : 0.34
       const lit = Math.max(dot(normal, KEY), 0)
       // Clamped: an unclamped value produces a color-mix percentage over 100,
@@ -198,6 +201,7 @@ export function projectMembers(
         depth,
         fill: `color-mix(in srgb, ${tone.base} ${Math.round(shade * 100)}%, ${tone.shade})`,
         mat: m.mat,
+        groups: m.groups,
       })
     }
 
