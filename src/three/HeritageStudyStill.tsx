@@ -1,12 +1,35 @@
 import { useMemo } from 'react'
-import type { CSSProperties } from 'react'
 import { HERITAGE_MEMBERS, HERITAGE_OFFSET, HERITAGE_YAW } from './heritageMembers'
 import { projectMembers } from './axonometric'
 import { LINE_COLOUR } from './materials'
 import type { MaterialKey } from './materials'
-import { HERITAGE_MAQUETTE_PROJECTION, MAQUETTE_GROUND, MAQUETTE_SOFTEN } from './heritageMaquette'
 import type { HeritageFocus, HeritagePresentation } from './heritageMaquette'
+import neutralStudy from '../assets/studies/auchenflower-study-neutral.webp'
+import originalStudy from '../assets/studies/auchenflower-study-original.webp'
+import connectionStudy from '../assets/studies/auchenflower-study-connection.webp'
+import outdoorsStudy from '../assets/studies/auchenflower-study-outdoors.webp'
 import styles from './HeritageStudyStill.module.css'
+
+type Props = {
+  presentation?: HeritagePresentation
+  focus?: HeritageFocus | null
+  className?: string
+  variant?: 'solid' | 'line'
+  highlight?: MaterialKey | null
+}
+
+// Exact depth-buffer renders of the live model keep roof and trim occlusion
+// intact without WebGL. The surrounding DOM controls remain fully interactive.
+const studyFrames = { neutral: neutralStudy, original: originalStudy, connection: connectionStudy, outdoors: outdoorsStudy }
+
+export function HeritageStudyStill(props: Props) {
+  if (props.presentation !== 'maquette') return <LegacyStudyStill {...props} />
+  const active = props.focus ?? 'neutral'
+  return <div className={[styles.maquette, props.className].filter(Boolean).join(' ')} data-focus={active} aria-hidden="true">
+    {Object.entries(studyFrames).map(([state, src]) => <img key={state} src={src} alt="" loading="lazy" decoding="async"
+      className={styles.studyFrame} data-study-frame={state} data-active={state === active} />)}
+  </div>
+}
 
 /**
  * The static frame for the hero.
@@ -23,35 +46,20 @@ import styles from './HeritageStudyStill.module.css'
  * the fill gives a wireframe with every hidden edge showing through, which is a
  * different and much worse drawing.
  */
-export function HeritageStudyStill({
+function LegacyStudyStill({
   className,
   variant = 'solid',
   highlight = null,
-  presentation = 'default',
-  focus = null,
-}: {
-  presentation?: HeritagePresentation
-  focus?: HeritageFocus | null
-  className?: string
-  variant?: 'solid' | 'line'
-  /**
-   * Draw one material at full strength and drop everything else back. The key
-   * on the approach page uses it: point at "cladding" and the cladding is what
-   * is left lit. Every face carries its material key from `projectMembers`, so
-   * this needs no second copy of the geometry.
-   */
-  highlight?: MaterialKey | null
-}) {
-  const maquette = presentation === 'maquette'
+}: Props) {
   const { polygons, viewBox } = useMemo(
     () =>
-      maquette ? HERITAGE_MAQUETTE_PROJECTION : projectMembers(HERITAGE_MEMBERS, {
+      projectMembers(HERITAGE_MEMBERS, {
         eye: [8.5, 4.9, 12],
         offset: HERITAGE_OFFSET,
         yaw: HERITAGE_YAW,
         padding: 0.4,
       }),
-    [maquette],
+    [],
   )
 
   const line = variant === 'line'
@@ -68,31 +76,25 @@ export function HeritageStudyStill({
         <polygon
           key={i}
           data-mat={p.mat}
-          data-groups={maquette ? p.groups : undefined}
           points={p.pts}
           fill={line ? 'var(--wash)' : p.fill}
-          stroke={maquette ? '#617466' : LINE_COLOUR}
+          stroke={LINE_COLOUR}
           strokeWidth={line ? 0.016 : 0.007}
-          strokeOpacity={line ? 0.85 : maquette ? 0.2 : 0.4}
+          strokeOpacity={line ? 0.85 : 0.4}
           strokeLinejoin="round"
-          style={maquette ? {
-            '--face': p.fill,
-            '--quiet-face': `color-mix(in srgb, ${p.fill} ${(1 - MAQUETTE_SOFTEN) * 100}%, ${MAQUETTE_GROUND})`,
-          } as CSSProperties : undefined}
         />
       )),
-    [polygons, line, maquette],
+    [polygons, line],
   )
 
   return (
     <svg
-      className={[styles.svg, maquette ? styles.maquette : '', className].filter(Boolean).join(' ')}
+      className={[styles.svg, className].filter(Boolean).join(' ')}
       viewBox={viewBox}
       // Opacity rather than a second colour: the drawing keeps its own palette
       // and simply steps back, so what is lit is lit by contrast rather than by
       // being repainted.
-      data-lit={maquette ? undefined : highlight ?? undefined}
-      data-focus={maquette ? focus ?? undefined : undefined}
+      data-lit={highlight ?? undefined}
       aria-hidden="true"
       role="presentation"
     >

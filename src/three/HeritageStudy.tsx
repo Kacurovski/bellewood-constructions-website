@@ -19,11 +19,12 @@ import {
   heritageFocusGroups,
   heritageMaquetteFrame,
   MAQUETTE_EYE,
-  MAQUETTE_GROUND,
+  MAQUETTE_FOCUS_COLOURS,
   MAQUETTE_MATERIALS,
+  MAQUETTE_MEMBERS,
   MAQUETTE_OFFSET,
-  MAQUETTE_SOFTEN,
   MAQUETTE_TARGET,
+  MAQUETTE_YAW,
 } from './heritageMaquette'
 import type { HeritageFocus, HeritagePresentation } from './heritageMaquette'
 
@@ -59,7 +60,11 @@ const EXPLORE_POINTS: { id: HeritagePart; label: string; point: [number, number,
 ]
 
 
-function buildGeometries(groupBy: (member: Member) => string = (member) => member.mat) {
+function buildGeometries(
+  groupBy: (member: Member) => string = (member) => member.mat,
+  members: Member[] = HERITAGE_MEMBERS,
+  order: THREE.EulerOrder = 'ZXY',
+) {
   const buckets: Record<string, THREE.BufferGeometry[]> = {}
 
   const matrix = new THREE.Matrix4()
@@ -68,15 +73,16 @@ function buildGeometries(groupBy: (member: Member) => string = (member) => membe
   const one = new THREE.Vector3(1, 1, 1)
   const euler = new THREE.Euler()
 
-  for (const m of HERITAGE_MEMBERS) {
+  for (const m of members) {
     const smallest = Math.min(m.s[0], m.s[1], m.s[2])
     // A radius at or past half the smallest side degenerates the geometry.
     const radius = Math.min(FILLET, smallest * 0.3)
 
     const geometry = new RoundedBoxGeometry(m.s[0], m.s[1], m.s[2], 1, radius)
 
-    // Roll then pitch, matching the order the still frame projects them in.
-    euler.set(m.rx, 0, m.rz ?? 0, 'ZXY')
+    // New study beams are authored roll-then-pitch: Rx * Rz ('XYZ' with y=0).
+    // Keep legacy geometry's original Euler order unchanged.
+    euler.set(m.rx, 0, m.rz ?? 0, order)
     quaternion.setFromEuler(euler)
     position.set(m.p[0], m.p[1], m.p[2])
     matrix.compose(position, quaternion, one)
@@ -95,14 +101,13 @@ function buildGeometries(groupBy: (member: Member) => string = (member) => membe
 }
 
 /**
- * The calm study has its own palette and fixed pose. Split by semantic group
- * and material so an entire part can be emphasised without making any surface
- * transparent or losing depth. The original rotating presentation is untouched.
+ * A separate photo-referenced study, split by architectural region and material.
+ * Selection introduces Bellewood green; the other regions retain their physical
+ * material colours and depth. Legacy presentations keep their original geometry.
  */
 function MaquetteHouse({ focus }: { focus: HeritageFocus | null }) {
   const batches = useMemo(() => {
-    const geometries = buildGeometries((member) => `${member.mat}|${heritageFocusGroups(member).join(' ')}`)
-    const ground = new THREE.Color(MAQUETTE_GROUND)
+    const geometries = buildGeometries((member) => `${member.mat}|${heritageFocusGroups(member).join(' ')}`, MAQUETTE_MEMBERS, 'XYZ')
     return Object.entries(geometries).flatMap(([id, geometry]) => {
       if (!geometry) return []
       const [key, groups] = id.split('|')
@@ -113,11 +118,11 @@ function MaquetteHouse({ focus }: { focus: HeritageFocus | null }) {
         groups: groups.split(' '),
         geometry,
         full,
-        quiet: full.clone().lerp(ground, MAQUETTE_SOFTEN),
+        active: new THREE.Color(MAQUETTE_FOCUS_COLOURS[key as MaterialKey]),
         material: new THREE.MeshStandardMaterial({
           ...spec,
           transparent: false,
-          envMapIntensity: key === 'glass' ? 1.1 : 0.55,
+          envMapIntensity: 0.28,
           emissiveIntensity: 0,
         }),
       }]
@@ -131,15 +136,15 @@ function MaquetteHouse({ focus }: { focus: HeritageFocus | null }) {
   useFrame((_, delta) => {
     const amount = 1 - Math.pow(0.005, Math.min(delta, 0.1))
     batches.forEach((batch) => {
-      const quiet = focus !== null && !batch.groups.includes(focus)
-      batch.material.color.lerp(quiet ? batch.quiet : batch.full, amount)
+      const active = focus !== null && batch.groups.includes(focus)
+      batch.material.color.lerp(active ? batch.active : batch.full, amount)
     })
   })
 
   return (
-    <group position={MAQUETTE_OFFSET} rotation={[0, HERITAGE_YAW, 0]}>
+    <group position={MAQUETTE_OFFSET} rotation={[0, MAQUETTE_YAW, 0]}>
       {batches.map(({ id, geometry, material }) => (
-        <mesh key={id} geometry={geometry} material={material} castShadow receiveShadow />
+        <mesh key={id} name={`study-${id}`} geometry={geometry} material={material} castShadow receiveShadow />
       ))}
     </group>
   )
@@ -173,7 +178,7 @@ function MaquetteFit() {
  * sage ground, run through the same prefilter three uses for a real HDR, so it
  * costs one small canvas and no network request.
  */
-function StudioSky() {
+function StudioSky({ neutral = false }: { neutral?: boolean }) {
   const { gl, scene } = useThree()
 
   useEffect(() => {
@@ -185,10 +190,10 @@ function StudioSky() {
 
     const gradient = ctx.createLinearGradient(0, 0, 0, 256)
     gradient.addColorStop(0, '#ffffff')
-    gradient.addColorStop(0.4, '#f2f5ea')
-    gradient.addColorStop(0.52, '#d8e0d2')
-    gradient.addColorStop(0.75, '#9aa894')
-    gradient.addColorStop(1, '#6f7c6a')
+    gradient.addColorStop(0.4, neutral ? '#f4f3ef' : '#f2f5ea')
+    gradient.addColorStop(0.52, neutral ? '#deddd6' : '#d8e0d2')
+    gradient.addColorStop(0.75, neutral ? '#aaa99f' : '#9aa894')
+    gradient.addColorStop(1, neutral ? '#77796f' : '#6f7c6a')
     ctx.fillStyle = gradient
     ctx.fillRect(0, 0, 64, 256)
 
@@ -207,7 +212,7 @@ function StudioSky() {
       scene.environment = null
       environment.dispose()
     }
-  }, [gl, scene])
+  }, [gl, scene, neutral])
 
   return null
 }
@@ -528,8 +533,8 @@ export default function HeritageStudy({
   return (
     <Canvas
       orthographic={maquette}
-      // A long lens rather than an orthographic camera: the process section
-      // further down is a drawing, and this one should read as an object.
+      // The new study shares orthographic framing with its static drawing.
+      // Legacy presentations retain their long perspective lens.
       camera={{ position: [8.5, 4.9, 12], fov: 26, near: 0.5, far: 140 }}
       // This is the showpiece and it is one static object, so it is worth the
       // resolution the rest of the site does not spend.
@@ -546,14 +551,14 @@ export default function HeritageStudy({
       resize={{ scroll: false }}
     >
       {maquette ? <MaquetteFit /> : <Fit />}
-      <StudioSky />
+      <StudioSky neutral={maquette} />
 
       {/* Late afternoon. A warm key over the left shoulder, a cool fill, and the
           sky doing most of the work. */}
-      <hemisphereLight args={['#f7f7f4', '#b6c5ae', maquette ? 0.7 : 0.55]} />
+      <hemisphereLight args={['#f7f7f4', maquette ? '#b8b6ab' : '#b6c5ae', maquette ? 0.65 : 0.55]} />
       <directionalLight
         position={[-9, 13, 10]}
-        intensity={maquette ? 1.15 : 1.55}
+        intensity={maquette ? 1 : 1.55}
         color={maquette ? '#fffdf6' : '#fff3de'}
         castShadow={shadows}
         shadow-mapSize={[2048, 2048]}

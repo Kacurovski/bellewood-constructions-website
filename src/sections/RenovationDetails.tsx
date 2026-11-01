@@ -1,4 +1,5 @@
 import { lazy, useState } from 'react'
+import { Link } from 'react-router-dom'
 import { SheetRef } from '../components/Sheet'
 import { SceneFrame } from '../three/SceneFrame'
 import { HeritageStudyStill } from '../three/HeritageStudyStill'
@@ -11,18 +12,18 @@ const HeritageStudy = lazy(() => import('../three/HeritageStudy'))
 const connections: { id: HeritageFocus; label: string; heading: string; body: string }[] = [
   {
     id: 'original', label: 'The original house',
-    heading: 'Character worth carrying forward.',
-    body: 'The familiar roofline, timber boards and proportions give the cottage its identity. Start by understanding what is there and what can be retained.',
+    heading: 'Start with the character.',
+    body: 'Auchenflower’s projecting gable, bay window and recessed verandah guide this imagined earlier cottage. These are the details that give the house its familiar street presence.',
   },
   {
     id: 'connection', label: 'Old meets new',
-    heading: 'A new chapter, joined with care.',
-    body: 'The addition reads as a new part of the home. Its floor level, roof edge and junction with the cottage are considered together.',
+    heading: 'Make the next chapter belong.',
+    body: 'A possible new wing sits behind the cottage, with a lower roof and a glazed connection. The join gives old and new their own space within one home.',
   },
   {
     id: 'outdoors', label: 'Openings & shelter',
     heading: 'A sheltered step outside.',
-    body: 'The verandah forms a room between house and garden. Doors, windows and cover shape how the inside meets the outdoors.',
+    body: 'A sheltered verandah, open balustrades and steps to the garden make the threshold useful. Doors, windows and cover bring the outlook into everyday life.',
   },
 ]
 
@@ -44,13 +45,13 @@ export function RenovationDetails() {
         <SheetRef number="E-03" name="Considered connections" note="An architectural study" />
         <div className={styles.intro}>
           <h2 id="renovation-details-heading">Where old and new<br /><em>come together.</em></h2>
-          <p className={styles.instruction}><span className={styles.exploreMark} aria-hidden="true">+</span>Hover or select a point<br />to explore the house.</p>
+          <p className={styles.instruction}>Select a detail.<span>See how it belongs.</span></p>
         </div>
         <div className={styles.composition}>
           <figure className={styles.figure}>
             <div className={styles.stage}>
               <div className={styles.model} style={{ aspectRatio: HERITAGE_MAQUETTE_ASPECT }}>
-                <SceneFrame rootMargin="200px" label={`Illustrative cottage and addition. ${current.label} highlighted.`}
+                <SceneFrame rootMargin="200px" label={`Auchenflower-inspired concept of an earlier cottage and possible addition. ${current.label} highlighted in green.`}
                   still={<HeritageStudyStill className={styles.drawing} presentation="maquette" focus={shown} />}>
                   <HeritageStudy shadows={false} presentation="maquette" focus={shown} />
                 </SceneFrame>
@@ -87,7 +88,11 @@ export function RenovationDetails() {
                 </button>)}
               </div>
             </div>
-            <figcaption className={styles.caption}><span>Concept study</span><span>An imagined cottage &amp; addition</span></figcaption>
+            <figcaption className={styles.caption}>
+              <span>Auchenflower / Concept study</span>
+              <Link to="/work/auchenflower">View the real home <span aria-hidden="true">↗</span></Link>
+              <p>An imagined earlier cottage and possible addition.</p>
+            </figcaption>
           </figure>
           <div id="renovation-explanation" className={styles.explanation}>
             <span className={styles.explanationNumber} aria-hidden="true">0{index + 1}</span>

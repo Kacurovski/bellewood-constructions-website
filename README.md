@@ -178,14 +178,26 @@ design test; the previous About layout remains in Git history.
 
 Approach's renovation study is now a single model with three directly labelled
 points: the original house, old meets new, and openings & shelter. It replaces
-the nested chapter/material controls in `RenovationDetails`. The quieter model
-palette takes cues from the approved Auchenflower and Bardon photographs;
-the geometry is explicitly an imagined cottage and addition, not a documented
-before-and-after or a replica of either project. No simulated project photos
-are introduced. Hover, keyboard focus and tap select the same explanation and
-highlight, with matching static rendering for reduced motion or no WebGL.
-This is a reversible design test; other pages and the Kalinga assembly remain
-unchanged.
+the nested chapter/material controls in `RenovationDetails`. Its separate geometry
+in `auchenflowerStudyMembers.ts` is based on Auchenflower's offset gable, projecting
+three-part bay window, recessed porch, side window hoods and timber brackets.
+The exposed subfloor and proposed rear pavilion are an imagined earlier cottage
+and possible addition, not a documented before-and-after or a measured replica.
+The caption makes this explicit and links to the real Auchenflower photographs.
+Warm white, graphite and limited timber form the base materials; Bellewood green
+marks the selected region while the rest retains its material colour and depth.
+No simulated project photos are introduced. Hover, keyboard focus and tap select
+the same explanation and highlight, with matching static rendering for reduced
+motion or no WebGL. This is a reversible design test; the original generic model
+remains available for legacy uses, and the Kalinga assembly is unchanged.
+
+The study's four static WebP states in `src/assets/studies/` are rendered from
+the same 3D geometry and materials, so roof occlusion and callout positions stay
+consistent without WebGL. After changing the geometry, camera or colours, start
+the local Vite server and run
+`powershell -NoProfile -ExecutionPolicy Bypass -File scripts/render_auchenflower_study.ps1`.
+This uses hidden Chrome; `-DevUrl` and `-ChromePath` can override the defaults.
+These assets are model renders, not altered photographs or historical evidence.
 
 ---
 
