@@ -1,0 +1,70 @@
+.gallery { min-width: 0; color: var(--green); }
+.heading { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; padding-block: 1.1rem; border-top: 1px solid var(--rule-strong); }
+.heading h2 { margin: 0; font: 500 clamp(1.25rem, 2vw, 1.6rem) var(--font-body); }
+.count { margin: 0; white-space: nowrap; font: 500 0.75rem var(--font-display); font-variant-numeric: tabular-nums; letter-spacing: 0.08em; }
+.countDivider { opacity: 0.45; padding-inline: 0.25rem; }
+.figure { margin: 0; }
+.stage { position: relative; width: 100%; aspect-ratio: 16 / 10; max-height: 72svh; overflow: hidden; background: color-mix(in srgb, var(--sage) 24%, var(--wash)); isolation: isolate; }
+.mainImage { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.arrow { position: absolute; z-index: 2; top: 50%; display: grid; place-items: center; width: 3.25rem; height: 3.25rem; padding: 0.7rem; border: 1px solid color-mix(in srgb, var(--green) 20%, transparent); border-radius: 50%; color: var(--green); background: color-mix(in srgb, var(--wash) 94%, transparent); transform: translateY(-50%); cursor: pointer; transition: background 240ms, color 240ms; }
+.previous { left: clamp(0.65rem, 2vw, 1.5rem); }
+.next { right: clamp(0.65rem, 2vw, 1.5rem); }
+.arrow svg { width: 100%; height: 1.1rem; }
+.arrow:hover, .fullNavigation button:hover { background: var(--green); color: var(--wash); }
+.expand { position: absolute; z-index: 2; right: 1rem; bottom: 1rem; display: inline-flex; align-items: center; gap: 0.55rem; min-height: 2.75rem; padding: 0.7rem 0.9rem; border: 1px solid color-mix(in srgb, var(--green) 18%, transparent); background: color-mix(in srgb, var(--wash) 95%, transparent); color: var(--green); font: 500 0.75rem var(--font-display); cursor: pointer; transition: background 240ms; }
+.expand:hover { background: var(--wash); }
+.expand svg { width: 1.1rem; height: 1.1rem; }
+.caption { min-height: 3.1em; margin: 0; padding-block: 0.8rem 0.65rem; font: 400 0.9375rem/1.45 var(--font-body); color: var(--pine); }
+.contactSheet { width: 100%; padding: 0.95rem clamp(0.65rem, 1.6vw, 1.25rem) 0.6rem; border: 1px solid var(--rule-strong); background: color-mix(in srgb, var(--sage) 8%, var(--wash)); }
+.sheetHeading { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; margin-bottom: 0.7rem; font: 500 0.75rem var(--font-display); }
+.sheetLabel { font: 400 0.875rem var(--font-body); margin-left: 0.4rem; color: var(--pine); }
+.hint { font-size: 0.6875rem; color: var(--green); }
+.thumbnails { position: relative; display: grid; grid-auto-flow: column; grid-auto-columns: clamp(5rem, 12.4%, 10rem); align-items: start; gap: clamp(0.6rem, 1.2vw, 1rem); min-width: 0; overflow-x: auto; padding: 0.2rem 0.2rem 0.55rem; scroll-padding-inline: 0.2rem; scrollbar-width: thin; scrollbar-color: color-mix(in srgb, var(--green) 50%, transparent) transparent; overscroll-behavior-x: contain; }
+.thumbnail { min-width: 0; padding: 0; border: 0; background: none; color: var(--green); cursor: pointer; text-align: left; }
+.thumbnailImage { display: block; position: relative; aspect-ratio: 3 / 2; overflow: hidden; background: var(--sage); }
+.thumbnailImage::after { content: ''; position: absolute; inset: 0; border: 2px solid var(--green); opacity: 0; transition: opacity 350ms var(--ease); }
+.thumbnailImage img { width: 100%; height: 100%; display: block; object-fit: cover; opacity: 0.68; transform: scale(1); transition: opacity 400ms var(--ease), transform 600ms var(--ease); }
+.thumbnail:hover img, .selected img { opacity: 1; transform: scale(1.035); }
+.selected .thumbnailImage::after { opacity: 1; }
+.thumbnailNumber { display: flex; justify-content: space-between; align-items: center; padding-block: 0.4rem 0.2rem; font: 500 0.625rem var(--font-display); letter-spacing: 0.07em; font-variant-numeric: tabular-nums; opacity: 0.7; }
+.thumbnailNumber span { width: 0.3rem; height: 0.3rem; border-radius: 50%; background: var(--green); opacity: 0; }
+.selected .thumbnailNumber, .selected .thumbnailNumber span { opacity: 1; }
+.gallery button:focus-visible { outline: 2px solid var(--green); outline-offset: 3px; }
+.stage button:focus-visible { outline: 2px solid var(--wash); box-shadow: 0 0 0 5px var(--green); outline-offset: 2px; }
+.srOnly { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
+
+.lightbox { width: min(96vw, 100rem); max-width: none; max-height: 96svh; padding: 0; border: 1px solid var(--rule); background: var(--wash); color: var(--green); }
+.lightbox::backdrop { background: color-mix(in srgb, var(--pine) 90%, transparent); }
+.lightboxInner { padding: clamp(0.8rem, 2vw, 1.75rem); }
+.lightboxHeader { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding-bottom: 0.8rem; }
+.lightboxHeader h3 { display: flex; align-items: baseline; flex-wrap: wrap; column-gap: 1rem; margin: 0; font: 500 clamp(1.2rem, 2vw, 1.6rem) var(--font-body); }
+.lightboxHeader h3 span { font: 500 0.7rem var(--font-display); font-variant-numeric: tabular-nums; }
+.close { display: inline-flex; align-items: center; justify-content: center; gap: 0.75rem; min-height: 2.75rem; padding: 0.4rem 0.7rem; border: 1px solid var(--rule-strong); background: transparent; color: inherit; font: 500 0.75rem var(--font-display); cursor: pointer; }
+.close span { font: 400 1.5rem/1 var(--font-display); }
+.fullFrame { height: min(72svh, 58rem); }
+.fullImage { display: block; width: 100%; height: 100%; object-fit: contain; }
+.lightboxFooter { display: flex; justify-content: space-between; align-items: center; gap: 1rem; padding-top: 0.8rem; }
+.lightboxFooter p { margin: 0; font: 400 0.9375rem/1.4 var(--font-body); }
+.fullNavigation { display: flex; flex-shrink: 0; gap: 0.6rem; }
+.fullNavigation button { display: grid; place-items: center; width: 2.75rem; height: 2.75rem; padding: 0.7rem; border: 1px solid var(--rule-strong); border-radius: 50%; background: transparent; color: var(--green); cursor: pointer; transition: color 240ms, background 240ms; }
+.fullNavigation svg { width: 100%; height: 1rem; }
+
+@media (max-width: 600px) {
+  .stage { aspect-ratio: 4 / 3; max-height: none; }
+  .arrow { width: 2.75rem; height: 2.75rem; padding: 0.6rem; }
+  .expand { right: 0.6rem; bottom: 0.6rem; min-height: 2.5rem; padding: 0.55rem 0.65rem; font-size: 0.6875rem; }
+  .caption { min-height: 4.2em; font-size: 0.875rem; }
+  .sheetHeading { gap: 0.5rem; }
+  .sheetLabel { display: none; }
+  .hint { font-size: 0.625rem; }
+  .thumbnails { grid-auto-columns: calc((100% - 1.8rem) / 3.5); gap: 0.6rem; }
+  .lightbox { width: calc(100vw - 1rem); max-height: calc(100svh - 1rem); }
+  .fullFrame { height: 62svh; }
+  .lightboxFooter { align-items: flex-start; }
+  .lightboxFooter p { font-size: 0.8125rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gallery *, .lightbox * { transition: none !important; scroll-behavior: auto !important; }
+  .thumbnail:hover img, .selected img { transform: none; }
+}

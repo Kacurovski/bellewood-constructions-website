@@ -1,14 +1,12 @@
-import { Link } from 'react-router-dom'
+import { ApproachPhotoTest } from '../sections/ApproachPhotoTest'
 import { PageHead } from '../components/PageHead'
-import { Reveal } from '../components/Reveal'
 import { Process } from '../sections/Process'
-import { MaterialKey } from '../sections/MaterialKey'
+import { PhotographyStorySlides } from '../sections/PhotographyStories'
+import { RenovationDetails } from '../sections/RenovationDetails'
 import { Journey } from '../sections/Journey'
 import { Questions } from '../sections/Questions'
-import { ScrollWords } from '../components/ScrollWords'
 import { usePageTitle } from '../hooks/usePageTitle'
 import { contact } from '../config/site'
-import styles from './Approach.module.css'
 
 /**
  * How it works — a route of its own.
@@ -24,9 +22,8 @@ import styles from './Approach.module.css'
  * here exclusively for a pass, on the reasoning that a nav item should not lead
  * to a copy of a home page section — sound in general, wrong for this one: it is
  * the signature object of the site and the home page is where most people meet
- * it. Here it runs headless, under a masthead that says the same three things
- * its own head would have, and it shares the page with the key to the drawing,
- * which exists nowhere else.
+ * it. Here it runs headless, followed by an interactive architectural study that explains
+ * the renovation ideas and materials, then the practical steps of working together.
  */
 export default function Approach() {
   usePageTitle('Approach')
@@ -37,7 +34,7 @@ export default function Approach() {
         number="E-01"
         eyebrow="Approach"
         title="Drawn, then built."
-        lede="We work from the architect's documents, set out square, and build in the same order every time. Nothing about the sequence is improvised."
+        lede="We work from the architect's drawings, set out square and follow a clear sequence, with the same care from start to finish."
         meta={[
           { label: 'Working from', value: 'Architect and designer documents' },
           { label: 'Sequence', value: 'Four stages, every job' },
@@ -47,32 +44,17 @@ export default function Approach() {
 
       <Process headless />
 
-      <MaterialKey />
+      <PhotographyStorySlides sheetNumber="E-02" />
+
+      <RenovationDetails />
 
       {/* The plain-language half of this page: what the drawing says, said in
           words, plus everything people ring up to ask before they commit. */}
       <Journey number="E-04" />
       <Questions number="E-05" />
 
-      <section className={['shell', styles.close].join(' ')} aria-labelledby="approach-close">
-        <Reveal>
-          <ScrollWords
-            as="h2"
-            id="approach-close"
-            className={styles.statement}
-            text="The order is the same on every job, which is why the *last week of a build* looks like the first — and why the drawings you were handed are the drawings you get."
-          />
-        </Reveal>
-
-        <Reveal delay={0.1} className={styles.actions}>
-          <Link to="/contact" className="btn">
-            Start a conversation
-          </Link>
-          <a href={contact.phoneHref} className="link-underline">
-            {contact.phone}
-          </a>
-        </Reveal>
-      </section>
+      {/* One closing invitation follows the practical guidance. */}
+      <ApproachPhotoTest />
     </>
   )
 }

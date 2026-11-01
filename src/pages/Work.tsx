@@ -1,11 +1,13 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
-import type { PointerEvent as ReactPointerEvent } from 'react'
+import { useCallback, useEffect, useId, useMemo, useRef, useState } from 'react'
+import type { KeyboardEvent, PointerEvent as ReactPointerEvent, ReactNode } from 'react'
 import { Link } from 'react-router-dom'
-import { AnimatePresence, motion } from 'framer-motion'
+import { AnimatePresence, motion, useInView } from 'framer-motion'
 import { PageHead } from '../components/PageHead'
-import { LeadMagnet } from '../components/LeadMagnet'
+import { WorkClosing } from '../sections/WorkClosing'
 import { Services } from '../sections/Services'
+import { FrontDoorStudy } from '../sections/PhotoStudiesTest'
 import { projects } from '../data/projects'
+import type { Project } from '../data/projects'
 import { contact } from '../config/site'
 import { usePageTitle } from '../hooks/usePageTitle'
 import { useMediaQuery } from '../hooks/useMediaQuery'
@@ -14,29 +16,164 @@ import styles from './Work.module.css'
 
 const COUNT_WORDS = ['No', 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine']
 
-/**
- * The work.
- *
- * Six projects, and the page has been through three shapes. It was a contact
- * sheet: six plates in a grid, every one the same size, which is what every
- * builder's site is and which made six placeholder photographs the whole page.
- * Then it was the same grid with a pointer mark on it, which changed the
- * texture and not the shape.
- *
- * It is now a plate and a list: one large photograph held beside the six names,
- * changing to whichever project you have scrolled to.
- *
- * Scroll, not hover, is what drives it. That matters for two reasons. The home
- * page already carries a register that reveals its plate on hover, and doing
- * the same thing here twice would make the two pages one page; and a hover
- * register is nothing at all on a phone, where half this site is read. Keying
- * on scroll is the interaction this site already uses for the material legend,
- * and it is the only one that works the same for everybody — reading the list
- * IS the interaction.
- *
- * A pointer still overrides it, because somebody who reaches for a row has
- * asked a question and should get an answer before they scroll.
- */
+const galleryEase = [0.22, 1, 0.36, 1] as const
+
+/** One complete contact sheet stays with the active home as the index scrolls. */
+function WorkGallery({ project, id, onInteractionChange }: {
+  project: Project; id: string; onInteractionChange: (held: boolean) => void
+}) {
+  const reduced = useReducedMotion()
+  const gallery = useRef<HTMLDivElement>(null)
+  const plate = useRef<HTMLAnchorElement>(null)
+  const thumbnails = useRef<HTMLDivElement>(null)
+  const markerId = useId()
+  const openingsWarmed = useRef(false)
+  const visible = useInView(gallery, { amount: 0.35 })
+  const [hovered, setHovered] = useState(false)
+  const [focused, setFocused] = useState(false)
+  const [pageVisible, setPageVisible] = useState(() => !document.hidden)
+  const [choice, setChoice] = useState({ slug: project.slug, index: 0 })
+  const images = useMemo(() => [project.hero, ...project.gallery].filter((image, index, all) =>
+    image.src && all.findIndex((other) => other.src === image.src) === index,
+  ), [project])
+  const selected = choice.slug === project.slug ? Math.min(choice.index, images.length - 1) : 0
+  const main = images[selected]
+
+  const choose = useCallback((index: number) => {
+    setChoice({ slug: project.slug, index })
+  }, [project.slug])
+
+  useEffect(() => {
+    const update = () => setPageVisible(!document.hidden)
+    document.addEventListener('visibilitychange', update)
+    return () => document.removeEventListener('visibilitychange', update)
+  }, [])
+
+  useEffect(() => {
+    onInteractionChange(hovered || focused)
+    return () => onInteractionChange(false)
+  }, [hovered, focused, onInteractionChange])
+
+  useEffect(() => {
+    if (!visible || !pageVisible || reduced || hovered || focused || images.length < 2) return
+    const timer = window.setTimeout(() => choose((selected + 1) % images.length), 5000)
+    return () => window.clearTimeout(timer)
+  }, [visible, pageVisible, reduced, hovered, focused, selected, images.length, project.slug, choose])
+
+  useEffect(() => {
+    if (!visible || openingsWarmed.current) return
+    openingsWarmed.current = true
+    projects.forEach((item) => {
+      if (item.hero.src) { const image = new Image(); image.src = item.hero.src }
+    })
+  }, [visible])
+
+  useEffect(() => {
+    if (!visible) return
+    const next = images[(selected + 1) % images.length]
+    if (next?.src) { const image = new Image(); image.src = next.src }
+  }, [visible, images, selected])
+
+  useEffect(() => {
+    const track = thumbnails.current
+    const button = track?.children[selected] as HTMLElement | undefined
+    if (!track || !button || hovered) return
+    track.scrollTo({
+      left: Math.max(0, button.offsetLeft - (track.clientWidth - button.clientWidth) / 2),
+      behavior: reduced ? 'auto' : 'smooth',
+    })
+  }, [selected, project.slug, reduced, hovered])
+
+  function onMove(event: ReactPointerEvent<HTMLElement>) {
+    if (reduced || event.pointerType !== 'mouse') return
+    const box = plate.current?.getBoundingClientRect()
+    if (!box) return
+    plate.current?.style.setProperty('--cx', `${event.clientX - box.left}px`)
+    plate.current?.style.setProperty('--cy', `${event.clientY - box.top}px`)
+  }
+
+  return (
+    <div ref={gallery} id={id} className={styles.plateCol} role="region" aria-label={`${project.title} photographs`}
+      data-work-gallery={project.slug} data-photo-index={selected}
+      onPointerEnter={(event) => { if (event.pointerType === 'mouse') setHovered(true) }}
+      onPointerLeave={() => setHovered(false)}
+      onFocusCapture={() => setFocused(true)}
+      onBlurCapture={(event) => { if (!event.currentTarget.contains(event.relatedTarget)) setFocused(false) }}>
+      <Link ref={plate} to={`/work/${project.slug}`} className={styles.plate}
+        aria-label={`Explore ${project.title}`} onPointerMove={onMove}>
+        <AnimatePresence initial={false}>
+          {main && <motion.img key={`${project.slug}:${main.src}`} className={styles.plateImg}
+            src={main.src!} alt={main.alt} decoding="async" data-work-photo={selected}
+            initial={reduced ? false : { opacity: 0, scale: 1.025 }}
+            animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0 }}
+            transition={{ duration: reduced ? 0 : 1.15, ease: galleryEase }} />}
+        </AnimatePresence>
+        <span className={styles.trace} aria-hidden="true">
+          <span className={styles.traceH} /><span className={styles.traceV} />
+          <span className={styles.traceTag}>Explore {project.title}</span>
+        </span>
+      </Link>
+      <div className={styles.contactSheet}>
+        <div className={styles.sheetHeading}>
+          <p className={styles.sheetTitle}>{project.title}<span>Photographs</span></p>
+          <span className={styles.photoCount} aria-label={`Photograph ${selected + 1} of ${images.length}`}>
+            {String(selected + 1).padStart(2, '0')}<span aria-hidden="true"> / </span>{String(images.length).padStart(2, '0')}
+          </span>
+        </div>
+        <div ref={thumbnails} className={styles.thumbnails} role="group" aria-label={`${project.title} photographs`}
+          onKeyDown={(event) => {
+            const target = (event.target as HTMLElement).closest<HTMLButtonElement>('button[data-photo]')
+            if (!target) return
+            const index = Number(target.dataset.photo)
+            const next = event.key === 'ArrowRight' ? (index + 1) % images.length
+              : event.key === 'ArrowLeft' ? (index - 1 + images.length) % images.length
+              : event.key === 'Home' ? 0 : event.key === 'End' ? images.length - 1 : null
+            if (next === null) return
+            event.preventDefault()
+            choose(next)
+            const track = thumbnails.current
+            const button = track?.children[next] as HTMLButtonElement | undefined
+            button?.focus({ preventScroll: true })
+            if (track && button) track.scrollTo({
+              left: Math.max(0, button.offsetLeft - (track.clientWidth - button.clientWidth) / 2),
+              behavior: reduced ? 'auto' : 'smooth',
+            })
+          }}>
+          {images.map((image, index) => (
+            <button key={`${project.slug}:${image.src}`} type="button" data-photo={index}
+              className={[styles.thumbnail, index === selected ? styles.thumbnailActive : ''].join(' ')}
+              aria-label={`Show photograph ${index + 1}: ${image.alt}`} aria-pressed={index === selected}
+              onPointerEnter={(event) => { if (event.pointerType === 'mouse') choose(index) }}
+              onFocus={() => choose(index)} onClick={() => choose(index)}>
+              <span className={styles.thumbnailPicture}>
+                <img src={image.src!} alt="" loading="lazy" decoding="async" />
+                {index === selected && <motion.span className={styles.activeMarker}
+                  layoutId={reduced ? undefined : markerId} transition={{ duration: reduced ? 0 : 0.5, ease: galleryEase }} aria-hidden="true" />}
+              </span>
+              <span className={styles.thumbnailNumber} aria-hidden="true">{String(index + 1).padStart(2, '0')}<span /></span>
+            </button>
+          ))}
+        </div>
+        <div className={styles.galleryFooter}>
+          <Link to={`/work/${project.slug}`} className={styles.explore}>Explore {project.title}<span aria-hidden="true">&#8599;</span></Link>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+
+
+function ProjectPreviewRow({ project, narrow, active, galleryId, onSelect, onKeyDown, children }: {
+  project: Project; narrow: boolean; active: boolean; galleryId: string; onSelect: () => void;
+  onKeyDown: (event: KeyboardEvent<HTMLButtonElement>) => void; children: ReactNode
+}) {
+  if (narrow) return <Link to={`/work/${project.slug}`} className={styles.rowLink} onFocus={onSelect}>{children}</Link>
+  return <button type="button" className={styles.rowLink} aria-pressed={active} aria-controls={galleryId}
+    onFocus={onSelect} onClick={onSelect} onKeyDown={onKeyDown}>{children}</button>
+}
+
+/** All nine projects from the approved photo folders, with scroll and pointer previews. */
 export default function Work() {
   usePageTitle('Work')
 
@@ -46,19 +183,22 @@ export default function Work() {
   const [at, setAt] = useState(0)
 
   const rows = useRef<(HTMLLIElement | null)[]>([])
-  const plate = useRef<HTMLAnchorElement>(null)
+  const galleryId = useId()
+  const galleryHeld = useRef(false)
+  const holdGallery = useCallback((held: boolean) => { galleryHeld.current = held }, [])
 
   /* The row being read is the last one whose top has passed a line drawn across
      the upper third of the window. Measured against the window rather than
      against the plate, so the answer does not change when the plate does. */
   const readScroll = useCallback(() => {
+    if (!narrow && (galleryHeld.current || rows.current.some((row) => row?.contains(document.activeElement)))) return
     const line = window.innerHeight * 0.38
     let next = 0
     rows.current.forEach((el, i) => {
       if (el && el.getBoundingClientRect().top <= line) next = i
     })
     setAt(next)
-  }, [])
+  }, [narrow])
 
   useEffect(() => {
     readScroll()
@@ -116,16 +256,6 @@ export default function Work() {
     }
   }, [narrow, reduced, readStack])
 
-  /* The pointer's position inside the plate, written straight to two custom
-     properties so a mousemove costs no React render. The browser moves two
-     hairlines and a tag, and nothing else. */
-  function onMove(event: ReactPointerEvent<HTMLElement>) {
-    const box = plate.current?.getBoundingClientRect()
-    if (!box) return
-    plate.current?.style.setProperty('--cx', `${event.clientX - box.left}px`)
-    plate.current?.style.setProperty('--cy', `${event.clientY - box.top}px`)
-  }
-
   const shown =
     projects.length < COUNT_WORDS.length ? COUNT_WORDS[projects.length] : String(projects.length)
 
@@ -146,84 +276,14 @@ export default function Work() {
       />
 
       {/* Not `shell`. See the note in the stylesheet: the two fight. */}
-      <div className={styles.set}>
+      <section className={styles.set} aria-labelledby="work-collection-heading">
+        <h2 id="work-collection-heading" className="visually-hidden">All work</h2>
         <div className={styles.split}>
-          {/* --- The plate ------------------------------------------------
-              Sticky, and a link to whichever project it is showing, so the
-              photograph is a way in rather than an illustration of one. It has
-              to be SHORTER than the list beside it or it has nothing to stick
-              through — that is the whole mechanism, and it is why the height
-              here is bounded by the window rather than by its contents. */}
-          <div className={styles.plateCol}>
-            <Link
-              ref={plate}
-              to={`/work/${live.slug}`}
-              className={styles.plate}
-              tabIndex={-1}
-              aria-hidden="true"
-              onPointerMove={pointer && !reduced ? onMove : undefined}
-            >
-              <AnimatePresence initial={false}>
-                {/* The photograph keeps moving the whole time it is up, rather
-                    than settling and sitting there. A plate this size that
-                    holds perfectly still reads as a slab; eighteen seconds of
-                    push means it never arrives, so the page is alive even while
-                    nobody is doing anything to it. */}
-                <motion.img
-                  key={live.slug}
-                  className={styles.plateImg}
-                  src={live.hero.src ?? undefined}
-                  alt=""
-                  initial={reduced ? { opacity: 1, scale: 1.06 } : { opacity: 0, scale: 1.03 }}
-                  animate={reduced ? { opacity: 1, scale: 1.06 } : { opacity: 1, scale: 1.16 }}
-                  exit={{ opacity: 0 }}
-                  transition={{
-                    opacity: { duration: reduced ? 0 : 0.7, ease: [0.16, 1, 0.3, 1] },
-                    scale: { duration: 18, ease: 'linear' },
-                  }}
-                />
-              </AnimatePresence>
+          {!narrow && <WorkGallery project={live} id={galleryId} onInteractionChange={holdGallery} />}
 
-              {/* Setting-out lines, following the pointer across the plate.
-                  Fixing a position by ruling to it is what a drawing does; a
-                  disc with "View" in it, which is what this was, is what every
-                  template does. */}
-              <span className={styles.trace}>
-                <span className={styles.traceH} />
-                <span className={styles.traceV} />
-                <span className={styles.traceTag}>
-                  <span className={styles.traceNum}>{String(at + 1).padStart(2, '0')}</span>
-                  View project
-                </span>
-              </span>
-            </Link>
-
-            {/* The caption is what makes the plate legible standing still.
-                Without it this is a photograph beside a list, and nothing says
-                the two are connected. */}
-            <p className={styles.plateCap}>
-              <span className={styles.plateNum}>{String(at + 1).padStart(2, '0')}</span>
-              <span className={styles.plateTitle}>{live.title}</span>
-              <span className={styles.plateOf}>
-                {String(at + 1).padStart(2, '0')} / {String(projects.length).padStart(2, '0')}
-              </span>
-            </p>
-
-            {/* How far through the index you are, drawn as a rule that fills.
-                The list is six screens tall, so without this there is nothing
-                on the page that says whether you are near the start of it or
-                near the end. */}
-            <span className={styles.rail} aria-hidden="true">
-              <motion.span
-                className={styles.railFill}
-                animate={{ scaleX: (at + 1) / projects.length }}
-                transition={{ duration: reduced ? 0 : 0.5, ease: [0.16, 1, 0.3, 1] }}
-              />
-            </span>
-          </div>
-
-          <ol className={styles.list}>
-            {projects.map((project, i) => (
+          <ol className={styles.list} aria-label="All projects">
+            {projects.map((project, i) => {
+              return (
               <li
                 key={project.slug}
                 ref={(el) => {
@@ -235,11 +295,21 @@ export default function Work() {
                 style={{ '--i': i } as React.CSSProperties}
                 onPointerEnter={pointer ? () => setAt(i) : undefined}
               >
-                <Link to={`/work/${project.slug}`} className={styles.rowLink}>
+                <ProjectPreviewRow project={project} narrow={narrow} active={i === at} galleryId={galleryId}
+                  onSelect={() => setAt(i)} onKeyDown={(event) => {
+                    const next = event.key === 'ArrowDown' ? (i + 1) % projects.length
+                      : event.key === 'ArrowUp' ? (i - 1 + projects.length) % projects.length
+                      : event.key === 'Home' ? 0 : event.key === 'End' ? projects.length - 1 : null
+                    if (next === null) return
+                    event.preventDefault()
+                    setAt(next)
+                    rows.current[next]?.querySelector<HTMLButtonElement>('button')?.focus()
+                  }}>
+
                   <span className={styles.rowNum}>
                     {String(i + 1).padStart(2, '0')}
-                    {/* Only the phone's card shows the total; on the desktop
-                        list the plate's caption already counts. */}
+                    {/* Only the phone's card shows the project total; the desktop
+                        contact sheet counts photographs within the selected home. */}
                     <span className={styles.rowOf}> / {String(projects.length).padStart(2, '0')}</span>
                   </span>
 
@@ -249,6 +319,7 @@ export default function Work() {
                     </span>
                     <span className={styles.rowMeta}>
                       <span>{project.kind}</span>
+                      <span>{project.gallery.length + 1} photographs</span>
                       {/* The dot travels with the suburb, so on a phone the line
                           wraps before the dot rather than stranding it. */}
                       <span className={styles.place}>
@@ -279,20 +350,21 @@ export default function Work() {
                   <span className={styles.rowPlate} aria-hidden="true">
                     <img src={project.hero.src ?? undefined} alt="" loading="lazy" />
                   </span>
-                </Link>
+                </ProjectPreviewRow>
               </li>
-            ))}
+              )
+            })}
           </ol>
         </div>
-      </div>
+      </section>
+
+      <FrontDoorStudy />
 
       {/* The projects show the work; this names it. Numbered after the last
           project page, since the index is B-01 and each project is B-02 on. */}
       <Services number={`B-${String(projects.length + 2).padStart(2, '0')}`} />
 
-      <div className={['shell', styles.magnet].join(' ')}>
-        <LeadMagnet tone="green" />
-      </div>
+      <WorkClosing />
     </>
   )
 }

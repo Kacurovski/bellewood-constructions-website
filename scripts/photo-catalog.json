@@ -1,0 +1,569 @@
+[
+  {
+    "id": "ascot-01",
+    "folder": "Ascot",
+    "sourceSha256": "f7796b6dc5d1b4718485079eaeadbb8f4d8c4d11344d8432a4ab142efd3528a5",
+    "alt": "Ascot: Entry hall with timber floors, an ornamental arch and a blue front door",
+    "outputSha256": "0b70316b89b7b2be891002808f4ad85a1ae031cb3fbaa8c6c3e0639122e0195e"
+  },
+  {
+    "id": "ascot-02",
+    "folder": "Ascot",
+    "sourceSha256": "9c218217fc8d9d6059fc6ad1abd48139ae3e116cb4719ffac262fc609ca99ed7",
+    "alt": "Ascot: White kitchen with a blue island, stone benchtop and counter stools",
+    "outputSha256": "a0c6b9e803a465fd08d23f15e3d926b3f0e7b896904d1f248d5e9678853f061a"
+  },
+  {
+    "id": "ascot-03",
+    "folder": "Ascot",
+    "sourceSha256": "46d80a87a31addb3a91bace35936573bb4d8710881334aeb73a252ca1bca20ad",
+    "alt": "Ascot: Living room opening onto the verandah beside the kitchen",
+    "outputSha256": "a1400ce66d55b3f90d66df06de9ebd4133bc1348c42c3bf283958ad268bb0617"
+  },
+  {
+    "id": "ascot-04",
+    "folder": "Ascot",
+    "sourceSha256": "98e25157fa743c94bcfccde0cebc225bed0cc67b9fb5a7fd24a80d7cff43bcd4",
+    "alt": "Ascot: Covered timber verandah with outdoor sofas and a dining table",
+    "outputSha256": "c840e461b4c6e571bd7193c8cf72eda35423303889f17bb6976f13ae82ada987"
+  },
+  {
+    "id": "ascot-05",
+    "folder": "Ascot",
+    "sourceSha256": "7ee14e4adde59aa02ee00b3e7054ff2908457e08cacbb245c8d3bca725282a98",
+    "alt": "Ascot: View from the verandah through wide doors into the living room and kitchen",
+    "outputSha256": "bfaee0266353473d02ddb351f3a1eec5d49ec880c4bcd1c8329440ff878800ad"
+  },
+  {
+    "id": "ascot-06",
+    "folder": "Ascot",
+    "sourceSha256": "c272af53161959aae6118aeaf98c47eaefd61397bbb84e405171647f464ead25",
+    "alt": "Ascot: Two levels of verandahs overlooking the rear lawn and pool",
+    "outputSha256": "a089485797a5319475c70026ad93ee7c66d96e5011671a8e794f52893f9f12d0"
+  },
+  {
+    "id": "ascot-07",
+    "folder": "Ascot",
+    "sourceSha256": "f5e201d423ee79d77e132f980c25466bdf57d5a1ab2bf596ef3509ac3f97ada6",
+    "alt": "Ascot: Street view of the white house behind a picket fence",
+    "outputSha256": "191b550a83ed1bd0a1dcf714e7d80009eb6aa52928a6ae165728abbacc425eff"
+  },
+  {
+    "id": "ascot-08",
+    "folder": "Ascot",
+    "sourceSha256": "2cc77571faa0b2c761f416eee0c346db08e160669ef9e686c90bb4d5cdb419b0",
+    "alt": "Ascot: Blue glazed front doors opening onto the verandah",
+    "outputSha256": "8bb89c08773c6d8d495f09db589ef34c239c1b61fb7fb05fa936b73e9f0b0c63"
+  },
+  {
+    "id": "ascot-09",
+    "folder": "Ascot",
+    "sourceSha256": "f0103549b79ddb94a8161ebd9f79bde2d8c941af0e21e2339c8afc2a54c37ab2",
+    "alt": "Ascot: Front sitting room with a cushioned bay-window seat",
+    "outputSha256": "f30174ef660775605142ff9629b86b76482bca706d2b29721b893e7309da30bc"
+  },
+  {
+    "id": "auchenflower-01",
+    "folder": "Auchenflower",
+    "sourceSha256": "bb407a5e26774211893011def68199ead519da405da5fabf5412c43984f05bb8",
+    "alt": "Auchenflower: Gabled street facade with decorative timber brackets and a bay window",
+    "outputSha256": "50e523da2dfc75619e5554ca74849cba96f2fae92c1e855f12952f05bfc82361"
+  },
+  {
+    "id": "auchenflower-02",
+    "folder": "Auchenflower",
+    "sourceSha256": "ff53ebbf0c4fa114de2ba6f9bab6ab5c97e91c803b666d4b78336f0fd80b1fe1",
+    "alt": "Auchenflower: Side elevation showing weatherboards, window hoods and timber brackets",
+    "outputSha256": "4bb9fc9ae74a35bb4f2f64792aed3defc3dc5b98f96b411467974256630cd1c5"
+  },
+  {
+    "id": "auchenflower-03",
+    "folder": "Auchenflower",
+    "sourceSha256": "f936dd65cd5f51cdce23deab0c49cec349806304388cd1b5762a5a74b4de435b",
+    "alt": "Auchenflower: Street frontage with a gabled roof, front fence and entrance gate",
+    "outputSha256": "a4ee8740c20acfb17b2a73dd42ec22d4e4531ad3e634567cea14d2bffb6c0ffc"
+  },
+  {
+    "id": "auchenflower-04",
+    "folder": "Auchenflower",
+    "sourceSha256": "33cb358c1c7fb300eac2478f9185347cf9128e6e9fe7a040733fcccc4b2f399f",
+    "alt": "Auchenflower: Timber verandah around a projecting bay window and glazed doors",
+    "outputSha256": "714b96e6cceb38500f0672f6f614370812c20fc46539e37fbc655467e9f9acc9"
+  },
+  {
+    "id": "auchenflower-05",
+    "folder": "Auchenflower",
+    "sourceSha256": "18573746d8a7de2055356338becaf4f91b6a0aa343e7025e703bd23e4ba70cb0",
+    "alt": "Auchenflower: White laundry with cabinetry, a tiled splashback and a glazed rear door",
+    "outputSha256": "9f5aeab07eac41653c21b2cc37f71f34dcf2850ab2a81a750a03a4e81631cbf8"
+  },
+  {
+    "id": "auchenflower-06",
+    "folder": "Auchenflower",
+    "sourceSha256": "3072c534d77827ea6314534453f89f4a301fdbcde3d97397ce7f5ce550198ca2",
+    "alt": "Auchenflower: Bathroom vanity with patterned wallpaper, a round mirror and brass tapware",
+    "outputSha256": "cf2f5eb2ac1730f4c006c9820f507df5ca7817ccf9378f6e4820ef09bdc33678"
+  },
+  {
+    "id": "auchenflower-07",
+    "folder": "Auchenflower",
+    "sourceSha256": "5ed40da68ef58068cfe8699e978188415bdb795b21b9c5168cc7ff27e58b2847",
+    "alt": "Auchenflower: Bedroom with a bay-window seat, fitted drawers and decorative timber brackets",
+    "outputSha256": "910387969d29ca9bb05175585b62cf8a38a3530fd05c342a84ee776160ed0c06"
+  },
+  {
+    "id": "auchenflower-08",
+    "folder": "Auchenflower",
+    "sourceSha256": "9be27b270fa9361fa5c4429c694a724172abf6497ed7927cfe6cb2b71e84c8c1",
+    "alt": "Auchenflower: White kitchen and dining space with a navy island and pendant lights",
+    "outputSha256": "9b7bd2254bb8675743aaf168ed8d47ba3017b8e106c3be0a80b00a67fae3df7b"
+  },
+  {
+    "id": "auchenflower-09",
+    "folder": "Auchenflower",
+    "sourceSha256": "fc27a975ada50227712f6e11771db5a57eaf099a6897d59d50618aebe91ca9c0",
+    "alt": "Auchenflower: Kitchen island, timber stools and white cabinetry viewed along the room",
+    "outputSha256": "383f14cd610cfb158ccda21a84835bb1ceffda5640dfbf2b0bafcaea95c4a961"
+  },
+  {
+    "id": "auchenflower-10",
+    "folder": "Auchenflower",
+    "sourceSha256": "6770eb435ea9a75e712acd8415e842cda7e639a1389dcfeba4ce2d3ee111b26a",
+    "alt": "Auchenflower: White cabinet and marble benchtop against a wall of vertical boards",
+    "outputSha256": "5831b0be2a2f32e6faff422911bdb00cd8867187ad5dd07fdc39910edb16e877"
+  },
+  {
+    "id": "auchenflower-11",
+    "folder": "Auchenflower",
+    "sourceSha256": "3db7bbf661d6180af4e04aa6322a58bea5b281060f67c03deb514605f782f8e9",
+    "alt": "Auchenflower: Navy kitchen island beneath pendant lights beside tall windows",
+    "outputSha256": "b5f68b01957b0709fdf5d3ef54f7f8899805114be865111bc94fe52edc08b12b"
+  },
+  {
+    "id": "auchenflower-12",
+    "folder": "Auchenflower",
+    "sourceSha256": "fa669525ec3e22834db898c8ef072d9dfbea00e14fe52f9343ea2555d24033f0",
+    "alt": "Auchenflower: Stair landing with a timber handrail, white balusters and sash windows",
+    "outputSha256": "71a754f87d551b587bcedfc93554ca6bdd4e0a74c13a883bfc86b580ac06b9fc"
+  },
+  {
+    "id": "auchenflower-13",
+    "folder": "Auchenflower",
+    "sourceSha256": "7a8ca14eda9c694d96c3c1b58243246863749f7333a09d8ec6168a85b3444bf9",
+    "alt": "Auchenflower: Covered verandah with sofas and an outlook across the suburb",
+    "outputSha256": "9961d4d6551f575935e919e328050e7d943ba6571d27b6d54cb1bdce2f764b07"
+  },
+  {
+    "id": "auchenflower-14",
+    "folder": "Auchenflower",
+    "sourceSha256": "40629caa316c6c0c06778dd91fdaa503cb68a0f9e2eb325df437624652939013",
+    "alt": "Auchenflower: Gabled upper verandah above an open terrace beside a weatherboard wing",
+    "outputSha256": "33ea3e63061ffc21e4f2b25366d263aeee5c882dc47a32130f3a86d953f2c978"
+  },
+  {
+    "id": "auchenflower-15",
+    "folder": "Auchenflower",
+    "sourceSha256": "3d117e54869f50bfc6f7094c5054e83db92974daf27e65f0299f84dcac0aa6bf",
+    "alt": "Auchenflower: Hallway with a glazed door revealing a timber wine rack",
+    "outputSha256": "55147c78a59c1c0d568d21d6743825c1daa09c2ec26efda216736f83c65a0813"
+  },
+  {
+    "id": "bardon-01",
+    "folder": "Bardon",
+    "sourceSha256": "e64443424fbf2aeeb9a91fec42dd3585c607e3e3c5a91622cbe26be096398cd6",
+    "alt": "Bardon: Timber kitchen and exposed ceiling beams opening onto a covered deck",
+    "outputSha256": "1cc81c7f8044174edf392def3deea57b13e30a637e6714751fa396803a880c72"
+  },
+  {
+    "id": "bardon-02",
+    "folder": "Bardon",
+    "sourceSha256": "6f47e71f2807a9c1e593497f97867d3c0a433e2e339799573cc6d430b3ba7400",
+    "alt": "Bardon: Open kitchen and living room with timber floors and wide doors to the lawn",
+    "outputSha256": "1fbd58ad89805b3923f2bf08d612cce68017ae6fa883014c82305a87dbc9de9d"
+  },
+  {
+    "id": "bardon-03",
+    "folder": "Bardon",
+    "sourceSha256": "e28db0927fe3547b73bedbdc94932a08c83825025ca2ecdd0d57ef395e8eeb0e",
+    "alt": "Bardon: Timber staircase and landing beside large windows overlooking trees",
+    "outputSha256": "725ad3894ca425e423ce7ea4ce7d4680df5ee66c673a71d72b1a8709cdec82ce"
+  },
+  {
+    "id": "bardon-04",
+    "folder": "Bardon",
+    "sourceSha256": "e5e72efe13bbd17819be72914f2e92bdba12f1b2f1727bc180cf5f6d28578c05",
+    "alt": "Bardon: Covered timber deck beside the pool and weatherboard house",
+    "outputSha256": "123d19315676c1f2d494e6f526ca31e92e20282590564cd7a2ac8d46bbbe4aa1"
+  },
+  {
+    "id": "bardon-05",
+    "folder": "Bardon",
+    "sourceSha256": "42d15debeb3ff363d1316b6ace633887581325c742f7656a5eae7c48aef98f87",
+    "alt": "Bardon: Bathroom with a floating timber vanity, round basin and freestanding bath",
+    "outputSha256": "abbc066825225d90322251fe983f096430d0069bedd1c846d55165b5713ee8a7"
+  },
+  {
+    "id": "bardon-06",
+    "folder": "Bardon",
+    "sourceSha256": "eb746d3a5da8fe9aeff3ca9384ec914c52dbd0cc90ad52c6bf9e6c5252684b9b",
+    "alt": "Bardon: Pool beside the timber deck and white weatherboard wing",
+    "outputSha256": "092808858e9b9fe2b218c724b4bbfe75dd9a016e32037ad0173d83a4cce8018f"
+  },
+  {
+    "id": "bardon-07",
+    "folder": "Bardon",
+    "sourceSha256": "a3d32408818b12451be8e302623f9b4ecc143a7e516eb971fdb0d6d6150a1d18",
+    "alt": "Bardon: Long pool with a timber deck and leafy outlook",
+    "outputSha256": "3122fe758e585b6595fec270bfe5cd13a44012aab0d9556ca09508c64b005210"
+  },
+  {
+    "id": "bardon-08",
+    "folder": "Bardon",
+    "sourceSha256": "3a75ffc50a7062afd1e6ed5a6eae25ab09e095191ed605c40a9f4a2bdb802482",
+    "alt": "Bardon: View over the pool towards the house and surrounding trees",
+    "outputSha256": "59603e6cffa3333719ec7bc20ff6159676e7089a7bbef93a15348219a3b57fec"
+  },
+  {
+    "id": "bardon-09",
+    "folder": "Bardon",
+    "sourceSha256": "ae4720bbe8e372bef853174fa76f97aac0a08ff6315e4aaaa7ed6df73fe2f494",
+    "alt": "Bardon: Raised weatherboard house and garden among mature trees",
+    "outputSha256": "e38cba63922837c5ef4033cba12acf52dea11eceb4c575ca33107ccaf107f45c"
+  },
+  {
+    "id": "bardon-10",
+    "folder": "Bardon",
+    "sourceSha256": "b2c8018aec1390814159cfd33ab9964001f6618616e8a74f663372ea5314729a",
+    "alt": "Bardon: Covered walkway facing a lawn and wide doors into the living area",
+    "outputSha256": "4d99fd0479bde204d9508050b77811ffbb5e3999087e00a53c03932bd931aab9"
+  },
+  {
+    "id": "camp-hill-01",
+    "folder": "Camp Hill",
+    "sourceSha256": "01a7321efdf5e818770dc63ec0c78dea5fc4fa8a7dc2e2a8de5a3004d37f9efa",
+    "alt": "Camp Hill: Brick entrance with dark doors, a garden bed and white boundary wall",
+    "outputSha256": "73cde47b1fc14983eef1f59bcf438cccad893c4120dd74afdd2ce18b41bead36"
+  },
+  {
+    "id": "camp-hill-02",
+    "folder": "Camp Hill",
+    "sourceSha256": "d018e59acfabf7509dc4d4b2654c3d4bbdd0e58fedbc73ceeca16ba466263caa",
+    "alt": "Camp Hill: Timber staircase with open treads and a timber handrail",
+    "outputSha256": "4b0494b921b23e7b3169844c0347d69aba85455e07a0025622142657cb953b4b"
+  },
+  {
+    "id": "camp-hill-03",
+    "folder": "Camp Hill",
+    "sourceSha256": "db785c66e02b449c5fe2dd39ad62c42b0e4629a42bec88730f947ecf3a24d3fc",
+    "alt": "Camp Hill: Pool and paved terrace beside the brick and white rear elevation",
+    "outputSha256": "833bede22e17989bc086e0d4ab299da403e5d58e5ce435c1ee29162f477ebec3"
+  },
+  {
+    "id": "camp-hill-04",
+    "folder": "Camp Hill",
+    "sourceSha256": "db851f885cb1dbc0bf5253a57c1d4e09b2e8ebb08e3dc30aaa06077aba3cbb9d",
+    "alt": "Camp Hill: Kitchen with timber ceiling, dark cabinetry and a white island benchtop",
+    "outputSha256": "4713addd1bd7cd5fd72ebbfce692081ea3a67e382576ea6352da33560ce158e2"
+  },
+  {
+    "id": "camp-hill-05",
+    "folder": "Camp Hill",
+    "sourceSha256": "406a9942b2d314e787eb88a07d8c1b6eef9af85b6182faa81c3c4540d14475cb",
+    "alt": "Camp Hill: Kitchen looking past the island towards dark cabinets and timber ceiling boards",
+    "outputSha256": "b4f2fa39a5c117a5a5b1bd3393ab9994a55aa8c661f87622c116a108d0e3f679"
+  },
+  {
+    "id": "camp-hill-06",
+    "folder": "Camp Hill",
+    "sourceSha256": "20675ed60ce3d40b65e25b44cba270115482a967767ec348425981db44fc7917",
+    "alt": "Camp Hill: Bathroom with a long timber vanity, stone finishes and a freestanding bath",
+    "outputSha256": "812f38c989a9f7d411c5e1895ed875af652e2fdca33706083535127f0a349383"
+  },
+  {
+    "id": "camp-hill-07",
+    "folder": "Camp Hill",
+    "sourceSha256": "44d198b0729e8c3d98fd44a5700748600693b51477e437838eecc7e076a1168a",
+    "alt": "Camp Hill: Blue entrance door opening into a long white hallway",
+    "outputSha256": "d1fe69cc81e9a7ccdd47f87a65c4818c94bd6d236143ba73c7f434cc178a673b"
+  },
+  {
+    "id": "camp-hill-08",
+    "folder": "Camp Hill",
+    "sourceSha256": "c016cb570e9f8060689bdc0094a5b00ec9211975594970c69091b75ca27fdb85",
+    "alt": "Camp Hill: Street elevation with a timber-screened balcony over the garage",
+    "outputSha256": "00acad6341b9955ed965211a83574d76a40fcbc8f8e1559dacbab7cd99e5e9ca"
+  },
+  {
+    "id": "camp-hill-09",
+    "folder": "Camp Hill",
+    "sourceSha256": "32516483b8ee724bd00dc60f4b076c81cd7944a6e8e6abc107a42f0e4528ccfc",
+    "alt": "Camp Hill: Two neighbouring homes with weatherboard, brick and timber-screened facades",
+    "outputSha256": "fd77c8034959eadf9e5cb0b2f5002b811e42ef4057b2e4f6355937cd8a2f0704"
+  },
+  {
+    "id": "clayfield-01",
+    "folder": "Clayfield",
+    "sourceSha256": "51b34133f61cb1e709c40fc182066d67545c8c3d19e20c609e1c493a93ef190e",
+    "alt": "Clayfield: Weatherboard cladding, corrugated roof and decorative window hood",
+    "outputSha256": "66eb4562c4115675d434f63a763772ab5822bbd2ebf31ffd5e072850361ae9dc"
+  },
+  {
+    "id": "clayfield-02",
+    "folder": "Clayfield",
+    "sourceSha256": "a42d687e6643193e67df87cd720673275527adc12e72bed8ad3eb82e0d5b1632",
+    "alt": "Clayfield: Two-storey facade with twin projecting wings and round ground-floor windows",
+    "outputSha256": "b35903e68df21d2ac23f37babab2d706eb476e4e5e6beaee01166a6f597183c2"
+  },
+  {
+    "id": "clayfield-03",
+    "folder": "Clayfield",
+    "sourceSha256": "524f84ac44ff221734b265f7b54aa76e1bbe451bae64b8b0054be1bf92ed0612",
+    "alt": "Clayfield: Angled view of the facade, verandahs, driveway and front lawn",
+    "outputSha256": "edd74d2d2a2ed941b72df82efc1bc009b5a4855c4d6fedc91b18d444ccf95cd4"
+  },
+  {
+    "id": "clayfield-04",
+    "folder": "Clayfield",
+    "sourceSha256": "a8d906976796c14aa42701777cebd44554846f8efe692737a7c2f541b5199728",
+    "alt": "Clayfield: Covered rear terrace and upper windows opening towards the lawn",
+    "outputSha256": "8f87cead49893f1382da2ff3d42a77bdba6ab14d20581502838ccb2f47c80e34"
+  },
+  {
+    "id": "clayfield-05",
+    "folder": "Clayfield",
+    "sourceSha256": "627943e4535a8fd0fa73302e0c6345dc4018ddb375387d6efef077a48985f40c",
+    "alt": "Clayfield: Front verandah and entrance at dusk, with two round windows and an iron gate",
+    "outputSha256": "bae1126357b074b398cd89089fbee57daaa7a68f1ea79bcc3b8be02bd9e40b28"
+  },
+  {
+    "id": "kalinga-01",
+    "folder": "Kalinga",
+    "sourceSha256": "d916015ec83582a3ea59588ac63015cbc94f7c3e76b2ab3d402664003ea1dd41",
+    "alt": "Kalinga: White two-storey Queenslander with double verandahs and a picket fence",
+    "outputSha256": "6fdef98262e3a44e95c3f9b98b8fc7535151aa26aca9be93c610cc74d840ae75"
+  },
+  {
+    "id": "kalinga-02",
+    "folder": "Kalinga",
+    "sourceSha256": "6005359049a8198dc7a79a2bb791447228bc574d79fa6d1c58ff610772661f40",
+    "alt": "Kalinga: Corner view of the house, double verandahs and white picket fence",
+    "outputSha256": "60e4955825c21f8043a388371d4708a2e30d31482e496a006cf8b44a660ee6be"
+  },
+  {
+    "id": "kalinga-03",
+    "folder": "Kalinga",
+    "sourceSha256": "9f918690b4e4ff22f8147160f399d6bcc8b303041681a0b77464a78b31de2597",
+    "alt": "Kalinga: Covered ground-floor walkway beneath the upper verandah",
+    "outputSha256": "4894ea0c130ef4dab04bc1122bcc206ebc81d3794d870ac90d14a402cc43010d"
+  },
+  {
+    "id": "kalinga-04",
+    "folder": "Kalinga",
+    "sourceSha256": "31e036b428ae86c2fda92489cd7c20299494bfb2bb286be2fc3f5f64baeb48e6",
+    "alt": "Kalinga: Dark glazed front door framed by white walls and potted plants",
+    "outputSha256": "fc27e92e83e18d596b09b940a3811bc9e48804c5f632113f73ae12919e193365"
+  },
+  {
+    "id": "kalinga-05",
+    "folder": "Kalinga",
+    "sourceSha256": "1889e61b57ca33939ee9be1a31a31b26809ee32e84c0fce6ad707723145ca20f",
+    "alt": "Kalinga: Upper timber verandah with a round table beneath a pitched ceiling",
+    "outputSha256": "d2a827401c925a98eaaba38565aa553501d999002808884830ef9fe8b9071733"
+  },
+  {
+    "id": "kalinga-06",
+    "folder": "Kalinga",
+    "sourceSha256": "1da9253e066cb465694743717931270f02fc17545674f9eeb2c1f6aafce7bd97",
+    "alt": "Kalinga: Bright living room with a bay window, timber floor and built-in seating",
+    "outputSha256": "a3d6595cc51254e965325c55ec9e1c23fd0bb21211d2f2cc10ab47a7960c4e6e"
+  },
+  {
+    "id": "kalinga-07",
+    "folder": "Kalinga",
+    "sourceSha256": "32eed8c1ad7d4c83c474e64392f3d42ee4595aa224e48608b9731235c30c7c37",
+    "alt": "Kalinga: Timber staircase with white balusters and dark decorative ironwork",
+    "outputSha256": "f978d37b430aa57300f010aa82643198c34d10d30a1920f1529806585b11979f"
+  },
+  {
+    "id": "kalinga-08",
+    "folder": "Kalinga",
+    "sourceSha256": "1955007bf56b67ec7eee8dfbd53a90cdd1bc2803657e0f487f6459e5dc55cd99",
+    "alt": "Kalinga: Rear weatherboard elevation, lawn and pool behind a glass fence",
+    "outputSha256": "2e9b681b83d047060e143e7a50c7fbb7b796f540222428c14b00879abdd3185f"
+  },
+  {
+    "id": "wilston-01",
+    "folder": "Wilston",
+    "sourceSha256": "97227a6c091d051ddd5e25870aa193b4f61663a56bcddaf0fdf98ac1ce137192",
+    "alt": "Wilston: Rear lawn and swimming pool overlooking a white two-storey house",
+    "outputSha256": "2e7a4df4a980c72eb98c45ea699316d03d421e336ffca580108dd5e18a1038b6"
+  },
+  {
+    "id": "wilston-02",
+    "folder": "Wilston",
+    "sourceSha256": "2ae68116bd9c16c4e80dd42017cbbd71fac5f9266dc195314d9a7eae2d3b847d",
+    "alt": "Wilston: Covered outdoor dining area opening through sliding doors to a sitting room",
+    "outputSha256": "3880f5a85fb7d9e94f0702a5defeece2e9cc2d6d607def1e106de1dc07f0338a"
+  },
+  {
+    "id": "wilston-03",
+    "folder": "Wilston",
+    "sourceSha256": "a34ea35affff5e5081825308a0ce16cb9a11b0dc70b3f51b97954a3b5168bb4e",
+    "alt": "Wilston: Sheltered terrace with a timber dining table, outdoor kitchen and tiled floor",
+    "outputSha256": "a1c29967f8aab24c4a78e9ce77b13e3df4c00e05eaaa42a00d7fe443b0ab25e4"
+  },
+  {
+    "id": "wilston-04",
+    "folder": "Wilston",
+    "sourceSha256": "8454f80a80b1b0c9d4d4249c7464292ca06ed59c638240c576b6d025ba28001d",
+    "alt": "Wilston: Dressing room with fitted white cupboards and timber shelves",
+    "outputSha256": "f3ba3189a1e18a1fbfc4bf041a64570170c84289f7308dc021101bc73079cc7b"
+  },
+  {
+    "id": "wilston-05",
+    "folder": "Wilston",
+    "sourceSha256": "75b17c094fcf4a6a9e16c9e4e842ef79bd0c00f29cb8d5195ebb5db9583ddc09",
+    "alt": "Wilston: Bathroom with a bath, tiled walls and a dark double vanity",
+    "outputSha256": "f6a846c53350bc20ed34aad56746993b5108f6effb31a961462b3de098bc6d02"
+  },
+  {
+    "id": "wilston-06",
+    "folder": "Wilston",
+    "sourceSha256": "f04131fd62537634a740b732b8495437dc0d02828da2f71cebe8f8f97a5c73b2",
+    "alt": "Wilston: Timber-floored hallway leading to a glazed door",
+    "outputSha256": "6fabe668d9bbdb244ebfac2b44e99d5d675fda6b4c36b804e1dff5b567287499"
+  },
+  {
+    "id": "wilston-07",
+    "folder": "Wilston",
+    "sourceSha256": "a4a62568f370a97977afe6b22cb1c52894febc3e82db2ae82d9c04af9cbd9fcf",
+    "alt": "Wilston: Dining room with a timber table, pendant light and large windows",
+    "outputSha256": "b5f1a813a291a1581608e8dd9836f8d546433cd80c51b7cfde9186b33f48457c"
+  },
+  {
+    "id": "wilston-08",
+    "folder": "Wilston",
+    "sourceSha256": "0177e0da7baaea38b1ef9c6e7fd89038eb3afd5534515118f30668a82d86f6d8",
+    "alt": "Wilston: Open kitchen and living room with timber flooring and wide windows",
+    "outputSha256": "002e4e804b35bd7cc550e6e23d4108147d553ff939dc7ae5794e7a0762099788"
+  },
+  {
+    "id": "wilston-09",
+    "folder": "Wilston",
+    "sourceSha256": "46a105d83fb9f6325698739275523b9d41be5d6dec8cf8118e7f883243aaccca",
+    "alt": "Wilston: Kitchen island with stools, white cabinets and a window splashback",
+    "outputSha256": "3be52f29b2802cc626021e0e05502d4ee23d6fe20451a6ac6a79f5d9feced64d"
+  },
+  {
+    "id": "wilston-10",
+    "folder": "Wilston",
+    "sourceSha256": "3bb3e0fb93a579a4639408e691298c195bdbf82ccf67b880322ab5ba6f625882",
+    "alt": "Wilston: Gabled street frontage with a verandah and white picket fence",
+    "outputSha256": "31be55f1e1e26c8c004ab87ad7a8061b5113950ac0987a09d878df0ed0a31ef4"
+  },
+  {
+    "id": "windsor-01",
+    "folder": "Windsor",
+    "sourceSha256": "431625226a450affcdad1ea1cb54da91c3f4bb43bb6d1b14c6ed32e088e0194d",
+    "alt": "Windsor: Living room with coffered ceiling, timber shelving and a stone fireplace wall",
+    "outputSha256": "f7d991be12e901454b5a0c6b4255dc325f7a91da8a2358aaee644a70b21ab272"
+  },
+  {
+    "id": "windsor-02",
+    "folder": "Windsor",
+    "sourceSha256": "1c86f575cf27a9ee481fcb81440c2cafb5350ad0195eccfcd1649a88a492a046",
+    "alt": "Windsor: Sitting and dining areas beneath a coffered ceiling",
+    "outputSha256": "25edf153565935d8fde7581cbf5b4b3449bf21418e570405f9a702f427e1fc6f"
+  },
+  {
+    "id": "windsor-03",
+    "folder": "Windsor",
+    "sourceSha256": "367606bd074212e45f2c8eef005831be7c58f0772ef44b8d30b32fde43d2689c",
+    "alt": "Windsor: Covered deck with outdoor sofas and views over the suburb",
+    "outputSha256": "5513b25f84c7cdbe77ca1c12a3d48503b1f8a39eb7df79f209079115898e3096"
+  },
+  {
+    "id": "windsor-04",
+    "folder": "Windsor",
+    "sourceSha256": "e921f733267444f7b3dd7cb4f416c78f9ec67656b97ca28b946d64b5eb8c97a7",
+    "alt": "Windsor: Open sliding doors connecting the living room and sheltered deck",
+    "outputSha256": "e7fa3169c290a188ac4c041dffd26bc549638c4310be43aa023504f4ec0ffe40"
+  },
+  {
+    "id": "windsor-05",
+    "folder": "Windsor",
+    "sourceSha256": "baa076c4b38c6f0868f97bd768f067608debbde95ec0ca83219d48690a07d637",
+    "alt": "Windsor: Outdoor sofas beside the living room on the covered deck",
+    "outputSha256": "9e648d359394db50a2e01b9903bf14f013759b0f0b0ce167c4348e2d576495a7"
+  },
+  {
+    "id": "windsor-06",
+    "folder": "Windsor",
+    "sourceSha256": "08ed348a2030ba09bb1959b5c02acb3b078992ff2b42b4af22058cf83267a516",
+    "alt": "Windsor: Broad rear lawn, pool fencing and the house beyond",
+    "outputSha256": "4f11351b49ede279396a0846035e0c1659b59a68bcebc48768018d5b51dc5717"
+  },
+  {
+    "id": "windsor-07",
+    "folder": "Windsor",
+    "sourceSha256": "f496312706ecafbba4878463d1d07c947f3a96bcad6d9e24bf695dce2bca1680",
+    "alt": "Windsor: Street facade with gabled roofs, verandahs and a landscaped garden",
+    "outputSha256": "6bc5297fa2d05abdb5f171e730552b7f993365832b8a7e99dd7ffdc144e441f2"
+  },
+  {
+    "id": "windsor-08",
+    "folder": "Windsor",
+    "sourceSha256": "736e684bff8ae32535743bfa22e4ab2142fa00751a457d2e3e41398d5d9b0eae",
+    "alt": "Windsor: Living room with a stone fireplace, timber shelving and glass doors onto the deck",
+    "outputSha256": "cbc2791a8c1d34ba044939287e60aeda3ff176f8b4c1e91ee63a1a39b83fa769"
+  },
+  {
+    "id": "yeronga-01",
+    "folder": "Yeronga",
+    "sourceSha256": "86ab8f87367dbfa2614ae3dc9936d0b4ae3263fa53625c779d9ffe3e9a1ac14f",
+    "alt": "Yeronga: Kitchen and hallway with polished timber floors and white cabinetry",
+    "outputSha256": "14fa899d44272465e24eb4028d6a589da6cb69e7bf956c27671e83e5554479bc"
+  },
+  {
+    "id": "yeronga-02",
+    "folder": "Yeronga",
+    "sourceSha256": "07b5f6ae2bef50840d4b58135c9703d61ab39c9ab93abe05805a806f81c87102",
+    "alt": "Yeronga: White bathroom with a long vanity, mirrors and a screened shower",
+    "outputSha256": "4ba10df9d49b1799eada30310f9cbc68dc5975ce3a82b809115836679f39a9c0"
+  },
+  {
+    "id": "yeronga-03",
+    "folder": "Yeronga",
+    "sourceSha256": "0d3ae53bbd8c997f9388e858bbf6147d0f3481dded10ab8cacb1a8c8f9ccfbfe",
+    "alt": "Yeronga: Bathroom with leadlight windows, white vanity and a clawfoot bath",
+    "outputSha256": "aa7882d3c18993486916d302c6be4540370ec5457e064c91890092bfb18a145e"
+  },
+  {
+    "id": "yeronga-04",
+    "folder": "Yeronga",
+    "sourceSha256": "6edcdc128b79c89b764f3857043444f77c3810c9ab40d8a46ac2287cbf6cd4a6",
+    "alt": "Yeronga: Bathroom with a timber vanity, dark tiles and a glass shower screen",
+    "outputSha256": "506d4e5d818ee7994b5dc49ecebeaf31978c32511799d4ca36b91d61556164f9"
+  },
+  {
+    "id": "yeronga-05",
+    "folder": "Yeronga",
+    "sourceSha256": "bdf5752d07b3718b10d8cbc680402d5623d2a1b1f7a33cd88ed638ab7306a0d9",
+    "alt": "Yeronga: Weatherboard exterior with a verandah, front garden and stepping-stone path",
+    "outputSha256": "0be950dc537d13c45db958ab917077f745a93c7348628395312b2814a1061a6e"
+  },
+  {
+    "id": "yeronga-06",
+    "folder": "Yeronga",
+    "sourceSha256": "c3edafb3c7a496cffffc5fd5ace0b1984c55c36c87f601f61c24eb2a37ffbfe4",
+    "alt": "Yeronga: Front stairs leading to the verandah and dark glazed entrance doors",
+    "outputSha256": "3b6b4df727c03c035dcd2febd3d795fe3a12be3c3db0da38d6574e79e25db915"
+  },
+  {
+    "id": "yeronga-07",
+    "folder": "Yeronga",
+    "sourceSha256": "58599f673ac5863a778f71c64992d460878fd1da48854202de34a1221faaca9f",
+    "alt": "Yeronga: Rear lawn and pool below two levels of verandahs",
+    "outputSha256": "7b9a33390f8e17cfee013942bd38d960b0961f786f57338e1afc88ffcee0fef2"
+  }
+]

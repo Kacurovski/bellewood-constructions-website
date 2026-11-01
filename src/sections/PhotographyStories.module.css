@@ -1,0 +1,251 @@
+.magazine, .craft { padding-block: clamp(4rem, 7vw, 7.5rem); border-top: 1px solid var(--ink); }
+.magazine { background: var(--wash); padding-top: clamp(2.5rem, 4vw, 4rem); }
+.magazine .editorialIntro { margin-top: clamp(1.75rem, 3vw, 3rem); }
+.editorialIntro { display: grid; grid-template-columns: minmax(0, 8fr) minmax(0, 3fr); gap: clamp(2rem, 5vw, 5rem); align-items: end; margin-block: clamp(2.5rem, 5vw, 5rem); }
+.editorialTitle { font-size: clamp(2.3rem, 4.5vw, 4.8rem); line-height: 1.05; letter-spacing: -0.035em; }
+.editorialTitle > span { display: block; margin-top: 0.12em; font: italic 400 1.12em/1.08 var(--font-body); letter-spacing: -0.04em; }
+.introNote { max-width: 30ch; padding-bottom: 0.5rem; font-size: var(--t-lead); line-height: 1.6; }
+.editorialGrid { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: clamp(1rem, 2.5vw, 2.5rem); row-gap: clamp(2rem, 4vw, 4rem); align-items: start; }
+.leadPhoto { grid-column: 1 / 9; }
+.tallPhoto { grid-column: 10 / 13; margin-top: clamp(3rem, 8vw, 8rem); }
+.exteriorPhoto { grid-column: 2 / 6; }
+.editorialNote { grid-column: 7 / 12; align-self: center; }
+.figure { margin: 0; }
+.photo { position: relative; overflow: hidden; background: var(--sage); }
+.photo img { position: absolute; top: -16px; left: 0; width: 100%; height: calc(100% + 32px); max-width: none; object-fit: cover; }
+.landscape { aspect-ratio: 3 / 2; }
+.portrait { aspect-ratio: 3 / 4; }
+.exterior { aspect-ratio: 3 / 2; }
+.imageCaption { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0.2rem 1rem; padding-top: 0.8rem; font-size: var(--t-fine); line-height: 1.5; }
+.imageCaption > span:first-child { font-family: var(--font-display); font-weight: 600; color: var(--green); }
+.imageCaption > span:last-child { color: var(--pine); }
+.shortRule { display: block; width: 3rem; height: 1px; background: var(--green); margin-bottom: 1.4rem; }
+.editorialQuote { font-size: clamp(1.45rem, 2.3vw, 2.4rem); line-height: 1.25; color: var(--green); letter-spacing: -0.02em; }
+.spaceNote { max-width: 43ch; margin-top: 1.5rem; font-size: var(--t-small); line-height: 1.65; }
+.craft { background: color-mix(in srgb, var(--sage) 10%, var(--wash)); }
+.craftGrid { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); gap: clamp(2rem, 6vw, 6rem); margin-top: clamp(2.5rem, 5vw, 5rem); align-items: start; }
+.craftOverview { margin-top: 2.5rem; }
+.craftOverview .portrait { aspect-ratio: 4 / 5; }
+.kicker { margin-bottom: 1.25rem; font: 500 var(--t-fine)/1.5 var(--font-display); color: var(--green); }
+.craftTitle { font-size: clamp(2.2rem, 3.8vw, 4.2rem); line-height: 1.08; letter-spacing: -0.035em; }
+.craftTitle > span { font: italic 400 1.12em/1.08 var(--font-body); }
+.craftCopy { margin-top: 1.75rem; max-width: 47ch; font-size: var(--t-lead); line-height: 1.65; }
+.architectLink { display: inline-flex; align-items: center; gap: 1.1rem; margin-top: 1.3rem; font: 600 var(--t-small)/1.5 var(--font-display); color: var(--green); text-decoration: none; padding-bottom: 0.35rem; border-bottom: 1px solid var(--ink); }
+.architectLink > span { transition: transform 400ms var(--ease); }
+.architectLink:hover > span { transform: translate(2px, -2px); }
+.details { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(1rem, 2vw, 2rem); margin-top: clamp(2rem, 4vw, 3.5rem); }
+.detailButton { display: block; width: 100%; padding: 0; border: 0; text-align: left; background: none; color: var(--green); cursor: pointer; }
+.detailImage { position: relative; display: block; aspect-ratio: 5 / 4; overflow: hidden; background: var(--sage); }
+.detailImage > img { width: 100%; height: 100%; object-fit: cover; }
+.openMark { position: absolute; right: 0.6rem; bottom: 0.6rem; display: grid; place-items: center; width: 2rem; height: 2rem; background: var(--wash); color: var(--green); transition: background 350ms var(--ease), color 350ms var(--ease); pointer-events: none; }
+.detailButton:hover .openMark, .detailButton:focus-visible .openMark { background: var(--green); color: var(--wash); }
+.detailHeading { display: flex; justify-content: space-between; gap: 0.5rem; margin-top: 0.8rem; font: 600 var(--t-small)/1.35 var(--font-display); }
+.detailNumber { font-size: var(--t-fine); font-variant-numeric: tabular-nums; }
+.detailNote { display: block; margin-top: 0.3rem; font-size: var(--t-fine); color: var(--pine); }
+.lightbox { width: min(94vw, 1300px); max-width: 94vw; max-height: 94svh; padding: 0; border: 1px solid var(--sage); background: var(--wash); color: var(--pine); overscroll-behavior: contain; }
+.lightbox::backdrop { background: rgb(16 37 26 / 85%); }
+.lightboxInner { padding: clamp(1rem, 2vw, 2rem); }
+.lightboxHeader { display: flex; justify-content: space-between; align-items: center; gap: 1rem; margin-bottom: 1rem; }
+.lightboxHeader h3 { font-size: var(--t-small); }
+.close { flex: none; display: flex; align-items: center; gap: 0.6rem; padding: 0.5rem 0.8rem; border: 1px solid var(--green); background: var(--green); color: var(--wash); cursor: pointer; font: 500 var(--t-small) var(--font-display); }
+.close:focus-visible { outline: 2px solid var(--green); outline-offset: 3px; }
+.close span { font-size: 1.3rem; }
+.fullPhoto { width: 100%; max-height: 72svh; object-fit: contain; }
+.lightboxNote { margin-top: 0.7rem; font-size: var(--t-small); }
+@media (max-width: 900px) {
+  .editorialIntro { grid-template-columns: 1fr; gap: 1.5rem; }
+  .introNote { max-width: 52ch; }
+  .leadPhoto { grid-column: 1 / 9; }
+  .tallPhoto { grid-column: 9 / 13; margin-top: 3rem; }
+  .exteriorPhoto { grid-column: 1 / 6; }
+  .editorialNote { grid-column: 7 / 13; }
+  .craftGrid { gap: 2rem; }
+  .craftCopy { font-size: 1.1rem; }
+}
+@media (max-width: 650px) {
+  .editorialGrid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.6rem 1rem; }
+  .leadPhoto { grid-column: 1 / -1; }
+  .tallPhoto { grid-column: 1; margin-top: 0; }
+  .exteriorPhoto { grid-column: 2; margin-top: 3rem; }
+  .editorialNote { grid-column: 1 / -1; padding-top: 0.75rem; }
+  .editorialQuote { font-size: 1.7rem; }
+  .craftGrid { grid-template-columns: 1fr; }
+  .craftOverview { margin-top: 0; }
+  .craftOverview .portrait { aspect-ratio: 4 / 3; }
+  .craftTitle { font-size: 2.3rem; }
+  .imageCaption { font-size: 0.7rem; }
+  .details { gap: 1rem; }
+  .detailHeading { font-size: 0.85rem; }
+  .detailNote { font-size: 0.7rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .architectLink > span, .openMark { transition: none; }
+  .architectLink:hover > span { transform: none; }
+}
+
+
+/* A green architectural sheet, with full-colour photography and forest-green ink. */
+.calmStory { --story-ink: #0b5937; position: relative; isolation: isolate; padding-block: clamp(1.8rem, 2.4vw, 2.25rem); background: #c4dac6; color: var(--green); border-block: 1px solid rgb(5 67 42 / 22%); }
+.storyFrame { display: grid; gap: 1.8rem; }
+.calmHeader { position: sticky; top: var(--header-h); z-index: 6; display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; min-height: 76px; padding-block: 0.45rem 1rem; border-bottom: 1px solid rgb(5 67 42 / 28%); background: rgb(196 218 198 / 95%); backdrop-filter: blur(16px); }
+.storyBody { position: relative; padding-inline: clamp(4.6rem, 6vw, 5.4rem); }
+/* Both panels occupy the same grid cell. Its height comes from their content,
+   including the inactive composition, so a turn never shifts the next section. */
+.calmStage { position: relative; display: grid; min-width: 0; touch-action: pan-y pinch-zoom; }
+.calmPanel { position: relative; grid-area: 1 / 1; min-width: 0; align-self: stretch; opacity: 0; pointer-events: none; transition: opacity 350ms ease; }
+.activePanel { opacity: 1; pointer-events: auto; z-index: 1; }
+.calmStory[data-story-changing='true'] .activePanel { transition-delay: 180ms; }
+.calmStory[data-story-changing='true'] [data-story-photo='bardon'],
+.calmStory[data-story-changing='true'] [data-story-photo='yeronga'] { visibility: hidden; }
+.travellingPhoto { position: absolute; top: 0; left: 0; overflow: hidden; z-index: 4; pointer-events: none; box-shadow: 0 12px 30px rgb(10 34 22 / 12%); will-change: transform, width, height; }
+.travellingPhoto img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.calmStory[data-story-changing='true'] .activePanel .editorialIntro,
+.calmStory[data-story-changing='true'] .activePanel .editorialNote,
+.calmStory[data-story-changing='true'] .activePanel .craftBody > div:first-child { animation: storyTypeIn 1100ms var(--ease-out) both; }
+.calmStory[data-story-changing='true'] .activePanel .craftOverview,
+.calmStory[data-story-changing='true'] .activePanel .exteriorPhoto { animation: storyPhotoIn 1300ms var(--ease-out) both; }
+@keyframes storyTypeIn { from { opacity: 0; transform: translateY(24px); clip-path: inset(12% 0 0); } 22% { opacity: 0; } to { opacity: 1; transform: translateY(0); clip-path: inset(0); } }
+@keyframes storyPhotoIn { from { opacity: 0; clip-path: inset(100% 0 0); transform: translateY(22px); } 18% { opacity: 0; } to { opacity: 1; clip-path: inset(0); transform: translateY(0); } }
+/* One shared control frame: the filled chapter moves, the clock shows the next turn. */
+.chapterTools { display: flex; align-items: stretch; flex: none; padding: 5px; border: 1px solid rgb(5 67 42 / 32%); border-radius: 5px; background: rgb(247 247 244 / 45%); box-shadow: 0 3px 12px rgb(5 67 42 / 3%); }
+.chapterJourney { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); padding: 0; margin: 0; list-style: none; color: var(--green); font: 500 0.86rem/1.35 var(--font-display); }
+.chapterJourney li { position: relative; isolation: isolate; min-width: 0; }
+.chapterJourney button { position: relative; z-index: 1; display: grid; place-items: center; width: 100%; min-height: 48px; padding: 0.6rem 1.2rem; border: 0; border-radius: 3px; background: transparent; font: inherit; color: inherit; cursor: pointer; transition: color 350ms ease; }
+.chapterLabel { white-space: nowrap; }
+.chapterJourney .chapterCurrent { color: var(--wash); }
+.chapterSelection { position: absolute; inset: 0; border-radius: 3px; background: var(--green); box-shadow: 0 2px 5px rgb(5 67 42 / 12%); }
+.chapterJourney li:not(.chapterCurrent) button:hover { background: rgb(5 67 42 / 7%); }
+.chapterJourney button:focus-visible { outline: 2px solid var(--green); outline-offset: 3px; }
+.chapterCurrent button:focus-visible { outline-color: var(--wash); outline-offset: -5px; }
+.calmPause { position: relative; flex: none; display: grid; place-items: center; width: 54px; min-height: 48px; padding: 0; margin-left: 5px; border: 0; border-left: 1px solid rgb(5 67 42 / 22%); background: transparent; color: var(--green); cursor: pointer; }
+.calmPause .pauseDial { position: absolute; width: 42px; height: 42px; }
+.dialTrack { stroke: rgb(5 67 42 / 17%); stroke-width: 1.25; }
+.dialProgress { stroke: var(--green); stroke-width: 1.8; stroke-linecap: round; transform: rotate(-90deg); transform-origin: 22px 22px; }
+.calmPause .pauseSymbol { width: 19px; height: 19px; transition: transform 300ms var(--ease-out); }
+.calmPause:hover .pauseSymbol { transform: scale(1.15); }
+.calmPause:hover { background: rgb(5 67 42 / 6%); }
+.pauseHint { position: absolute; right: -6px; top: calc(100% + 14px); padding: 0.5rem 0.7rem; white-space: nowrap; background: var(--green); color: var(--wash); font: 400 0.72rem/1.4 var(--font-display); pointer-events: none; opacity: 0; transform: translateY(-3px); transition: opacity 200ms ease, transform 200ms ease; }
+.calmPause:hover .pauseHint, .calmPause:focus-visible .pauseHint { opacity: 1; transform: translateY(0); }
+/* Open corner marks and extended arrows echo the architectural drawing sheets. */
+.storyNavigation { display: contents; }
+.calmArrow { position: absolute; top: 48%; z-index: 5; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.65rem; width: 72px; height: 104px; padding: 12px 0 4px; border: 0; border-radius: 0; background: transparent; color: var(--green); cursor: pointer; transform: translateY(-50%); transition: color 450ms ease, filter 450ms ease; }
+.previousArrow { left: -0.4rem; }
+.nextArrow { right: -0.4rem; }
+.calmArrow .arrowFrame { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; }
+.arrowSurface { fill: rgb(247 247 244 / 32%); transition: fill 450ms ease; }
+.arrowCorners { stroke: var(--green); stroke-opacity: 0.7; stroke-width: 1; vector-effect: non-scaling-stroke; transition: stroke 450ms ease; }
+.calmArrow .arrowDrawing { position: relative; width: 58px; height: 28px; overflow: visible; transition: transform 550ms var(--ease-out); }
+.arrowGlyph { stroke: currentColor; stroke-width: 1.7; stroke-linecap: square; stroke-linejoin: miter; }
+.arrowLabel { position: relative; font: 500 0.65rem/1 var(--font-display); letter-spacing: 0.03em; }
+.calmArrow:hover, .calmArrow:focus-visible { color: var(--wash); filter: drop-shadow(0 5px 8px rgb(5 67 42 / 12%)); }
+.calmArrow:hover .arrowSurface, .calmArrow:focus-visible .arrowSurface { fill: var(--green); }
+.calmArrow:hover .arrowCorners, .calmArrow:focus-visible .arrowCorners { stroke: var(--green); }
+.previousArrow:hover .arrowDrawing { transform: translateX(-5px); }
+.nextArrow:hover .arrowDrawing { transform: translateX(5px); }
+.calmArrow:focus-visible, .calmPause:focus-visible { outline: 2px solid var(--green); outline-offset: 5px; }
+.calmArrow[aria-disabled='true'] { cursor: default; }
+/* Preserve the different editorial arrangements without viewport-based sizing. */
+.embeddedStory { height: 100%; min-height: 0; padding: 0; border: 0; background: transparent; color: var(--green); }
+.embeddedStory > :global(.shell) { height: 100%; min-height: 0; max-width: none; padding: 0; }
+.embeddedStory.magazine > :global(.shell) { display: grid; grid-template-rows: auto 1fr; gap: clamp(1.2rem, 2.4vw, 2rem); }
+.embeddedStory .editorialIntro { margin: 0; grid-template-columns: minmax(0, 8fr) minmax(0, 4fr); gap: 2rem; align-items: center; }
+.embeddedStory .editorialTitle { color: var(--story-ink); font-size: clamp(2rem, 2.8vw, 3rem); }
+.embeddedStory .introNote { font-size: clamp(1rem, 1.2vw, 1.18rem); line-height: 1.45; max-width: 33ch; padding: 0; }
+.embeddedStory .editorialGrid { column-gap: clamp(1rem, 2vw, 2rem); row-gap: clamp(1.5rem, 2.5vw, 2.25rem); align-items: start; align-content: space-between; }
+.embeddedStory .leadPhoto { grid-column: 1 / 9; grid-row: 1; }
+.embeddedStory .tallPhoto { grid-column: 10 / 13; grid-row: 1; margin-top: 2.8rem; }
+.embeddedStory .exteriorPhoto { grid-column: 2 / 5; grid-row: 2; }
+.embeddedStory .editorialNote { grid-column: 6 / 13; grid-row: 2; align-self: center; display: grid; grid-template-columns: 0.9fr 1.1fr; column-gap: 1.5rem; align-items: start; }
+.embeddedStory .shortRule { display: none; }
+.embeddedStory .editorialQuote { grid-row: 1 / 3; font-size: clamp(1.4rem, 1.75vw, 1.85rem); color: var(--story-ink); }
+.embeddedStory .spaceNote { margin: 0; font-size: 0.93rem; line-height: 1.5; }
+.embeddedStory .architectLink { width: fit-content; margin-top: 0.6rem; font-size: 0.85rem; color: var(--green); }
+.embeddedStory .photo img { top: 0; height: 100%; }
+.embeddedStory .landscape { aspect-ratio: 16 / 10; }
+.embeddedStory .portrait { aspect-ratio: 3 / 4; }
+.embeddedStory .exterior { aspect-ratio: 3 / 2; }
+.embeddedStory .imageCaption { padding-top: 0.6rem; font-size: 0.7rem; gap: 0.2rem 0.5rem; }
+.embeddedStory .imageCaption > span:last-child, .embeddedStory .detailNote { color: var(--green); }
+.embeddedStory .craftGrid { height: 100%; min-height: 0; margin: 0; gap: clamp(2rem, 4vw, 4rem); grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); }
+.embeddedStory .craftOverview { margin: 0; height: 100%; min-height: 0; }
+.embeddedStory .craftOverview .figure { display: grid; height: 100%; grid-template-rows: minmax(0, 1fr) auto; }
+.embeddedStory .craftOverview .photo { min-height: 480px; height: 100%; aspect-ratio: auto; }
+.embeddedStory .craftBody { height: 100%; min-height: 0; display: grid; grid-template-rows: auto minmax(0, 1fr); gap: 2rem; }
+.embeddedStory .kicker { font-size: 0.7rem; margin-bottom: 1rem; }
+.embeddedStory .craftTitle { color: var(--story-ink); font-size: clamp(2rem, 3.1vw, 3.5rem); }
+.embeddedStory .craftCopy { font-size: clamp(1rem, 1.3vw, 1.25rem); line-height: 1.5; margin-top: 1.35rem; max-width: 49ch; }
+.embeddedStory .details { margin: 0; height: 100%; min-height: 240px; gap: 1.2rem; }
+.embeddedStory .details > div { min-height: 0; }
+.embeddedStory .detailButton { height: 100%; min-height: 0; display: grid; grid-template-rows: minmax(0, 1fr) auto auto; }
+.embeddedStory .detailImage { aspect-ratio: auto; min-height: 0; }
+.embeddedStory .detailHeading { font-size: 0.85rem; margin-top: 0.6rem; }
+.embeddedStory .lightboxHeader h3 { color: var(--green); }
+@media (max-width: 1000px) and (min-width: 651px) {
+  .storyBody { padding-inline: 3.6rem; }
+  .calmArrow { width: 52px; height: 88px; }
+  .calmArrow .arrowDrawing { width: 46px; }
+  .calmHeader { flex-wrap: wrap; gap: 0.85rem; }
+  .embeddedStory .editorialIntro { grid-template-columns: 1fr; gap: 1rem; }
+  .embeddedStory .introNote { max-width: 56ch; }
+  .embeddedStory .tallPhoto { grid-column: 9 / 13; margin-top: 2rem; }
+  .embeddedStory .exteriorPhoto { grid-column: 1 / 5; }
+  .embeddedStory .editorialNote { grid-column: 6 / 13; display: block; }
+  .embeddedStory .editorialQuote { font-size: 1.5rem; }
+  .embeddedStory .spaceNote { margin-top: 0.65rem; }
+  .embeddedStory .craftGrid { gap: 1.5rem; }
+  .embeddedStory .craftTitle { font-size: 2.2rem; }
+}
+@media (max-width: 650px) {
+  .calmStory { padding-block: 1.5rem; }
+  .storyFrame { gap: 1.25rem; }
+  .calmHeader { flex-wrap: wrap; gap: 0.85rem; padding-block: 0.5rem 0.85rem; }
+  .chapterTools { width: 100%; padding: 4px; }
+  .chapterJourney { flex: 1; font-size: 0.76rem; }
+  .chapterJourney button { min-height: 46px; padding: 0.6rem 0.35rem; }
+  .calmPause { width: 47px; min-height: 46px; margin-left: 4px; }
+  .calmHeader > div:first-child > div { font-size: 0.62rem; gap: 0.6rem; letter-spacing: 0.1em; }
+  .storyBody { padding: 0; }
+  .storyNavigation { display: flex; align-items: center; justify-content: space-between; margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid rgb(5 67 42 / 22%); }
+  .calmArrow { position: relative; top: auto; left: auto; right: auto; width: 102px; height: 58px; transform: none; flex-direction: row; gap: 0.4rem; padding: 0 0.5rem; }
+  .calmArrow .arrowDrawing { width: 42px; }
+  .previousArrow .arrowDrawing { order: -1; }
+  .nextArrow .arrowDrawing { order: 1; }
+  .arrowLabel { font-size: 0.64rem; }
+  .embeddedStory.magazine > :global(.shell) { gap: 1rem; }
+  .embeddedStory .editorialIntro { grid-template-columns: 1fr; gap: 0.65rem; }
+  .embeddedStory .editorialTitle { font-size: clamp(1.6rem, 7.2vw, 2.3rem); }
+  .embeddedStory .introNote { font-size: 0.95rem; line-height: 1.4; max-width: none; }
+  .embeddedStory .editorialGrid { grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: 0.9rem; row-gap: 1rem; }
+  .embeddedStory .leadPhoto { grid-column: 1 / 9; grid-row: 1; }
+  .embeddedStory .landscape { aspect-ratio: 4 / 5; }
+  .embeddedStory .tallPhoto { grid-column: 9 / 13; grid-row: 1; margin-top: 2.5rem; }
+  .embeddedStory .exteriorPhoto { grid-column: 1 / 6; grid-row: 2; margin: 0; }
+  .embeddedStory .editorialNote { display: contents; }
+  .embeddedStory .editorialQuote { grid-column: 6 / 13; grid-row: 2; align-self: center; font-size: clamp(1.1rem, 4.7vw, 1.4rem); line-height: 1.2; }
+  .embeddedStory .spaceNote { grid-column: 1 / -1; grid-row: 3; font-size: 0.9rem; line-height: 1.45; margin: 0; }
+  .embeddedStory .editorialNote > .architectLink { grid-column: 1 / -1; grid-row: 4; margin: 0; }
+  .embeddedStory .architectLink { font-size: 0.8rem; margin-top: 0.7rem; gap: 0.5rem; }
+  .embeddedStory .imageCaption { font-size: 0.65rem; padding-top: 0.5rem; }
+  .embeddedStory .imageCaption > span:last-child { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+  .embeddedStory .craftGrid { grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr); grid-template-rows: auto minmax(300px, 1fr); gap: 1.25rem 1rem; }
+  .embeddedStory .craftOverview { grid-column: 1; grid-row: 2; height: 100%; }
+  .embeddedStory .craftOverview .photo { min-height: 0; }
+  .embeddedStory .craftBody { display: contents; }
+  .embeddedStory .craftBody > div:first-child { grid-column: 1 / -1; grid-row: 1; }
+  .embeddedStory .kicker { font-size: 0.65rem; line-height: 1.35; margin-bottom: 0.65rem; }
+  .embeddedStory .craftTitle { font-size: clamp(1.6rem, 7.2vw, 2.3rem); }
+  .embeddedStory .craftCopy { font-size: 1rem; line-height: 1.45; margin-top: 0.8rem; }
+  .embeddedStory .craftBody .architectLink { font-size: 0.8rem; }
+  .embeddedStory .details { grid-column: 2; grid-row: 2; height: 100%; min-height: 0; margin: 0; grid-template-columns: 1fr; grid-template-rows: repeat(2, minmax(0, 1fr)); gap: 0.9rem; }
+  .embeddedStory .details > div { min-height: 0; }
+  .embeddedStory .detailButton { height: 100%; display: grid; grid-template-rows: minmax(0, 1fr) auto; }
+  .embeddedStory .detailImage { aspect-ratio: auto; min-height: 0; }
+  .embeddedStory .detailHeading { font-size: 0.73rem; margin-top: 0.4rem; }
+  .embeddedStory .detailNumber { font-size: 0.62rem; }
+  .embeddedStory .detailNote { display: none; }
+  .embeddedStory .openMark { width: 1.5rem; height: 1.5rem; right: 0.4rem; bottom: 0.4rem; font-size: 0.9rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .calmPanel, .calmArrow, .arrowDrawing, .arrowSurface, .arrowCorners, .calmPause .pauseSymbol, .pauseHint, .chapterJourney button { transition: none; }
+  .activePanel .editorialIntro, .activePanel .editorialNote, .activePanel .craftBody > div, .activePanel .craftOverview, .activePanel .exteriorPhoto { animation: none !important; }
+}

@@ -142,3 +142,9 @@
   .item:hover .name,
   .item:focus-visible .name { transform: translate(0, -50%); }
 }
+
+/* The photographic story temporarily gives the image the entire margin. */
+.rail { transition: opacity 250ms, visibility 250ms; }
+.railQuiet { opacity: 0; visibility: hidden; }
+.railQuiet .item { pointer-events: none; }
+@media (prefers-reduced-motion: reduce) { .rail { transition: none; } }

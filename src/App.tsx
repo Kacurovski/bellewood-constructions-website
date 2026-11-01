@@ -1,8 +1,8 @@
-import { useEffect } from 'react'
-import { HashRouter, Route, Routes, useLocation } from 'react-router-dom'
+import { HashRouter, Route, Routes } from 'react-router-dom'
 import { Header } from './components/Header'
 import { Footer } from './components/Footer'
-import { getLenis, useLenis } from './hooks/useLenis'
+import { useLenis } from './hooks/useLenis'
+import { RouteReturnProvider } from './hooks/useRouteReturn'
 import Home from './pages/Home'
 import Work from './pages/Work'
 import Approach from './pages/Approach'
@@ -27,8 +27,9 @@ import NotFound from './pages/NotFound'
 export default function App() {
   return (
     <HashRouter>
-      <ScrollToTop />
-      <Shell />
+      <RouteReturnProvider>
+        <Shell />
+      </RouteReturnProvider>
     </HashRouter>
   )
 }
@@ -56,38 +57,4 @@ function Shell() {
       <Footer />
     </>
   )
-}
-
-/**
- * New page, top of the page. An in-page anchor is left alone.
- *
- * Both branches have to go through Lenis when it is running. It takes the
- * page's scroll over and writes its own position to the window every frame, so
- * a `window.scrollTo` is overwritten on the next frame and the page does not
- * move — which is why a new route used to open at whatever height the last one
- * was left at, and why an anchor sometimes did not travel either.
- *
- * `immediate` on the reset, because arriving on a new page is not a journey
- * through it: it should already be at the top when it appears, not glide there.
- */
-function ScrollToTop() {
-  const { pathname, hash } = useLocation()
-
-  useEffect(() => {
-    const lenis = getLenis()
-
-    if (hash) {
-      const el = document.getElementById(hash.slice(1))
-      if (el) {
-        if (lenis) lenis.scrollTo(el, { offset: 0 })
-        else el.scrollIntoView({ behavior: 'smooth', block: 'start' })
-        return
-      }
-    }
-
-    if (lenis) lenis.scrollTo(0, { immediate: true })
-    else window.scrollTo({ top: 0, left: 0, behavior: 'auto' })
-  }, [pathname, hash])
-
-  return null
 }

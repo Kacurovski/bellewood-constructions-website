@@ -64,12 +64,12 @@ type Plate = {
 const PLATES: Plate[] = [
   // Angus's own photographs. The quotes in front of them are still written
   // placeholders (see data/testimonials.ts); the houses behind them are real.
-  { image: photo('kalinga-1') },
-  { image: photo('auchenflower-4') },
-  { image: photo('clayfield-1') },
+  { image: photo('kalinga-01') },
+  { image: photo('auchenflower-13') },
+  { image: photo('clayfield-05') },
 ]
 
-export function Testimonials() {
+export function Testimonials({ sheetNumber = "A-07" }: { sheetNumber?: string } = {}) {
   const reduced = useReducedMotion()
   const coarse = useMediaQuery('(pointer: coarse)')
   const [at, setAt] = useState(0)
@@ -169,7 +169,7 @@ export function Testimonials() {
       <div className={['shell', styles.inner].join(' ')}>
         <Reveal className={styles.head}>
           <SheetRef
-            number="A-07"
+            number={sheetNumber}
             name="In their words"
             note="Clients and architects"
             rule={false}

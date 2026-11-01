@@ -1,28 +1,24 @@
-import { useState } from 'react'
+import { useId, useState } from 'react'
 import type { FormEvent } from 'react'
 import { submitToPipeline } from '../lib/pipeline'
 import type { SubmitResult } from '../lib/pipeline'
 import { contact, forms } from '../config/site'
 import styles from './LeadMagnet.module.css'
 
-/**
- * The lead magnet.
- *
- * One email field, one checklist. It goes to the same pipeline as the enquiry
- * form and through the same single endpoint, and the component is deliberately
- * self-contained so the Instagram automation can point at the same capture
- * without a second implementation.
- *
- * OPEN: the checklist PDF itself is a Milestone 2 deliverable. Until
- * `forms.leadMagnet.file` is set, this promises the checklist by email rather
- * than offering a download that does not exist.
- */
-export function LeadMagnet({ tone = 'wash' }: { tone?: 'wash' | 'sage' | 'green' }) {
+/** Preview the original feature without collecting requests for an unfinished guide. */
+export function LeadMagnet({ tone = 'wash', headingId }: {
+  tone?: 'wash' | 'sage' | 'green'
+  headingId?: string
+}) {
+  const id = useId()
+  const ready = Boolean(forms.leadMagnet.file && forms.endpoint)
   const [status, setStatus] = useState<'idle' | 'sending' | SubmitResult>('idle')
 
   async function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
+    if (!ready || status === 'sending') return
     const form = event.currentTarget
+    if (!form.reportValidity()) return
     const data = new FormData(form)
 
     if (data.get('website')) {
@@ -52,40 +48,52 @@ export function LeadMagnet({ tone = 'wash' }: { tone?: 'wash' | 'sage' | 'green'
     >
       <div className={styles.copy}>
         <p className="eyebrow">Before you start</p>
-        <h2 className={['sub-heading', styles.title].join(' ')}>{forms.leadMagnet.title}</h2>
+        <h2 id={headingId ?? `${id}-heading`} className={['sub-heading', styles.title].join(' ')}>{forms.leadMagnet.title}</h2>
         <p className={['small', styles.blurb].join(' ')}>{forms.leadMagnet.blurb}</p>
       </div>
 
-      <form className={styles.form} onSubmit={onSubmit} noValidate>
+      <form className={styles.form} onSubmit={onSubmit} aria-labelledby={headingId ?? `${id}-heading`}>
         <div className={styles.field}>
-          <label className={styles.label} htmlFor="magnet-email">
+          <label className={styles.label} htmlFor={`${id}-email`}>
             Email
           </label>
           <input
             className={styles.input}
-            id="magnet-email"
+            id={`${id}-email`}
             name="email"
             type="email"
             autoComplete="email"
             required
+            disabled={!ready || status === 'sending'}
+            aria-describedby={!ready ? `${id}-availability` : undefined}
             placeholder="you@example.com"
           />
         </div>
 
         <div className={styles.honey} aria-hidden="true">
-          <label htmlFor="magnet-website">Website</label>
-          <input id="magnet-website" name="website" type="text" tabIndex={-1} autoComplete="off" />
+          <label htmlFor={`${id}-website`}>Website</label>
+          <input id={`${id}-website`} name="website" type="text" tabIndex={-1} autoComplete="off" disabled={!ready} />
         </div>
 
-        <button className="btn" type="submit" disabled={status === 'sending'}>
-          {status === 'sending' ? 'Sending…' : 'Send it to me'}
+        {!ready && (
+          <p id={`${id}-availability`} className={styles.preparation}>
+            The checklist is in preparation. Email requests will open when it is ready.
+          </p>
+        )}
+
+        <button className={styles.send} type="submit" disabled={!ready || status === 'sending'}
+          aria-describedby={!ready ? `${id}-availability` : undefined}>
+          <span>{status === 'sending' ? 'Sending…' : 'Send it to me'}</span>
+          <svg viewBox="0 0 50 20" fill="none" aria-hidden="true">
+            <path d="M1 10h46m-9-8 9 8-9 8" stroke="currentColor" strokeWidth="1.25" />
+          </svg>
         </button>
 
         <p className={['small', styles.status].join(' ')} role="status" aria-live="polite">
-          {status === 'ok' && 'On its way. Check your inbox.'}
-          {status === 'error' && `That did not send. Email ${contact.email} and we will send it over.`}
+          {status === 'ok' && 'Request received. Thank you.'}
+          {status === 'error' && `That did not send. Please try again or email ${contact.email}.`}
           {status === 'not-configured' &&
-            `Not connected yet — email ${contact.email} and we will send it over.`}
+            `Requests are temporarily unavailable. Please contact ${contact.email}.`}
         </p>
       </form>
     </div>

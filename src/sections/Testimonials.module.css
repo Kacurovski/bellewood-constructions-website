@@ -7,6 +7,7 @@
    --------------------------------------------------------------------------- */
 
 .section {
+  padding-block: clamp(3rem, 5vw, 5rem);
   position: relative;
   isolation: isolate;
   overflow: hidden;
@@ -65,7 +66,7 @@
 
 .inner { position: relative; }
 
-.head { padding-bottom: clamp(2rem, 4vw, 3rem); }
+.head { padding-bottom: clamp(1.75rem, 3vw, 2.5rem); }
 
 .heading { margin-top: var(--s-4); max-width: 16ch; }
 
@@ -326,7 +327,7 @@
 
   .quoteSlot { grid-column: 1; grid-row: 1; min-height: 0; }
 
-  .nav { grid-column: 1; grid-row: 2; }
+  .nav { grid-column: 1; grid-row: 2; margin-top: 0; }
 
   .set {
     grid-column: 1;

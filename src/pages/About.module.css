@@ -4,7 +4,7 @@
   display: grid;
   grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
   gap: clamp(2.5rem, 6vw, 6rem);
-  padding-block: clamp(4rem, 8vw, 7.5rem);
+  padding-block: clamp(2.75rem, 5vw, 4.5rem) clamp(3rem, 6vw, 6rem);
   align-items: start;
 }
 
@@ -27,7 +27,7 @@
 
 /* --- About the name --------------------------------------------------------
    The one solid green band on the page. */
-.name { padding-block: clamp(4.5rem, 8vw, 7rem); }
+.name { padding-block: clamp(3rem, 5vw, 5rem); }
 
 .nameInner {
   display: grid;
@@ -45,6 +45,10 @@
 }
 
 .nameHeading { max-width: 12ch; }
+
+/* The flex gap owns the separation; the illustrative name study also has
+   standalone margins that would otherwise double it in this composition. */
+.nameAside > [aria-hidden="true"] { margin-block: 0; }
 
 /* Pushed to the bottom of the column. */
 .nameFine { margin-top: auto; }
@@ -65,7 +69,7 @@
   .body,
   .nameInner { grid-template-columns: minmax(0, 1fr); gap: var(--s-6); }
 
-  .portrait { position: static; max-width: 22rem; }
+  .portrait { position: static; max-width: 28rem; justify-self: center; }
 
   /* Stacked, the licensed-entity line sits directly under the heading it is
      the subject of, and the story follows. It reads as a credit rather than a

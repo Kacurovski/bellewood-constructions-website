@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useMediaQuery } from '../hooks/useMediaQuery'
 import styles from './SheetRail.module.css'
 
@@ -44,6 +44,8 @@ export function SheetRail({ sheets }: { sheets: Sheet[] }) {
   // overlap. At 1600 content starts at 144 and the rail clears it by fifty.
   const wide = useMediaQuery('(min-width: 1600px)')
   const [active, setActive] = useState(0)
+  const [quiet, setQuiet] = useState(false)
+  const railRef = useRef<HTMLElement>(null)
 
   useEffect(() => {
     if (!wide) return
@@ -63,6 +65,13 @@ export function SheetRail({ sheets }: { sheets: Sheet[] }) {
         if (section.getBoundingClientRect().top <= line) current = i
       })
       setActive(current)
+      // Expansive photographic stories need the whole width. Hide the index
+      // whenever any part of its actual bounds would overlap one of them.
+      const rail = railRef.current?.getBoundingClientRect()
+      if (rail) setQuiet(Array.from(document.querySelectorAll('[data-sheet-rail="quiet"]')).some((section) => {
+        const bounds = section.getBoundingClientRect()
+        return bounds.top < rail.bottom + 24 && bounds.bottom > rail.top - 24
+      }))
     }
 
     read()
@@ -78,7 +87,9 @@ export function SheetRail({ sheets }: { sheets: Sheet[] }) {
 
   return (
     <nav
-      className={[styles.rail, sheets[active]?.dark ? styles.railReverse : ''].join(' ')}
+      ref={railRef}
+      aria-hidden={quiet || undefined}
+      className={[styles.rail, sheets[active]?.dark ? styles.railReverse : '', quiet ? styles.railQuiet : ''].join(' ')}
       aria-label="Sheets"
     >
       <ol className={styles.list}>

@@ -1,0 +1,17 @@
+.point {
+  pointer-events: auto;
+  width: 2.75rem;
+  height: 2.75rem;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--green);
+  border-radius: 50%;
+  background: var(--wash);
+  color: var(--green);
+  box-shadow: 0 0 0 5px rgb(247 247 244 / 55%);
+  font: 600 0.7rem var(--font-display);
+  cursor: pointer;
+  transition: background 400ms var(--ease), color 400ms var(--ease), box-shadow 400ms var(--ease);
+}
+.point:hover, .active { background: var(--green); color: var(--wash); box-shadow: 0 0 0 7px rgb(247 247 244 / 65%); }
+@media (prefers-reduced-motion: reduce) { .point { transition: none; } }

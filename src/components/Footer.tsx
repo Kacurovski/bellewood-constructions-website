@@ -1,112 +1,77 @@
 import { Link } from 'react-router-dom'
 import { Logo } from './Logo'
 import { ComplianceLine } from './ComplianceLine'
-import { compliance, contact, nav, site, socialLinks } from '../config/site'
+import { contact, nav, site, socialLinks } from '../config/site'
+import { getLenis } from '../hooks/useLenis'
+import { useReducedMotion } from '../hooks/useReducedMotion'
 import styles from './Footer.module.css'
 
-/**
- * The footer, on green.
- *
- * The compliance line lives here and appears on every page of the site as a
- * result. It is the legally required advertising line, not a courtesy.
- *
- * Note there is deliberately no link to the Google Business Profile. That
- * profile stays under the current name until the ASIC change so its review
- * history is not put at risk, and nothing on this site should point at it.
- *
- * The legal strip is set as a drawing title block: ruled cells, a label above
- * each field, the value under it. On a real drawing that block is where you look
- * to find who is responsible for what is on the sheet, which is exactly what
- * this strip is for — the licensed entity, the licence number and the client.
- * It is the same information the compliance line has always carried, set as the
- * document it belongs to rather than as a line of small print.
- */
+/** A compact closing signature, useful links and one complete compliance line. */
 export function Footer() {
   const year = new Date().getFullYear()
+  const reduced = useReducedMotion()
+
+  function backToTop() {
+    const home = document.querySelector<HTMLElement>('header a[href="#/"]')
+    home?.focus({ preventScroll: true })
+    const lenis = getLenis()
+    if (lenis) lenis.scrollTo(0, { immediate: reduced, duration: 1 })
+    else window.scrollTo({ top: 0, left: 0, behavior: reduced ? 'auto' : 'smooth' })
+  }
 
   return (
     <footer className={['on-green', styles.footer].join(' ')}>
-      <div className={['shell', styles.inner].join(' ')}>
-        <div className={styles.brand}>
-          <Link to="/" aria-label={`${site.name} — home`} className={styles.logoLink}>
-            <Logo variant="lockup" tone="reverse" width={200} decorative />
-          </Link>
-          <p className={[styles.blurb, 'small'].join(' ')}>{site.description}</p>
+      <div className="shell">
+        <div className={styles.inner}>
+          <div className={styles.brand}>
+            <Link to="/" aria-label={`${site.name} home`} className={styles.logoLink}>
+              <Logo variant="lockup" tone="reverse" width={220} decorative />
+            </Link>
+            <p className={styles.blurb}>{site.description}</p>
+          </div>
+
+          <nav className={styles.explore} aria-label="Footer">
+            <h2 className={styles.columnHeading}>Explore</h2>
+            <ul className={styles.navigation}>
+              {nav.map((item) => (
+                <li key={item.label}>
+                  <Link to={{ pathname: item.to, hash: item.hash }}>
+                    <span>{item.label}</span><span className={styles.linkArrow} aria-hidden="true">&#8599;</span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </nav>
+
+          <div className={styles.contact}>
+            <h2 className={styles.columnHeading}>Contact Angus</h2>
+            <a className={styles.phone} href={contact.phoneHref}>{contact.phone}</a>
+            <a className={styles.email} href={contact.emailHref}>{contact.email}</a>
+            <p className={styles.area}>{contact.serviceArea}</p>
+            {socialLinks.length > 0 && <ul className={styles.social} aria-label="Follow Bellewood">
+              {socialLinks.map((item) => (
+                <li key={item.label}>
+                  <a href={item.href} target="_blank" rel="noreferrer noopener">
+                    {item.label}<span className={styles.linkArrow} aria-hidden="true">&#8599;</span>
+                  </a>
+                </li>
+              ))}
+            </ul>}
+          </div>
         </div>
 
-        <nav className={styles.column} aria-label="Footer">
-          <h2 className={['eyebrow', styles.columnHeading].join(' ')}>Site</h2>
-          <ul className={styles.list}>
-            {nav.map((item) => (
-              <li key={item.label}>
-                <Link to={{ pathname: item.to, hash: item.hash }}>{item.label}</Link>
-              </li>
-            ))}
-          </ul>
-        </nav>
-
-        <div className={styles.column}>
-          <h2 className={['eyebrow', styles.columnHeading].join(' ')}>Contact</h2>
-          <ul className={styles.list}>
-            <li>
-              <a href={contact.phoneHref}>{contact.phone}</a>
-            </li>
-            <li>
-              <a href={contact.emailHref}>{contact.email}</a>
-            </li>
-            <li className={styles.plain}>{contact.serviceArea}</li>
-          </ul>
-        </div>
-
-        <div className={styles.column}>
-          <h2 className={['eyebrow', styles.columnHeading].join(' ')}>Follow</h2>
-          <ul className={styles.list}>
-            {socialLinks.map((item) => (
-              <li key={item.label}>
-                <a href={item.href} target="_blank" rel="noreferrer noopener">
-                  {item.label}
-                </a>
-              </li>
-            ))}
-          </ul>
-        </div>
-      </div>
-
-      <div className={['shell', styles.legal].join(' ')}>
-        <dl className={styles.block}>
-          <div className={styles.cell}>
-            <dt className={styles.cellLabel}>Licensed entity</dt>
-            <dd className={styles.cellValue}>{compliance.licensedEntity}</dd>
+        <div className={styles.legal}>
+          <div className={styles.legalCopy}>
+            <ComplianceLine className={styles.compliance} />
+            <p className={styles.director}>{contact.role}: {contact.principal}</p>
           </div>
-          <div className={styles.cell}>
-            <dt className={styles.cellLabel}>QBCC licence</dt>
-            <dd className={styles.cellValue}>{compliance.licenceNumber}</dd>
+          <div className={styles.endnote}>
+            <p className={styles.copyright}>&copy; {year} {site.name}</p>
+            <button type="button" className={styles.backTop} onClick={backToTop}>
+              Back to top
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 20V4m-7 7 7-7 7 7" /></svg>
+            </button>
           </div>
-          <div className={styles.cell}>
-            <dt className={styles.cellLabel}>Trading as</dt>
-            <dd className={styles.cellValue}>{site.name}</dd>
-          </div>
-          {/* This cell was "Effective — 1 July 2027", the date the ASIC name
-              change completes. Beside "Trading as", a future date read as though
-              the business or its licence were not valid until then, and a
-              visitor has no way to know otherwise. The date is not part of what
-              the advertising rule requires — that is the licensed entity and the
-              licence number, both still here — so it gives way to the field a
-              title block always carries: who is responsible for the work. */}
-          <div className={styles.cell}>
-            <dt className={styles.cellLabel}>{contact.role}</dt>
-            <dd className={styles.cellValue}>{contact.principal}</dd>
-          </div>
-        </dl>
-
-        {/* The compliance line itself stays, verbatim and unabbreviated. The
-            block above is how it is presented; this is the wording that is
-            legally required, and it is not the block's job to paraphrase it. */}
-        <div className={styles.legalRow}>
-          <ComplianceLine />
-          <p className={['fine', styles.copyright].join(' ')}>
-            © {year} {site.name}
-          </p>
         </div>
       </div>
     </footer>

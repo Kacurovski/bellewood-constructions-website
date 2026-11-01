@@ -26,6 +26,9 @@ node_modules
 dist
 *.tsbuildinfo
 
+# Local review screenshots, browser profiles, scratch scripts and reversible tests
+.tmp/
+
 # Local environment and editor noise
 *.local
 .env

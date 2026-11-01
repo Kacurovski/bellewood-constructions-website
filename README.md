@@ -5,9 +5,9 @@
 The public website for Bellewood Constructions, a Brisbane builder of high-end
 heritage renovations. Domain: `bellewood.com.au`. Built by Systemations.
 
-> **Status: not publishable.** The project photography is placeholder stock and
-> shows other people's buildings; the testimonials were written, not collected;
-> the enquiry form has no endpoint; and nothing is measured. See **Open items**
+> **Status: design preview, not publishable.** Project photography now comes from
+> the nine approved client folders. The testimonials still need approval;
+> the enquiry endpoint, checklist and delivery are unfinished. See **Open items**
 > below before anything goes live. Every one of those is a flag in the code, not
 > a note in a document.
 
@@ -97,6 +97,33 @@ in `src/data/projects.ts`.
 
 ---
 
+
+## Version one: Ascot scroll journey (30 October 2026)
+
+The opening section uses the first five photographs in the private Ascot folder,
+in ascending filename order. Their existing public copies are
+`ascot-hero-1.jpg` through `ascot-hero-5.jpg`. The hero has no 3D building model.
+
+- `src/data/projects.ts`: `ascotHeroFrames` owns the five photos, alt text,
+  captions, text placements and camera focal points.
+- `src/sections/Hero.tsx` and its CSS Module: pinned desktop/mobile composition,
+  scroll-scrubbed captions, scene navigation and skip-tour link.
+- `src/components/RoomJourney.tsx`: a small WebGL photographic renderer with
+  forward zoom, a feathered reveal from each focal point and radial motion blur.
+- `src/lib/heroMotion.ts`: shared scroll timing. Four moves, five resting views;
+  the final photo gets a reading interval before the next section arrives.
+
+This is simulated camera movement from still photography, not filmed footage or
+a reconstruction of the home's actual layout. The source photos do not contain
+the intermediate viewpoints needed for a physically continuous walkthrough.
+
+The HTML image stack is visible immediately and remains the fallback if WebGL
+is unavailable, image textures are not ready, or the graphics context is lost.
+Reduced motion uses five normal-flow photo sections with static text, no pinned
+timeline, no zoom and no blur. All captions remain available in document order.
+No new dependencies. This local first version is ready for motion review; a
+second design has not been implemented.
+
 ## Quick start
 
 ```bash
@@ -110,6 +137,36 @@ npm run typecheck
 `npm run build` produces a `dist/` you can open directly — double-click
 `dist/index.html` and the site works, with no server. That is deliberate and
 worth preserving (see **Routing and deployment**).
+
+## Git checkpoints (1 November 2026)
+
+The current website is saved in this repository, including its approved web
+photographs and architectural model assets. `npm ci` and `npm run build` work
+without the private `Knowledge/` or original-photo folders.
+
+Save each substantial completed update as a separate, clearly named commit,
+then push it to the existing `origin`. Save the current version before a major
+experiment. `AGENTS.md` records this ongoing project preference for later sessions.
+Use a new revert commit to undo a shared change while keeping its history.
+Source checkpoints do not mean the public website has been deployed or approved.
+
+The first November checkpoint captures the accumulated design work as one
+baseline; older uncommitted experiments are not individual Git versions.
+Local `.tmp/` backups and review screenshots stay on the working computer.
+Private client documents, original photographs, dependencies, generated builds
+and credentials stay excluded from Git.
+
+The Windsor closing photograph has a dedicated `src/assets/projects/windsor-pause.jpg`
+copy. Its pixels and colour profile match the original; personal metadata is
+removed and its filename is anonymous. This avoids an import from the ignored
+original-photo directory. The other 81 web photographs and two detail crops are
+in `src/assets/projects/approved/`. The optional photo-library regeneration script
+needs the private source folders; running the website and building it do not.
+
+The current page-ending test restores the original checklist feature on Home
+after How it works (clearly marked in preparation), adds a contact invitation at
+the end of Work, and keeps one photographic closing on Approach. Approach's
+introduction retains the message about drawings, sequence and consistent care.
 
 ---
 
@@ -1105,3 +1162,140 @@ while everything above it stays centred. Use `margin-block: 0`.
   and labels only, and used sparingly.
 - **Do not recolour, stretch, skew, shadow or retype the mark**, and never rebuild
   the wordmark from a font.
+
+
+### Selected work gallery (30 October 2026)
+
+The home page shows five featured projects, configured in `src/data/projects.ts`.
+`src/components/ProjectIndex.tsx` and its CSS module control the 30/70 project list
+and gallery. Each project shows its hero plus up to five unique gallery images.
+Every image remains in a fixed thumbnail order, including the active main image.
+The contact sheet matches the main image's outer width, overlaps its lower edge,
+and names the house, shows the photo
+counter, and marks the selected thumbnail with an animated outline and dot.
+Hover, tap or keyboard activation selects a photograph without moving thumbnails.
+
+The gallery stays mounted across project changes, so both house and photo changes
+use the same 1.1-second dissolve and gentle settling zoom. Changing house resets
+to its opening image. Its thumbnails enter with a restrained stagger. Opening
+images preload when the section becomes visible. Images use consistent cover crops.
+
+Autoplay advances every five seconds, pausing while the pointer or keyboard focus
+is in the gallery and while offscreen. Leaving starts a fresh five-second dwell.
+Reduced motion disables autoplay and image transitions. There is no pause button.
+The solid green See all work button links to `/work` and stays aligned with the
+contact sheet on desktop. Its arrow and fine connecting rule lead the eye towards
+the photographs. On small
+screens the project list and thumbnails scroll horizontally. The main photograph
+and caption link to the full project.
+
+Kalinga, Clayfield and Windsor gallery files are web-sized JPEG derivatives of
+`src/assets/project_photos/`; originals remain unchanged. Edit the project data to
+add or reorder photos.
+
+
+### Permanent home-page photography stories (30 October 2026)
+
+The approved concepts now have distinct roles and sequential chapter navigation:
+- A-02 / `Proposition`: what Bellewood builds. A custom animated SVG elevation
+  (`AuchenflowerDrawing`) is interpreted from the actual Auchenflower photograph
+  displayed beside it. It is labelled as an illustrated study, not a construction
+  drawing. Both link to the project. Apartment note and credentials appear once.
+- A-03 / `LivingSpaces`: the experience of the rooms and their connections outdoors,
+  illustrated by Bardon, Yeronga and Windsor. The name meaning and full company
+  story remain on About; the rebrand introduction has its own place above these sections.
+- A-04 / `Craftsmanship`: architectural details, the architect/designer message,
+  phone contact and two crops opening full photographs in an accessible native dialog.
+  Replaces the duplicated Architects block later on the home page.
+
+The latter two components live in `src/sections/PhotographyStories.tsx` and its CSS
+module. All three read images from `photographyStories` in `src/data/projects.ts`.
+Selected Work and Process are now A-05 and A-06; their functionality is unchanged.
+The footer compliance line remains in place. Photography retains reduced-motion
+fallbacks and responsive layouts. Original photo files remain private and unchanged.
+
+### Rebrand introduction (30 October 2026)
+
+`ContinuityIntroduction` sits directly after the hero, bringing the established
+Angus Cowan Constructions name forward with "Same builder. A new name." and the
+complete company/licence/person-on-site reassurance. It links to About. The hero's
+Skip the tour button lands here; the rail includes an unnumbered Note entry so
+all existing chapter numbers remain stable. The duplicate small note below
+LivingSpaces has been removed. Photography layouts and Craftsmanship are unchanged.
+
+The continuity introduction now uses an editorial name-to-logo composition:
+a drawn connector leads from Angus Cowan Constructions to the official Bellewood
+lockup, with its clear space preserved. The three continuity assurances sit along
+a ruled footer beside the About link. The layout stacks on small screens;
+line drawing, reveals and hover motion respect reduced-motion preferences.
+
+### Complete approved-folder photo library (30 October 2026)
+
+This supersedes the earlier photo and before/after setup notes above. The only
+project-photo sources are the nine named folders under `src/assets/project_photos/`:
+Ascot (9), Auchenflower (15), Bardon (10), Camp Hill (9), Clayfield (5), Kalinga (8),
+Wilston (10), Windsor (8), and Yeronga (7). All 81 supplied photos appear across
+the nine project pages (one cover plus the remaining photographs in each gallery).
+Work lists all nine; Home retains its five selected projects with uncapped photo
+strips. Horizontal scrolling keeps the thumbnails usable for larger galleries.
+
+- `scripts/photo-catalog.json`: approved folder, stable public ID, source/output
+  SHA-256 hashes and visually reviewed alt text. Private source filenames are omitted.
+- `python scripts/build_photo_library.py`: rebuild 81 WebP derivatives and two detail
+  crops with Pillow. EXIF is stripped and originals are untouched. Source inventory
+  changes stop the script so additions receive a deliberate catalog/alt-text review.
+- `python scripts/build_photo_library.py --check`: verify the source inventory and
+  derivative integrity without writing files.
+- `src/data/photoLibrary.ts`: generated approved image slots, consumed by projects.
+- `src/data/photos.ts`: imports only `src/assets/projects/approved/*.webp`.
+  Legacy parent-folder JPEGs and loose root-level originals cannot enter the build.
+- `node scripts/check_photos.cjs`: verify project coverage, all image references,
+  the absence of simulated comparisons and the emitted production image inventory
+  (run after `npm run build`).
+
+All section photos, including Hero, About, the editorial/craft compositions and
+Testimonial backgrounds, resolve into this library. The two detail crops are
+regenerated from Bardon and Yeronga source photos. Brand assets and architectural
+illustrations remain unchanged. The six simulated monochrome before images have
+been deleted; comparison sections are hidden until real before photos are supplied.
+This photo-only audit does not change the separate testimonial-copy review status.
+
+### Kalinga architectural model
+
+The Process / Drawn, then built model now interprets the supplied Kalinga front
+and corner photographs. `frameMembers.ts` defines two enclosed storeys, the
+full-width verandah, low hipped roof, white posts, balustrades, frieze and street
+fence. Live and static renderers share this geometry and matching pale materials.
+The model is labelled an architectural study; its proportions are illustrative,
+not measured project dimensions or an assertion of the actual construction sequence.
+The separate material-key illustration and all project photographs are unchanged.
+
+### Temporary heritage explorer concept
+
+Approach includes `HeritageExplorerTest` immediately after MaterialKey, labelled
+Concept preview / Test section. It reuses the original hero model with optional
+3D-anchored pointer controls and equivalent keyboard/touch buttons below. The
+three choices pair the illustrative model with approved Kalinga, Bardon and Ascot
+photos; they do not claim those projects are the modelled house. Reduced motion
+uses the static model with the same choices. The extra scene only mounts near
+the section. Existing sections remain. Remove its import and mount from Approach
+to remove the test; the optional HeritageStudy controls are inert elsewhere.
+
+### Temporary pre-enquiry photograph
+
+`PhotoPauseTest` is mounted on Home immediately before Enquiry, after LeadMagnet.
+It uses the approved Windsor indoor/outdoor photograph (`stills.preEnquiry`),
+a slow once-only inset/scale reveal, a small project link and a discreet test label.
+Reduced motion displays the full photograph immediately. Desktop uses a broad
+panoramic frame; mobile uses a taller crop. Remove the import/mount from Home to
+remove the test. The enquiry itself is unchanged. Anchor: `photo-pause-test`.
+
+### Additional Approach photo-background test
+
+`ApproachPhotoTest` is appended after the existing Approach closing section,
+not substituted for it. All earlier content is preserved verbatim. The section
+uses approved Bardon photo 04 via `stills.approachClosing`, a deep-green readability
+gradient, the proposed "Care in the making. Pleasure in the living." headline,
+a Contact link and Bardon project credit. Slow reveal/subtle image drift respect
+reduced motion. Labelled Concept preview / Additional section / Test.
+Anchor: `approach-photo-test`. Remove its import/mount to discard the experiment.

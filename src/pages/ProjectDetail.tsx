@@ -1,13 +1,28 @@
 import { Link, useParams } from 'react-router-dom'
 import { ImageSlot } from '../components/ImageSlot'
 import { SlicedImage } from '../components/SlicedImage'
-import { BeforeAfter } from '../components/BeforeAfter'
 import { Reveal } from '../components/Reveal'
 import { PageHead } from '../components/PageHead'
-import { getProject, hasBeforeAfter, projects } from '../data/projects'
+import { ProjectPhotoGallery } from '../components/ProjectPhotoGallery'
+import { getProject, projects } from '../data/projects'
 import { usePageTitle } from '../hooks/usePageTitle'
+import { useRouteReturn } from '../hooks/useRouteReturn'
 import NotFound from './NotFound'
 import styles from './ProjectDetail.module.css'
+
+function ProjectReturn({ light = false }: { light?: boolean }) {
+  const destination = useRouteReturn()
+  return (
+    <Link to={destination.to} onClick={destination.onClick} className={[styles.back, light ? styles.backLight : ''].join(' ')}>
+      <span className={styles.backArrow} aria-hidden="true">
+        <svg viewBox="0 0 44 18" fill="none">
+          <path d="M42 9H2m7-7L2 9l7 7" stroke="currentColor" strokeWidth="1.3" />
+        </svg>
+      </span>
+      <span className={styles.backLabel}>{destination.label}</span>
+    </Link>
+  )
+}
 
 export default function ProjectDetail() {
   const { slug } = useParams()
@@ -23,15 +38,12 @@ export default function ProjectDetail() {
     <article>
       <PageHead
         number={`B-${String(index + 2).padStart(2, '0')}`}
-        eyebrow={
-          <Link to="/work" className={['link-underline', styles.back].join(' ')}>
-            All projects
-          </Link>
-        }
+        eyebrow={<ProjectReturn />}
         title={project.title}
         meta={[
           { label: 'Location', value: project.suburb },
           { label: 'Work', value: project.kind },
+          { label: 'Photographs', value: String(project.gallery.length + 1) },
           /* Year is only shown when it is known. An unconfirmed date is worse
              than no date on a builder's project page. */
           ...(project.year ? [{ label: 'Completed', value: project.year }] : []),
@@ -102,30 +114,14 @@ export default function ProjectDetail() {
         </Reveal>
       </div>
 
-      {/* Half a comparison is worse than none, so this only appears when both
-          the before and the after actually exist. */}
-      {hasBeforeAfter(project) && (
-        <section className={['shell', styles.compare].join(' ')} aria-label="Before and after">
-          <Reveal>
-            <h2 className={['section-heading', styles.compareHeading].join(' ')}>
-              Before and after
-            </h2>
-            <BeforeAfter before={project.before} after={project.after} label={project.title} />
-          </Reveal>
-        </section>
-      )}
-
       {project.gallery.length > 0 && (
-        <section className={['shell', styles.gallery].join(' ')} aria-label="Gallery">
-          {project.gallery.map((slot, i) => (
-            <Reveal key={i} delay={(i % 2) * 0.06}>
-              <ImageSlot slot={slot} ratio="4 / 3" tone={i % 2 === 0 ? 'sage' : 'green'} />
-            </Reveal>
-          ))}
-        </section>
+        <div className={['shell', styles.gallery].join(' ')}>
+          <ProjectPhotoGallery key={project.slug} project={project} />
+        </div>
       )}
 
-      <nav className={['shell', styles.next].join(' ')} aria-label="Next project">
+      <nav className={['shell', styles.next].join(' ')} aria-label="More projects">
+        <ProjectReturn light />
         <Link to={`/work/${next.slug}`} className={styles.nextLink}>
           <span className="eyebrow">Next project</span>
           <span className={['section-heading', styles.nextTitle].join(' ')}>{next.title}</span>

@@ -1,6 +1,5 @@
 import { useRef, useState } from 'react'
 import { ImageSlot } from './ImageSlot'
-import { beforeIsPlaceholder } from '../data/projects'
 import type { ImageSlot as Slot } from '../data/projects'
 import styles from './BeforeAfter.module.css'
 
@@ -86,10 +85,7 @@ export function BeforeAfter({ before, after, label = 'Before and after', ratio =
       </div>
 
       <figcaption className={['small', styles.caption].join(' ')}>
-        {/* While the before photographs are stand-ins, the caption says so:
-            a faded copy of the finished house is a demonstration of the
-            control, not a record of the job. */}
-        <span>{beforeIsPlaceholder ? 'Before — placeholder, photo to come' : 'Before'}</span>
+        <span>Before</span>
         <span className={styles.hint}>Drag to compare</span>
         <span>After</span>
       </figcaption>

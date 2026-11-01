@@ -26,7 +26,7 @@
 /* Reduced motion, or no WebGL: no pin, no hold, and the still frame shows the
    finished building. Nobody is kept in place to watch something that cannot move. */
 .static {
-  padding-block: var(--section-y);
+  padding-block: clamp(3rem, 5vw, 5rem);
 }
 
 /* Named areas so the three blocks can reorder between layouts without the
@@ -51,13 +51,37 @@
    its own and the steps take that row back.
 
    Guarded to the wide layout, and that guard is the whole point. Below 900px
-   this section stops being a grid at all and becomes a column — but
+   this section stops being a grid at all and becomes a column â€” but
    `.headless .inner` is two classes to `.inner`'s one, so unguarded it beat the
    media query and kept a two-column grid on a phone. The steps were squeezed
    into half a 390px screen and the drawing was pushed off the side of it
    entirely: the section rendered as four words and no building. Anything that
    restyles `.inner` from here on has to be inside this query. */
 @media (min-width: 901px) {
+  /* Start both build chapters just below the header instead of vertically
+     centring it in a tall viewport. The sticky stage and scroll run stay intact. */
+  .pinned .stage {
+    align-items: flex-start;
+    padding-top: calc(var(--header-h) + 1.25rem);
+  }
+
+  /* Let the drawing and its four stages occupy the available composition on
+     tall screens, rather than moving the old upper gap below the content. */
+  .pinned .inner {
+    min-height: min(50rem, calc(100svh - var(--header-h) - 3.75rem));
+  }
+  .pinned .steps {
+    align-self: stretch;
+    display: grid;
+    grid-template-rows: repeat(4, minmax(0, 1fr));
+  }
+  .pinned .step { align-items: center; }
+  .pinned .sceneWrap {
+    align-self: stretch;
+    aspect-ratio: auto;
+    height: auto;
+  }
+
   .headless .inner {
     grid-template-areas:
       'steps scene'
@@ -189,7 +213,7 @@
     gap: 0;
     /* The wide layout centres its children, which is right across two columns
        and wrong stacked: every row shrink-wraps to its own content, so the steps
-       sat in the middle of the column out of line with the heading above them —
+       sat in the middle of the column out of line with the heading above them â€”
        and got narrower still once their notes were hidden. */
     align-items: stretch;
   }
@@ -200,7 +224,7 @@
   /* Whatever is left after the words. It never collapses to nothing, and it is
      the only part of the column allowed to give. */
   /* Whatever is left after the words, run out to both screen edges. The shell's
-     gutter is given back so the drawing gets the full width of the phone — it is
+     gutter is given back so the drawing gets the full width of the phone â€” it is
      the widest thing in the section and the only one that gains by it. */
   .sceneWrap {
     order: 2;
@@ -211,20 +235,20 @@
     margin-inline: calc(var(--gutter) * -1);
     /* The base rule sets width:100%, which is 100% of the gutter-inset column,
        so the negative margin alone would only shift the box left. Released, the
-       stretch above resolves it to the column plus both margins — full bleed,
+       stretch above resolves it to the column plus both margins â€” full bleed,
        without a second place to keep the gutter in step. */
     width: auto;
   }
 
   /* The supporting line goes on every phone, not just short ones. The four
      steps below say the same thing, and at this size the drawing is worth more
-     than a second telling — it was costing it 14% of the screen. */
+     than a second telling â€” it was costing it 14% of the screen. */
   .lede { display: none; }
 
   /* Tighter, so four steps and a drawing both fit a phone screen. */
   .step { padding-block: 0.5rem; gap: var(--s-4); }
 
-  /* The four labels — Drawings, Frame, Roof, Finish — carry the sequence on
+  /* The four labels â€” Drawings, Frame, Roof, Finish â€” carry the sequence on
      their own, and this section exists for the drawing. The notes cost it a
      third of its height on a phone, so they go.
 
@@ -239,3 +263,15 @@
   /* Full width of the bled scene on a phone, inside the gutter it gave back. */
   .sceneDim { left: var(--gutter); right: var(--gutter); }
 }
+
+/* Both orientations show the same model and retain the scroll assembly. */
+.viewControls { position: absolute; top: 0; left: 50%; transform: translateX(-50%); z-index: 2; display: flex; gap: 0.4rem; white-space: nowrap; }
+.viewControls button { min-height: 40px; padding: 0.5rem 0.85rem; border: 1px solid var(--rule-strong); background: var(--wash); color: var(--green); font: 500 0.65rem/1.4 var(--font-display); cursor: pointer; transition: background 250ms, color 250ms; }
+.viewControls button[aria-pressed='true'] { background: var(--green); color: var(--wash); }
+.viewControls button[aria-pressed='true']:focus-visible { outline-color: var(--wash); outline-offset: -4px; }
+.sceneWrap > .scene { position: absolute; top: 2.8rem; bottom: 2.25rem; height: auto; }
+@media (max-width: 900px) {
+  /* An unpinned section needs its own drawing height, not leftover viewport space. */
+  .static .sceneWrap { flex: none; min-height: clamp(22rem, 85vw, 34rem); }
+}
+@media (prefers-reduced-motion: reduce) { .viewControls button { transition: none; } }

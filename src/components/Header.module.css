@@ -483,6 +483,7 @@
 .mobileCall { padding-top: var(--s-4); }
 
 @media (max-width: 880px) {
+  .inner { gap: var(--s-3); }
   .nav { display: none; }
   .call:not(.callBlock) { display: none; }
   .callCompact { display: grid; }

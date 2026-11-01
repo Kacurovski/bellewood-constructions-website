@@ -1,137 +1,68 @@
-.footer { padding-top: clamp(3.5rem, 7vw, 6rem); }
-
+.footer { padding: 0; }
 .inner {
   display: grid;
-  grid-template-columns: minmax(0, 1.6fr) repeat(3, minmax(0, 0.8fr));
-  gap: clamp(2rem, 4vw, 4rem);
-  padding-bottom: clamp(3rem, 6vw, 5rem);
-}
-
-.brand { max-width: 34ch; }
-
-/* The mark carries its own clear space, so it is pulled back to sit on the page
-   grid rather than a clear-space width inside it. The pull is capped at the
-   gutter: a fixed -1.5rem is wider than the gutter on a phone and hangs the
-   mark off the left edge of the screen. */
-.logoLink {
-  display: inline-flex;
-  margin-inline-start: calc(min(var(--s-5), var(--gutter)) * -1);
-}
-
-.blurb {
-  margin-top: var(--s-4);
-  color: color-mix(in srgb, var(--wash) 76%, transparent);
-}
-
-.columnHeading { margin-bottom: var(--s-4); }
-
-.list {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  gap: var(--s-3);
-  font-family: var(--font-display);
-  font-size: var(--t-small);
-  font-weight: 500;
-}
-
-.list a { text-decoration: none; }
-
-.list a:hover { text-decoration: underline; text-underline-offset: 0.28em; }
-
-.plain { color: color-mix(in srgb, var(--wash) 70%, transparent); }
-
-.legal {
-  padding-block: clamp(1.75rem, 3vw, 2.5rem) clamp(1.5rem, 2.5vw, 2rem);
+  grid-template-columns: minmax(0, 1.3fr) minmax(0, 0.9fr) minmax(0, 1fr);
+  gap: clamp(2rem, 5vw, 5rem);
   border-top: 1px solid var(--ink);
+  padding-block: clamp(2rem, 3.4vw, 3rem) clamp(1.75rem, 3vw, 2.75rem);
+  align-items: start;
 }
-
-/* --- The title block -------------------------------------------------------
-   Ruled cells, a label above each field and the value under it, exactly as the
-   block sits in the corner of a drawing sheet. It is where you look to find who
-   is responsible for what is on the sheet — which is what these four fields
-   are: the licensed entity, the number, the trading name and the date it takes
-   effect.
-
-   The rules are drawn with a gap and a single border per cell rather than a
-   table border, so no line is ever doubled where two cells meet. */
-.block {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 1px;
-  margin: 0;
-  background: var(--ink);
-  border: 1px solid var(--ink);
+.brand { max-width: 37ch; }
+/* Keep the supplied artwork's clear space while aligning the mark to the text. */
+.logoLink { display: inline-flex; margin-left: -19.38px; margin-top: -19.38px; }
+.blurb { margin: 0.65rem 0 0; font: 400 1rem/1.6 var(--font-body); color: #d1ded0; }
+.columnHeading { margin: 0 0 0.8rem; font: 600 0.68rem/1.5 var(--font-display); text-transform: uppercase; letter-spacing: 0.12em; color: var(--sage) !important; }
+.navigation { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 1.4rem; list-style: none; margin: 0; padding: 0; }
+.navigation a { display: flex; align-items: center; justify-content: space-between; gap: 0.7rem; min-height: 44px; padding-block: 0.5rem; border-bottom: 1px solid rgb(247 247 244 / 16%); font: 500 0.95rem/1.4 var(--font-display); text-decoration: none; transition: border-color 350ms ease; }
+.linkArrow { display: inline-block; font-size: 0.95rem; transition: transform 450ms var(--ease-out); }
+.navigation a:hover { border-color: rgb(247 247 244 / 68%); }
+.navigation a:hover .linkArrow, .social a:hover .linkArrow { transform: translate(2px, -2px); }
+.contact { min-width: 0; }
+.phone { display: inline-flex; align-items: center; min-height: 44px; font: 400 clamp(1.55rem, 2.1vw, 2.1rem)/1.2 var(--font-body); letter-spacing: -0.025em; text-decoration: none; white-space: nowrap; }
+.email { display: block; width: fit-content; min-height: 44px; padding-block: 0.6rem; font: 400 0.9rem/1.5 var(--font-display); text-decoration: none; overflow-wrap: anywhere; }
+.phone:hover, .email:hover { text-decoration: underline; text-underline-offset: 0.22em; text-decoration-thickness: 1px; }
+.area { margin: 0.2rem 0 0; font: 400 0.9rem/1.5 var(--font-body); color: #d1ded0; }
+.social { display: flex; flex-wrap: wrap; gap: 0.25rem 1.25rem; list-style: none; padding: 0; margin: 0.4rem 0 0; }
+.social a { display: inline-flex; align-items: center; gap: 0.9rem; min-height: 44px; font: 500 0.8rem/1.4 var(--font-display); text-decoration: none; }
+.legal { display: flex; justify-content: space-between; align-items: end; gap: 1rem 2rem; padding-block: 1.25rem 1.5rem; border-top: 1px solid var(--ink); }
+.legalCopy { max-width: 79ch; }
+.legalCopy .compliance { max-width: none; color: #d1ded0; opacity: 1; font-size: 0.75rem; line-height: 1.6; }
+.director { margin: 0.3rem 0 0; color: #d1ded0; font: 400 0.7rem/1.5 var(--font-display); }
+.endnote { flex: none; display: flex; flex-direction: column; align-items: flex-end; gap: 0.2rem; }
+.copyright { color: #d1ded0; font: 400 0.7rem/1.5 var(--font-display); }
+.backTop { display: inline-flex; justify-content: flex-end; align-items: center; gap: 0.75rem; min-height: 44px; padding: 0.35rem 0; border: 0; background: transparent; color: var(--wash); font: 500 0.75rem/1.4 var(--font-display); cursor: pointer; }
+.backTop svg { width: 20px; height: 20px; stroke: currentColor; stroke-width: 1.3; transition: transform 450ms var(--ease-out); }
+.backTop:hover svg { transform: translateY(-3px); }
+@media (max-width: 1000px) {
+  .inner { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 1.75rem 3rem; }
+  .brand { grid-column: 1 / -1; display: flex; align-items: center; gap: 2.5rem; max-width: none; }
+  .brand .logoLink { flex: none; margin-block: 0; }
+  .blurb { max-width: 47ch; margin-top: 0; }
+  .legal { align-items: start; }
+  .legalCopy { max-width: 55ch; }
 }
-
-.cell {
-  background: var(--green);
-  padding: clamp(0.75rem, 1.6vw, 1.1rem) clamp(0.75rem, 1.4vw, 1.25rem);
-  min-width: 0;
+@media (max-width: 600px) {
+  .inner { grid-template-columns: minmax(0, 1fr); gap: 1.75rem; }
+  .brand { display: block; }
+  .brand .logoLink { margin-top: -19.38px; }
+  .blurb { max-width: 39ch; font-size: 0.95rem; margin-top: 0.5rem; }
+  .columnHeading { margin-bottom: 0.45rem; }
+  .navigation { column-gap: 2rem; }
+  .navigation a { font-size: 0.9rem; }
+  .contact { display: grid; grid-template-columns: minmax(0, 1fr) auto; column-gap: 1rem; }
+  .contact .columnHeading, .phone, .email { grid-column: 1 / -1; }
+  .phone { font-size: 1.85rem; }
+  .email { font-size: 0.85rem; }
+  .area { grid-column: 1; max-width: 23ch; font-size: 0.85rem; }
+  .social { grid-column: 2; margin: 0; align-self: start; }
+  .social a { font-size: 0.75rem; gap: 0.6rem; }
+  .legal { flex-direction: column; gap: 0.8rem; }
+  .legalCopy .compliance { font-size: 0.72rem; }
+  .endnote { width: 100%; flex-direction: row; align-items: center; justify-content: space-between; gap: 1rem; }
+  .copyright { max-width: 22ch; font-size: 0.66rem; }
+  .backTop { flex: none; gap: 0.4rem; font-size: 0.7rem; }
 }
-
-.cellLabel {
-  font-family: var(--font-display);
-  font-weight: 600;
-  font-size: var(--t-eyebrow);
-  text-transform: uppercase;
-  letter-spacing: 0.14em;
-  color: var(--sage);
-}
-
-.cellValue {
-  margin: 0.4rem 0 0;
-  font-family: var(--font-display);
-  font-weight: 500;
-  font-size: var(--t-small);
-  line-height: 1.35;
-  color: var(--wash);
-  font-variant-numeric: tabular-nums;
-}
-
-.legalRow {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: var(--s-5);
-  flex-wrap: wrap;
-  margin-top: clamp(1.25rem, 2.2vw, 1.75rem);
-}
-
-.copyright { opacity: 0.6; }
-
-@media (max-width: 900px) {
-  .inner { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .brand { grid-column: 1 / -1; }
-
-  /* Two cells across rather than four. A title block with four columns on a
-     phone is four columns of one word each. */
-  .block { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-}
-
-@media (max-width: 520px) {
-  .inner { grid-template-columns: minmax(0, 1fr); gap: var(--s-6); }
-}
-
-/* On a phone the footer's links were 16px tall and stacked 28px apart: small
-   enough to miss and close enough to hit the wrong one. Invisible hit areas
-   would overlap at that spacing, so each row becomes a real 44px row instead,
-   and the gap that used to separate them is folded into the row. */
-@media (max-width: 900px) {
-  .list { gap: 0; }
-
-  .list a {
-    display: inline-flex;
-    align-items: center;
-    min-height: 44px;
-    min-width: 44px;
-  }
-
-  .list .plain {
-    display: flex;
-    align-items: center;
-    min-height: 44px;
-  }
+@media (prefers-reduced-motion: reduce) {
+  .navigation a, .linkArrow, .backTop svg { transition: none; }
+  .navigation a:hover .linkArrow, .social a:hover .linkArrow, .backTop:hover svg { transform: none; }
 }

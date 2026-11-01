@@ -1,9 +1,10 @@
 /* The masthead — title, note and the contact ledger — is PageHead's. What is
    left here is the form band under it. */
 
-.wrap { padding-block: clamp(4rem, 8vw, 7.5rem) clamp(4.5rem, 9vw, 8rem); }
+.wrap { padding-block: clamp(2.5rem, 4vw, 4rem) clamp(3rem, 5vw, 5rem); }
 
 .inner {
+  min-width: 0;
   display: grid;
   grid-template-columns: minmax(0, 0.62fr) minmax(0, 1.38fr);
   gap: clamp(2.5rem, 6vw, 6rem);
@@ -22,9 +23,11 @@
   color: var(--pine);
 }
 
+.right { min-width: 0; }
+
 .sep { opacity: 0.4; }
 
 @media (max-width: 900px) {
-  .inner { grid-template-columns: minmax(0, 1fr); gap: var(--s-7); }
+  .inner { grid-template-columns: minmax(0, 1fr); gap: clamp(1.75rem, 4vw, 2.5rem); }
   .aside { position: static; }
 }

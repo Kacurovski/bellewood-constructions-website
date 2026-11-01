@@ -2,11 +2,10 @@ import { Reveal } from '../components/Reveal'
 import { PageHead } from '../components/PageHead'
 import { ScrollWords } from '../components/ScrollWords'
 import { ComplianceLine } from '../components/ComplianceLine'
-import { ImageSlot } from '../components/ImageSlot'
+import { BuilderFolioTest } from '../components/BuilderFolioTest'
 import { NameStudy } from '../components/NameStudy'
 import { usePageTitle } from '../hooks/usePageTitle'
 import { compliance, contact } from '../config/site'
-import { stills } from '../data/projects'
 import styles from './About.module.css'
 
 /**
@@ -75,11 +74,7 @@ export default function About() {
         </Reveal>
 
         <Reveal delay={0.08} className={styles.portrait}>
-          {/* Deliberately a photograph of the work rather than a portrait. A
-              stock photograph of a stranger captioned "Angus Cowan" would be a
-              picture of someone who is not him. Swap for a real portrait of
-              Angus when one exists. */}
-          <ImageSlot slot={stills.onSite} ratio="4 / 5" tone="green" />
+          <BuilderFolioTest />
         </Reveal>
       </div>
 

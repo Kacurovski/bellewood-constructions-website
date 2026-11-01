@@ -1,40 +1,24 @@
-import { useMemo, useRef } from 'react'
-import { Canvas, useFrame } from '@react-three/fiber'
+import { useLayoutEffect, useMemo, useRef } from 'react'
+import { Canvas, useFrame, useThree } from '@react-three/fiber'
 import * as THREE from 'three'
-import { FRAME_BOUNDS, FRAME_MEMBERS } from './frameMembers'
-import type { MaterialKey } from './frameMembers'
+import { FRAME_BOUNDS, FRAME_MEMBERS, FRAME_VIEWS } from './frameMembers'
+import type { FrameView, MaterialKey } from './frameMembers'
 
-/**
- * Scene 3 — a Paddington cottage and its Ashgrove-style extension going up.
- *
- * An orthographic, drawing-like view of a Queensland worker's cottage with a
- * contemporary wing behind it, built in the order a renovation reads: at every
- * stage the old house first, then the new wing. Stumps and bearers, wall
- * frames, the cottage's hip and bullnose and the extension's flat roof, then
- * weatherboard on the old and charred timber and glass on the new. Line-work
- * first, then solid timber, then a finished house with the lights on.
- *
- * Several hundred members at real sections and real centres, drawn in six
- * instanced calls plus one line buffer. That is what lets it be a building
- * rather than a diagram of one. See frameMembers.ts for the house itself.
+/** Kalinga-inspired two-storey Queenslander, assembled through scroll.
+ * The live scene and its fallback share the photo-referenced member list.
  */
 
 const LINE = '#05432a'
 
-/**
- * The palette. Silky Oak is the brand's timber accent and it carries the
- * structure; the cladding and deck sit either side of it so the three read apart
- * without becoming three different colours. The roof is Deep Pine, which keeps
- * the darkest value on the page inside the brand.
- */
+/** Pale painted timber and a silver roof, taken from the Kalinga references. */
 const MATERIALS: Record<MaterialKey, { color: string; roughness: number }> = {
-  frame: { color: '#9a7b4f', roughness: 0.84 },
-  clad: { color: '#ab8354', roughness: 0.88 },
-  // The extension's boards. The same charred timber as the hero's new wing.
-  charred: { color: '#2b2723', roughness: 0.78 },
-  deck: { color: '#8f7248', roughness: 0.9 },
-  roof: { color: '#10251a', roughness: 0.62 },
-  glass: { color: '#41544c', roughness: 0.16 },
+  frame: { color: '#9a8060', roughness: 0.86 },
+  clad: { color: '#d3d1c8', roughness: 0.88 },
+  trim: { color: '#f3f2ec', roughness: 0.78 },
+  joinery: { color: '#303b3b', roughness: 0.8 },
+  deck: { color: '#a59073', roughness: 0.9 },
+  roof: { color: '#cfd3d0', roughness: 0.65 },
+  glass: { color: '#425454', roughness: 0.2 },
 }
 
 const MATERIAL_KEYS = Object.keys(MATERIALS) as MaterialKey[]
@@ -80,8 +64,8 @@ function Building({ progress }: { progress: React.MutableRefObject<number> }) {
   const quats = useMemo(
     () =>
       FRAME_MEMBERS.map((m) =>
-        // 'YXZ': roll, then pitch, then yaw. The hip needs all three — a sheet
-        // on a hip end rolls, a hip rafter pitches and yaws — and a member with
+        // 'YXZ': roll, then pitch, then yaw. The hip needs all three â€” a sheet
+        // on a hip end rolls, a hip rafter pitches and yaws â€” and a member with
         // only a pitch comes out exactly as it did under the default order.
         new THREE.Quaternion().setFromEuler(new THREE.Euler(m.rx, m.ry ?? 0, m.rz ?? 0, 'YXZ')),
       ),
@@ -118,7 +102,7 @@ function Building({ progress }: { progress: React.MutableRefObject<number> }) {
       // The drawing hands over to solid material through the middle of the
       // section, and a trace of it stays: the drawing does not stop being true
       // once the thing is built.
-      lineMat.current.opacity = 1 - smoothstep(0.48, 0.9, p) * 0.8
+      lineMat.current.opacity = 1 - smoothstep(0.48, 0.9, p) * 0.97
     }
 
     const solidOpacity = smoothstep(0.34, 0.68, p)
@@ -131,7 +115,7 @@ function Building({ progress }: { progress: React.MutableRefObject<number> }) {
       mat.opacity = solidOpacity
       /* Transparent only while fading in. Left transparent once the house is
          built, the blending let the page show through wherever two faces meet
-         — the canvas is composited over the page with alpha — and every seam
+         â€” the canvas is composited over the page with alpha â€” and every seam
          between two boards came out as a pale line that read as a gap. Opaque
          at full strength, nothing gets through. */
       const fading = solidOpacity < 0.999
@@ -139,7 +123,7 @@ function Building({ progress }: { progress: React.MutableRefObject<number> }) {
         mat.transparent = fading
         mat.needsUpdate = true
       }
-      if (k === 'glass') mat.emissiveIntensity = lit * 1.05
+      if (k === 'glass') mat.emissiveIntensity = lit * 0.06
     }
 
     if (Math.abs(p - lastProgress.current) < 0.0003) return
@@ -208,7 +192,7 @@ function Building({ progress }: { progress: React.MutableRefObject<number> }) {
   })
 
   return (
-    <group position={[0, -FRAME_BOUNDS.centreY, 0]}>
+    <group position={[0, -FRAME_BOUNDS.centreY, -FRAME_BOUNDS.centreZ]}>
       {MATERIAL_KEYS.map((key) => (
         <instancedMesh
           key={key}
@@ -223,7 +207,7 @@ function Building({ progress }: { progress: React.MutableRefObject<number> }) {
             color={MATERIALS[key].color}
             roughness={MATERIALS[key].roughness}
             metalness={key === 'roof' ? 0.25 : 0}
-            emissive={key === 'glass' ? '#ffc178' : '#000000'}
+            emissive={key === 'glass' ? '#e2e9e6' : '#000000'}
             emissiveIntensity={0}
             transparent
             opacity={0}
@@ -241,15 +225,17 @@ function Building({ progress }: { progress: React.MutableRefObject<number> }) {
 export default function TimberFrame({
   progress,
   shadows = true,
+  view = 'front',
 }: {
   progress: React.MutableRefObject<number>
   shadows?: boolean
+  view?: FrameView
 }) {
   return (
     <Canvas
       orthographic
       // A true axonometric: the view an architect would draw the thing in.
-      camera={{ position: [9, 6.2, 10.5], zoom: 60, near: 0.1, far: 120 }}
+      camera={{ position: FRAME_VIEWS[view], zoom: 60, near: 0.1, far: 120 }}
       dpr={[1, shadows ? 1.75 : 1.4]}
       shadows={shadows}
       gl={{
@@ -264,15 +250,15 @@ export default function TimberFrame({
       resize={{ scroll: false }}
       onCreated={({ camera }) => camera.lookAt(0, 0, 0)}
     >
-      <Fit />
+      <Fit view={view} />
 
       {/* Late afternoon, not a product shot. A warm key from over the left
           shoulder, a cool sky fill, and nothing else. */}
       <hemisphereLight args={['#f7f7f4', '#afc3b0', 1.0]} />
       <directionalLight
         position={[-9, 12, 9]}
-        intensity={1.85}
-        color="#fff4e2"
+        intensity={1.25}
+        color="#fffdf8"
         castShadow={shadows}
         shadow-mapSize={[1024, 1024]}
         shadow-bias={-0.0015}
@@ -313,15 +299,21 @@ export default function TimberFrame({
  * plan is neither 8 nor 5 wide on screen, and guessing at the diagonal put the
  * building over the edges of its own frame.
  */
-function Fit() {
+function Fit({ view }: { view: FrameView }) {
+  const { camera } = useThree()
+  useLayoutEffect(() => {
+    camera.position.set(...FRAME_VIEWS[view])
+    camera.lookAt(0, 0, 0)
+    camera.updateMatrixWorld()
+  }, [camera, view])
   const corners = useMemo(() => {
-    const { height, ground, halfWidth, minZ, maxZ, centreY } = FRAME_BOUNDS
+    const { height, ground, halfWidth, minZ, maxZ, centreY, centreZ } = FRAME_BOUNDS
     // Measured from the model: eaves, the extension and the deck included.
     const hx = halfWidth + 0.15
     const out: THREE.Vector3[] = []
     for (const x of [-hx, hx]) {
       for (const y of [ground - 0.1 - centreY, height + 0.15 - centreY]) {
-        for (const z of [minZ - 0.15, maxZ + 0.15]) out.push(new THREE.Vector3(x, y, z))
+        for (const z of [minZ - 0.15, maxZ + 0.15]) out.push(new THREE.Vector3(x, y, z - centreZ))
       }
     }
     return out
@@ -347,7 +339,7 @@ function Fit() {
 
     const width = Math.max(maxX - minX, 0.001)
     const height = Math.max(maxY - minY, 0.001)
-    /* A little air on every side — the drawing should not touch its edges. On a
+    /* A little air on every side â€” the drawing should not touch its edges. On a
        phone the box is small enough that 10% of it is the difference between a
        readable building and a thumbnail, so the margin tightens with the canvas
        rather than staying a fixed fraction of it. */

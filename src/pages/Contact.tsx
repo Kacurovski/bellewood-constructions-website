@@ -1,9 +1,12 @@
+import { lazy, Suspense } from 'react'
 import { EnquiryForm } from '../components/EnquiryForm'
 import { Reveal } from '../components/Reveal'
 import { PageHead } from '../components/PageHead'
 import { usePageTitle } from '../hooks/usePageTitle'
 import { contact, socialLinks } from '../config/site'
 import styles from './Contact.module.css'
+
+const ServiceMapTest = lazy(() => import('../sections/ServiceMapTest').then(module => ({ default: module.ServiceMapTest })))
 
 export default function Contact() {
   usePageTitle('Contact')
@@ -36,6 +39,12 @@ export default function Contact() {
           },
         ]}
       />
+
+      <div id="service-map-test" style={{ scrollMarginTop: 'var(--header-h)' }}>
+        <Suspense fallback={<div className="shell" role="status" style={{ minHeight: '30rem', paddingBlock: '4rem' }}>Loading the regional guide&hellip;</div>}>
+          <ServiceMapTest />
+        </Suspense>
+      </div>
 
       <section className={['shell', styles.wrap].join(' ')} aria-labelledby="enquiry-heading">
         <div className={styles.inner}>

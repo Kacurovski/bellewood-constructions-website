@@ -90,40 +90,69 @@
 }
 
 .more {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: var(--s-5);
+  gap: 1rem;
   width: 100%;
-  padding-block: clamp(1.1rem, 2.2vw, 1.6rem);
-  border-top: 1px solid var(--ink);
-  border-bottom: 1px solid var(--ink);
+  min-height: 4.5rem;
+  padding: 1rem 1.25rem;
+  border: 1px solid var(--green);
+  border-radius: 2px;
+  background: var(--green);
+  color: var(--wash);
   text-decoration: none;
-  color: var(--green);
-  transition: border-color var(--dur-fast) var(--ease);
+  cursor: pointer;
+  transition: background-color 250ms var(--ease), border-color 250ms var(--ease), box-shadow 250ms var(--ease);
 }
-
 .more:hover,
-.more:focus-visible { border-color: var(--rule-strong); }
-
+.more:focus-visible {
+  background: var(--pine);
+  border-color: var(--pine);
+  box-shadow: 0 5px 15px color-mix(in srgb, var(--pine) 12%, transparent);
+}
+.more:focus-visible { outline: 2px solid var(--green); outline-offset: 5px; }
+.more:active { box-shadow: none; }
 .moreLabel {
   font-family: var(--font-display);
   font-weight: 600;
-  font-size: var(--t-sub);
+  font-size: clamp(1.05rem, 1.6vw, 1.5rem);
   letter-spacing: -0.01em;
 }
-
 .moreArrow {
-  display: block;
-  width: clamp(2rem, 4vw, 2.75rem);
+  display: grid;
+  place-items: center;
+  width: clamp(3rem, 4.5vw, 4rem);
+  min-height: 2.25rem;
+  padding-left: 0.85rem;
+  border-left: 1px solid color-mix(in srgb, var(--wash) 30%, transparent);
   flex: none;
-  transition: transform var(--dur) var(--ease-out);
 }
-
-.moreArrow svg { width: 100%; height: auto; display: block; }
-
-.more:hover .moreArrow,
-.more:focus-visible .moreArrow { transform: translateX(0.4rem); }
+.moreArrow svg { width: 100%; height: auto; display: block; transition: transform 450ms var(--ease-out); }
+.more:hover .moreArrow svg,
+.more:focus-visible .moreArrow svg { transform: translateX(0.25rem); }
+/* Continue the arrow's direction through the gutter towards the photo panel. */
+@media (min-width: 761px) {
+  .more::after {
+    content: '';
+    position: absolute;
+    left: calc(100% + 1px);
+    top: 50%;
+    width: clamp(1.5rem, 3vw, 3rem);
+    height: 1px;
+    background: var(--green);
+    opacity: 0.3;
+    pointer-events: none;
+    transform-origin: left;
+    transition: opacity 450ms var(--ease);
+  }
+  .more:hover::after, .more:focus-visible::after { opacity: 0.7; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .more, .more::after, .moreArrow svg { transition: none; }
+  .more:hover .moreArrow svg, .more:focus-visible .moreArrow svg { transform: none; }
+}
 
 @media (max-width: 620px) {
   /* Stacked, a 3:2 plate at the full column width is the right size. It only
@@ -144,3 +173,6 @@
   text-transform: inherit;
   color: inherit;
 }
+
+/* Preserve the compact credentials-to-work transition in the Home order test. */
+.section.compactIntro { padding-top: clamp(2.5rem, 4vw, 4rem); }

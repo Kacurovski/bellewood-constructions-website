@@ -1,0 +1,116 @@
+.section {
+  background: var(--green);
+  scroll-margin-top: var(--header-h);
+}
+.figure {
+  position: relative;
+  isolation: isolate;
+  margin: 0;
+  width: 100%;
+  height: calc(100svh - var(--header-h));
+  min-height: 34rem;
+  overflow: hidden;
+}
+.media { position: absolute; inset: 0; overflow: hidden; }
+.media > img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 58%;
+  transform-origin: 56% 55%;
+}
+.media::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgb(5 35 24 / 8%), transparent 16%, transparent 53%, rgb(5 43 28 / 10%) 65%, rgb(5 43 28 / 66%) 88%, var(--green));
+  pointer-events: none;
+}
+.credit {
+  position: absolute;
+  z-index: 1;
+  top: clamp(1.25rem, 3vw, 3rem);
+  left: clamp(1.25rem, 4vw, 5rem);
+  display: inline-flex;
+  align-items: center;
+  gap: 1.25rem;
+  min-height: 44px;
+  padding: 0.7rem 1rem;
+  color: var(--wash);
+  background: rgb(5 43 28 / 68%);
+  border: 1px solid rgb(247 247 244 / 32%);
+  backdrop-filter: blur(12px);
+  font: 500 0.75rem/1.4 var(--font-display);
+  letter-spacing: 0.025em;
+  text-decoration: none;
+  transition: background 450ms var(--ease), border-color 450ms var(--ease);
+}
+.caption {
+  position: absolute;
+  z-index: 1;
+  inset: auto 0 0;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 2rem;
+  padding: clamp(1.5rem, 4vw, 5rem);
+  color: var(--wash);
+}
+.heading {
+  margin: 0;
+  color: inherit;
+  font: 400 clamp(2.75rem, 5.7vw, 7rem)/1.04 var(--font-body);
+  letter-spacing: -0.035em;
+}
+.heading em { font-weight: 400; }
+.wordMask { display: inline-block; overflow: hidden; padding: 0.1em 0.06em 0.13em 0; margin: -0.1em -0.06em -0.13em 0; vertical-align: bottom; }
+.wordMask > span, .wordMask > em { display: inline-block; }
+.next {
+  display: inline-flex;
+  align-items: center;
+  flex: none;
+  gap: 1.25rem;
+  min-height: 52px;
+  padding-block: 0.15rem;
+  color: inherit;
+  font: 500 0.85rem/1.4 var(--font-display);
+  text-decoration: none;
+}
+.arrow {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 56px;
+  height: 64px;
+  background: rgb(5 43 28 / 12%);
+  transition: background 450ms var(--ease);
+}
+.arrow::before, .arrow::after { content: ''; position: absolute; width: 12px; height: 12px; border-color: rgb(247 247 244 / 65%); transition: width 450ms var(--ease), height 450ms var(--ease); }
+.arrow::before { top: 0; left: 0; border-top: 1px solid; border-left: 1px solid; }
+.arrow::after { right: 0; bottom: 0; border-right: 1px solid; border-bottom: 1px solid; }
+.arrow svg { width: 28px; height: 42px; transition: transform 550ms var(--ease-out); }
+.nextLabel { position: relative; padding-bottom: 0.35rem; }
+.nextLabel::after { content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 1px; background: currentColor; transform: scaleX(0.2); transform-origin: left; transition: transform 550ms var(--ease-out); }
+.next:hover .arrow, .next:focus-visible .arrow { background: rgb(247 247 244 / 9%); }
+.next:hover .arrow svg, .next:focus-visible .arrow svg { transform: translateY(4px); }
+.next:hover .arrow::before, .next:hover .arrow::after { width: 18px; height: 18px; }
+.next:hover .nextLabel::after, .next:focus-visible .nextLabel::after { transform: scaleX(1); }
+.credit:hover { background: rgb(5 43 28 / 80%); border-color: rgb(247 247 244 / 65%); }
+.credit > span { transition: transform 350ms; }
+.credit:hover > span { transform: translate(2px, -2px); }
+.credit:focus-visible, .next:focus-visible { outline: 2px solid var(--wash); outline-offset: 5px; }
+@media (max-width: 760px) {
+  .figure { height: min(78svh, 44rem); min-height: 30rem; }
+  .media > img { object-position: 52% 60%; }
+  .media::after { background: linear-gradient(180deg, rgb(5 35 24 / 8%), transparent 18%, transparent 40%, rgb(5 43 28 / 45%) 65%, rgb(5 43 28 / 75%) 86%, var(--green)); }
+  .caption { flex-direction: column; align-items: flex-start; gap: 1.1rem; }
+  .heading { max-width: 10ch; font-size: clamp(3rem, 9vw, 4.5rem); }
+  .next { justify-content: space-between; width: 100%; font-size: 0.8rem; }
+  .arrow { width: 48px; height: 52px; }
+  .arrow svg { width: 25px; height: 36px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .credit, .credit > span, .arrow, .arrow::before, .arrow::after, .arrow svg, .nextLabel::after { transition: none; }
+  .next:hover .arrow svg, .next:focus-visible .arrow svg, .credit:hover > span { transform: none; }
+}

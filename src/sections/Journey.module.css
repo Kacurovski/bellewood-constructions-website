@@ -9,6 +9,7 @@
    --------------------------------------------------------------------------- */
 
 .section {
+  padding-block: clamp(3rem, 5vw, 5rem);
   border-top: 1px solid var(--ink);
 }
 

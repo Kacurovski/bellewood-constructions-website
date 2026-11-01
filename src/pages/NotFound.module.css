@@ -4,10 +4,10 @@
   background: var(--green);
   margin-top: calc(var(--header-h) * -1);
   padding-top: var(--header-h);
-  padding-bottom: clamp(6rem, 14vw, 12rem);
+  padding-bottom: clamp(3rem, 5vw, 5rem);
 }
 
-.pad { padding-top: clamp(5rem, 11vw, 9rem); }
+.pad { padding-top: clamp(3rem, 5vw, 5rem); }
 
 .title {
   margin-top: var(--s-4);

@@ -24,7 +24,7 @@ import styles from './Enquiry.module.css'
  */
 const TILT = [-2.1, 1.4, -1.1, 2.3]
 
-export function Enquiry() {
+export function Enquiry({ sheetNumber = "A-08" }: { sheetNumber?: string } = {}) {
   const reduced = useReducedMotion()
   /* One column below this, where four overlapping tilted sheets would be a
      stack you cannot read. The tilt is an inline transform from framer, so it
@@ -47,7 +47,7 @@ export function Enquiry() {
           renovation will not fill in a form that goes into the dark. */}
       <div className={['shell', styles.steps].join(' ')}>
         <Reveal className={styles.stepsHead}>
-          <SheetRef number="A-08" name="What happens next" rule={false} />
+          <SheetRef number={sheetNumber} name="What happens next" rule={false} />
         </Reveal>
         {/* Four sheets, dealt onto the table.
 

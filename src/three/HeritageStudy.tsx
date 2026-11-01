@@ -1,5 +1,7 @@
 import { useEffect, useMemo, useRef } from 'react'
 import { Canvas, useFrame, useThree } from '@react-three/fiber'
+import { Html } from '@react-three/drei'
+import hotspotStyles from './HeritageHotspots.module.css'
 import * as THREE from 'three'
 import { RoundedBoxGeometry } from 'three/examples/jsm/geometries/RoundedBoxGeometry.js'
 import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js'
@@ -35,6 +37,15 @@ const FILLET = 0.012
 
 const EASE = 0.075
 const DRIFT = 0.21
+
+/** Optional controls used only by the temporary Approach-page concept. */
+export type HeritagePart = 'original' | 'extension' | 'verandah'
+const EXPLORE_POINTS: { id: HeritagePart; label: string; point: [number, number, number] }[] = [
+  { id: 'original', label: 'Original house', point: [2.8, 3.8, 0.8] },
+  { id: 'extension', label: 'New possibilities', point: [2.55, 3.1, -4.1] },
+  { id: 'verandah', label: 'The verandah', point: [-1.4, 2.5, 4.35] },
+]
+
 
 function buildGeometries() {
   const buckets = {} as Record<MaterialKey, THREE.BufferGeometry[]>
@@ -151,7 +162,11 @@ const GLASS_GLOW = 0.62
 function House({
   lean,
   highlight,
+  selectedPart,
+  onPartSelect,
 }: {
+  selectedPart?: HeritagePart
+  onPartSelect?: (part: HeritagePart) => void
   lean: React.MutableRefObject<{ x: number; y: number }>
   highlight: MaterialKey | null
 }) {
@@ -261,6 +276,16 @@ function House({
 
   return (
     <group ref={group} position={HERITAGE_OFFSET}>
+      {onPartSelect && EXPLORE_POINTS.map((item, i) => (
+        <Html key={item.id} position={item.point} center zIndexRange={[30, 20]}>
+          <button type="button" tabIndex={-1}
+            className={[hotspotStyles.point, selectedPart === item.id ? hotspotStyles.active : ''].join(' ')}
+            onClick={(event) => { event.stopPropagation(); onPartSelect(item.id) }}
+            title={item.label} aria-label={item.label}>
+            {String(i + 1).padStart(2, '0')}
+          </button>
+        </Html>
+      ))}
       {MATERIAL_KEYS.map((key) => {
         const geometry = geometries[key]
         if (!geometry) return null
@@ -387,7 +412,11 @@ function Fit() {
 export default function HeritageStudy({
   shadows = true,
   highlight = null,
+  selectedPart,
+  onPartSelect,
 }: {
+  selectedPart?: HeritagePart
+  onPartSelect?: (part: HeritagePart) => void
   shadows?: boolean
   /**
    * Draw one material at full strength and step everything else back. The
@@ -461,7 +490,7 @@ export default function HeritageStudy({
         </mesh>
       )}
 
-      <House lean={lean} highlight={highlight} />
+      <House lean={lean} highlight={highlight} selectedPart={selectedPart} onPartSelect={onPartSelect} />
     </Canvas>
   )
 }
