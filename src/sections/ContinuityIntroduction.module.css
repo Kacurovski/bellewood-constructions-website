@@ -1,47 +1,56 @@
 .section {
   position: relative;
-  padding-block: clamp(2.75rem, 4.5vw, 4.5rem) clamp(2.25rem, 3.6vw, 3.5rem);
+  padding-block: clamp(2.5rem, 4.5vw, 4.5rem) clamp(2rem, 3vw, 3rem);
   background: var(--wash);
   color: var(--green);
   scroll-margin-top: var(--header-h);
 }
-.inner { display: grid; gap: clamp(2rem, 3.4vw, 3.25rem); }
-.introduction { display: grid; grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr); align-items: center; gap: clamp(2rem, 5vw, 5rem); }
-.eyebrow { margin-bottom: 1.25rem; font: 600 0.68rem/1.5 var(--font-display); letter-spacing: 0.13em; text-transform: uppercase; }
-.heading { margin: 0; font-weight: 400; }
-.established { display: block; font: 600 clamp(1.65rem, 2.35vw, 2.5rem)/1.2 var(--font-display); letter-spacing: -0.035em; text-wrap: balance; }
-.newName { display: block; margin-top: 0.45rem; font: 400 clamp(2rem, 3.35vw, 3.5rem)/1.1 var(--font-body); letter-spacing: -0.035em; }
-.newName em { font-weight: 400; }
-.identity { display: flex; align-items: center; justify-content: flex-end; gap: clamp(1.25rem, 2vw, 2rem); }
-.mark { flex: none; }
-.aside { min-width: 0; }
-.aside p { margin: 0; font: 400 clamp(1.3rem, 1.7vw, 1.75rem)/1.25 var(--font-body); color: var(--green); letter-spacing: -0.02em; }
-.link { display: inline-flex; align-items: center; justify-content: space-between; gap: 1.25rem; min-height: 44px; margin-top: 0.7rem; padding-block: 0.5rem; color: var(--green); border-bottom: 1px solid var(--rule-strong); font: 500 0.8rem/1.4 var(--font-display); text-decoration: none; transition: border-color 350ms ease; }
-.link svg { flex: none; width: 17px; height: 17px; stroke: currentColor; stroke-width: 1.3; transition: transform 500ms var(--ease-out); }
-.link:hover { border-color: var(--green); }
-.link:hover svg { transform: translate(2px, -2px); }
+.eyebrow { margin: 0 0 1.5rem; font: 600 .6875rem/1.5 var(--font-display); letter-spacing: .12em; text-transform: uppercase; }
+
+/* The type and the sign are connected, rather than two competing headlines. */
+.identity { display: grid; grid-template-columns: minmax(0, 1fr) minmax(5rem, .26fr) minmax(0, 1.15fr); align-items: center; gap: clamp(1.25rem, 3vw, 3rem); }
+.heading { margin: 0; font: 600 clamp(1.9rem, 3.3vw, 3.25rem)/1.12 var(--font-display); letter-spacing: -.045em; text-wrap: initial; scroll-margin-top: calc(var(--header-h) + 2rem); }
+.heading > span:first-child { display: block; }
+.connector { display: grid; gap: .75rem; align-self: center; padding-bottom: 1.5rem; }
+.connector > span { font: italic 400 1.05rem/1.2 var(--font-body); white-space: nowrap; }
+.connector svg { width: 100%; height: auto; overflow: visible; }
+.connector path { stroke: var(--green); stroke-width: 1; vector-effect: non-scaling-stroke; }
+.newIdentity { display: grid; place-items: center; min-height: clamp(10rem, 15vw, 13rem); padding: 1.25rem; background: var(--green); }
+/* Preserve the supplied artwork and its clear space at every breakpoint. */
+.newIdentity .lockup { width: min(340px, 80%) !important; height: auto !important; aspect-ratio: 900 / 234; margin: 1.75rem; }
+.reassurance { display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; padding-block: 1.25rem; border-bottom: 1px solid var(--rule-strong); }
+.reassurance p { font: 400 clamp(1.1rem, 1.55vw, 1.4rem)/1.4 var(--font-body); text-wrap: balance; }
+.reassurance em { font-weight: 400; white-space: nowrap; }
+.link { flex: none; display: inline-flex; align-items: center; gap: 1.5rem; min-height: 48px; padding-block: .5rem; font: 600 .875rem/1.4 var(--font-display); text-decoration: none; }
+.link > span { position: relative; }
+.link > span::after { content: ''; position: absolute; inset: auto 0 -.3rem; height: 1px; background: currentColor; transform: scaleX(.3); transform-origin: left; transition: transform .6s var(--ease-out); }
+.link svg { width: 32px; height: 24px; stroke: currentColor; stroke-width: 1.25; transition: transform .6s var(--ease-out); }
+.link:hover > span::after, .link:focus-visible > span::after { transform: scaleX(1); }
+.link:hover svg { transform: translateX(4px); }
 .link:focus-visible { outline: 2px solid var(--green); outline-offset: 5px; }
-@media (max-width: 960px) {
-  .introduction { grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); gap: 2rem; }
-  .identity { gap: 0.65rem; }
-  .identity .mark { width: 58px !important; height: 52px !important; margin: 17.5px; }
-  .aside p { font-size: 1.3rem; }
-  .link { gap: 0.65rem; font-size: 0.75rem; }
+@media (max-width: 960px) and (min-width: 641px) {
+  .identity { grid-template-columns: minmax(0, 1fr) 4.5rem minmax(0, 1fr); gap: 1.25rem; }
+  .heading { font-size: clamp(1.6rem, 3.2vw, 2rem); }
+  .newIdentity { min-height: 9rem; padding: .75rem; }
+  .newIdentity .lockup { width: 80% !important; margin: 1.25rem; }
+  .connector > span { font-size: .875rem; }
 }
-@media (max-width: 680px) {
-  .introduction { grid-template-columns: minmax(0, 1fr); gap: 1.5rem; }
-  .eyebrow { font-size: 0.65rem; margin-bottom: 0.9rem; }
-  .established { max-width: 24ch; font-size: clamp(1.6rem, 6.4vw, 2rem); }
-  .newName { font-size: clamp(2rem, 8vw, 2.65rem); }
-  .identity { justify-content: flex-start; gap: 1rem; }
-  .identity .mark { margin-block: 18px; margin-left: 0; margin-right: 18px; }
-  .aside { flex: 1; }
-  .aside p { font-size: 1.25rem; }
-  .aside p br { display: none; }
-  .aside p br::after { content: ' '; }
-  .link { margin-top: 0.2rem; font-size: 0.77rem; }
+@media (max-width: 640px) {
+  .eyebrow { margin-bottom: 1.25rem; font-size: .65rem; }
+  .identity { grid-template-columns: minmax(0, 1fr); gap: 0; }
+  .heading { font-size: clamp(1.9rem, 7.5vw, 2.65rem); line-height: 1.1; letter-spacing: -.035em; }
+  .connector { display: flex; align-items: center; gap: 1rem; padding-block: 1rem; }
+  .connector > span { font-size: 1rem; }
+  .connector svg { width: 32px; height: 16px; transform: rotate(90deg); }
+  .newIdentity { min-height: 7.5rem; padding: .75rem; }
+  .newIdentity .lockup { width: min(260px, 80%) !important; margin: 1.4rem; }
+  .reassurance { display: grid; grid-template-columns: minmax(0, 1fr); gap: .5rem; padding-block: 1.15rem; }
+  .reassurance p { font-size: 1.2rem; line-height: 1.4; }
+  .reassurance em { display: block; }
+  .link { justify-content: space-between; font-size: .85rem; }
+  .link svg { width: 30px; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .link, .link svg { transition: none; }
+  .link > span::after, .link svg { transition: none; }
   .link:hover svg { transform: none; }
 }

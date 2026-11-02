@@ -20,6 +20,18 @@ reference it.
 
 ---
 
+## Home name introduction (2 November 2026)
+
+`ContinuityIntroduction` now presents one explicit name transition: Angus Cowan
+Constructions, a drawn connector, then the supplied reverse Bellewood lockup on
+a green sign panel. The company/licence/on-site reassurance sits beneath it,
+with a single Meet Angus link to About. `Credentials` uses three aligned facts
+on desktop and labelled rows on mobile. This replaces the separate symbol,
+mixed text blocks and “What stays the same” subheading. All existing business
+facts remain, sourced from the same config. Motion runs once on arrival and
+reduced motion shows the completed composition. The hero skip target and Home
+chapter anchor remain `continuity-heading`.
+
 ## Approach timeline editorial test (2 November 2026)
 
 The seven stages in “From the first call to handover” retain their numbered
