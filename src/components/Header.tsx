@@ -1,28 +1,29 @@
-import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
-import type { MutableRefObject } from 'react'
+import { useEffect, useLayoutEffect, useRef, useState } from 'react'
+import type { PointerEvent as ReactPointerEvent } from 'react'
 import { Link, NavLink, useLocation } from 'react-router-dom'
-import { AnimatePresence, motion, useIsPresent, useScroll } from 'framer-motion'
+import { motion, useMotionValue, useScroll, useSpring } from 'framer-motion'
 import { Logo } from './Logo'
 import { contact, nav, site } from '../config/site'
-import { getLenis } from '../hooks/useLenis'
 import { useReducedMotion } from '../hooks/useReducedMotion'
 import styles from './Header.module.css'
 
-const firstName = contact.principal.split(' ')[0]
-type CloseReason = 'dismiss' | 'navigate' | 'resize'
-
-/** The same navigation on every page, with a separate mobile modal panel. */
+/**
+ * A quiet header. The mark, the routes, and the phone number — nothing else.
+ *
+ * The phone number is deliberately prominent and tap-to-call on mobile:
+ * missed-call text-back runs off Angus's mobile and is the first thing this
+ * engagement switched on.
+ */
 export function Header() {
   const [scrolled, setScrolled] = useState(false)
   const [open, setOpen] = useState(false)
-  const closeReason = useRef<CloseReason>('dismiss')
   const location = useLocation()
-  const { scrollYProgress } = useScroll()
 
-  const closeMenu = useCallback((reason: CloseReason = 'dismiss') => {
-    closeReason.current = reason
-    setOpen(false)
-  }, [])
+  /* How far down the page you are, drawn along the header's own bottom rule.
+     A bar of its own across the top of the window is the generic version of
+     this and it would be a tenth element on a page that already has enough;
+     the header already draws a line there, so the line is the indicator. */
+  const { scrollYProgress } = useScroll()
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24)
@@ -31,162 +32,125 @@ export function Header() {
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
-  useEffect(() => closeMenu('navigate'), [location.pathname, location.hash, closeMenu])
+  // Close the mobile menu whenever the route changes.
+  useEffect(() => setOpen(false), [location.pathname, location.hash])
 
-  useEffect(() => {
-    const desktop = window.matchMedia('(min-width: 881px)')
-    const onResize = () => { if (desktop.matches) closeMenu('resize') }
-    desktop.addEventListener('change', onResize)
-    return () => desktop.removeEventListener('change', onResize)
-  }, [closeMenu])
+  /* Every route now opens on a dark band — the hero on the home page, the
+     PageHead masthead everywhere else — so at the top of any page the header
+     floats over Deep Pine and goes reverse. It returns to ink as soon as the
+     page is scrolled off that band, or when the mobile menu opens over it. */
+  const overDark = !scrolled && !open
 
-  const overDark = !scrolled
+  /* The live route. A project page lives under Work, so it marks Work — the
+     index is where you came from and where the header should say you are. */
   const activeIndex = nav.findIndex(
     (item) => location.pathname === item.to || location.pathname.startsWith(`${item.to}/`),
   )
 
   return (
-    <>
-      <header className={[styles.header, scrolled ? styles.scrolled : '', overDark ? styles.overDark : ''].join(' ')}>
-        <div className={[styles.inner, 'shell'].join(' ')}>
-          <Link to="/" className={styles.brand} aria-label={`${site.name} home`}>
-            <Logo variant="lockup" tone={overDark ? 'reverse' : 'green'} width={168} decorative />
-          </Link>
-          <PrimaryNav activeIndex={activeIndex} />
-          <CallButton />
-          <a className={styles.callCompact} href={contact.phoneHref} aria-label={`Call ${firstName} on ${contact.phone}`}>
-            <PhoneGlyph />
-          </a>
-          <button type="button" className={styles.toggle} aria-expanded={open}
-            aria-controls="mobile-nav" aria-haspopup="dialog"
-            onClick={() => { closeReason.current = 'dismiss'; setOpen(true) }}>
-            <span className="visually-hidden">Open menu</span>
-            <span className={styles.bar} aria-hidden="true" />
-          </button>
-        </div>
-        <motion.span className={styles.progress} style={{ scaleX: scrollYProgress }} aria-hidden="true" />
-      </header>
-      <AnimatePresence>
-        {open && <MobileMenu key="mobile-menu" activeIndex={activeIndex} closeReason={closeReason} onClose={closeMenu} />}
-      </AnimatePresence>
-    </>
-  )
-}
-
-/** Native dialog supplies modal semantics, background inertness and focus containment.
- * It is mounted only while open/closing, so hidden links cannot receive focus. */
-function MobileMenu({ activeIndex, closeReason, onClose }: {
-  activeIndex: number
-  closeReason: MutableRefObject<CloseReason>
-  onClose: (reason?: CloseReason) => void
-}) {
-  const dialog = useRef<HTMLDialogElement>(null)
-  const closeButton = useRef<HTMLButtonElement>(null)
-  const reduced = useReducedMotion()
-  const present = useIsPresent()
-
-  useLayoutEffect(() => {
-    const node = dialog.current
-    if (!node) return
-    const previousFocus = document.activeElement
-    const root = document.documentElement
-    const rootOverflow = root.style.overflow
-    const bodyOverflow = document.body.style.overflow
-    const rootPadding = root.style.paddingRight
-    const scrollbar = window.innerWidth - root.clientWidth
-    const lenis = getLenis()
-    const resume = lenis && !lenis.isStopped
-    lenis?.stop()
-    root.style.overflow = 'hidden'
-    document.body.style.overflow = 'hidden'
-    if (scrollbar > 0) root.style.paddingRight = `${parseFloat(getComputedStyle(root).paddingRight) + scrollbar}px`
-    node.showModal()
-    closeButton.current?.focus({ preventScroll: true })
-
-    return () => {
-      node.close()
-      root.style.overflow = rootOverflow
-      document.body.style.overflow = bodyOverflow
-      root.style.paddingRight = rootPadding
-      if (resume) lenis?.start()
-      if (closeReason.current === 'navigate') {
-        document.getElementById('main')?.focus({ preventScroll: true })
-      } else if (closeReason.current === 'resize') {
-        const destination = document.querySelector<HTMLElement>('nav[aria-label="Primary"] a[aria-current="page"]')
-          ?? document.querySelector<HTMLElement>('header a')
-        destination?.focus({ preventScroll: true })
-      } else if (previousFocus instanceof HTMLElement && previousFocus.isConnected) {
-        previousFocus.focus({ preventScroll: true })
-      }
-    }
-  }, [closeReason])
-
-  return (
-    <motion.dialog ref={dialog} id="mobile-nav" aria-label="Main menu" className={styles.mobileDialog}
-      data-lenis-prevent data-exiting={!present || undefined}
-      initial={{ opacity: reduced ? 1 : 0, y: reduced ? 0 : -10 }}
-      animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: reduced ? 0 : -8 }}
-      transition={{ duration: reduced ? 0 : present ? .4 : .2, ease: [0.16, 1, 0.3, 1] }}
-      onCancel={(event) => { event.preventDefault(); onClose() }}
-      onKeyDown={(event) => {
-        if (event.key !== 'Tab') return
-        const links = event.currentTarget.querySelectorAll<HTMLElement>('a[href], button:not(:disabled)')
-        const first = links[0]
-        const last = links[links.length - 1]
-        if (event.shiftKey && document.activeElement === first) {
-          event.preventDefault()
-          last?.focus()
-        } else if (!event.shiftKey && document.activeElement === last) {
-          event.preventDefault()
-          first?.focus()
-        }
-      }}
-      onClick={(event) => {
-        if (event.target !== event.currentTarget) return
-        const rect = event.currentTarget.getBoundingClientRect()
-        if (event.clientY > rect.bottom || event.clientY < rect.top || event.clientX < rect.left || event.clientX > rect.right) onClose()
-      }}>
-      <div className={[styles.mobileTop, 'shell'].join(' ')}>
-        <Link to="/" className={styles.brand} aria-label={`${site.name} home`} onClick={() => onClose('navigate')}>
-          <Logo variant="lockup" tone="green" width={168} decorative />
+    <header
+      className={[
+        styles.header,
+        scrolled ? styles.scrolled : '',
+        overDark ? styles.overDark : '',
+        open ? styles.menuOpen : '',
+      ].join(' ')}
+    >
+      <div className={[styles.inner, 'shell'].join(' ')}>
+        <Link to="/" className={styles.brand} aria-label={`${site.name} — home`}>
+          <Logo variant="lockup" tone={overDark ? 'reverse' : 'green'} width={168} decorative />
         </Link>
-        <button ref={closeButton} type="button" className={styles.close} onClick={() => onClose()} autoFocus>
-          <span>Close</span>
-          <svg viewBox="0 0 24 24" width="24" height="24" fill="none" aria-hidden="true">
-            <path d="m6 6 12 12M6 18 18 6" stroke="currentColor" strokeWidth="1.2" />
-          </svg>
+
+        <PrimaryNav activeIndex={activeIndex} />
+
+        <CallButton />
+
+        {/* On a phone the number used to vanish into the menu, which is the
+            one place a tap-to-call button does no good. It stays in the bar
+            as a square the same size as the menu toggle beside it. */}
+        <a
+          className={styles.callCompact}
+          href={contact.phoneHref}
+          aria-label={`Call ${firstName} on ${contact.phone}`}
+        >
+          <PhoneGlyph />
+        </a>
+
+        <button
+          type="button"
+          className={styles.toggle}
+          aria-expanded={open}
+          aria-controls="mobile-nav"
+          onClick={() => setOpen((v) => !v)}
+        >
+          <span className="visually-hidden">{open ? 'Close menu' : 'Open menu'}</span>
+          <span className={[styles.bar, open ? styles.barOpen : ''].join(' ')} aria-hidden="true" />
         </button>
       </div>
-      <div className={[styles.mobileBody, 'shell'].join(' ')}>
-        <nav aria-label="Mobile primary">
-          <ul className={styles.mobileList}>
-            {nav.map((item, i) => (
-              <li key={item.to}>
-                <NavLink to={{ pathname: item.to, hash: item.hash }} onClick={() => onClose('navigate')}
-                  className={[styles.mobileLink, i === activeIndex ? styles.mobileActive : ''].join(' ')}>
-                  <span className={styles.mobileLabel}>{item.label}</span>
-                  {i === activeIndex ? <span className={styles.currentPage} aria-hidden="true">You're here</span> : <MenuArrow />}
-                </NavLink>
-              </li>
-            ))}
-          </ul>
-        </nav>
-        <a className={styles.mobileCall} href={contact.phoneHref}>
-          <span><span className={styles.mobileCallLabel}>Call {firstName}</span><span className={styles.mobileNumber}>{contact.phone}</span></span>
-          <span className={styles.mobileCallIcon}><PhoneGlyph /></span>
-        </a>
+
+      <motion.span
+        className={styles.progress}
+        style={{ scaleX: scrollYProgress }}
+        aria-hidden="true"
+      />
+
+      <div id="mobile-nav" className={[styles.mobile, open ? styles.mobileOpen : ''].join(' ')}>
+        {/* The panel opens and the links follow it in, one after another. It
+            is the same stagger the headline uses, at the one moment on a phone
+            where the whole screen changes at once. */}
+        <ul className={styles.mobileList}>
+          {nav.map((item, i) => (
+            <li key={item.label} style={{ '--i': i } as React.CSSProperties}>
+              <NavLink
+                to={{ pathname: item.to, hash: item.hash }}
+                className={[styles.mobileLink, i === activeIndex ? styles.mobileActive : '']
+                  .join(' ')
+                  .trim()}
+              >
+                <span className={styles.mobileIndex} aria-hidden="true">
+                  {index(i)}
+                </span>
+                {item.label}
+              </NavLink>
+            </li>
+          ))}
+          <li className={styles.mobileCall} style={{ '--i': nav.length } as React.CSSProperties}>
+            <CallButton block />
+          </li>
+        </ul>
       </div>
-    </motion.dialog>
+    </header>
   )
 }
 
-function MenuArrow() {
-  return <svg className={styles.menuArrow} viewBox="0 0 40 24" width="40" height="24" fill="none" aria-hidden="true">
-    <path d="M2 12h34m-9-8 9 8-9 8" stroke="currentColor" strokeWidth="1.2" />
-  </svg>
-}
+const firstName = contact.principal.split(' ')[0]
 
-/** The capsule's moving hover wash is independent of the current-page marker. */
+/** Two-digit sheet numbering — the same convention as A-01, Fig. 1, 01 / 06. */
+const index = (i: number) => String(i + 1).padStart(2, '0')
+
+/**
+ * The routes, in a capsule of frosted glass.
+ *
+ * Two earlier versions were sent back. Four bare words had no design until the
+ * pointer arrived; a framed strip with sheet numbers had design, but it was
+ * square and technical, and it sat next to a call button whose round badge and
+ * rolling words were the part of the bar that felt right. So the routes now
+ * speak the button's language instead of the drawing's: one soft capsule at
+ * rest, a pill of light that glides between routes, and words that roll.
+ *
+ * The roll is where the brand comes in. Each route turns over from Archivo into
+ * the same word in Newsreader, the serif the hero's changing word is set in, so
+ * pointing at a link borrows the one typographic gesture the home page is built
+ * around. It is upright, not italic: there is no italic cut in the self-hosted
+ * files, and a slanted faux italic is the cheapest thing a browser draws.
+ *
+ * The pill rests behind the page you are on, slides to whichever route you
+ * point at, stretches to its width, and returns when you leave. The text never
+ * changes colour under it: a fill that inverts the text has to flip the text at
+ * one instant while the fill is still travelling, and for that moment the word
+ * is the colour of the ground. A tint the text can sit on either way has no
+ * such moment.
+ */
 function PrimaryNav({ activeIndex }: { activeIndex: number }) {
   const reduced = useReducedMotion()
   const listRef = useRef<HTMLUListElement>(null)
@@ -216,10 +180,12 @@ function PrimaryNav({ activeIndex }: { activeIndex: number }) {
     window.addEventListener('resize', measure)
     document.fonts?.ready.then(measure).catch(() => {})
     return () => window.removeEventListener('resize', measure)
-  }, [activeIndex])
+  }, [])
 
-  // Hover/focus has its own soft surface. The current route keeps its underline.
-  const target = pointed
+  /* The route under the pointer wins; with nothing pointed at, the pill rests
+     behind the live page. On the home page there is no live route in the
+     capsule, so it rests nowhere and only appears when it is wanted. */
+  const target = pointed ?? (activeIndex >= 0 ? activeIndex : null)
   const span = target == null ? null : spans[target]
   const visible = span != null && span.width > 0
 
@@ -284,16 +250,86 @@ function PrimaryNav({ activeIndex }: { activeIndex: number }) {
   )
 }
 
-/** One steady call action, with a small handset response on hover. */
-function CallButton() {
+/**
+ * Call Angus, as the one solid thing in the bar.
+ *
+ * Everything else in the header is line and tint, so the single most valuable
+ * action on the site is the only filled shape: Wash on the dark hero, Bellewood
+ * Green on the pale header. The handset sits in a round badge — the same round
+ * mark the callouts on the hero's model are pinned with — and a ring leaves it
+ * every few seconds, slowly, the way a phone rings, so the button reads as live
+ * before anyone has pointed at it.
+ *
+ * On hover the words roll: the label and number slide up and out and the same
+ * words roll in from below, while the handset rings once. The button also leans
+ * a few pixels toward the pointer as it comes near, the same idea as the house
+ * leaning toward the cursor. Pointer only, never under reduced motion, and never
+ * by more than a few pixels.
+ */
+function CallButton({ block = false }: { block?: boolean }) {
+  const reduced = useReducedMotion()
+  const ref = useRef<HTMLAnchorElement>(null)
+  const [finePointer] = useState(
+    () =>
+      typeof window !== 'undefined' &&
+      !!window.matchMedia &&
+      window.matchMedia('(hover: hover) and (pointer: fine)').matches,
+  )
+
+  const pullX = useMotionValue(0)
+  const pullY = useMotionValue(0)
+  const x = useSpring(pullX, { stiffness: 220, damping: 18, mass: 0.5 })
+  const y = useSpring(pullY, { stiffness: 220, damping: 18, mass: 0.5 })
+  const leans = finePointer && !reduced && !block
+
+  const clamp = (v: number, max: number) => Math.max(-max, Math.min(max, v))
+
+  function onMove(event: ReactPointerEvent<HTMLAnchorElement>) {
+    const el = ref.current
+    if (!leans || !el) return
+    const box = el.getBoundingClientRect()
+    pullX.set(clamp((event.clientX - (box.left + box.width / 2)) * 0.12, 5))
+    pullY.set(clamp((event.clientY - (box.top + box.height / 2)) * 0.2, 4))
+  }
+
+  function onLeave() {
+    pullX.set(0)
+    pullY.set(0)
+  }
+
+  const words = (
+    <>
+      <span className={styles.callLabel}>Call {firstName}</span>
+      <span className={styles.callNumber}>{contact.phone}</span>
+    </>
+  )
+
   return (
-    <a href={contact.phoneHref} className={styles.call}>
-      <span className={styles.callBadge} aria-hidden="true"><PhoneGlyph /></span>
-      <span className={styles.callWords}>
-        <span className={styles.callLabel}>Call {firstName}</span>
-        <span className={styles.callNumber}>{contact.phone}</span>
+    <motion.a
+      ref={ref}
+      href={contact.phoneHref}
+      className={[styles.call, block ? styles.callBlock : ''].join(' ').trim()}
+      style={leans ? { x, y } : undefined}
+      onPointerMove={leans ? onMove : undefined}
+      onPointerLeave={leans ? onLeave : undefined}
+    >
+      <span className={styles.callBadge} aria-hidden="true">
+        <span className={styles.callRing} />
+        <PhoneGlyph />
       </span>
-    </a>
+
+      {/* Two copies of the same words, stacked in a window one copy tall. The
+          second is for the roll and is hidden from assistive tech, so the link
+          is announced once. */}
+      <span className={styles.callWindow}>
+        <span className={styles.callRoll}>
+          <span className={styles.callWords}>{words}</span>
+          <span className={styles.callWords} aria-hidden="true">
+            {words}
+          </span>
+        </span>
+      </span>
+    </motion.a>
   )
 }
 

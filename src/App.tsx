@@ -43,7 +43,7 @@ function Shell() {
         Skip to content
       </a>
       <Header />
-      <main id="main" tabIndex={-1}>
+      <main id="main">
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/work" element={<Work />} />

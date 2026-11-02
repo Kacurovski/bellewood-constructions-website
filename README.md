@@ -21,27 +21,6 @@ reference it.
 
 ---
 
-## Navigation test (2 November 2026)
-
-`Header.tsx` and `Header.module.css` retain the four destinations, logo link to
-Home, direct phone action, dark-to-light header and reading progress line.
-The desktop capsule has a softer edge and hover surface. A separate underline
-keeps the current page visible while hovering another destination. Navigation
-targets are at least 44px high, and the phone action has one restrained hover
-response instead of continuous pulsing and magnetic movement.
-
-Below 881px, a paper-coloured modal menu overlays the page with larger links,
-an explicit current-page marker, a Close action and one phone link. It locks
-background scrolling, contains keyboard focus, closes on Escape or the backdrop,
-and restores focus and scroll position on dismissal. Choosing a page closes the
-menu and focuses the main content. Resizing to desktop releases the modal and
-focuses the current desktop link. Short screens scroll within the menu; reduced
-motion removes its entrance and exit movement. Closed links are unmounted.
-
-The complete pre-test version is checkpoint `9d6f5d32`. To undo this test after
-sharing it, use a new revert commit, preserving any later unrelated changes.
-This source checkpoint does not deploy the public website.
-
 ## Inner-page introduction test (2 November 2026)
 
 Work, Approach, About and Contact opt into individual `PageHead` variants using
