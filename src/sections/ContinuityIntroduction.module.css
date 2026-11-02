@@ -5,13 +5,12 @@
   scroll-margin-top: var(--header-h);
   overflow: clip;
 }
-.marquee { overflow: hidden; padding-block: clamp(1rem, 2.2vw, 1.75rem); border-bottom: 1px solid var(--rule); }
-.track { display: flex; width: max-content; animation: continuity-line 48s linear infinite; animation-play-state: paused; }
+.marquee { overflow: hidden; padding-block: .85rem; border-bottom: 1px solid var(--rule); }
+.track { display: flex; width: max-content; animation: continuity-line 36s linear infinite; animation-play-state: paused; }
 .section[data-running='true'] .track { animation-play-state: running; }
 .phrases { display: flex; align-items: center; justify-content: space-around; flex-shrink: 0; min-width: 100vw; }
-.phrase { display: flex; align-items: center; gap: clamp(1.5rem, 3.5vw, 4rem); padding-right: clamp(1.5rem, 3.5vw, 4rem); white-space: nowrap; font: 400 clamp(1.8rem, 3.5vw, 3.25rem)/1.1 var(--font-body); letter-spacing: -.035em; }
-.phrase em { font-weight: 400; }
-.separator { display: block; width: 1.5rem; height: 1px; background: var(--green); transform: rotate(-45deg); opacity: .45; }
+.phrase { display: flex; align-items: center; gap: .8rem; padding-right: .8rem; white-space: nowrap; font: 600 clamp(.85rem, 1.15vw, 1.1rem)/1.2 var(--font-display); letter-spacing: -.025em; text-transform: uppercase; }
+.separator { display: block; width: 3px; height: 3px; border-radius: 50%; background: var(--green); }
 @keyframes continuity-line { to { transform: translateX(-50%); } }
 
 .inner { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: center; gap: clamp(2rem, 5vw, 5rem); padding-block: clamp(2.75rem, 5vw, 5rem); }
@@ -38,7 +37,6 @@
   .inner { grid-template-columns: minmax(0, 1fr); gap: 2rem; padding-block: 2.5rem 2rem; }
   .heading { font-size: clamp(1.8rem, 6vw, 2.5rem); }
   .heading br { display: none; }
-  .heading br::after { content: ' '; }
   .newName { font-size: clamp(2rem, 7vw, 2.65rem); }
   .reassurance { margin-top: 1rem; font-size: 1.0625rem; }
   .eyebrow { margin-bottom: 1rem; font-size: .65rem; }
@@ -48,7 +46,8 @@
   .track { animation: none; width: auto; }
   .phrases { flex-wrap: wrap; justify-content: center; gap: .65rem 1.5rem; width: 100%; padding-inline: var(--gutter); }
   .phrases + .phrases { display: none; }
-  .phrase { padding: 0; font-size: 1.3rem; }
+  .phrase { padding: 0; font-size: .8rem; }
+  .phrase:nth-child(n + 5) { display: none; }
   .separator { display: none; }
   .link > span::after, .link svg { transition: none; }
   .link:hover svg { transform: none; }

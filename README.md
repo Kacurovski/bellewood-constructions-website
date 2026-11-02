@@ -22,16 +22,18 @@ reference it.
 
 ## Home name introduction (2 November 2026)
 
-`ContinuityIntroduction` pairs a slow, continuous text strip with a stationary
-name-change announcement and three overlapping cards. The cards automatically
-bring personal attention, licence and cover, and service area to the front every
-5.2 seconds. Their facts come from the existing config. Visitors can select a
-number, use arrow keys or swipe; manual selection holds the chosen card. One
-pause control stops both animations. Hover pauses the cards, and motion stops
-when the section or browser tab is hidden. Reduced motion keeps the strip still
-and the cards manually selectable. The Meet Angus link leads to About; the hero
-skip target and Home chapter anchor remain `continuity-heading`. This is a local
-design test inspired by the supplied ticker and rotating-card reference.
+`ContinuityIntroduction` pairs a compact, continuous text ticker with a stationary
+name-change announcement and a three-card 3D orbit. The supplied screen recording
+is the motion reference: the cards travel continuously around a horizontal ring,
+turn edge-on, and show their reverse faces behind the leading card. The orbit
+takes 27 seconds, rather than stepping between stacked cards. Drag in either
+direction to turn it directly; release to continue. The small selectors and
+arrow keys bring a chosen face forward and hold it. One pause control stops both
+animations, and automatic motion stops when the section or browser tab is hidden.
+Reduced motion shows one still card with manual navigation. The cards retain the
+existing config facts about attention, licence and cover, and service area.
+The Meet Angus link leads to About; the hero skip target and Home chapter anchor
+remain `continuity-heading`. This remains a local design test.
 
 ## Approach timeline editorial test (2 November 2026)
 

@@ -7,6 +7,7 @@ import { useReducedMotion } from '../hooks/useReducedMotion'
 import styles from './ContinuityIntroduction.module.css'
 
 const continuity = ['Same builder.', 'Same company.', 'Same licence.', 'A new name.']
+const repeatedContinuity = [...continuity, ...continuity, ...continuity]
 
 /** A moving continuity line and a rotating set of three practical assurances.
  * The actual announcement stays still and readable throughout. */
@@ -32,9 +33,9 @@ export function ContinuityIntroduction() {
         <div className={styles.track}>
           {[0, 1].map(copy => (
             <div className={styles.phrases} key={copy}>
-              {continuity.map((phrase, i) => (
-                <span className={styles.phrase} key={phrase}>
-                  {i === 3 ? <em>{phrase}</em> : phrase}
+              {repeatedContinuity.map((phrase, i) => (
+                <span className={styles.phrase} key={i}>
+                  {phrase}
                   <span className={styles.separator} />
                 </span>
               ))}
