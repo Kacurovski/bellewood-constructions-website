@@ -14,6 +14,7 @@ export default function Approach() {
   return (
     <>
       <PageHead
+        variant="approach"
         number="E-01"
         eyebrow="Approach"
         title="Care for the house. Clarity for you."

@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react'
+import type { CSSProperties, ReactNode } from 'react'
 import { Reveal } from './Reveal'
 import { RegistrationMarks, SheetRef } from './Sheet'
 import styles from './PageHead.module.css'
@@ -18,6 +18,25 @@ type Props = {
   meta?: MetaRow[]
   /** Anything that should sit under the title instead of a ledger. */
   children?: ReactNode
+  /** Optional page-specific introduction. Omit to retain the original masthead. */
+  variant?: 'work' | 'approach' | 'about' | 'contact'
+}
+
+/** Page openings enter on mount, independently of scroll observers or JS frames. */
+function IntroSettle({ children, className, delay = 0, y = 12 }: {
+  children: ReactNode
+  className?: string
+  delay?: number
+  y?: number
+}) {
+  return (
+    <div
+      className={[styles.settle, className].filter(Boolean).join(' ')}
+      style={{ '--intro-delay': `${delay}s`, '--intro-y': `${y}px` } as CSSProperties}
+    >
+      {children}
+    </div>
+  )
 }
 
 /**
@@ -32,21 +51,48 @@ type Props = {
  * The header is transparent over this band (see Header.module.css), which is
  * why the band runs up underneath it rather than starting below it.
  */
-export function PageHead({ number, eyebrow, title, lede, meta, children }: Props) {
+export function PageHead({ number, eyebrow, title, lede, meta, children, variant }: Props) {
+  const FactsReveal = variant ? IntroSettle : Reveal
   return (
-    <header className={['on-green', styles.head].join(' ')}>
+    <header
+      className={['on-green', styles.head, variant && styles.refined, variant && styles[variant]].filter(Boolean).join(' ')}
+      data-page-intro={variant}
+    >
       <RegistrationMarks />
 
       <div className={['shell', styles.inner].join(' ')}>
-        <Reveal className={styles.copy}>
-          <SheetRef number={number} name={eyebrow} rule={false} />
-          <h1 className={styles.title}>{title}</h1>
-          {lede && <p className={styles.lede}>{lede}</p>}
-          {children}
-        </Reveal>
+        {variant ? (
+          <div className={styles.copy}>
+            <IntroSettle y={0}>
+              <SheetRef number={number} name={eyebrow} rule={false} />
+            </IntroSettle>
+            <IntroSettle delay={0.06} y={12}>
+              <h1 className={styles.title}>{title}</h1>
+            </IntroSettle>
+            {lede && variant !== 'approach' && (
+              <IntroSettle delay={0.14} y={8}>
+                <p className={styles.lede}>{lede}</p>
+              </IntroSettle>
+            )}
+            {children}
+          </div>
+        ) : (
+          <Reveal className={styles.copy}>
+            <SheetRef number={number} name={eyebrow} rule={false} />
+            <h1 className={styles.title}>{title}</h1>
+            {lede && <p className={styles.lede}>{lede}</p>}
+            {children}
+          </Reveal>
+        )}
+
+        {variant === 'approach' && lede && (
+          <IntroSettle className={styles.introNote} delay={0.14} y={8}>
+            <p className={styles.lede}>{lede}</p>
+          </IntroSettle>
+        )}
 
         {meta && meta.length > 0 && (
-          <Reveal delay={0.08}>
+          <FactsReveal className={variant ? styles.facts : undefined} delay={variant ? 0.22 : 0.08} y={variant ? 8 : 18}>
             <dl className={styles.meta}>
               {meta.map((row) => (
                 <div className={styles.row} key={row.label}>
@@ -55,7 +101,7 @@ export function PageHead({ number, eyebrow, title, lede, meta, children }: Props
                 </div>
               ))}
             </dl>
-          </Reveal>
+          </FactsReveal>
         )}
       </div>
     </header>

@@ -21,6 +21,21 @@ reference it.
 
 ---
 
+## Inner-page introduction test (2 November 2026)
+
+Work, Approach, About and Contact opt into individual `PageHead` variants while
+retaining their original copy, links and Bellewood Green. Work has a shorter
+opening and a prominent project count. Approach pairs its statement with the
+explanation above a single row of supporting facts. About leads with Angus's
+name; Contact makes phone and email larger, direct actions. Heights follow the
+content, with separate mobile arrangements and restrained entrance motion that
+respects reduced-motion preferences. Home and project-page mastheads are unchanged.
+
+This is a reversible design test. The version immediately before it is
+`c126901`. To restore just one introduction, remove that page's `variant` prop
+from `PageHead`; the original layout and entrance behaviour remain the default.
+Record any shared rollback as a new commit, preserving later unrelated work.
+
 ## Home name introduction (2 November 2026)
 
 `ContinuityIntroduction` pairs a continuous text ticker with a stationary

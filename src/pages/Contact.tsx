@@ -14,6 +14,7 @@ export default function Contact() {
   return (
     <>
       <PageHead
+        variant="contact"
         number="D-01"
         eyebrow="Contact"
         title="Tell us about the house."

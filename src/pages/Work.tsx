@@ -264,6 +264,7 @@ export default function Work() {
   return (
     <>
       <PageHead
+        variant="work"
         number="B-01"
         eyebrow="Work"
         title="Renovations, extensions and restorations."

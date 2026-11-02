@@ -23,6 +23,7 @@ export default function About() {
   return (
     <>
       <PageHead
+        variant="about"
         number="C-01"
         eyebrow="About"
         title="One builder, more than two decades of Brisbane houses."
