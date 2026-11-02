@@ -12,12 +12,12 @@ export type HeritageFocus = 'original' | 'connection' | 'outdoors'
 
 /** A hypothetical architectural study, not a reconstruction of any project's past. */
 export const MAQUETTE_MATERIALS: typeof MATERIALS = {
-  frame: { color: '#e4e1d8', roughness: 0.9, metalness: 0 },
-  clad: { color: '#d5d1c6', roughness: 0.9, metalness: 0 },
-  charred: { color: '#c7c5bb', roughness: 0.9, metalness: 0 },
-  roof: { color: '#5d635e', roughness: 0.86, metalness: 0.06 },
-  glass: { color: '#34483e', roughness: 0.5, metalness: 0.04 },
-  deck: { color: '#9a7b4f', roughness: 0.92, metalness: 0 },
+  frame: { color: '#edece4', roughness: 0.9, metalness: 0 },
+  clad: { color: '#c7c3b7', roughness: 0.9, metalness: 0 },
+  charred: { color: '#204b37', roughness: 0.9, metalness: 0 },
+  roof: { color: '#05432a', roughness: 0.8, metalness: 0.06 },
+  glass: { color: '#304b40', roughness: 0.4, metalness: 0.04 },
+  deck: { color: '#9a7346', roughness: 0.92, metalness: 0 },
   shadow: { color: '#575a52', roughness: 0.96, metalness: 0 },
 }
 

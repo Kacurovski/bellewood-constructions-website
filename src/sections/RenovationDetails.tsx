@@ -1,5 +1,4 @@
 import { lazy, useEffect, useRef, useState } from 'react'
-import type { CSSProperties } from 'react'
 import { SheetRef } from '../components/Sheet'
 import { useReducedMotion } from '../hooks/useReducedMotion'
 import { hasWebGL } from '../lib/webgl'
@@ -10,51 +9,54 @@ import styles from './RenovationDetails.module.css'
 
 const HeritageStudy = lazy(() => import('../three/HeritageStudy'))
 
-/** One spatial idea, explored on a model. This is not a real project's history. */
+/** Two clear views of an illustrative home, with no implied project history. */
 export function RenovationDetails() {
-  const [reveal, setReveal] = useState(100)
+  const [extended, setExtended] = useState(true)
   const [canMove, setCanMove] = useState(false)
   const stage = useRef<HTMLDivElement>(null)
   const reduced = useReducedMotion()
-  const progress = reveal / 100
+  const progress = extended ? 1 : 0
 
   useEffect(() => { setCanMove(!reduced && hasWebGL()) }, [reduced])
 
   return (
-    <section id="renovation-details" className={styles.section} aria-labelledby="renovation-details-heading">
+    <section id="renovation-details" className={styles.section} aria-labelledby="renovation-details-heading" data-view={extended ? 'addition' : 'cottage'}>
       <div className="shell">
         <SheetRef number="E-03" name="Space for what's next" />
         <div className={styles.composition}>
           <div className={styles.story}>
             <h2 id="renovation-details-heading">More room.<br /><em>Still your home.</em></h2>
             <p className={styles.lede}>The familiar face stays. New living space opens behind it. Explore one way an older home can grow.</p>
-            <span className={styles.signature} aria-hidden="true"><i /> A little room to imagine.</span>
+
+            <div className={styles.explore}>
+              <p id="renovation-view-prompt" className={styles.prompt}>See what an addition could change.</p>
+              <div className={styles.choices} role="group" aria-labelledby="renovation-view-prompt" data-extended={extended}>
+                <button type="button" aria-pressed={!extended} aria-controls="renovation-model" onClick={() => setExtended(false)}>The cottage</button>
+                <button type="button" aria-pressed={extended} aria-controls="renovation-model" onClick={() => setExtended(true)}>With an addition</button>
+                <span className={styles.choiceLine} aria-hidden="true" />
+              </div>
+              <p className={styles.choiceHelp}>Choose a view to watch the house change.</p>
+            </div>
           </div>
 
           <figure className={styles.figure}>
-            <div ref={stage} className={styles.stage} data-movable={canMove || undefined}>
+            <div ref={stage} id="renovation-model" className={styles.stage} data-movable={canMove || undefined}>
               <div className={styles.ground} aria-hidden="true" />
               <div className={styles.model} style={{ aspectRatio: HERITAGE_MAQUETTE_ASPECT }}>
-                <SceneFrame rootMargin="200px" label="An illustrative cottage and possible rear addition. Use the slider to explore the idea."
+                <SceneFrame rootMargin="200px" label="An illustrative cottage. Choose the cottage or the possible rear addition using the two view options."
                   still={<HeritageStudyStill className={styles.drawing} presentation="maquette" additionProgress={progress} />}>
                   <HeritageStudy shadows={false} presentation="maquette" additionProgress={progress} interactive motionRef={stage} />
                 </SceneFrame>
               </div>
-              {canMove && <span className={styles.motionHint}>Move your mouse to look around <span aria-hidden="true">↔</span></span>}
             </div>
-
-            <div className={styles.explore} style={{ '--reveal': reveal + '%' } as CSSProperties}>
-              <div className={styles.controlHeading}>
-                <label htmlFor="renovation-addition">Explore an addition</label>
-                <span id="renovation-slide-hint">Slide to reveal</span>
-              </div>
-              <input id="renovation-addition" className={styles.range} type="range" min="0" max="100" step="1" value={reveal}
-                aria-describedby="renovation-slide-hint renovation-study-caption"
-                aria-valuetext={reveal === 0 ? 'Original cottage' : reveal === 100 ? 'With a rear addition' : 'Rear addition partly revealed'}
-                onChange={event => setReveal(Number(event.target.value))} />
-              <div className={styles.endpoints} aria-hidden="true"><span>Original cottage</span><span>With a rear addition</span></div>
-            </div>
-            <figcaption id="renovation-study-caption" className={styles.caption}>An illustrative renovation concept.</figcaption>
+            <figcaption className={styles.caption}>
+              <span>An illustrative renovation concept.</span>
+              {canMove && <span className={styles.motionHint}>
+                <svg width="18" height="22" viewBox="0 0 18 22" aria-hidden="true"><path d="m3 2 11 9-5 .9 2.7 6-2.4 1.1-2.7-6-3.6 3Z" /></svg>
+                Move over the house to look around
+              </span>}
+            </figcaption>
+            <p className="visually-hidden" role="status">{extended ? 'Showing the cottage with a possible rear addition.' : 'Showing the cottage without the addition.'}</p>
           </figure>
         </div>
       </div>

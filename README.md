@@ -178,25 +178,27 @@ design test; the previous About layout remains in Git history.
 
 Approach's `RenovationDetails` is a single spatial idea: "More room. Still your
 home." The large architectural model responds gently to mouse movement within
-its stage and returns to rest on leave. One labelled, keyboard-accessible slider
-reveals a possible rear addition while retaining the cottage's frontage, porch
-and stairs. There are no project links, numbered hotspots or changing text panels.
-Touch keeps native page scrolling and uses the slider; reduced motion disables
-3D movement and uses static renders.
+its stage and returns to rest on leave. Two direct choices, "The cottage" and
+"With an addition", reveal a possible rear addition while retaining the cottage's
+frontage, porch and stairs. A green underline identifies the selected view, and
+short instructions explain the view choices and desktop mouse movement. The
+choices support keyboard and touch; mobile places them above the house. Touch
+keeps native page scrolling; reduced motion uses static renders without movement.
 
 The geometry in `auchenflowerStudyMembers.ts` takes architectural cues from the
 photo library, but the model is an illustrative renovation concept, not an actual
 project, measured replica or documented earlier state. Project identity stays
-out of the section. Warm white, graphite and limited timber sit on a pale sage
-ground. `studyEvolution.ts` separates the imagined addition from the original
+out of the section. A Bellewood-green roof, warm stone walls and timber detailing
+sit on the site's Wash ground. `studyEvolution.ts` separates the imagined addition from the original
 cottage and defines the reveal and mouse movement limits. Legacy models and the
 Kalinga construction sequence are unchanged. This is a reversible design test.
 
 The original-only and complete WebP renders in `src/assets/studies/` provide a
-matching, interactive fallback without WebGL. They share one camera and blend
-as the slider moves. After changing geometry, camera or colours, start the local
+matching, interactive fallback without WebGL. They share one camera and switch
+between the two views. The live model reveals the addition with a gently eased
+transition. After changing geometry, camera or colours, start the local
 Vite server and run
-`powershell -NoProfile -ExecutionPolicy Bypass -File scripts/render_auchenflower_study.ps1 -EvolutionOnly`.
+`powershell -NoProfile -ExecutionPolicy Bypass -File scripts/render_auchenflower_study.ps1`.
 This uses hidden Chrome; `-DevUrl` and `-ChromePath` can override the defaults.
 These assets are model renders, not altered photographs or historical evidence.
 

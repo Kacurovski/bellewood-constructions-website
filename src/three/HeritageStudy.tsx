@@ -193,7 +193,7 @@ function MaquetteHouse({ focus, additionProgress, interactive, motionRef }: {
     }
 
     const targetProgress = THREE.MathUtils.clamp(additionProgress, 0, 1)
-    shownProgress.current = THREE.MathUtils.lerp(shownProgress.current, targetProgress, 1 - Math.exp(-14 * dt))
+    shownProgress.current = THREE.MathUtils.lerp(shownProgress.current, targetProgress, 1 - Math.exp(-5 * dt))
     if (Math.abs(shownProgress.current - targetProgress) < 0.0001) shownProgress.current = targetProgress
     if (addition.current) addition.current.visible = shownProgress.current > 0
     if (model.current) {
