@@ -29,6 +29,8 @@ smoothly on hover. Its position wraps without restarting when direction changes.
 The supplied screen recording remains the orbit reference: cards turn edge-on
 and show their reverse faces, completing a turn in 27 seconds. Larger faces,
 Newsreader values, labelled tops and fine rules give the cards more presence.
+The reverse faces use Bellewood Green with the supplied white symbol and a small
+card number; the information faces and section ground stay light.
 
 There is no visible control bar. Drag to turn; select a card to bring it forward
 and hold it for reading, then select it again to resume. The same surface supports

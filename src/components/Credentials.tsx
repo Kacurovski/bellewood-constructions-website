@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import type { CSSProperties, KeyboardEvent, MouseEvent, PointerEvent } from 'react'
 import { credentials } from '../config/site'
 import { useReducedMotion } from '../hooks/useReducedMotion'
+import { Logo } from './Logo'
 import styles from './Credentials.module.css'
 
 const [licence, insurance, location, capacity] = credentials
@@ -162,9 +163,8 @@ export function Credentials({ running }: { running: boolean }) {
                 <p className={styles.note}>{item.note}</p>
               </div>
               <div className={styles.back} aria-hidden="true">
-                <span>{String(i + 1).padStart(2, '0')}</span>
-                <small>Same builder.</small>
-                <i />
+                <span className={styles.backNumber}>{String(i + 1).padStart(2, '0')}</span>
+                <Logo variant="symbol" tone="reverse" width={64} decorative />
               </div>
             </div>
           ))}
