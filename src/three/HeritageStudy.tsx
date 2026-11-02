@@ -1,4 +1,5 @@
 import { useEffect, useLayoutEffect, useMemo, useRef } from 'react'
+import type { RefObject } from 'react'
 import { Canvas, useFrame, useThree } from '@react-three/fiber'
 import { Html } from '@react-three/drei'
 import hotspotStyles from './HeritageHotspots.module.css'
@@ -27,6 +28,7 @@ import {
   MAQUETTE_YAW,
 } from './heritageMaquette'
 import type { HeritageFocus, HeritagePresentation } from './heritageMaquette'
+import { isStudyAddition, STUDY_ADDITION_REVEAL, STUDY_POINTER_MOTION } from './studyEvolution'
 
 /**
  * Scene 1 — the heritage study, in the hero.
@@ -105,16 +107,31 @@ function buildGeometries(
  * Selection introduces Bellewood green; the other regions retain their physical
  * material colours and depth. Legacy presentations keep their original geometry.
  */
-function MaquetteHouse({ focus }: { focus: HeritageFocus | null }) {
+function MaquetteHouse({ focus, additionProgress, interactive, motionRef }: {
+  focus: HeritageFocus | null
+  additionProgress: number
+  interactive: boolean
+  motionRef?: RefObject<HTMLElement>
+}) {
+  const { gl } = useThree()
+  const motionPivot = useRef<THREE.Group>(null)
+  const model = useRef<THREE.Group>(null)
+  const addition = useRef<THREE.Group>(null)
+  const pointer = useRef({ x: 0, y: 0 })
+  const shownProgress = useRef(THREE.MathUtils.clamp(additionProgress, 0, 1))
+  const revealPlane = useMemo(() => new THREE.Plane(new THREE.Vector3(0, 0, 1), -STUDY_ADDITION_REVEAL.back), [])
+  const restPosition = useMemo(() => MAQUETTE_OFFSET.map((value, i) => value - MAQUETTE_TARGET[i]) as [number, number, number], [])
+
   const batches = useMemo(() => {
-    const geometries = buildGeometries((member) => `${member.mat}|${heritageFocusGroups(member).join(' ')}`, MAQUETTE_MEMBERS, 'XYZ')
+    const geometries = buildGeometries((member) => `${member.mat}|${heritageFocusGroups(member).join(' ')}|${isStudyAddition(member) ? 'addition' : 'original'}`, MAQUETTE_MEMBERS, 'XYZ')
     return Object.entries(geometries).flatMap(([id, geometry]) => {
       if (!geometry) return []
-      const [key, groups] = id.split('|')
+      const [key, groups, part] = id.split('|')
       const spec = MAQUETTE_MATERIALS[key as MaterialKey]
       const full = new THREE.Color(spec.color)
       return [{
         id,
+        part,
         groups: groups.split(' '),
         geometry,
         full,
@@ -124,16 +141,70 @@ function MaquetteHouse({ focus }: { focus: HeritageFocus | null }) {
           transparent: false,
           envMapIntensity: 0.28,
           emissiveIntensity: 0,
+          clippingPlanes: part === 'addition' ? [revealPlane] : [],
         }),
       }]
     })
-  }, [])
+  }, [revealPlane])
+
+  useEffect(() => {
+    const previous = gl.localClippingEnabled
+    gl.localClippingEnabled = true
+    return () => { gl.localClippingEnabled = previous }
+  }, [gl])
+
+  useEffect(() => {
+    pointer.current = { x: 0, y: 0 }
+    if (!interactive || !window.matchMedia('(hover: hover) and (pointer: fine)').matches) return
+    const surface = motionRef?.current ?? gl.domElement.parentElement
+    if (!surface) return
+    const reset = () => { pointer.current = { x: 0, y: 0 } }
+    const move = (event: PointerEvent) => {
+      if (event.pointerType !== 'mouse') return
+      if (event.target instanceof Element && event.target.closest('input, button, a')) return
+      const rect = surface.getBoundingClientRect()
+      pointer.current = {
+        x: THREE.MathUtils.clamp(((event.clientX - rect.left) / Math.max(rect.width, 1)) * 2 - 1, -1, 1),
+        y: THREE.MathUtils.clamp(((event.clientY - rect.top) / Math.max(rect.height, 1)) * 2 - 1, -1, 1),
+      }
+    }
+    surface.addEventListener('pointermove', move, { passive: true })
+    surface.addEventListener('pointerleave', reset)
+    window.addEventListener('blur', reset)
+    return () => {
+      surface.removeEventListener('pointermove', move)
+      surface.removeEventListener('pointerleave', reset)
+      window.removeEventListener('blur', reset)
+      reset()
+    }
+  }, [gl, interactive, motionRef])
 
   useEffect(() => () => {
     batches.forEach(({ geometry, material }) => { geometry.dispose(); material.dispose() })
   }, [batches])
 
   useFrame((_, delta) => {
+    const dt = Math.min(delta, 0.1)
+    const pivot = motionPivot.current
+    if (pivot) {
+      const movement = 1 - Math.exp(-6 * dt)
+      pivot.rotation.y = THREE.MathUtils.lerp(pivot.rotation.y, pointer.current.x * STUDY_POINTER_MOTION.yaw, movement)
+      pivot.rotation.x = THREE.MathUtils.lerp(pivot.rotation.x, pointer.current.y * STUDY_POINTER_MOTION.tilt, movement)
+    }
+
+    const targetProgress = THREE.MathUtils.clamp(additionProgress, 0, 1)
+    shownProgress.current = THREE.MathUtils.lerp(shownProgress.current, targetProgress, 1 - Math.exp(-14 * dt))
+    if (Math.abs(shownProgress.current - targetProgress) < 0.0001) shownProgress.current = targetProgress
+    if (addition.current) addition.current.visible = shownProgress.current > 0
+    if (model.current) {
+      // The clipping plane follows the moving model, rather than remaining in
+      // world space and sawing through a different part when the pointer moves.
+      model.current.updateWorldMatrix(true, false)
+      revealPlane.normal.set(0, 0, 1)
+      revealPlane.constant = -THREE.MathUtils.lerp(STUDY_ADDITION_REVEAL.front, STUDY_ADDITION_REVEAL.back, shownProgress.current)
+      revealPlane.applyMatrix4(model.current.matrixWorld)
+    }
+
     const amount = 1 - Math.pow(0.005, Math.min(delta, 0.1))
     batches.forEach((batch) => {
       const active = focus !== null && batch.groups.includes(focus)
@@ -142,10 +213,19 @@ function MaquetteHouse({ focus }: { focus: HeritageFocus | null }) {
   })
 
   return (
-    <group position={MAQUETTE_OFFSET} rotation={[0, MAQUETTE_YAW, 0]}>
-      {batches.map(({ id, geometry, material }) => (
-        <mesh key={id} name={`study-${id}`} geometry={geometry} material={material} castShadow receiveShadow />
-      ))}
+    <group ref={motionPivot} name="study-motion-pivot" position={MAQUETTE_TARGET}>
+      <group ref={model} position={restPosition} rotation={[0, MAQUETTE_YAW, 0]}>
+        <group name="study-evolution-original">
+          {batches.filter(batch => batch.part === 'original').map(({ id, geometry, material }) => (
+            <mesh key={id} name={`study-${id}`} geometry={geometry} material={material} castShadow receiveShadow />
+          ))}
+        </group>
+        <group ref={addition} name="study-evolution-addition" visible={additionProgress > 0}>
+          {batches.filter(batch => batch.part === 'addition').map(({ id, geometry, material }) => (
+            <mesh key={id} name={`study-${id}`} geometry={geometry} material={material} castShadow receiveShadow />
+          ))}
+        </group>
+      </group>
     </group>
   )
 }
@@ -503,9 +583,17 @@ export default function HeritageStudy({
   onPartSelect,
   presentation = 'default',
   focus = null,
+  additionProgress = 1,
+  interactive = false,
+  motionRef,
 }: {
   presentation?: HeritagePresentation
   focus?: HeritageFocus | null
+  /** Reveal the imagined addition, from the original cottage (0) to complete (1). */
+  additionProgress?: number
+  /** Gentle, local pointer response for the architectural study only. */
+  interactive?: boolean
+  motionRef?: RefObject<HTMLElement>
   selectedPart?: HeritagePart
   onPartSelect?: (part: HeritagePart) => void
   shadows?: boolean
@@ -585,7 +673,7 @@ export default function HeritageStudy({
       )}
 
       {maquette
-        ? <MaquetteHouse focus={focus} />
+        ? <MaquetteHouse focus={focus} additionProgress={additionProgress} interactive={interactive} motionRef={motionRef} />
         : <House lean={lean} highlight={highlight} selectedPart={selectedPart} onPartSelect={onPartSelect} />}
     </Canvas>
   )

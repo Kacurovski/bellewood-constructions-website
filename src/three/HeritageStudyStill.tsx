@@ -8,11 +8,13 @@ import neutralStudy from '../assets/studies/auchenflower-study-neutral.webp'
 import originalStudy from '../assets/studies/auchenflower-study-original.webp'
 import connectionStudy from '../assets/studies/auchenflower-study-connection.webp'
 import outdoorsStudy from '../assets/studies/auchenflower-study-outdoors.webp'
+import cottageStudy from '../assets/studies/renovation-concept-cottage.webp'
 import styles from './HeritageStudyStill.module.css'
 
 type Props = {
   presentation?: HeritagePresentation
   focus?: HeritageFocus | null
+  additionProgress?: number
   className?: string
   variant?: 'solid' | 'line'
   highlight?: MaterialKey | null
@@ -24,6 +26,13 @@ const studyFrames = { neutral: neutralStudy, original: originalStudy, connection
 
 export function HeritageStudyStill(props: Props) {
   if (props.presentation !== 'maquette') return <LegacyStudyStill {...props} />
+  if (props.additionProgress !== undefined) {
+    const progress = Math.max(0, Math.min(1, props.additionProgress))
+    return <div className={[styles.maquette, props.className].filter(Boolean).join(' ')} data-addition={progress} aria-hidden="true">
+      <img src={cottageStudy} alt="" loading="lazy" decoding="async" className={styles.studyFrame} data-study-frame="cottage" style={{ opacity: 1 }} />
+      <img src={neutralStudy} alt="" loading="lazy" decoding="async" className={styles.studyFrame} data-study-frame="addition" style={{ opacity: progress }} />
+    </div>
+  }
   const active = props.focus ?? 'neutral'
   return <div className={[styles.maquette, props.className].filter(Boolean).join(' ')} data-focus={active} aria-hidden="true">
     {Object.entries(studyFrames).map(([state, src]) => <img key={state} src={src} alt="" loading="lazy" decoding="async"

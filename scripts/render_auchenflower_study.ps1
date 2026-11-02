@@ -3,7 +3,8 @@
 param(
   [string]$DevUrl = 'http://127.0.0.1:5173',
   [string]$ChromePath = 'C:\Program Files\Google\Chrome\Application\chrome.exe',
-  [int]$DebugPort = 9293
+  [int]$DebugPort = 9293,
+  [switch]$EvolutionOnly
 )
 $ErrorActionPreference = 'Stop'
 $workspace = Split-Path $PSScriptRoot -Parent
@@ -58,7 +59,8 @@ try {
   }
   if (!$ready) { throw 'The live study did not mount. WebGL must be available for asset generation.' }
   Start-Sleep -Seconds 2
-  foreach ($focus in @('neutral','original','connection','outdoors')) {
+  $frames = if ($EvolutionOnly) { @('neutral','cottage') } else { @('neutral','original','connection','outdoors','cottage') }
+  foreach ($focus in $frames) {
     $expression = @'
 (async()=>{
   const focus='__FOCUS__';
@@ -69,6 +71,12 @@ try {
   const root=F._roots.get(canvas);
   if(!root)throw new Error('Live canvas root not found');
   const {gl,scene,camera}=root.store.getState();
+  const pivot=scene.getObjectByName('study-motion-pivot');
+  const addition=scene.getObjectByName('study-evolution-addition');
+  const oldRotation=pivot?.rotation.clone();
+  if(pivot)pivot.rotation.set(0,0,0);
+  if(addition)addition.visible=focus!=='cottage';
+  scene.updateMatrixWorld(true);
   let meshes=0;
   scene.traverse(object=>{
     if(!object.isMesh||!object.name.startsWith('study-'))return;
@@ -90,6 +98,8 @@ try {
   const pixels=new Uint8Array(width*height*4);
   gl.readRenderTargetPixels(target,0,0,width,height,pixels);
   gl.setRenderTarget(null);target.dispose();
+  if(pivot&&oldRotation)pivot.rotation.copy(oldRotation);
+  if(addition)addition.visible=true;
   Object.assign(camera,oldFrame);camera.updateProjectionMatrix();
   const output=document.createElement('canvas');output.width=width;output.height=height;
   const context=output.getContext('2d');const bitmap=context.createImageData(width,height);
@@ -101,7 +111,8 @@ try {
 })()
 '@
     $data = Js ($expression.Replace('__FOCUS__',$focus))
-    $target = Join-Path $assetDir ("auchenflower-study-$focus.webp")
+    $filename = if ($focus -eq 'cottage') { 'renovation-concept-cottage.webp' } else { "auchenflower-study-$focus.webp" }
+    $target = Join-Path $assetDir $filename
     [IO.File]::WriteAllBytes($target,[Convert]::FromBase64String($data))
     Write-Output ("Rendered $focus (" + (Get-Item -LiteralPath $target).Length + ' bytes)')
   }

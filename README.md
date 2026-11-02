@@ -176,26 +176,27 @@ passages in the About introduction are shortened. The drawing hatch responds to
 a mouse and stays static for touch and reduced motion. This is a reversible
 design test; the previous About layout remains in Git history.
 
-Approach's renovation study is now a single model with three directly labelled
-points: the original house, old meets new, and openings & shelter. It replaces
-the nested chapter/material controls in `RenovationDetails`. Its separate geometry
-in `auchenflowerStudyMembers.ts` is based on Auchenflower's offset gable, projecting
-three-part bay window, recessed porch, side window hoods and timber brackets.
-The exposed subfloor and proposed rear pavilion are an imagined earlier cottage
-and possible addition, not a documented before-and-after or a measured replica.
-The caption makes this explicit and links to the real Auchenflower photographs.
-Warm white, graphite and limited timber form the base materials; Bellewood green
-marks the selected region while the rest retains its material colour and depth.
-No simulated project photos are introduced. Hover, keyboard focus and tap select
-the same explanation and highlight, with matching static rendering for reduced
-motion or no WebGL. This is a reversible design test; the original generic model
-remains available for legacy uses, and the Kalinga assembly is unchanged.
+Approach's `RenovationDetails` is a single spatial idea: "More room. Still your
+home." The large architectural model responds gently to mouse movement within
+its stage and returns to rest on leave. One labelled, keyboard-accessible slider
+reveals a possible rear addition while retaining the cottage's frontage, porch
+and stairs. There are no project links, numbered hotspots or changing text panels.
+Touch keeps native page scrolling and uses the slider; reduced motion disables
+3D movement and uses static renders.
 
-The study's four static WebP states in `src/assets/studies/` are rendered from
-the same 3D geometry and materials, so roof occlusion and callout positions stay
-consistent without WebGL. After changing the geometry, camera or colours, start
-the local Vite server and run
-`powershell -NoProfile -ExecutionPolicy Bypass -File scripts/render_auchenflower_study.ps1`.
+The geometry in `auchenflowerStudyMembers.ts` takes architectural cues from the
+photo library, but the model is an illustrative renovation concept, not an actual
+project, measured replica or documented earlier state. Project identity stays
+out of the section. Warm white, graphite and limited timber sit on a pale sage
+ground. `studyEvolution.ts` separates the imagined addition from the original
+cottage and defines the reveal and mouse movement limits. Legacy models and the
+Kalinga construction sequence are unchanged. This is a reversible design test.
+
+The original-only and complete WebP renders in `src/assets/studies/` provide a
+matching, interactive fallback without WebGL. They share one camera and blend
+as the slider moves. After changing geometry, camera or colours, start the local
+Vite server and run
+`powershell -NoProfile -ExecutionPolicy Bypass -File scripts/render_auchenflower_study.ps1 -EvolutionOnly`.
 This uses hidden Chrome; `-DevUrl` and `-ChromePath` can override the defaults.
 These assets are model renders, not altered photographs or historical evidence.
 
