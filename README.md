@@ -178,19 +178,27 @@ design test; the previous About layout remains in Git history.
 
 Approach's `RenovationDetails` is a single spatial idea: "More room. Still your
 home." The large architectural model responds gently to mouse movement within
-its stage and returns to rest on leave. Two direct choices, "The cottage" and
-"With an addition", reveal a possible rear addition while retaining the cottage's
-frontage, porch and stairs. A green underline identifies the selected view, and
-short instructions explain the view choices and desktop mouse movement. The
-choices support keyboard and touch; mobile places them above the house. Touch
-keeps native page scrolling; reduced motion uses static renders without movement.
+its stage and returns to rest on leave. While the house is visible, an automatic
+sequence gently reveals a possible rear addition, holds, and reverses back to
+the cottage. Each reveal takes 2.2 seconds, with a 3-second hold between changes.
+The first change starts after 1.6 seconds. The cottage's frontage, porch and
+stairs remain in place throughout.
+
+Two direct choices, "The cottage" and "With an addition", pause the sequence and
+hold the chosen view. An animated green underline follows the change, and one
+small pause/resume control sits alongside the choices. There is no mouse-hint
+graphic. Keyboard focus pauses automatic changes; selecting resume explicitly
+restarts them. The sequence stops advancing off-screen and in a hidden tab.
+Mobile places the controls above the house and retains native page scrolling.
+Reduced motion and no-WebGL use manually selected static renders without an
+automatic cycle or an inactive playback control.
 
 The geometry in `auchenflowerStudyMembers.ts` takes architectural cues from the
 photo library, but the model is an illustrative renovation concept, not an actual
 project, measured replica or documented earlier state. Project identity stays
 out of the section. A Bellewood-green roof, warm stone walls and timber detailing
-sit on the site's Wash ground. `studyEvolution.ts` separates the imagined addition from the original
-cottage and defines the reveal and mouse movement limits. Legacy models and the
+sit on the site's Wash ground. `studyEvolution.ts` separates the imagined addition
+from the original cottage and defines the reveal and mouse movement limits. Legacy models and the
 Kalinga construction sequence are unchanged. This is a reversible design test.
 
 The original-only and complete WebP renders in `src/assets/studies/` provide a

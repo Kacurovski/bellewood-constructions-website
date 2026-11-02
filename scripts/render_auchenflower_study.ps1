@@ -73,15 +73,20 @@ try {
   const {gl,scene,camera}=root.store.getState();
   const pivot=scene.getObjectByName('study-motion-pivot');
   const addition=scene.getObjectByName('study-evolution-addition');
+  const oldAdditionVisible=addition?.visible;
   const oldRotation=pivot?.rotation.clone();
   if(pivot)pivot.rotation.set(0,0,0);
   if(addition)addition.visible=focus!=='cottage';
   scene.updateMatrixWorld(true);
   let meshes=0;
+  const savedMaterials=[];
   scene.traverse(object=>{
     if(!object.isMesh||!object.name.startsWith('study-'))return;
     const [key,groups]=object.name.slice(6).split('|');
     const selected=groups.split(' ').includes(focus);
+    savedMaterials.push({material:object.material,color:object.material.color.clone(),planes:object.material.clippingPlanes});
+    // Capture a complete endpoint, independent of the live automatic preview.
+    object.material.clippingPlanes=[];
     object.material.color.set(selected?m.MAQUETTE_FOCUS_COLOURS[key]:m.MAQUETTE_MATERIALS[key].color);
     meshes++;
   });
@@ -99,7 +104,8 @@ try {
   gl.readRenderTargetPixels(target,0,0,width,height,pixels);
   gl.setRenderTarget(null);target.dispose();
   if(pivot&&oldRotation)pivot.rotation.copy(oldRotation);
-  if(addition)addition.visible=true;
+  if(addition)addition.visible=oldAdditionVisible;
+  for(const saved of savedMaterials){saved.material.color.copy(saved.color);saved.material.clippingPlanes=saved.planes;}
   Object.assign(camera,oldFrame);camera.updateProjectionMatrix();
   const output=document.createElement('canvas');output.width=width;output.height=height;
   const context=output.getContext('2d');const bitmap=context.createImageData(width,height);

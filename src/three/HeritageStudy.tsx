@@ -119,6 +119,7 @@ function MaquetteHouse({ focus, additionProgress, interactive, motionRef }: {
   const addition = useRef<THREE.Group>(null)
   const pointer = useRef({ x: 0, y: 0 })
   const shownProgress = useRef(THREE.MathUtils.clamp(additionProgress, 0, 1))
+  const reveal = useRef({ from: shownProgress.current, to: shownProgress.current, elapsed: 2.2 })
   const revealPlane = useMemo(() => new THREE.Plane(new THREE.Vector3(0, 0, 1), -STUDY_ADDITION_REVEAL.back), [])
   const restPosition = useMemo(() => MAQUETTE_OFFSET.map((value, i) => value - MAQUETTE_TARGET[i]) as [number, number, number], [])
 
@@ -193,8 +194,15 @@ function MaquetteHouse({ focus, additionProgress, interactive, motionRef }: {
     }
 
     const targetProgress = THREE.MathUtils.clamp(additionProgress, 0, 1)
-    shownProgress.current = THREE.MathUtils.lerp(shownProgress.current, targetProgress, 1 - Math.exp(-5 * dt))
-    if (Math.abs(shownProgress.current - targetProgress) < 0.0001) shownProgress.current = targetProgress
+    if (reveal.current.to !== targetProgress) {
+      reveal.current = { from: shownProgress.current, to: targetProgress, elapsed: 0 }
+    }
+    // A measured forward/reverse reveal, rather than a fast initial jump with
+    // a long tail. Manual changes can reverse smoothly from any intermediate point.
+    const transition = reveal.current
+    transition.elapsed = Math.min(2.2, transition.elapsed + delta)
+    const t = transition.elapsed / 2.2
+    shownProgress.current = THREE.MathUtils.lerp(transition.from, transition.to, t * t * (3 - 2 * t))
     if (addition.current) addition.current.visible = shownProgress.current > 0
     if (model.current) {
       // The clipping plane follows the moving model, rather than remaining in

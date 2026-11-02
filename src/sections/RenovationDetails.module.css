@@ -17,8 +17,8 @@
 .story h2 em { display: inline-block; font-family: var(--font-body); font-weight: 400; letter-spacing: -.04em; margin-top: .12em; }
 .lede { max-width: 28ch; margin-top: 1.6rem; color: var(--pine); font: 400 clamp(1.08rem, 1.3vw, 1.3rem)/1.55 var(--font-body); }
 .explore { margin-top: 2.6rem; max-width: 26rem; }
-.prompt { color: var(--green); font: 500 .8rem/1.45 var(--font-display); }
-.choices { position: relative; display: grid; grid-template-columns: 1fr 1.25fr; border-bottom: 1px solid var(--rule-strong); margin-top: .6rem; }
+.controlRow { display: flex; align-items: center; gap: .6rem; }
+.choices { position: relative; display: grid; grid-template-columns: 1fr 1.25fr; flex: 1; min-width: 0; border-bottom: 1px solid var(--rule-strong); }
 .choices button {
   position: relative;
   appearance: none;
@@ -32,28 +32,28 @@
   cursor: pointer;
   transition: background 240ms ease, color 240ms ease;
 }
-.choices button[aria-pressed='true'] { color: var(--green); font-weight: 650; background: rgb(5 67 42 / 5%); }
-.choices button:hover { background: rgb(5 67 42 / 8%); color: var(--green); }
+.choices button[aria-pressed='true'] { color: var(--green); font-weight: 650; }
+.choices button:hover { background: rgb(5 67 42 / 5%); color: var(--green); }
 .choices button:focus-visible { outline: 2px solid var(--green); outline-offset: 4px; z-index: 1; }
-.choiceLine { position: absolute; left: 0; bottom: -1px; height: 3px; width: 44.444%; background: var(--green); pointer-events: none; transition: left 650ms var(--ease), width 650ms var(--ease); }
+.choiceLine { position: absolute; left: 0; bottom: -1px; height: 2px; width: 44.444%; background: var(--green); pointer-events: none; transition: left 2200ms cubic-bezier(.4, 0, .2, 1), width 2200ms cubic-bezier(.4, 0, .2, 1); }
 .choices[data-extended='true'] .choiceLine { left: 44.444%; width: 55.556%; }
-.choiceHelp { margin-top: .9rem; color: var(--pine); font: 400 .7rem/1.5 var(--font-display); }
+.previewToggle { display: grid; place-items: center; flex: 0 0 44px; width: 44px; height: 44px; padding: 0; border: 0; border-radius: 50%; background: transparent; color: var(--green); cursor: pointer; transition: background 240ms ease; }
+.previewToggle:hover { background: rgb(5 67 42 / 7%); }
+.previewToggle:focus-visible { outline: 2px solid var(--green); outline-offset: 3px; }
+.previewToggle svg { fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+.choiceHelp { margin-top: .9rem; min-height: 3em; color: var(--pine); font: 400 .7rem/1.5 var(--font-display); }
 .figure { min-width: 0; margin: 0; }
 .stage { position: relative; aspect-ratio: 1.42; isolation: isolate; }
 .model { position: absolute; width: 96%; left: 2%; top: 3%; }
 .drawing { width: 100%; height: 100%; }
 .ground { position: absolute; z-index: -1; width: 76%; height: 20%; left: 14%; bottom: 15%; border-radius: 50%; background: radial-gradient(ellipse, rgb(16 37 26 / 10%), transparent 69%); transform: rotate(-9deg); }
-.caption { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: .8rem 1.5rem; padding-top: 1rem; border-top: 1px solid var(--rule); color: var(--pine); font: 400 .67rem/1.5 var(--font-display); }
-.motionHint { display: none; align-items: center; gap: .5rem; color: var(--green); font-size: .73rem; }
-.motionHint svg { flex: 0 0 auto; fill: none; stroke: currentColor; stroke-width: 1.1; stroke-linejoin: round; }
-@media (hover: hover) and (pointer: fine) { .motionHint { display: inline-flex; } }
+.caption { padding-top: 1rem; border-top: 1px solid var(--rule); color: var(--pine); font: 400 .67rem/1.5 var(--font-display); }
 @media (max-width: 1050px) {
   .composition { grid-template-columns: minmax(0, .9fr) minmax(0, 1.3fr); gap: 1.25rem; }
   .story h2 { font-size: clamp(2.3rem, 4.4vw, 3.2rem); }
   .lede { font-size: 1.1rem; }
   .explore { margin-top: 1.8rem; }
   .caption { font-size: .62rem; }
-  .motionHint { font-size: .65rem; }
 }
 @media (max-width: 760px) {
   .composition { grid-template-columns: 1fr; gap: 1rem; padding-top: 1.6rem; }
@@ -63,14 +63,11 @@
   .story h2 em { display: block; }
   .lede { max-width: 39ch; margin-top: 1rem; font-size: 1.12rem; }
   .explore { max-width: none; margin-top: 1.6rem; }
-  .prompt { font-size: .75rem; }
-  .choices { margin-top: .35rem; }
-  .choices button { font-size: .85rem; min-height: 52px; }
+  .choices button { font-size: .8rem; padding-inline: .4rem; min-height: 52px; }
   .choiceHelp { margin-top: .7rem; font-size: .67rem; }
   .stage { margin-inline: -.35rem; aspect-ratio: 1.42; }
   .caption { font-size: .62rem; padding-top: .8rem; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .motionHint { display: none; }
-  .choices button, .choiceLine { transition: none; }
+  .choices button, .choiceLine, .previewToggle { transition: none; }
 }
