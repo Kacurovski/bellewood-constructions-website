@@ -1,4 +1,0 @@
-.checklist {
-  padding-block: clamp(2rem, 4vw, 3.5rem);
-  scroll-margin-top: calc(var(--header-h) + 24px);
-}

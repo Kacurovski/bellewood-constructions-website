@@ -7,7 +7,8 @@ heritage renovations. Domain: `bellewood.com.au`. Built by Systemations.
 
 > **Status: design preview, not publishable.** Project photography now comes from
 > the nine approved client folders. The testimonials still need approval;
-> the enquiry endpoint, checklist and delivery are unfinished. See **Open items**
+> the enquiry endpoint is unfinished. The optional checklist is off the site
+> until its content and delivery are ready. See **Open items**
 > below before anything goes live. Every one of those is a flag in the code, not
 > a note in a document.
 
@@ -194,10 +195,13 @@ original-photo directory. The other 81 web photographs and two detail crops are
 in `src/assets/projects/approved/`. The optional photo-library regeneration script
 needs the private source folders; running the website and building it do not.
 
-The current page-ending test restores the original checklist feature on Home
-after How it works (clearly marked in preparation), adds a contact invitation at
-the end of Work, and keeps one photographic closing on Approach. Approach's
-introduction retains the message about drawings, sequence and consistent care.
+Home's unfinished checklist and fixed side section index were removed on
+2 November 2026. How it works now leads directly into the testimonials. The
+header's scroll progress line remains on every page. The unused checklist and
+index components are retained for possible future use; neither is mounted.
+Work ends with a contact invitation, and Approach keeps one photographic closing.
+Approach's introduction retains the message about drawings, sequence and
+consistent care.
 
 About ends with a combined "Working with Bellewood" section before the footer.
 `src/sections/AboutClosing.tsx` and its CSS Module reuse the former process and
