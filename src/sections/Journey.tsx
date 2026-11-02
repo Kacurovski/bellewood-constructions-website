@@ -19,9 +19,8 @@ import styles from './Journey.module.css'
  * column that fills with the scroll, so the page keeps its place in the
  * sequence the way the progress bar in the header keeps its place in the
  * page. Each stage's number sits in a ring; the ring fills as the spine
- * reaches it, and the stage the reader is on carries full weight while the
- * others sit back. The same active/at-rest treatment the build's own steps
- * use, so the two halves of the page behave as one.
+ * reaches it. A short connecting rule and a two-line opening statement settle
+ * into place with each stage. Supporting text remains at full contrast.
  *
  * Under reduced motion the spine is drawn full, every ring is filled, and
  * every stage sits at full weight: the finished drawing, still.
@@ -52,7 +51,10 @@ export function Journey({ number = 'E-04' }: { number?: string }) {
   const move = (dir: 1 | -1) => {
     const el = list.current
     if (!el) return
-    el.scrollBy({ left: dir * (el.scrollWidth / journey.length), behavior: 'smooth' })
+    const items = Array.from(el.children) as HTMLElement[]
+    const current = Math.max(0, Math.min(journey.length - 1, at))
+    const target = Math.max(0, Math.min(journey.length - 1, current + dir))
+    el.scrollTo({ left: items[target].offsetLeft - items[0].offsetLeft, behavior: reduced ? 'instant' : 'smooth' })
   }
 
   // The swipe's position, for the rail and the rings on a phone.
@@ -64,8 +66,13 @@ export function Journey({ number = 'E-04' }: { number?: string }) {
       raf = 0
       const max = el.scrollWidth - el.clientWidth
       if (max <= 0) return
-      const step = el.scrollWidth / journey.length
-      setAt(Math.min(journey.length - 1, Math.round(el.scrollLeft / step)))
+      const items = Array.from(el.children) as HTMLElement[]
+      const origin = items[0].offsetLeft
+      let closest = 0
+      items.forEach((item, i) => {
+        if (Math.abs(item.offsetLeft - origin - el.scrollLeft) < Math.abs(items[closest].offsetLeft - origin - el.scrollLeft)) closest = i
+      })
+      setAt(el.scrollLeft >= max - 2 ? journey.length - 1 : closest)
       setProgress(el.scrollLeft / max)
     }
     const onScroll = () => {
@@ -82,12 +89,18 @@ export function Journey({ number = 'E-04' }: { number?: string }) {
   }, [])
 
   // The spine fills as the list passes through the middle of the window.
-  const { scrollYProgress } = useScroll({ target: list, offset: ['start 72%', 'end 55%'] })
+  const { scrollYProgress } = useScroll({ target: list, offset: ['start 65%', 'end 65%'] })
   const fill = useSpring(scrollYProgress, { stiffness: 90, damping: 26, mass: 0.6 })
 
-  useMotionValueEvent(scrollYProgress, 'change', (v) => {
-    const n = journey.length
-    const idx = v <= 0 ? -1 : Math.min(n - 1, Math.floor(v * n + 0.15))
+  useMotionValueEvent(scrollYProgress, 'change', () => {
+    if (narrow || !list.current) return
+    // Actual marker positions keep the text reveal and numbered spine aligned,
+    // even when a supporting paragraph wraps onto an extra line.
+    const markers = list.current.querySelectorAll<HTMLElement>(`.${styles.refCol}`)
+    let idx = -1
+    markers.forEach((marker, i) => {
+      if (marker.getBoundingClientRect().top + marker.offsetHeight / 2 <= window.innerHeight * .65) idx = i
+    })
     if (idx !== active) setActive(idx)
   })
 
@@ -124,8 +137,8 @@ export function Journey({ number = 'E-04' }: { number?: string }) {
               const done = reduced || (narrow ? i <= at : i <= active)
               const current = !reduced && (narrow ? i === at : i === active)
               const cls = [styles.item, done ? styles.itemDone : '', current ? styles.itemActive : ''].join(' ')
-              const content = (
-                <>
+              return (
+                <li key={stage.title} className={cls} aria-current={current ? 'step' : undefined}>
                   <span className={styles.refCol}>
                     <Ref done={done} active={current}>
                       {String(i + 1).padStart(2, '0')}
@@ -134,26 +147,18 @@ export function Journey({ number = 'E-04' }: { number?: string }) {
                   <div className={styles.card}>
                     <h3 className={styles.title}>{stage.title}</h3>
                     <div className={styles.body}>
-                      {stage.body.map((para) => (
-                        <p key={para} className={['small', styles.para].join(' ')}>
-                          {para}
-                        </p>
-                      ))}
+                      <span className={styles.leadRule} aria-hidden="true" />
+                      <p className={styles.lead}>
+                        <span className={styles.leadLine}>{stage.lead}</span>{' '}
+                        <em className={styles.leadLine}>{stage.emphasis}</em>
+                      </p>
+                      <div className={styles.support}>
+                        {stage.body.map((para) => <p key={para} className={styles.para}>{para}</p>)}
+                      </div>
                     </div>
                   </div>
                   <DrawnRule className={styles.rule} delay={0.1 + Math.min(i * 0.03, 0.18)} />
-                </>
-              )
-              // A plain item on a phone — the row is the thing that arrives —
-              // and a settling one on a desk.
-              return narrow ? (
-                <li key={stage.title} className={cls}>
-                  {content}
                 </li>
-              ) : (
-                <Reveal key={stage.title} as="li" className={cls} delay={Math.min(i * 0.03, 0.18)}>
-                  {content}
-                </Reveal>
               )
             })}
           </ol>

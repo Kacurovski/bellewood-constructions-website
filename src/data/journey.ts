@@ -12,61 +12,75 @@
  * real date; he is on site on his own jobs; questions go back in writing
  * before they become variations.
  *
- * Steps four and six carry the least from the file and the most convention —
- * how documents and approvals usually run, and what a handover usually
- * includes. Angus should read those two hardest. The "What happens next" block
+ * The documents and handover stages include draft descriptions of how
+ * approvals and project paperwork are handled. Angus should review those
+ * before publication. The "What happens next" block
  * in the enquiry section is the four-line version of this; they should agree,
  * and if he changes one the other follows.
  */
 
 export type Stage = {
   title: string
+  lead: string
+  emphasis: string
   body: string[]
 }
 
 export const journey: Stage[] = [
   {
     title: 'A conversation',
+    lead: 'You speak directly',
+    emphasis: 'with Angus.',
     body: [
-      'It starts with a phone call, and the call reaches Angus, not an office. A suburb, a rough idea of what you are thinking and how far along you are is enough. If it is not a good fit you will be told that on the call and pointed somewhere better.',
+      'Tell us where the house is, what you have in mind and how far along you are. We’ll talk through whether it’s a good fit.',
     ],
   },
   {
     title: 'A look at the house',
+    lead: 'Start with what makes',
+    emphasis: 'it worth keeping.',
     body: [
-      'Then a visit. Old houses tell you most of what you need to know once you are standing in them — what has moved, what has been added, what is original and worth the trouble. If there are drawings already, this is where they meet the building for the first time.',
+      'We visit the house, look at its character and discuss what you want to keep or change. Bring drawings if you already have them.',
     ],
   },
   {
     title: 'The documents',
+    lead: 'Resolve the questions',
+    emphasis: 'while they’re on paper.',
     body: [
-      'If you have an architect or designer, we work from their documents and the questions start here, in writing, while they are cheap to answer. If you do not, this is the point to get one, and we can say which kind of documentation the job actually needs and which it does not.',
-      'Character and heritage overlays, and any approvals the job needs, are sorted out in this stage rather than discovered later.',
+      'We review the drawings with your architect or designer, clarify the approvals needed and raise questions early, in writing.',
     ],
   },
   {
     title: 'Scope and price, in writing',
+    lead: 'Know what’s included',
+    emphasis: 'before you commit.',
     body: [
-      'A written quote: what is in, what is out, and what it costs. Something you can read at the kitchen table, compare with another one, and ask about — not a number over the phone.',
+      'A written quote sets out the scope, exclusions and price. Take time to read it, compare it and ask questions.',
     ],
   },
   {
     title: 'A start date',
+    lead: 'Make plans around',
+    emphasis: 'a clear start date.',
     body: [
-      'About four projects a year means the diary is a real diary. The start date you are given is when the job starts, and if the honest answer is that it cannot begin before your deadline, that is said now and not in three months.',
+      'With around four projects a year, we discuss availability early. If your timing doesn’t fit, we’ll say so before you make plans.',
     ],
   },
   {
     title: 'The build',
+    lead: 'Clear communication',
+    emphasis: 'throughout the build.',
     body: [
-      'The same order on every job — stumps and bearers, frame, roof, then the finish — and the same builder on site from the first day to the last. When the house disagrees with the drawings, and a hundred-year-old house usually does somewhere, the question comes to you and the architect while it is still a question.',
-      'The site is kept in a state you could bring somebody to. That is not a courtesy; it is how the work stays accurate.',
+      'Angus remains your person on site. We follow a clear sequence, raise questions early in writing, and keep the site orderly.',
     ],
   },
   {
     title: 'Handover',
+    lead: 'A home to settle into.',
+    emphasis: 'A builder you can call.',
     body: [
-      'A walk through the finished house together, the paperwork the job generated, and a builder who answers the phone afterwards. The licence number on the bottom of every page of this site is the same one on the contract, and it does not change with the name.',
+      'We walk through the finished house together and go through the project paperwork. Angus remains a point of contact after handover.',
     ],
   },
 ]

@@ -20,6 +20,16 @@ reference it.
 
 ---
 
+## Approach timeline editorial test (2 November 2026)
+
+The seven stages in “From the first call to handover” retain their numbered
+timeline and mobile swipe cards. Each now opens with a two-line Newsreader
+statement, an italic second line and a shorter, inset explanation. A fine rule
+and subtle text movement follow the active stage; reduced motion keeps the
+complete text still and readable. Copy lives in `src/data/journey.ts`, with
+layout and behaviour in `src/sections/Journey.tsx` and `Journey.module.css`.
+Mobile arrows use the actual card positions, including the final handover card.
+
 ## Brand assets — use these files, do not redraw the mark
 
 If you are a person or a tool rebuilding this page somewhere else, the logo is

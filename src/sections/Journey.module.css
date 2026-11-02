@@ -3,9 +3,8 @@
 
    A ledger with a spine. The reference column carries a vertical hairline the
    height of the list; a green fill grows down it with the scroll, and each
-   stage's ring fills as the spine reaches it. The stage the reader is on sits
-   at full weight, the rest a step back — the treatment the build's own steps
-   use, so the two halves of the page behave as one document.
+   stage's ring fills as the spine reaches it. Each text composition has a
+   two-line thought, an inset explanation and a short rule keyed to the spine.
    --------------------------------------------------------------------------- */
 
 .section {
@@ -72,20 +71,8 @@
   grid-template-columns: 3.5rem minmax(0, 0.85fr) minmax(0, 1.15fr);
   gap: clamp(1rem, 2.5vw, 2.5rem);
   align-items: start;
-  padding-block: clamp(1.5rem, 3vw, 2.5rem);
-  padding-bottom: calc(clamp(1.5rem, 3vw, 2.5rem) + 1px);
-  transition: opacity var(--dur) var(--ease);
-}
-
-/* Stages not yet reached sit back; the current one and those passed sit
-   at full weight. The rings do the rest. */
-.item {
-  opacity: 0.62;
-}
-
-.itemDone,
-.itemActive {
-  opacity: 1;
+  padding-block: clamp(1.5rem, 2.2vw, 2rem);
+  padding-bottom: calc(clamp(1.5rem, 2.2vw, 2rem) + 1px);
 }
 
 .refCol {
@@ -115,8 +102,38 @@
    shift is kept for hover, where the pointer explains it. */
 
 .body {
-  display: block;
+  position: relative;
+  min-width: 0;
+  padding-left: clamp(1.75rem, 2.8vw, 3rem);
 }
+
+.leadRule {
+  position: absolute;
+  left: 0;
+  top: 1.1rem;
+  height: 1px;
+  width: clamp(1rem, 1.7vw, 1.8rem);
+  background: var(--green);
+  transform: scaleX(.25);
+  transform-origin: left;
+  opacity: .3;
+  transition: transform 900ms var(--ease), opacity 600ms ease;
+}
+
+.lead {
+  margin: 0;
+  max-width: 28ch;
+  color: var(--green);
+  font: 400 clamp(1.75rem, 2.4vw, 2.25rem)/1.12 var(--font-body);
+  letter-spacing: -.025em;
+}
+
+.leadLine { display: block; opacity: .86; transform: translateY(5px); transition: transform 850ms var(--ease), opacity 700ms ease; }
+.leadLine + .leadLine { transition-delay: 110ms; }
+.lead em { font-weight: 400; }
+.itemDone .leadLine, .itemActive .leadLine { opacity: 1; transform: translateY(0); }
+.itemDone .leadRule, .itemActive .leadRule { transform: scaleX(1); opacity: 1; }
+.support { max-width: 47ch; margin: 1rem 0 0 clamp(1.25rem, 2.8vw, 2.5rem); }
 
 /* On a desk the card wrapper is invisible to the grid: its children take
    their own columns. On a phone it becomes the card. */
@@ -126,8 +143,8 @@
 
 .para {
   margin: 0;
-  max-width: var(--measure);
   color: var(--pine);
+  font: 400 clamp(1.0625rem, 1.25vw, 1.125rem)/1.55 var(--font-body);
 }
 
 .para + .para {
@@ -142,7 +159,6 @@
 }
 
 @media (hover: hover) {
-  .item:hover { opacity: 1; }
   .item:hover .title { transform: translateX(4px); }
 }
 
@@ -166,7 +182,11 @@
 
   .body {
     grid-column: 2;
+    padding-left: 2rem;
   }
+
+  .lead { font-size: 1.9rem; }
+  .support { max-width: 48ch; margin-left: 1.5rem; }
 
   .spine {
     left: 1rem;
@@ -263,9 +283,9 @@
   .card {
     display: flex;
     flex-direction: column;
-    gap: 0.75rem;
+    gap: 1.1rem;
     flex: 1;
-    padding: clamp(1.5rem, 5vw, 1.75rem);
+    padding: clamp(1.15rem, 5vw, 1.75rem);
     border: 1px solid var(--rule);
   }
 
@@ -273,6 +293,13 @@
   .body {
     grid-column: auto;
   }
+
+  .title { font-size: 1.125rem; }
+  .body { padding-left: 0; }
+  .leadRule { position: relative; display: block; top: auto; width: 1.75rem; margin-bottom: .85rem; }
+  .lead { font-size: clamp(1.5rem, 6.5vw, 1.75rem); line-height: 1.13; }
+  .support { margin: 1rem 0 0 .75rem; }
+  .para { font-size: 1.0625rem; line-height: 1.5; }
 
   .rule {
     display: none;
@@ -312,4 +339,10 @@
     transform-origin: left center;
     transition: transform var(--dur-fast) var(--ease);
   }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .item .leadLine { opacity: 1; transform: none; transition: none; }
+  .item .leadRule { opacity: 1; transform: none; transition: none; }
+  .title, .item::before, .item::after, .railFill { transition: none; }
 }
