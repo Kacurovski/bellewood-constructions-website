@@ -4,8 +4,7 @@ import { useReducedMotion } from '../hooks/useReducedMotion'
 import styles from './Sheet.module.css'
 
 /**
- * The drawing-sheet marks: a sheet reference, a dimension line, and corner
- * registration crosses.
+ * Architectural section labels, dimension lines and corner registration marks.
  *
  * These replace the eyebrow, the hairline and the plain section head across the
  * site. The point is not decoration — it is that a builder who works from
@@ -17,8 +16,8 @@ import styles from './Sheet.module.css'
  */
 
 type RefProps = {
-  /** The sheet number, e.g. "SK-02". Set tabular. */
-  number: string
+  /** Legacy source reference, retained for existing callers but never displayed. */
+  number?: string
   /** What the sheet is. This is the old eyebrow, and it takes a node so a page
       can hang a link — or its own <h2> — in the slot. The strip is a <div>
       rather than a <p> for exactly that reason: a section whose heading is a
@@ -31,11 +30,10 @@ type RefProps = {
   rule?: boolean
 }
 
-export function SheetRef({ number, name, note, className, rule = true }: RefProps) {
+export function SheetRef({ name, note, className, rule = true }: RefProps) {
   return (
     <div className={className}>
       <div className={styles.ref}>
-        <span className={styles.number}>{number}</span>
         <span className={styles.tick} aria-hidden="true" />
         <span className={styles.name}>{name}</span>
         {note && <span className={styles.note}>{note}</span>}

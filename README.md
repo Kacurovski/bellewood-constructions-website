@@ -453,9 +453,11 @@ reversed bands, and a title block in the footer.
    dimensioned objects on the site and both are 3D models. Putting a made-up
    figure between two text bands would be decoration wearing the costume.
 
-The sheets are numbered as one set: `A-01` to `A-08` down the home page, `B-01`
-for the work index with each project taking its own number in the B series,
-`C-01` About, `D-01` Contact. `PageHead` takes the number as a prop.
+Section codes such as `A-03` and `E-02` are no longer displayed. `SheetRef`
+keeps the short leading line, section label, supporting note and optional divider.
+Legacy `number` props remain optional source references; they produce no text or
+hidden accessibility content. Keep meaningful process steps, gallery positions
+and the header's scrolling progress line. New sections do not need a sheet code.
 
 ---
 

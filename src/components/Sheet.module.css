@@ -35,14 +35,7 @@
 
 :global(.on-green) .ref { color: var(--sage); }
 
-/* The sheet number. Tabular, because it is a number in a set. */
-.number {
-  font-variant-numeric: tabular-nums;
-  flex: none;
-}
-
-/* A short tick between the number and the name, the way a drawing separates the
-   fields of its reference. */
+/* A short leading rule keeps the architectural detail beside the section label. */
 .tick {
   width: 1.25rem;
   height: 1px;

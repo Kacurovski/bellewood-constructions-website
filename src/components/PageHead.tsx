@@ -9,8 +9,8 @@ export type MetaRow = {
 }
 
 type Props = {
-  /** The sheet number in the set, e.g. "B-01". */
-  number: string
+  /** Optional legacy source reference; not part of the displayed introduction. */
+  number?: string
   eyebrow: ReactNode
   title: ReactNode
   lede?: ReactNode
