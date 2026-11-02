@@ -22,15 +22,16 @@ reference it.
 
 ## Home name introduction (2 November 2026)
 
-`ContinuityIntroduction` now presents one explicit name transition: Angus Cowan
-Constructions, a drawn connector, then the supplied reverse Bellewood lockup on
-a green sign panel. The company/licence/on-site reassurance sits beneath it,
-with a single Meet Angus link to About. `Credentials` uses three aligned facts
-on desktop and labelled rows on mobile. This replaces the separate symbol,
-mixed text blocks and “What stays the same” subheading. All existing business
-facts remain, sourced from the same config. Motion runs once on arrival and
-reduced motion shows the completed composition. The hero skip target and Home
-chapter anchor remain `continuity-heading`.
+`ContinuityIntroduction` pairs a slow, continuous text strip with a stationary
+name-change announcement and three overlapping cards. The cards automatically
+bring personal attention, licence and cover, and service area to the front every
+5.2 seconds. Their facts come from the existing config. Visitors can select a
+number, use arrow keys or swipe; manual selection holds the chosen card. One
+pause control stops both animations. Hover pauses the cards, and motion stops
+when the section or browser tab is hidden. Reduced motion keeps the strip still
+and the cards manually selectable. The Meet Angus link leads to About; the hero
+skip target and Home chapter anchor remain `continuity-heading`. This is a local
+design test inspired by the supplied ticker and rotating-card reference.
 
 ## Approach timeline editorial test (2 November 2026)
 

@@ -1,56 +1,55 @@
 .section {
   position: relative;
-  padding-block: clamp(2.5rem, 4.5vw, 4.5rem) clamp(2rem, 3vw, 3rem);
   background: var(--wash);
   color: var(--green);
   scroll-margin-top: var(--header-h);
+  overflow: clip;
 }
-.eyebrow { margin: 0 0 1.5rem; font: 600 .6875rem/1.5 var(--font-display); letter-spacing: .12em; text-transform: uppercase; }
+.marquee { overflow: hidden; padding-block: clamp(1rem, 2.2vw, 1.75rem); border-bottom: 1px solid var(--rule); }
+.track { display: flex; width: max-content; animation: continuity-line 48s linear infinite; animation-play-state: paused; }
+.section[data-running='true'] .track { animation-play-state: running; }
+.phrases { display: flex; align-items: center; justify-content: space-around; flex-shrink: 0; min-width: 100vw; }
+.phrase { display: flex; align-items: center; gap: clamp(1.5rem, 3.5vw, 4rem); padding-right: clamp(1.5rem, 3.5vw, 4rem); white-space: nowrap; font: 400 clamp(1.8rem, 3.5vw, 3.25rem)/1.1 var(--font-body); letter-spacing: -.035em; }
+.phrase em { font-weight: 400; }
+.separator { display: block; width: 1.5rem; height: 1px; background: var(--green); transform: rotate(-45deg); opacity: .45; }
+@keyframes continuity-line { to { transform: translateX(-50%); } }
 
-/* The type and the sign are connected, rather than two competing headlines. */
-.identity { display: grid; grid-template-columns: minmax(0, 1fr) minmax(5rem, .26fr) minmax(0, 1.15fr); align-items: center; gap: clamp(1.25rem, 3vw, 3rem); }
-.heading { margin: 0; font: 600 clamp(1.9rem, 3.3vw, 3.25rem)/1.12 var(--font-display); letter-spacing: -.045em; text-wrap: initial; scroll-margin-top: calc(var(--header-h) + 2rem); }
-.heading > span:first-child { display: block; }
-.connector { display: grid; gap: .75rem; align-self: center; padding-bottom: 1.5rem; }
-.connector > span { font: italic 400 1.05rem/1.2 var(--font-body); white-space: nowrap; }
-.connector svg { width: 100%; height: auto; overflow: visible; }
-.connector path { stroke: var(--green); stroke-width: 1; vector-effect: non-scaling-stroke; }
-.newIdentity { display: grid; place-items: center; min-height: clamp(10rem, 15vw, 13rem); padding: 1.25rem; background: var(--green); }
-/* Preserve the supplied artwork and its clear space at every breakpoint. */
-.newIdentity .lockup { width: min(340px, 80%) !important; height: auto !important; aspect-ratio: 900 / 234; margin: 1.75rem; }
-.reassurance { display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; padding-block: 1.25rem; border-bottom: 1px solid var(--rule-strong); }
-.reassurance p { font: 400 clamp(1.1rem, 1.55vw, 1.4rem)/1.4 var(--font-body); text-wrap: balance; }
-.reassurance em { font-weight: 400; white-space: nowrap; }
-.link { flex: none; display: inline-flex; align-items: center; gap: 1.5rem; min-height: 48px; padding-block: .5rem; font: 600 .875rem/1.4 var(--font-display); text-decoration: none; }
+.inner { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: center; gap: clamp(2rem, 5vw, 5rem); padding-block: clamp(2.75rem, 5vw, 5rem); }
+.story { min-width: 0; }
+.eyebrow { margin: 0 0 1.25rem; font: 600 .6875rem/1.5 var(--font-display); letter-spacing: .12em; text-transform: uppercase; }
+.heading { font: 600 clamp(2rem, 2.9vw, 2.8rem)/1.12 var(--font-display); letter-spacing: -.035em; text-wrap: initial; scroll-margin-top: calc(var(--header-h) + 2rem); }
+.newName { display: block; margin-top: .55rem; font: 400 clamp(2.2rem, 3.5vw, 3.3rem)/1.1 var(--font-body); letter-spacing: -.04em; }
+.newName em { font-weight: 400; white-space: nowrap; }
+.reassurance { margin-top: 1.5rem; font: 400 1.125rem/1.5 var(--font-body); color: var(--pine); }
+.link { display: inline-flex; align-items: center; gap: 2rem; min-height: 48px; margin-top: 1rem; padding-block: .5rem; font: 600 .875rem/1.4 var(--font-display); text-decoration: none; }
 .link > span { position: relative; }
 .link > span::after { content: ''; position: absolute; inset: auto 0 -.3rem; height: 1px; background: currentColor; transform: scaleX(.3); transform-origin: left; transition: transform .6s var(--ease-out); }
 .link svg { width: 32px; height: 24px; stroke: currentColor; stroke-width: 1.25; transition: transform .6s var(--ease-out); }
 .link:hover > span::after, .link:focus-visible > span::after { transform: scaleX(1); }
 .link:hover svg { transform: translateX(4px); }
 .link:focus-visible { outline: 2px solid var(--green); outline-offset: 5px; }
-@media (max-width: 960px) and (min-width: 641px) {
-  .identity { grid-template-columns: minmax(0, 1fr) 4.5rem minmax(0, 1fr); gap: 1.25rem; }
-  .heading { font-size: clamp(1.6rem, 3.2vw, 2rem); }
-  .newIdentity { min-height: 9rem; padding: .75rem; }
-  .newIdentity .lockup { width: 80% !important; margin: 1.25rem; }
-  .connector > span { font-size: .875rem; }
+
+@media (max-width: 960px) {
+  .inner { gap: 2rem; }
+  .heading { font-size: 1.95rem; }
+  .newName { font-size: 2.3rem; }
 }
-@media (max-width: 640px) {
-  .eyebrow { margin-bottom: 1.25rem; font-size: .65rem; }
-  .identity { grid-template-columns: minmax(0, 1fr); gap: 0; }
-  .heading { font-size: clamp(1.9rem, 7.5vw, 2.65rem); line-height: 1.1; letter-spacing: -.035em; }
-  .connector { display: flex; align-items: center; gap: 1rem; padding-block: 1rem; }
-  .connector > span { font-size: 1rem; }
-  .connector svg { width: 32px; height: 16px; transform: rotate(90deg); }
-  .newIdentity { min-height: 7.5rem; padding: .75rem; }
-  .newIdentity .lockup { width: min(260px, 80%) !important; margin: 1.4rem; }
-  .reassurance { display: grid; grid-template-columns: minmax(0, 1fr); gap: .5rem; padding-block: 1.15rem; }
-  .reassurance p { font-size: 1.2rem; line-height: 1.4; }
-  .reassurance em { display: block; }
-  .link { justify-content: space-between; font-size: .85rem; }
-  .link svg { width: 30px; }
+@media (max-width: 760px) {
+  .inner { grid-template-columns: minmax(0, 1fr); gap: 2rem; padding-block: 2.5rem 2rem; }
+  .heading { font-size: clamp(1.8rem, 6vw, 2.5rem); }
+  .heading br { display: none; }
+  .heading br::after { content: ' '; }
+  .newName { font-size: clamp(2rem, 7vw, 2.65rem); }
+  .reassurance { margin-top: 1rem; font-size: 1.0625rem; }
+  .eyebrow { margin-bottom: 1rem; font-size: .65rem; }
+  .link { font-size: .8rem; margin-top: .5rem; }
 }
 @media (prefers-reduced-motion: reduce) {
+  .track { animation: none; width: auto; }
+  .phrases { flex-wrap: wrap; justify-content: center; gap: .65rem 1.5rem; width: 100%; padding-inline: var(--gutter); }
+  .phrases + .phrases { display: none; }
+  .phrase { padding: 0; font-size: 1.3rem; }
+  .separator { display: none; }
   .link > span::after, .link svg { transition: none; }
   .link:hover svg { transform: none; }
 }
