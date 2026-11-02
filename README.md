@@ -200,8 +200,11 @@ Home's unfinished checklist and fixed side section index were removed on
 header's scroll progress line remains on every page. The unused checklist and
 index components are retained for possible future use; neither is mounted.
 Work ends with a contact invitation, and Approach keeps one photographic closing.
-Approach's introduction retains the message about drawings, sequence and
-consistent care.
+Approach's order test (2 November 2026) opens with "Care for the house. Clarity
+for you." and its cottage-and-addition model, followed by the first-call-to-handover
+timeline, both Spaces & craftsmanship states, the questions and the Bardon
+photographic invitation. References run E-01 to E-05 in that order. The duplicate
+Kalinga assembly was removed from Approach; its full experience remains on Home.
 
 About ends with a combined "Working with Bellewood" section before the footer.
 `src/sections/AboutClosing.tsx` and its CSS Module reuse the former process and

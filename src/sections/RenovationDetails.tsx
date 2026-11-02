@@ -63,7 +63,7 @@ export function RenovationDetails() {
   return (
     <section id="renovation-details" className={styles.section} aria-labelledby="renovation-details-heading" data-preview={automatic ? 'automatic' : 'manual'} data-running={running}>
       <div className="shell">
-        <SheetRef number="E-03" name="Space for what's next" />
+        <SheetRef number="E-02" name="Space for what's next" />
         <div className={styles.composition}>
           <div className={styles.story}>
             <h2 id="renovation-details-heading">More room.<br /><em>Still your home.</em></h2>
