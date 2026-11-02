@@ -5,15 +5,15 @@
   scroll-margin-top: var(--header-h);
   overflow: clip;
 }
-.marquee { overflow: hidden; padding-block: .85rem; border-bottom: 1px solid var(--rule); }
-.track { display: flex; width: max-content; animation: continuity-line 36s linear infinite; animation-play-state: paused; }
-.section[data-running='true'] .track { animation-play-state: running; }
+.marquee { position: relative; overflow: hidden; padding-block: 1.05rem; border-bottom: 1px solid var(--rule); }
+.track { display: flex; width: max-content; }
 .phrases { display: flex; align-items: center; justify-content: space-around; flex-shrink: 0; min-width: 100vw; }
-.phrase { display: flex; align-items: center; gap: .8rem; padding-right: .8rem; white-space: nowrap; font: 600 clamp(.85rem, 1.15vw, 1.1rem)/1.2 var(--font-display); letter-spacing: -.025em; text-transform: uppercase; }
-.separator { display: block; width: 3px; height: 3px; border-radius: 50%; background: var(--green); }
-@keyframes continuity-line { to { transform: translateX(-50%); } }
+.phrase { display: flex; align-items: center; gap: 1.1rem; padding-right: 1.1rem; white-space: nowrap; font: 600 clamp(1rem, 1.55vw, 1.5rem)/1.2 var(--font-display); letter-spacing: -.025em; text-transform: uppercase; }
+.separator { display: block; width: 4px; height: 4px; border-radius: 50%; background: var(--green); }
+.motionAccess { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0; }
+.motionAccess:focus-visible { z-index: 2; inset: 50% 1rem auto auto; transform: translateY(-50%); width: auto; height: auto; min-height: 44px; margin: 0; padding: .5rem 1rem; clip-path: none; overflow: visible; border: 1px solid var(--green); background: var(--wash); color: var(--green); outline: 2px solid var(--green); outline-offset: 2px; font: 500 .8rem/1.4 var(--font-display); }
 
-.inner { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: center; gap: clamp(2rem, 5vw, 5rem); padding-block: clamp(2.75rem, 5vw, 5rem); }
+.inner { display: grid; grid-template-columns: minmax(0, .95fr) minmax(0, 1.05fr); align-items: center; gap: clamp(2rem, 4vw, 4.5rem); padding-block: clamp(2.75rem, 5vw, 5rem); }
 .story { min-width: 0; }
 .eyebrow { margin: 0 0 1.25rem; font: 600 .6875rem/1.5 var(--font-display); letter-spacing: .12em; text-transform: uppercase; }
 .heading { font: 600 clamp(2rem, 2.9vw, 2.8rem)/1.12 var(--font-display); letter-spacing: -.035em; text-wrap: initial; scroll-margin-top: calc(var(--header-h) + 2rem); }
@@ -43,10 +43,10 @@
   .link { font-size: .8rem; margin-top: .5rem; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .track { animation: none; width: auto; }
+  .track { width: auto; transform: none; }
   .phrases { flex-wrap: wrap; justify-content: center; gap: .65rem 1.5rem; width: 100%; padding-inline: var(--gutter); }
   .phrases + .phrases { display: none; }
-  .phrase { padding: 0; font-size: .8rem; }
+  .phrase { padding: 0; font-size: .9375rem; }
   .phrase:nth-child(n + 5) { display: none; }
   .separator { display: none; }
   .link > span::after, .link svg { transition: none; }

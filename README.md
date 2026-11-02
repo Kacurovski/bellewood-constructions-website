@@ -22,18 +22,22 @@ reference it.
 
 ## Home name introduction (2 November 2026)
 
-`ContinuityIntroduction` pairs a compact, continuous text ticker with a stationary
-name-change announcement and a three-card 3D orbit. The supplied screen recording
-is the motion reference: the cards travel continuously around a horizontal ring,
-turn edge-on, and show their reverse faces behind the leading card. The orbit
-takes 27 seconds, rather than stepping between stacked cards. Drag in either
-direction to turn it directly; release to continue. The small selectors and
-arrow keys bring a chosen face forward and hold it. One pause control stops both
-animations, and automatic motion stops when the section or browser tab is hidden.
-Reduced motion shows one still card with manual navigation. The cards retain the
-existing config facts about attention, licence and cover, and service area.
-The Meet Angus link leads to About; the hero skip target and Home chapter anchor
-remain `continuity-heading`. This remains a local design test.
+`ContinuityIntroduction` pairs a continuous text ticker with a stationary
+name-change announcement and a three-card 3D orbit. The ticker is 16–24px,
+travels left on downward scrolling and right on upward scrolling, and slows
+smoothly on hover. Its position wraps without restarting when direction changes.
+The supplied screen recording remains the orbit reference: cards turn edge-on
+and show their reverse faces, completing a turn in 27 seconds. Larger faces,
+Newsreader values, labelled tops and fine rules give the cards more presence.
+
+There is no visible control bar. Drag to turn; select a card to bring it forward
+and hold it for reading, then select it again to resume. The same surface supports
+arrow keys and Space. A keyboard-focus-only control pauses both animations.
+Automatic motion stops when the section or browser tab is hidden. Reduced motion
+shows the ticker as a still line and all three facts as static cards. The facts
+still come from the existing config. The Meet Angus link leads to About; the hero
+skip target and Home chapter anchor remain `continuity-heading`. This remains a
+local design test.
 
 ## Approach timeline editorial test (2 November 2026)
 
