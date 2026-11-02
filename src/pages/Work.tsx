@@ -8,7 +8,6 @@ import { Services } from '../sections/Services'
 import { FrontDoorStudy } from '../sections/PhotoStudiesTest'
 import { projects } from '../data/projects'
 import type { Project } from '../data/projects'
-import { contact } from '../config/site'
 import { usePageTitle } from '../hooks/usePageTitle'
 import { useMediaQuery } from '../hooks/useMediaQuery'
 import { useReducedMotion } from '../hooks/useReducedMotion'
@@ -268,11 +267,8 @@ export default function Work() {
         number="B-01"
         eyebrow="Work"
         title="Renovations, extensions and restorations."
-        lede="A small number of projects, each one taken from the drawings through to the last piece of trim. Most are heritage or older homes in inner Brisbane."
         meta={[
           { label: 'Projects', value: <span className={styles.count}>{shown} shown</span> },
-          { label: 'Where', value: contact.serviceArea },
-          { label: 'Enquiries', value: <a href={contact.phoneHref}>{contact.phone}</a> },
         ]}
       />
 

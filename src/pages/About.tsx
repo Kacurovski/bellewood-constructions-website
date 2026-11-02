@@ -6,7 +6,7 @@ import { BuilderFolioTest } from '../components/BuilderFolioTest'
 import { NameStudy } from '../components/NameStudy'
 import { AboutClosing } from '../sections/AboutClosing'
 import { usePageTitle } from '../hooks/usePageTitle'
-import { compliance, contact } from '../config/site'
+import { contact } from '../config/site'
 import styles from './About.module.css'
 
 /**
@@ -26,12 +26,7 @@ export default function About() {
         variant="about"
         number="C-01"
         eyebrow="About"
-        title="One builder, more than two decades of Brisbane houses."
-        meta={[
-          { label: 'Builder', value: contact.principal },
-          { label: 'QBCC licence', value: compliance.licenceNumber },
-          { label: 'Where', value: contact.serviceArea },
-        ]}
+        title="The builder behind Bellewood."
       />
 
       <div className={['shell', styles.body].join(' ')}>

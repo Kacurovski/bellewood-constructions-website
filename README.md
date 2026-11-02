@@ -23,18 +23,23 @@ reference it.
 
 ## Inner-page introduction test (2 November 2026)
 
-Work, Approach, About and Contact opt into individual `PageHead` variants while
-retaining their original copy, links and Bellewood Green. Work has a shorter
-opening and a prominent project count. Approach pairs its statement with the
-explanation above a single row of supporting facts. About leads with Angus's
-name; Contact makes phone and email larger, direct actions. Heights follow the
-content, with separate mobile arrangements and restrained entrance motion that
-respects reduced-motion preferences. Home and project-page mastheads are unchanged.
+Work, Approach, About and Contact opt into individual `PageHead` variants using
+Bellewood Green and restrained entrance motion. The content pass keeps Work to
+its heading and collection count; About introduces the builder without repeating
+the biography or credentials below. Contact has its heading and an enquiry-form
+shortcut. Phone, email, service regions and the missed-call explanation live in
+the existing contact guide below. The shortcut uses the router's anchor handling
+to scroll beneath the fixed navigation and focus the enquiry section.
 
-This is a reversible design test. The version immediately before it is
-`c126901`. To restore just one introduction, remove that page's `variant` prop
-from `PageHead`; the original layout and entrance behaviour remain the default.
-Record any shared rollback as a new commit, preserving later unrelated work.
+Approach retains its heading, explanation and supporting facts. Heights follow
+the content, including on mobile, and motion respects reduced-motion preferences.
+Home and project-page mastheads are unchanged.
+
+This is a reversible design test. The fuller introductions are saved at
+`dddc308`; the version before the design test is `c126901`. Use those checkpoints
+to restore a page's content and matching variant styles if needed. Record shared
+rollbacks as new commits, preserving later unrelated work. Omitting the `variant`
+prop still selects the original generic masthead layout.
 
 ## Home name introduction (2 November 2026)
 

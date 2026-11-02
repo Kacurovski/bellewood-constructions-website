@@ -80,7 +80,7 @@ export function ServiceMapTest() {
           <div className={styles.person}>
             <span className={styles.eyebrow}>Your first conversation</span>
             <div className={styles.personName}><h3>{contact.principal}</h3><span>{contact.role}</span></div>
-            <p>The builder you speak with. The person on site.</p>
+            <p>If Angus is on site and cannot answer, you’ll get a text back.</p>
             <a className={styles.phone} href={contact.phoneHref}><span><small>Call Angus directly</small>{contact.phone}</span><span aria-hidden="true">&#8599;</span></a>
             <a className={styles.email} href={contact.emailHref}>{contact.email}<span aria-hidden="true">&#8599;</span></a>
           </div>
