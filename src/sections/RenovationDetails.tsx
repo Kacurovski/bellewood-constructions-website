@@ -1,5 +1,6 @@
 import { lazy, useEffect, useRef, useState } from 'react'
 import { SheetRef } from '../components/Sheet'
+import { useHousePreview } from '../hooks/useHousePreview'
 import { useReducedMotion } from '../hooks/useReducedMotion'
 import { hasWebGL } from '../lib/webgl'
 import { SceneFrame } from '../three/SceneFrame'
@@ -8,28 +9,25 @@ import { HERITAGE_MAQUETTE_ASPECT } from '../three/heritageMaquette'
 import styles from './RenovationDetails.module.css'
 
 const HeritageStudy = lazy(() => import('../three/HeritageStudy'))
-const PREVIEW_INTERVAL = 5200
 
-/** An automatic, reversible study that gives way to a visitor's chosen view. */
+/** The animated guide line and the model share one continuous reveal. */
 export function RenovationDetails() {
-  const [extended, setExtended] = useState(false)
   const [canAnimate, setCanAnimate] = useState(false)
-  const [paused, setPaused] = useState(false)
+  const [modelReady, setModelReady] = useState(false)
   const [inView, setInView] = useState(false)
   const [pageVisible, setPageVisible] = useState(!document.hidden)
   const [announcement, setAnnouncement] = useState('')
   const stage = useRef<HTMLDivElement>(null)
-  const previewStarted = useRef(false)
+  const range = useRef<HTMLInputElement>(null)
   const reduced = useReducedMotion()
-  const progress = extended ? 1 : 0
+  const { progress, paused, running, pause, resume, seek } = useHousePreview(canAnimate && modelReady && inView && pageVisible)
   const automatic = canAnimate && !paused
-  const running = automatic && inView && pageVisible
 
   useEffect(() => { setCanAnimate(!reduced && hasWebGL()) }, [reduced])
 
   useEffect(() => {
     const surface = stage.current
-    if (!surface) return
+    if (!surface || !('IntersectionObserver' in window)) return
     // Watch the house itself: on a phone the introduction can enter before
     // the model. Start the sequence only once the visitor can actually see it.
     const observer = new IntersectionObserver(([entry]) => {
@@ -45,49 +43,52 @@ export function RenovationDetails() {
   }, [])
 
   useEffect(() => {
-    if (!running) return
-    // A short first hold makes the interaction discoverable. Subsequent views
-    // have a full reveal plus a quiet hold; there is no off-screen catch-up.
-    const timer = window.setTimeout(() => {
-      previewStarted.current = true
-      setExtended(value => !value)
-    }, previewStarted.current ? PREVIEW_INTERVAL : 1600)
-    return () => window.clearTimeout(timer)
-  }, [running, extended])
-
-  function chooseView(withAddition: boolean) {
-    setPaused(true)
-    setExtended(withAddition)
-    setAnnouncement(withAddition ? 'Showing the cottage with a possible rear addition.' : 'Showing the cottage without the addition.')
-  }
+    const update = (value: number) => {
+      const input = range.current
+      if (!input) return
+      input.value = String(value * 100)
+      input.style.setProperty('--reveal', String(value))
+      input.setAttribute('aria-valuetext', value === 0 ? 'The cottage, without the addition' : value === 1 ? 'With the full addition' : `Addition ${Math.round(value * 100)} percent revealed`)
+    }
+    update(progress.get())
+    return progress.on('change', update)
+  }, [progress])
 
   function togglePreview() {
-    previewStarted.current = true
-    if (paused) setExtended(value => !value)
-    setPaused(value => !value)
+    if (paused) resume()
+    else pause()
     setAnnouncement(paused ? 'Automatic preview resumed.' : 'Automatic preview paused.')
   }
 
   return (
-    <section id="renovation-details" className={styles.section} aria-labelledby="renovation-details-heading" data-view={extended ? 'addition' : 'cottage'} data-preview={automatic ? 'automatic' : 'manual'} data-running={running}>
+    <section id="renovation-details" className={styles.section} aria-labelledby="renovation-details-heading" data-preview={automatic ? 'automatic' : 'manual'} data-running={running}>
       <div className="shell">
         <SheetRef number="E-03" name="Space for what's next" />
         <div className={styles.composition}>
           <div className={styles.story}>
             <h2 id="renovation-details-heading">More room.<br /><em>Still your home.</em></h2>
             <p className={styles.lede}>The familiar face stays. New living space opens behind it. Explore one way an older home can grow.</p>
+          </div>
 
-            <div className={styles.explore}
-              onFocusCapture={event => {
-                // Keyboard exploration holds the current view until the visitor
-                // explicitly resumes. Pointer hover still lets the house move.
-                if (!event.currentTarget.contains(event.relatedTarget) && event.target.matches(':focus-visible')) setPaused(true)
-              }}>
+          <figure className={styles.figure}>
+            <div ref={stage} id="renovation-model" className={styles.stage}>
+              <div className={styles.ground} aria-hidden="true" />
+              <div className={styles.model} style={{ aspectRatio: HERITAGE_MAQUETTE_ASPECT }}>
+                <SceneFrame rootMargin="200px" label="An illustrative cottage and possible rear addition. Use the slider below to explore the change."
+                  still={<HeritageStudyStill className={styles.drawing} presentation="maquette" additionMotion={progress} />}>
+                  <HeritageStudy shadows={false} presentation="maquette" additionMotion={progress} onReady={setModelReady} interactive motionRef={stage} />
+                </SceneFrame>
+              </div>
+            </div>
+            <div className={styles.explore}>
               <div className={styles.controlRow}>
-                <div className={styles.choices} role="group" aria-label="Choose a house view" data-extended={extended}>
-                  <button type="button" aria-pressed={!extended} aria-controls="renovation-model" onClick={() => chooseView(false)}>The cottage</button>
-                  <button type="button" aria-pressed={extended} aria-controls="renovation-model" onClick={() => chooseView(true)}>With an addition</button>
-                  <span className={styles.choiceLine} aria-hidden="true" />
+                <div className={styles.rangeControl}>
+                  <div className={styles.endpoints} aria-hidden="true"><span>The cottage</span><span>With an addition</span></div>
+                  <label htmlFor="renovation-progress" className="visually-hidden">Explore the cottage and its possible addition</label>
+                  <input ref={range} id="renovation-progress" className={styles.range} type="range" min="0" max="100" step="1" defaultValue="0"
+                    aria-controls="renovation-model" aria-describedby="renovation-slider-help"
+                    onPointerDown={pause} onFocus={pause}
+                    onChange={event => seek(event.currentTarget.valueAsNumber / 100)} />
                 </div>
                 {canAnimate && <button type="button" className={styles.previewToggle} onClick={togglePreview}
                   aria-label={paused ? 'Resume automatic house preview' : 'Pause automatic house preview'}
@@ -97,19 +98,7 @@ export function RenovationDetails() {
                   </svg>
                 </button>}
               </div>
-              <p className={styles.choiceHelp}>{automatic ? 'Changes automatically. Choose a view to hold it.' : canAnimate ? 'Your view. Resume the preview whenever you like.' : 'Choose a view to explore the idea.'}</p>
-            </div>
-          </div>
-
-          <figure className={styles.figure}>
-            <div ref={stage} id="renovation-model" className={styles.stage}>
-              <div className={styles.ground} aria-hidden="true" />
-              <div className={styles.model} style={{ aspectRatio: HERITAGE_MAQUETTE_ASPECT }}>
-                <SceneFrame rootMargin="200px" label="An illustrative cottage. Choose the cottage or the possible rear addition using the two view options."
-                  still={<HeritageStudyStill className={styles.drawing} presentation="maquette" additionProgress={progress} />}>
-                  <HeritageStudy shadows={false} presentation="maquette" additionProgress={progress} interactive motionRef={stage} />
-                </SceneFrame>
-              </div>
+              <p id="renovation-slider-help" className="visually-hidden">Drag the marker or use the arrow keys to explore the addition. Your selection pauses the automatic preview. Home shows the cottage; End shows the full addition.</p>
             </div>
             <figcaption className={styles.caption}>An illustrative renovation concept.</figcaption>
             <p className="visually-hidden" role="status">{announcement}</p>

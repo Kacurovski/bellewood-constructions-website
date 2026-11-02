@@ -1,5 +1,6 @@
 import { useEffect, useLayoutEffect, useMemo, useRef } from 'react'
 import type { RefObject } from 'react'
+import type { MotionValue } from 'framer-motion'
 import { Canvas, useFrame, useThree } from '@react-three/fiber'
 import { Html } from '@react-three/drei'
 import hotspotStyles from './HeritageHotspots.module.css'
@@ -107,9 +108,11 @@ function buildGeometries(
  * Selection introduces Bellewood green; the other regions retain their physical
  * material colours and depth. Legacy presentations keep their original geometry.
  */
-function MaquetteHouse({ focus, additionProgress, interactive, motionRef }: {
+function MaquetteHouse({ focus, additionProgress, additionMotion, onReady, interactive, motionRef }: {
   focus: HeritageFocus | null
   additionProgress: number
+  additionMotion?: MotionValue<number>
+  onReady?: (ready: boolean) => void
   interactive: boolean
   motionRef?: RefObject<HTMLElement>
 }) {
@@ -118,7 +121,7 @@ function MaquetteHouse({ focus, additionProgress, interactive, motionRef }: {
   const model = useRef<THREE.Group>(null)
   const addition = useRef<THREE.Group>(null)
   const pointer = useRef({ x: 0, y: 0 })
-  const shownProgress = useRef(THREE.MathUtils.clamp(additionProgress, 0, 1))
+  const shownProgress = useRef(THREE.MathUtils.clamp(additionMotion?.get() ?? additionProgress, 0, 1))
   const reveal = useRef({ from: shownProgress.current, to: shownProgress.current, elapsed: 2.2 })
   const revealPlane = useMemo(() => new THREE.Plane(new THREE.Vector3(0, 0, 1), -STUDY_ADDITION_REVEAL.back), [])
   const restPosition = useMemo(() => MAQUETTE_OFFSET.map((value, i) => value - MAQUETTE_TARGET[i]) as [number, number, number], [])
@@ -153,6 +156,11 @@ function MaquetteHouse({ focus, additionProgress, interactive, motionRef }: {
     gl.localClippingEnabled = true
     return () => { gl.localClippingEnabled = previous }
   }, [gl])
+
+  useEffect(() => {
+    onReady?.(true)
+    return () => onReady?.(false)
+  }, [onReady])
 
   useEffect(() => {
     pointer.current = { x: 0, y: 0 }
@@ -193,16 +201,20 @@ function MaquetteHouse({ focus, additionProgress, interactive, motionRef }: {
       pivot.rotation.x = THREE.MathUtils.lerp(pivot.rotation.x, pointer.current.y * STUDY_POINTER_MOTION.tilt, movement)
     }
 
-    const targetProgress = THREE.MathUtils.clamp(additionProgress, 0, 1)
-    if (reveal.current.to !== targetProgress) {
-      reveal.current = { from: shownProgress.current, to: targetProgress, elapsed: 0 }
+    const targetProgress = THREE.MathUtils.clamp(additionMotion?.get() ?? additionProgress, 0, 1)
+    if (additionMotion) {
+      // The slider owns timing. A second tween here would lag behind the marker
+      // and continue moving after the visitor pauses or lets go.
+      shownProgress.current = targetProgress
+    } else {
+      if (reveal.current.to !== targetProgress) {
+        reveal.current = { from: shownProgress.current, to: targetProgress, elapsed: 0 }
+      }
+      const transition = reveal.current
+      transition.elapsed = Math.min(2.2, transition.elapsed + delta)
+      const t = transition.elapsed / 2.2
+      shownProgress.current = THREE.MathUtils.lerp(transition.from, transition.to, t * t * (3 - 2 * t))
     }
-    // A measured forward/reverse reveal, rather than a fast initial jump with
-    // a long tail. Manual changes can reverse smoothly from any intermediate point.
-    const transition = reveal.current
-    transition.elapsed = Math.min(2.2, transition.elapsed + delta)
-    const t = transition.elapsed / 2.2
-    shownProgress.current = THREE.MathUtils.lerp(transition.from, transition.to, t * t * (3 - 2 * t))
     if (addition.current) addition.current.visible = shownProgress.current > 0
     if (model.current) {
       // The clipping plane follows the moving model, rather than remaining in
@@ -228,7 +240,7 @@ function MaquetteHouse({ focus, additionProgress, interactive, motionRef }: {
             <mesh key={id} name={`study-${id}`} geometry={geometry} material={material} castShadow receiveShadow />
           ))}
         </group>
-        <group ref={addition} name="study-evolution-addition" visible={additionProgress > 0}>
+        <group ref={addition} name="study-evolution-addition" visible={(additionMotion?.get() ?? additionProgress) > 0}>
           {batches.filter(batch => batch.part === 'addition').map(({ id, geometry, material }) => (
             <mesh key={id} name={`study-${id}`} geometry={geometry} material={material} castShadow receiveShadow />
           ))}
@@ -592,6 +604,8 @@ export default function HeritageStudy({
   presentation = 'default',
   focus = null,
   additionProgress = 1,
+  additionMotion,
+  onReady,
   interactive = false,
   motionRef,
 }: {
@@ -599,6 +613,9 @@ export default function HeritageStudy({
   focus?: HeritageFocus | null
   /** Reveal the imagined addition, from the original cottage (0) to complete (1). */
   additionProgress?: number
+  /** A shared continuous value for the study's live slider and automatic loop. */
+  additionMotion?: MotionValue<number>
+  onReady?: (ready: boolean) => void
   /** Gentle, local pointer response for the architectural study only. */
   interactive?: boolean
   motionRef?: RefObject<HTMLElement>
@@ -681,7 +698,7 @@ export default function HeritageStudy({
       )}
 
       {maquette
-        ? <MaquetteHouse focus={focus} additionProgress={additionProgress} interactive={interactive} motionRef={motionRef} />
+        ? <MaquetteHouse focus={focus} additionProgress={additionProgress} additionMotion={additionMotion} onReady={onReady} interactive={interactive} motionRef={motionRef} />
         : <House lean={lean} highlight={highlight} selectedPart={selectedPart} onPartSelect={onPartSelect} />}
     </Canvas>
   )

@@ -181,17 +181,22 @@ home." The large architectural model responds gently to mouse movement within
 its stage and returns to rest on leave. While the house is visible, an automatic
 sequence gently reveals a possible rear addition, holds, and reverses back to
 the cottage. Each reveal takes 2.2 seconds, with a 3-second hold between changes.
-The first change starts after 1.6 seconds. The cottage's frontage, porch and
+The first change starts 1.6 seconds after the live model is ready and visible. The cottage's frontage, porch and
 stairs remain in place throughout.
 
-Two direct choices, "The cottage" and "With an addition", pause the sequence and
-hold the chosen view. An animated green underline follows the change, and one
-small pause/resume control sits alongside the choices. There is no mouse-hint
-graphic. Keyboard focus pauses automatic changes; selecting resume explicitly
-restarts them. The sequence stops advancing off-screen and in a hidden tab.
-Mobile places the controls above the house and retains native page scrolling.
-Reduced motion and no-WebGL use manually selected static renders without an
-automatic cycle or an inactive playback control.
+A native slider beneath the house spans "The cottage" to "With an addition".
+Its marker and the 3D reveal share one continuous value, driven by
+`useHousePreview.ts` without React rendering every frame. Dragging or using the
+keyboard takes over immediately and holds any intermediate position. The small
+pause/resume control freezes or continues the same animation, without jumping
+to an endpoint. After a manual drag, resuming continues in the drag direction.
+The sequence freezes off-screen and in a hidden tab, preserving its place.
+
+The slider stays below the house on mobile, with a 44px touch target and native
+keyboard support. Reduced motion and no-WebGL retain manual control using the
+two matching renders, blended as the slider moves. They have no automatic cycle
+or inactive playback control. The short accessible description explains keyboard
+operation; the visible control needs only its two endpoint labels.
 
 The geometry in `auchenflowerStudyMembers.ts` takes architectural cues from the
 photo library, but the model is an illustrative renovation concept, not an actual
@@ -202,7 +207,7 @@ from the original cottage and defines the reveal and mouse movement limits. Lega
 Kalinga construction sequence are unchanged. This is a reversible design test.
 
 The original-only and complete WebP renders in `src/assets/studies/` provide a
-matching, interactive fallback without WebGL. They share one camera and switch
+matching, interactive fallback without WebGL. They share one camera and blend
 between the two views. The live model reveals the addition with a gently eased
 transition. After changing geometry, camera or colours, start the local
 Vite server and run

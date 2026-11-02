@@ -1,4 +1,6 @@
 import { useMemo } from 'react'
+import { motion } from 'framer-motion'
+import type { MotionValue } from 'framer-motion'
 import { HERITAGE_MEMBERS, HERITAGE_OFFSET, HERITAGE_YAW } from './heritageMembers'
 import { projectMembers } from './axonometric'
 import { LINE_COLOUR } from './materials'
@@ -15,6 +17,7 @@ type Props = {
   presentation?: HeritagePresentation
   focus?: HeritageFocus | null
   additionProgress?: number
+  additionMotion?: MotionValue<number>
   className?: string
   variant?: 'solid' | 'line'
   highlight?: MaterialKey | null
@@ -26,11 +29,11 @@ const studyFrames = { neutral: neutralStudy, original: originalStudy, connection
 
 export function HeritageStudyStill(props: Props) {
   if (props.presentation !== 'maquette') return <LegacyStudyStill {...props} />
-  if (props.additionProgress !== undefined) {
-    const progress = Math.max(0, Math.min(1, props.additionProgress))
-    return <div className={[styles.maquette, props.className].filter(Boolean).join(' ')} data-addition={progress} aria-hidden="true">
+  if (props.additionProgress !== undefined || props.additionMotion) {
+    const progress = Math.max(0, Math.min(1, props.additionProgress ?? 0))
+    return <div className={[styles.maquette, props.className].filter(Boolean).join(' ')} data-addition={props.additionMotion ? undefined : progress} aria-hidden="true">
       <img src={cottageStudy} alt="" loading="lazy" decoding="async" className={styles.studyFrame} data-study-frame="cottage" style={{ opacity: 1 }} />
-      <img src={neutralStudy} alt="" loading="lazy" decoding="async" className={styles.studyFrame} data-study-frame="addition" style={{ opacity: progress }} />
+      <motion.img src={neutralStudy} alt="" loading="lazy" decoding="async" className={styles.studyFrame} data-study-frame="addition" style={{ opacity: props.additionMotion ?? progress }} />
     </div>
   }
   const active = props.focus ?? 'neutral'
