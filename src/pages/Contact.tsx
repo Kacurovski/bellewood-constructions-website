@@ -4,6 +4,7 @@ import { EnquiryForm } from '../components/EnquiryForm'
 import { Reveal } from '../components/Reveal'
 import { PageHead } from '../components/PageHead'
 import { usePageTitle } from '../hooks/usePageTitle'
+import { contact } from '../config/site'
 import styles from './Contact.module.css'
 
 const ServiceMapTest = lazy(() => import('../sections/ServiceMapTest').then(module => ({ default: module.ServiceMapTest })))
@@ -18,14 +19,14 @@ export default function Contact() {
         number="D-01"
         eyebrow="Contact"
         title="Tell us about the house."
-      >
-        <Link to={{ pathname: '/contact', hash: '#contact-enquiry' }} className={styles.introLink}>
-          Send an enquiry
-          <svg viewBox="0 0 32 32" width="32" height="32" aria-hidden="true">
-            <path d="M16 5v22m-8-8 8 8 8-8" />
-          </svg>
-        </Link>
-      </PageHead>
+        lede="You don’t need every answer before you get in touch. Tell us what you have in mind, and we can take it from there."
+        meta={[
+          { label: 'A project in mind?', value: <Link to={{ pathname: '/contact', hash: '#contact-enquiry' }}>Share your plans</Link> },
+          { label: 'Prefer to talk?', value: <a href={contact.phoneHref}>Call Angus</a> },
+          { label: 'Homeowners', value: 'Ideas for your home.' },
+          { label: 'Architects & designers', value: 'A brief to discuss.' },
+        ]}
+      />
 
       <div id="service-map-test" style={{ scrollMarginTop: 'var(--header-h)' }}>
         <Suspense fallback={<div className="shell" role="status" style={{ minHeight: '30rem', paddingBlock: '4rem' }}>Loading the regional guide&hellip;</div>}>

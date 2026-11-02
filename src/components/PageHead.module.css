@@ -57,10 +57,8 @@
   color: color-mix(in srgb, var(--wash) 78%, transparent);
 }
 
-/* --- The ledger ------------------------------------------------------------
-   What fills the right-hand column. Rows of label and value, hung off a rule,
-   bottom-aligned with the baseline of the title. Nothing here is a new claim:
-   every value is a fact already stated somewhere else on the site. */
+/* Supporting context, anchored to the title with fine rules. Page variants
+   introduce ways into the content; project pages retain their factual ledger. */
 .meta {
   margin: 0;
   min-width: 0;
@@ -177,20 +175,19 @@
 }
 
 /* Work: a shorter opening, with the size of the collection as its main fact. */
-.work .inner { grid-template-columns: minmax(0, 1.8fr) minmax(0, .6fr); }
+.work .inner { grid-template-columns: minmax(0, 1.65fr) minmax(0, .75fr); }
 .work .title {
   font-size: clamp(2.5rem, 1.6rem + 3vw, 4.25rem);
   max-width: 22ch;
 }
-.work .facts { width: 100%; max-width: 14rem; justify-self: end; }
+.work .lede { max-width: 52ch; }
 .work .row:first-child {
   grid-template-columns: 1fr;
   gap: .5rem;
-  padding-block: 1rem 0;
-  border-bottom: 0;
+  padding-block: 1rem 1.25rem;
 }
 .work .row:first-child .value {
-  font: 400 clamp(1.8rem, 2.4vw, 2.4rem)/1 var(--font-body);
+  font: 400 clamp(2.5rem, 3.6vw, 3.75rem)/1 var(--font-body);
   letter-spacing: -.025em;
 }
 
@@ -213,10 +210,69 @@
   padding-block: 1.1rem 0;
 }
 
-/* About and Contact introduce the page. Their detailed information lives below. */
-.about .inner, .contact .inner { grid-template-columns: minmax(0, 1fr); }
-.about .title { max-width: 22ch; }
-.contact .title { max-width: 24ch; }
+/* About: who the relationship is with, then two entries into the story. */
+.about .inner { grid-template-columns: minmax(0, 1.45fr) minmax(0, .75fr); }
+.about .title { max-width: 19ch; }
+.about .meta { display: grid; grid-template-columns: 1fr 1fr; column-gap: 1.5rem; }
+.about .row { grid-template-columns: 1fr; align-content: start; gap: .6rem; border-bottom: 0; }
+.about .row:first-child { grid-column: 1 / -1; padding-block: 1.1rem 1.4rem; border-bottom: 1px solid var(--rule-reverse); }
+.about .row:first-child .value {
+  font: 400 clamp(2.25rem, 2.8vw, 3rem)/1.1 var(--font-body);
+  letter-spacing: -.025em;
+}
+
+/* Contact: two ways to begin. The actual contact details live in the guide. */
+.contact .inner { grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: clamp(2rem, 6vw, 6rem); }
+.contact .title { max-width: 15ch; }
+.contact .lede { max-width: 43ch; }
+.contact .meta { display: grid; grid-template-columns: 1fr 1fr; column-gap: 1.75rem; }
+.contact .row { grid-template-columns: 1fr; gap: .4rem; border-bottom: 0; align-content: start; }
+.contact .row:nth-child(-n + 2) { grid-column: 1 / -1; border-bottom: 1px solid var(--rule-reverse); padding-block: .9rem; }
+.contact .row:first-child .value { font: 400 clamp(2.5rem, 3.5vw, 3.5rem)/1.1 var(--font-body); letter-spacing: -.025em; }
+.contact .row:nth-child(2) .value { font-size: clamp(1.125rem, 1.5vw, 1.5rem); letter-spacing: -.025em; }
+.contact .value a { display: inline-flex; align-items: center; min-height: 44px; max-width: 100%; }
+.contact .row:nth-child(-n + 2) .value a {
+  width: 100%;
+  text-decoration: none;
+  justify-content: space-between;
+  gap: .75rem;
+}
+.contact .value a:hover { color: var(--sage); }
+.contact .value a::before { content: none; }
+.contact .row:nth-child(-n + 2) .value a::after {
+  content: '';
+  flex: 0 0 24px;
+  width: 24px;
+  height: 24px;
+  margin-left: auto;
+  background: currentColor;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M5 19 19 5M5 5h14v14' fill='none' stroke='black' stroke-width='1.25'/%3E%3C/svg%3E") center / contain no-repeat;
+  transition: transform 300ms var(--ease-out);
+}
+.contact .value a:hover::after,
+.contact .value a:focus-visible::after { transform: translate(2px, -2px); }
+
+/* Understated section links with a real touch target, not a second button bar. */
+.work .value a, .about .value a {
+  display: inline-flex;
+  align-items: center;
+  gap: .65rem;
+  min-height: 44px;
+  max-width: 100%;
+  text-decoration: none;
+}
+.work .value a::before, .about .value a::before { content: none; }
+.work .value a::after, .about .value a::after {
+  content: '';
+  width: 16px;
+  height: 16px;
+  flex: 0 0 16px;
+  background: currentColor;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M5 5 19 19M5 19h14V5' fill='none' stroke='black' stroke-width='1.25'/%3E%3C/svg%3E") center / contain no-repeat;
+  transition: transform 300ms var(--ease-out);
+}
+.work .value a:hover, .about .value a:hover { color: var(--sage); }
+.work .value a:hover::after, .about .value a:hover::after { transform: translate(2px, 2px); }
 
 @keyframes intro-rule { from { transform: scaleX(0); } to { transform: scaleX(1); } }
 @keyframes intro-settle {
@@ -226,18 +282,29 @@
 
 @media (max-width: 1100px) and (min-width: 901px) {
   .refined .inner { column-gap: 2.25rem; }
+  .contact .inner { grid-template-columns: 1fr 1fr; }
+  .contact .title { font-size: 4rem; }
+  .contact .row:first-child .value { font-size: 2.6rem; }
+  .about .meta { column-gap: 1rem; }
 }
 
 @media (max-width: 900px) {
   .refined .inner { grid-template-columns: minmax(0, 1fr); gap: 1.75rem; padding-block: 2.5rem 2.25rem; }
   .refined .title { max-width: 23ch; }
   .refined .lede { margin-top: 1.25rem; max-width: 54ch; }
-  .work .facts { max-width: none; justify-self: start; }
-  .work .row:first-child { grid-template-columns: auto 1fr; align-items: baseline; gap: 1rem; }
-  .work .row:first-child .value { font-size: 1.6rem; }
+  .work .meta { display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr); column-gap: 1.5rem; }
+  .work .row { grid-template-columns: 1fr; gap: .4rem; border-bottom: 0; }
+  .work .row:first-child { grid-row: 1 / 3; align-content: center; gap: .65rem; }
+  .work .row:last-child { padding-top: 0; }
+  .work .row:first-child .value { font-size: clamp(2.1rem, 5vw, 3.5rem); }
   .approach .introNote { padding: 0; }
   .approach .introNote .lede { margin: 0; max-width: 54ch; }
   .approach .meta { gap: 1.5rem; }
+  .about .meta { grid-template-columns: 1.1fr .65fr 1fr; gap: 1.5rem; }
+  .about .row:first-child { grid-column: auto; border: 0; padding-block: 1rem; }
+  .about .row:first-child .value { font-size: 2.5rem; }
+  .contact .title { max-width: 18ch; }
+  .contact .meta { column-gap: 1.5rem; }
 }
 
 @media (max-width: 520px) {
@@ -245,14 +312,27 @@
   .refined .title { margin-top: 1rem; font-size: clamp(2.25rem, 9.8vw, 3.125rem); line-height: 1.05; }
   .refined .lede { line-height: 1.5; }
   .refined .value { font-size: .875rem; }
+  .work .meta { column-gap: 1rem; }
+  .work .row:first-child .value { font-size: clamp(1.6rem, 7.2vw, 2.5rem); }
   .approach .meta { grid-template-columns: 1fr 1fr; gap: 1rem; }
   .approach .row { padding-block: 1rem 0; }
   .approach .row:last-child { grid-column: 1 / -1; grid-template-columns: auto 1fr; align-items: baseline; gap: .75rem; padding-top: 0; }
+  .about .meta { grid-template-columns: 1fr 1fr; gap: 0 1.25rem; }
+  .about .row:first-child { grid-column: 1 / -1; border-bottom: 1px solid var(--rule-reverse); padding-block: 1rem; }
+  .about .row:first-child .value { font-size: clamp(1.75rem, 7.5vw, 2.1rem); }
   .contact .title { max-width: 14ch; }
+  .contact .row:first-child .value { font-size: clamp(2.25rem, 10vw, 3rem); }
+  .contact .row:nth-child(2) .value { font-size: clamp(1rem, 4.6vw, 1.375rem); }
+  .contact .row:nth-child(-n + 2) .value a::after { flex-basis: 20px; width: 20px; height: 20px; }
+  .work .inner, .about .inner, .contact .inner { row-gap: 1.35rem; }
+  .work .row:not(:first-child), .about .row:not(:first-child) { gap: .25rem; padding-block: .65rem .25rem; }
+  .work .row:last-child { padding-top: .1rem; }
+  .about .row:first-child { padding-block: .85rem; gap: .4rem; }
+  .contact .row:nth-child(-n + 2) { padding-block: .7rem; gap: .25rem; }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .settle { animation: none; }
   .refined .meta::before { animation: none; }
-  .refined .value a { transition: none; }
+  .refined .value a, .refined .value a::after { transition: none; }
 }

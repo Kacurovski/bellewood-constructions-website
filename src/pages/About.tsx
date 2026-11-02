@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom'
 import { Reveal } from '../components/Reveal'
 import { PageHead } from '../components/PageHead'
 import { ScrollWords } from '../components/ScrollWords'
@@ -26,10 +27,15 @@ export default function About() {
         variant="about"
         number="C-01"
         eyebrow="About"
-        title="The builder behind Bellewood."
+        title="Good homes begin with good relationships."
+        meta={[
+          { label: 'Who we work with', value: <>Homeowners.<br />Architects &amp; designers.</> },
+          { label: 'The builder', value: <Link to={{ pathname: '/about', hash: '#about-builder' }}>Get to know Angus</Link> },
+          { label: 'The name', value: <Link to={{ pathname: '/about', hash: '#about-name' }}>Why Bellewood</Link> },
+        ]}
       />
 
-      <div className={['shell', styles.body].join(' ')}>
+      <div id="about-builder" tabIndex={-1} className={['shell', styles.body].join(' ')}>
         <Reveal className={styles.copy}>
           <div className="stack-lg">
             {/* The page's argument, read in a word at a time — the same
@@ -69,7 +75,7 @@ export default function About() {
         </Reveal>
       </div>
 
-      <section className={['on-green', styles.name].join(' ')} aria-labelledby="name-story">
+      <section id="about-name" tabIndex={-1} className={['on-green', styles.name].join(' ')} aria-labelledby="name-story">
         <div className={['shell', styles.nameInner].join(' ')}>
           <Reveal className={styles.nameAside}>
             <h2 id="name-story" className={['section-heading', styles.nameHeading].join(' ')}>

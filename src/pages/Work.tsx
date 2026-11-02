@@ -267,13 +267,16 @@ export default function Work() {
         number="B-01"
         eyebrow="Work"
         title="Renovations, extensions and restorations."
+        lede="From a familiar street frontage to the life within. Explore the spaces, materials and details that make each home its own."
         meta={[
-          { label: 'Projects', value: <span className={styles.count}>{shown} shown</span> },
+          { label: 'In the collection', value: <span className={styles.count}>{shown} homes</span> },
+          { label: 'All projects', value: <Link to={{ pathname: '/work', hash: '#work-collection' }}>Explore the collection</Link> },
+          { label: 'Featured home', value: <Link to={{ pathname: '/work', hash: '#front-door-test' }}>Step inside Wilston</Link> },
         ]}
       />
 
       {/* Not `shell`. See the note in the stylesheet: the two fight. */}
-      <section className={styles.set} aria-labelledby="work-collection-heading">
+      <section id="work-collection" tabIndex={-1} className={styles.set} aria-labelledby="work-collection-heading">
         <h2 id="work-collection-heading" className="visually-hidden">All work</h2>
         <div className={styles.split}>
           {!narrow && <WorkGallery project={live} id={galleryId} onInteractionChange={holdGallery} />}

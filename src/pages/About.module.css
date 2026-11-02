@@ -1,4 +1,5 @@
 /* The masthead is PageHead's. */
+.body, .name { scroll-margin-top: var(--header-h); }
 
 .body {
   display: grid;

@@ -14,7 +14,7 @@ type Props = {
   eyebrow: ReactNode
   title: ReactNode
   lede?: ReactNode
-  /** The right-hand ledger. Facts already stated elsewhere on the site. */
+  /** Supporting context and routes into the page, or project facts. */
   meta?: MetaRow[]
   /** Anything that should sit under the title instead of a ledger. */
   children?: ReactNode

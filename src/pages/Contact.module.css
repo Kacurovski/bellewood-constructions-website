@@ -1,29 +1,8 @@
-/* The introduction shortcut and enquiry form. PageHead owns the green band. */
+/* The enquiry form. PageHead owns the introduction and its section links. */
 
 .wrap {
   padding-block: clamp(2.5rem, 4vw, 4rem) clamp(3rem, 5vw, 5rem);
   scroll-margin-top: calc(var(--header-h) + 1.25rem);
-}
-
-.introLink {
-  display: inline-flex;
-  align-items: center;
-  gap: 2.5rem;
-  min-height: 44px;
-  margin-top: 1.75rem;
-  padding-bottom: .3rem;
-  border-bottom: 1px solid var(--rule-reverse);
-  color: var(--wash);
-  font: 500 var(--t-small)/1.4 var(--font-display);
-  text-decoration: none;
-  transition: border-color 240ms ease;
-}
-.introLink svg { fill: none; stroke: currentColor; stroke-width: 1.25; transition: transform 240ms var(--ease-out); }
-.introLink:hover { border-color: var(--wash); }
-.introLink:hover svg { transform: translateY(3px); }
-.introLink:focus-visible { outline: 2px solid var(--sage); outline-offset: 6px; }
-@media (prefers-reduced-motion: reduce) {
-  .introLink, .introLink svg { transition: none; }
 }
 
 .inner {

@@ -16,6 +16,7 @@
    is exactly what it looked like. It owns its own padding now and has no
    maximum, so it is full width at every size and needs no negative margin. */
 .set {
+  scroll-margin-top: var(--header-h);
   width: 100%;
   padding-block: clamp(2rem, 4vw, 3.5rem);
   padding-inline: clamp(1rem, 2.4vw, 2.5rem);

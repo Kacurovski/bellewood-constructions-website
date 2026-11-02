@@ -24,22 +24,27 @@ reference it.
 ## Inner-page introduction test (2 November 2026)
 
 Work, Approach, About and Contact opt into individual `PageHead` variants using
-Bellewood Green and restrained entrance motion. The content pass keeps Work to
-its heading and collection count; About introduces the builder without repeating
-the biography or credentials below. Contact has its heading and an enquiry-form
-shortcut. Phone, email, service regions and the missed-call explanation live in
-the existing contact guide below. The shortcut uses the router's anchor handling
-to scroll beneath the fixed navigation and focus the enquiry section.
+Bellewood Green and restrained entrance motion. The fuller two-column layouts
+are restored, with page-specific supporting content instead of repeated credentials
+and contact directories. Work introduces the collection and links to all projects
+and the featured home. About leads with working relationships, its two audiences,
+and links into the builder and name stories. Contact pairs a short invitation with
+an enquiry-form shortcut and a direct call link. Phone and email details, service
+regions and the missed-call explanation remain in the existing contact guide.
+Section links use router anchors, clear the fixed navigation and move keyboard
+focus to their destinations. All introduction links have at least 44px touch targets.
 
 Approach retains its heading, explanation and supporting facts. Heights follow
-the content, including on mobile, and motion respects reduced-motion preferences.
+the content, with closer supporting rows on phones; no content is hidden on mobile.
+Motion respects reduced-motion preferences.
 Home and project-page mastheads are unchanged.
 
-This is a reversible design test. The fuller introductions are saved at
-`dddc308`; the version before the design test is `c126901`. Use those checkpoints
-to restore a page's content and matching variant styles if needed. Record shared
-rollbacks as new commits, preserving later unrelated work. Omitting the `variant`
-prop still selects the original generic masthead layout.
+This is a reversible design test. The original fuller layouts are saved at
+`dddc308`; the overly sparse content pass at `a108b3e`; the version before the
+design test at `c126901`. Use those checkpoints to restore a page's content and
+matching variant styles if needed. Record shared rollbacks as new commits,
+preserving later unrelated work. Omitting the `variant` prop still selects the
+original generic masthead layout.
 
 ## Home name introduction (2 November 2026)
 

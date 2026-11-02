@@ -18,7 +18,7 @@ export function FrontDoorStudy() {
   const current = wilstonStory.chapters[chapter]
 
   return (
-    <section id="front-door-test" aria-labelledby="front-door-heading" className={styles.story}>
+    <section id="front-door-test" tabIndex={-1} aria-labelledby="front-door-heading" className={styles.story}>
       <div className="shell">
         <div className={styles.studyLabel}><span>Featured home / Wilston</span><span>From the street to the garden</span></div>
         <Reveal className={styles.intro}>
