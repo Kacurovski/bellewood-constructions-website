@@ -360,7 +360,6 @@ export function PhotographyStorySlides({ sheetNumber = 'A-04' }: { sheetNumber?:
                 className={[styles.storyControl, index === 0 ? styles.previousControl : styles.nextControl].join(' ')}
                 aria-label={`${label} perspective`} aria-controls={stageId}
                 aria-disabled={journeys.length > 0} onClick={() => select(active + (index === 0 ? -1 : 1))}>
-                <span className={styles.panelMark} aria-hidden="true"><span /><span /></span>
                 <span className={styles.controlLabel}>{label}</span>
               </button>
             ))}
