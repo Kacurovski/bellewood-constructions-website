@@ -53,15 +53,15 @@ export function PhotoPauseTest() {
           </motion.h2>
           <div className={styles.invitation}>
             <p className={styles.nextLabel}>Your home, <em>next.</em></p>
-            <a href="#enquiry" className={styles.next} onClick={(event) => {
+            <a href="#what-happens-next" className={styles.next} onClick={(event) => {
+              const destination = document.getElementById('what-happens-next')
+              if (!destination) return
               event.preventDefault()
-              const heading = document.getElementById('enquiry-heading')
-              if (!heading) return
-              heading.setAttribute('tabindex', '-1')
-              heading.focus({ preventScroll: true })
+              destination.focus({ preventScroll: true })
+              // Lenis and native scrolling both honour the target's scroll margin.
               const lenis = getLenis()
-              if (lenis) lenis.scrollTo(heading, { offset: -window.innerHeight * 0.22, duration: 1.15 })
-              else heading.scrollIntoView({ behavior: reduced ? 'instant' : 'smooth', block: 'center' })
+              if (lenis) lenis.scrollTo(destination, { duration: 1.15, immediate: reduced })
+              else destination.scrollIntoView({ behavior: reduced ? 'instant' : 'smooth', block: 'start' })
             }}>
               <span>Start a conversation</span>
               <span className={styles.conversationMark}><ActionGlyph name="conversation" /></span>

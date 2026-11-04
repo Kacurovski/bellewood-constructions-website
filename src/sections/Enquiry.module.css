@@ -6,7 +6,10 @@
 
 /* --- What happens next ---------------------------------------------------- */
 
-.steps { padding-bottom: clamp(2.5rem, 5vw, 4rem); }
+.steps {
+  padding-bottom: clamp(2.5rem, 5vw, 4rem);
+  scroll-margin-top: calc(var(--header-h) + 1.5rem);
+}
 
 .stepsHead { padding-bottom: clamp(1.25rem, 2.5vw, 2rem); }
 

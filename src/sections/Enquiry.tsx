@@ -45,7 +45,8 @@ export function Enquiry({ sheetNumber = "A-08" }: { sheetNumber?: string } = {})
 
       {/* What happens after the form is sent. Someone weighing up a major
           renovation will not fill in a form that goes into the dark. */}
-      <div className={['shell', styles.steps].join(' ')}>
+      <section id="what-happens-next" tabIndex={-1} aria-label="What happens next"
+        className={['shell', styles.steps].join(' ')}>
         <Reveal className={styles.stepsHead}>
           <SheetRef number={sheetNumber} name="What happens next" rule={false} />
         </Reveal>
@@ -83,7 +84,7 @@ export function Enquiry({ sheetNumber = "A-08" }: { sheetNumber?: string } = {})
             </motion.li>
           ))}
         </ol>
-      </div>
+      </section>
 
       <div className={['shell', styles.inner].join(' ')}>
         <Reveal className={styles.left}>
