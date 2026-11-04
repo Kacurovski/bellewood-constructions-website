@@ -9,23 +9,36 @@
 .statement { max-width: 22ch; }
 .actions { display: flex; flex-direction: column; align-items: flex-start; gap: 1rem; }
 .conversation {
-  position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: space-between;
-  gap: clamp(1rem, 2vw, 2rem);
+  gap: 1.1rem;
   width: fit-content;
-  max-width: 22rem;
+  max-width: 100%;
   min-height: 56px;
-  padding-block: 0.75rem;
+  padding: 6px 6px 6px 1.3rem;
+  border: 1px solid var(--green);
+  border-radius: 999px;
+  background: var(--green);
+  color: var(--wash);
+  box-shadow: 0 4px 16px rgb(5 35 24 / 10%);
+  font: 600 0.95rem/1.35 var(--font-display);
   text-decoration: none;
-  color: var(--green);
-  font: 400 clamp(1.3rem, 1.9vw, 1.65rem)/1.2 var(--font-body);
+  transition: background 350ms ease, border-color 350ms ease, transform 350ms var(--ease-out), box-shadow 350ms ease;
 }
-.conversation::before, .conversation::after { content: ''; position: absolute; inset: auto 0 0; height: 1px; background: currentColor; }
-.conversation::before { opacity: 0.3; }
-.conversation::after { transform: scaleX(0.24); transform-origin: left; transition: transform 650ms var(--ease-out); }
-.conversation:hover::after, .conversation:focus-visible::after { transform: scaleX(1); }
+.conversationMark {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: var(--wash);
+  color: var(--green);
+}
+.conversationMark svg { width: 21px; height: 21px; }
+.conversation:hover { background: #12613f; border-color: #12613f; transform: translateY(-2px); box-shadow: 0 8px 22px rgb(5 35 24 / 16%); }
+.conversation:active { transform: translateY(0); }
 
 .conversation:focus-visible, .call a:focus-visible { outline: 2px solid var(--green); outline-offset: 5px; }
 .call { display: flex; flex-wrap: wrap; align-items: center; column-gap: 0.5rem; color: var(--green); font: 400 0.875rem/1.5 var(--font-display); }
@@ -36,5 +49,6 @@
   .actions { gap: 0.5rem; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .conversation::after { transition: none; }
+  .conversation { transition: none; }
+  .conversation:hover { transform: none; }
 }

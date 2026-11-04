@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import { ActionGlyph } from '../components/ActionGlyph'
 import { Reveal } from '../components/Reveal'
 import { ScrollWords } from '../components/ScrollWords'
 import { contact } from '../config/site'
@@ -15,6 +16,7 @@ export function WorkClosing() {
       <Reveal delay={0.1} className={styles.actions}>
         <Link to="/contact" className={styles.conversation}>
           <span>Start a conversation</span>
+          <span className={styles.conversationMark}><ActionGlyph name="conversation" /></span>
         </Link>
         <p className={styles.call}>Or call Angus <a href={contact.phoneHref}>{contact.phone}</a></p>
       </Reveal>
