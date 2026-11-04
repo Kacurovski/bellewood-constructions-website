@@ -53,8 +53,8 @@ export function PhotoPauseTest() {
           </motion.h2>
           <div className={styles.invitation}>
             <p className={styles.nextLabel}>Your home, <em>next.</em></p>
-            <a href="#what-happens-next" className={styles.next} onClick={(event) => {
-              const destination = document.getElementById('what-happens-next')
+            <a href="#enquiry" className={styles.next} onClick={(event) => {
+              const destination = document.getElementById('enquiry')
               if (!destination) return
               event.preventDefault()
               destination.focus({ preventScroll: true })

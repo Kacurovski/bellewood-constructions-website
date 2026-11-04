@@ -142,7 +142,7 @@ export function EnquiryForm({ compact = false }: { compact?: boolean }) {
 
   return (
     <form className={[styles.form, compact ? styles.compact : ''].join(' ')} onSubmit={onSubmit} noValidate>
-      <div className={[styles.row, styles.nameRow].join(' ')}>
+      <div className={styles.row}>
         <Field
           id={id('firstName')}
           name="firstName"

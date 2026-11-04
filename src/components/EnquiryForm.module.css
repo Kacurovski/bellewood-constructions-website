@@ -138,10 +138,10 @@
 :global(.on-green) .submit:hover:not(:disabled) { background: #fff; box-shadow: 0 6px 18px #10251a30; }
 :global(.on-green) .submit:focus-visible { outline-color: var(--wash); }
 
-/* Home pairs the form with its next steps, rather than placing it after them. */
-.compact { gap: 1.15rem; }
-.compact .textarea { min-height: 7rem; }
-.compact .input { scroll-margin-block: calc(var(--header-h) + 1.5rem) 7rem; }
+@media (prefers-reduced-motion: reduce) {
+  .submit { transition: none; }
+  .submit:hover:not(:disabled) { transform: none; }
+}
 
 .inlineLink {
   color: var(--green);
@@ -169,30 +169,6 @@
 
 @media (max-width: 640px) {
   .row { grid-template-columns: minmax(0, 1fr); }
-  .compact .nameRow { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; }
-}
-
-/* The actual submit action stays inside this form while a phone user scrolls.
-   Its normal-flow space remains at the end; it never follows into the footer. */
-@media (max-width: 900px), (max-height: 700px) {
-  .compact .actions {
-    position: sticky;
-    bottom: 0;
-    z-index: 3;
-    padding-block: 0.75rem max(0.75rem, env(safe-area-inset-bottom));
-    margin-top: 0;
-    background: var(--green);
-    box-shadow: 0 -10px 16px var(--green);
-  }
-  .compact .aside { display: none; }
-  .compact .submit { width: 100%; }
-  /* Leave the typing area clear, including when a phone's keyboard opens. */
-  .compact:has(.input:focus) .actions { position: static; box-shadow: none; }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .submit { transition: none; }
-  .submit:hover:not(:disabled) { transform: none; }
 }
 
 
