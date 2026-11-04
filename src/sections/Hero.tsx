@@ -1,4 +1,6 @@
 import { ActionGlyph } from '../components/ActionGlyph'
+import { GoogleReviewBadge } from '../components/GoogleReviewBadge'
+import { googleReviews } from '../config/site'
 import { useRef } from 'react'
 import type { CSSProperties } from 'react'
 import { Link } from 'react-router-dom'
@@ -127,12 +129,15 @@ function ScrollHero() {
                   <RoomStop key={frame.src} index={index} progress={progress} go={go} />)}
               </nav>
             </div>
-            <div className={styles.links}>
-              <button className={styles.skip} type="button" onClick={skip}>
-                <span>Skip tour</span>
-                <ActionGlyph name="down" />
-              </button>
-              <WorkLink />
+            <div className={styles.heroActions}>
+              {googleReviews.placements.hero && <GoogleReviewBadge />}
+              <div className={styles.links}>
+                <button className={styles.skip} type="button" onClick={skip}>
+                  <span>Skip tour</span>
+                  <ActionGlyph name="down" />
+                </button>
+                <WorkLink />
+              </div>
             </div>
           </div>
         </div>
@@ -157,7 +162,12 @@ function StaticHero() {
             <div className={[styles.caption, styles[frame.placement]].join(' ')}>
               <FrameCopy frame={frame} index={index} />
             </div>
-            <WorkLink />
+            {index === 0 && googleReviews.placements.hero ? (
+              <div className={styles.staticActions}>
+                <GoogleReviewBadge />
+                <WorkLink />
+              </div>
+            ) : <WorkLink />}
           </div>
         </article>
       ))}

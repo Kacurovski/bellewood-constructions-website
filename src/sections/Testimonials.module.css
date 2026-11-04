@@ -69,6 +69,8 @@
 .head { padding-bottom: clamp(1.75rem, 3vw, 2.5rem); }
 
 .heading { margin-top: var(--s-4); max-width: 16ch; }
+.headingRow { display: flex; align-items: flex-end; justify-content: space-between; gap: 1.5rem; }
+.headingRow > a { flex-shrink: 0; }
 
 .stage {
   display: grid;
@@ -312,6 +314,7 @@
    keeps its ground and its swipe, so a phone loses nothing but the side by
    side. */
 @media (max-width: 900px) {
+  .headingRow { flex-wrap: wrap; }
   .stage {
     grid-template-columns: minmax(0, 1fr);
     row-gap: clamp(1.75rem, 4vw, 2.5rem);

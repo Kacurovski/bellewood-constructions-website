@@ -147,6 +147,7 @@
 .stopRail > span { display: block; height: 100%; background: var(--wash); transform-origin: left; }
 .stop:hover .stopRail { background: rgb(247 247 244 / 65%); }
 .links { display: flex; align-items: center; gap: clamp(1.5rem, 3vw, 3rem); padding-bottom: 0.5rem; }
+.heroActions { display: grid; justify-items: end; gap: 0.65rem; }
 .skip, .workLink {
   position: relative;
   display: inline-flex;
@@ -193,11 +194,13 @@
 .staticFrame > img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
 .staticContent { position: relative; z-index: 3; min-height: inherit; }
 .staticContent > .workLink { position: absolute; bottom: 2rem; left: var(--gutter); }
+.staticActions { position: absolute; bottom: 2rem; left: var(--gutter); right: var(--gutter); display: flex; align-items: center; gap: 1.75rem; }
 
 @media (max-width: 860px) {
   .caption { width: min(42vw, 24rem); }
   .caption .heading { font-size: clamp(1.8rem, 4vw, 2.6rem); }
   .footer { flex-wrap: wrap; gap: 0.75rem 1.5rem; }
+  .heroActions { margin-left: auto; }
   .links { margin-left: auto; }
   .links { gap: 1.75rem; }
 }
@@ -206,7 +209,7 @@
   .pin { min-height: 480px; }
   .caption, .left, .upperLeft, .upperRight {
     top: auto;
-    bottom: 10.5rem;
+    bottom: 15rem;
     left: var(--gutter);
     right: var(--gutter);
     width: auto;
@@ -227,12 +230,16 @@
   .stops { gap: 0.4rem; }
   .stop { width: 1.9rem; }
   .links { display: flex; gap: 1.5rem; padding: 0; margin-top: 0.75rem; }
+  .heroActions { justify-items: start; margin-top: 0.75rem; gap: 0.25rem; }
+  .heroActions .links { width: 100%; margin-top: 0; }
   .skip, .workLink { min-height: 3.25rem; }
   .skip { gap: 0.5rem; padding-inline: 0; font-size: 0.8125rem; }
   .workLink { flex: 1; min-width: 0; gap: 0.65rem; font-size: 1.3rem; }
   .bottomScrim { height: 55%; }
   .staticFrame { min-height: 90svh; }
   .staticContent .caption { bottom: 7rem; }
+  .staticActions { flex-direction: column; align-items: flex-start; gap: 0.5rem; bottom: 1rem; }
+  .staticFrame:first-child .caption { bottom: 11rem; }
 }
 @media (prefers-reduced-motion: reduce) {
   .skip, .skip svg, .skip::after, .workLink, .workLink::after { transition: none; }

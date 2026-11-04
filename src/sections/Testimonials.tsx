@@ -8,6 +8,8 @@ import { SheetRef } from '../components/Sheet'
 import { useMediaQuery } from '../hooks/useMediaQuery'
 import { useReducedMotion } from '../hooks/useReducedMotion'
 import { testimonials, testimonialsArePlaceholder } from '../data/testimonials'
+import { GoogleReviewBadge } from '../components/GoogleReviewBadge'
+import { googleReviews } from '../config/site'
 import styles from './Testimonials.module.css'
 
 /**
@@ -175,9 +177,12 @@ export function Testimonials({ sheetNumber = "A-07" }: { sheetNumber?: string } 
             note="Clients and architects"
             rule={false}
           />
-          <h2 id="said-heading" className={['section-heading', styles.heading].join(' ')}>
-            What clients say.
-          </h2>
+          <div className={styles.headingRow}>
+            <h2 id="said-heading" className={['section-heading', styles.heading].join(' ')}>
+              What clients say.
+            </h2>
+            {googleReviews.placements.testimonials && <GoogleReviewBadge />}
+          </div>
         </Reveal>
 
         <div className={styles.stage}>
