@@ -1,6 +1,7 @@
 import { useRef } from 'react'
 import { motion, useScroll, useTransform } from 'framer-motion'
 import { Link } from 'react-router-dom'
+import { ActionGlyph } from '../components/ActionGlyph'
 import { stills } from '../data/projects'
 import { useReducedMotion } from '../hooks/useReducedMotion'
 import { getLenis } from '../hooks/useLenis'
@@ -50,19 +51,22 @@ export function PhotoPauseTest() {
               transition={{ duration: reduced ? 0 : 1.2, delay: reduced ? 0 : 0.12, ease: [0.22, 1, 0.36, 1] }}
             >opened up.</motion.em></span>
           </motion.h2>
-          <a href="#enquiry" className={styles.next} onClick={(event) => {
-            event.preventDefault()
-            const heading = document.getElementById('enquiry-heading')
-            if (!heading) return
-            heading.setAttribute('tabindex', '-1')
-            heading.focus({ preventScroll: true })
-            const lenis = getLenis()
-            if (lenis) lenis.scrollTo(heading, { offset: -window.innerHeight * 0.22, duration: 1.15 })
-            else heading.scrollIntoView({ behavior: reduced ? 'instant' : 'smooth', block: 'center' })
-          }}>
-            <span className={styles.nextLabel}>Your home, <em>next.</em></span>
-            <span className={styles.nextHint}>Start a conversation</span>
-          </a>
+          <div className={styles.invitation}>
+            <p className={styles.nextLabel}>Your home, <em>next.</em></p>
+            <a href="#enquiry" className={styles.next} onClick={(event) => {
+              event.preventDefault()
+              const heading = document.getElementById('enquiry-heading')
+              if (!heading) return
+              heading.setAttribute('tabindex', '-1')
+              heading.focus({ preventScroll: true })
+              const lenis = getLenis()
+              if (lenis) lenis.scrollTo(heading, { offset: -window.innerHeight * 0.22, duration: 1.15 })
+              else heading.scrollIntoView({ behavior: reduced ? 'instant' : 'smooth', block: 'center' })
+            }}>
+              <span>Start a conversation</span>
+              <span className={styles.conversationMark}><ActionGlyph name="conversation" /></span>
+            </a>
+          </div>
         </figcaption>
       </figure>
     </section>

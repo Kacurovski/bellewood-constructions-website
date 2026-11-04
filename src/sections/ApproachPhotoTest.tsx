@@ -1,6 +1,7 @@
 import { useRef } from 'react'
 import { motion, useScroll, useTransform } from 'framer-motion'
 import { Link } from 'react-router-dom'
+import { ActionGlyph } from '../components/ActionGlyph'
 import { stills } from '../data/projects'
 import { useReducedMotion } from '../hooks/useReducedMotion'
 import styles from './ApproachPhotoTest.module.css'
@@ -30,7 +31,10 @@ export function ApproachPhotoTest() {
           <h2 id="approach-photo-test-heading" className={styles.heading}>
             Care in the making.<em>Pleasure in the living.</em>
           </h2>
-          <Link to="/contact" className={styles.conversation}>Start a <em>conversation</em></Link>
+          <Link to="/contact" className={styles.conversation}>
+            <span>Start a conversation</span>
+            <span className={styles.conversationMark}><ActionGlyph name="conversation" /></span>
+          </Link>
         </motion.div>
         <div className={styles.creditRow}>
           <span className={styles.note}>Timber, light and a little room to breathe.</span>

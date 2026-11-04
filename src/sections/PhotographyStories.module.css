@@ -88,7 +88,7 @@
 .calmStory { --story-ink: #0b5937; position: relative; isolation: isolate; padding-block: clamp(1.8rem, 2.4vw, 2.25rem); background: #c4dac6; color: var(--green); border-block: 1px solid rgb(5 67 42 / 22%); }
 .storyFrame { display: grid; gap: 1.8rem; }
 .calmHeader { position: sticky; top: var(--header-h); z-index: 6; display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; min-height: 76px; padding-block: 0.45rem 1rem; border-bottom: 1px solid rgb(5 67 42 / 28%); background: rgb(196 218 198 / 95%); backdrop-filter: blur(16px); }
-.storyBody { position: relative; }
+.storyBody { position: relative; padding-inline: clamp(4.6rem, 6vw, 5.4rem); }
 /* Both panels occupy the same grid cell. Its height comes from their content,
    including the inactive composition, so a turn never shifts the next section. */
 .calmStage { position: relative; display: grid; min-width: 0; touch-action: pan-y pinch-zoom; }
@@ -126,24 +126,21 @@
 .calmPause:hover { background: rgb(5 67 42 / 6%); }
 .pauseHint { position: absolute; right: -6px; top: calc(100% + 14px); padding: 0.5rem 0.7rem; white-space: nowrap; background: var(--green); color: var(--wash); font: 400 0.72rem/1.4 var(--font-display); pointer-events: none; opacity: 0; transform: translateY(-3px); transition: opacity 200ms ease, transform 200ms ease; }
 .calmPause:hover .pauseHint, .calmPause:focus-visible .pauseHint { opacity: 1; transform: translateY(0); }
-/* A small photographic page previews the other perspective, without arrows. */
-.storyNavigation { display: flex; justify-content: flex-end; margin-top: 1.65rem; padding-top: 1rem; border-top: 1px solid rgb(5 67 42 / 22%); }
-.pageTurn { display: inline-flex; align-items: center; gap: 1.2rem; min-width: 240px; min-height: 82px; padding: 0.5rem 0.25rem; border: 0; background: transparent; color: var(--green); text-align: left; cursor: pointer; }
-.pagePreview { position: relative; display: block; flex: none; width: 64px; height: 60px; perspective: 500px; }
-.pageBehind, .pagePhoto { position: absolute; inset: 3px 7px 3px 1px; border: 3px solid var(--wash); background: var(--wash); box-shadow: 0 2px 6px rgb(5 43 28 / 12%); transition: transform 650ms var(--ease-out); }
-.pageBehind { transform: rotate(9deg) translateX(5px); }
-.pagePhoto { overflow: hidden; transform: rotate(-5deg); transform-origin: left center; }
-.pagePhoto img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity 650ms ease; }
-.pagePhoto img.previewVisible { opacity: 1; }
-.pageWords { display: grid; gap: 0.4rem; }
-.pageHint { font: 500 0.65rem/1.4 var(--font-display); letter-spacing: 0.09em; text-transform: uppercase; }
-.pageTitle { position: relative; width: fit-content; padding-bottom: 0.25rem; font: 400 1.4rem/1.2 var(--font-body); }
-.pageTitle::after { content: ''; position: absolute; inset: auto 0 0; height: 1px; background: currentColor; transform: scaleX(0.22); transform-origin: left; transition: transform 650ms var(--ease-out); }
-.pageTurn:hover .pagePhoto, .pageTurn:focus-visible .pagePhoto { transform: rotate(-11deg) rotateY(-22deg) translateY(-3px); }
-.pageTurn:hover .pageBehind, .pageTurn:focus-visible .pageBehind { transform: rotate(12deg) translateX(7px); }
-.pageTurn:hover .pageTitle::after, .pageTurn:focus-visible .pageTitle::after { transform: scaleX(1); }
-.pageTurn:focus-visible, .calmPause:focus-visible { outline: 2px solid var(--green); outline-offset: 4px; }
-.pageTurn[aria-disabled='true'] { cursor: default; }
+/* Mirrored panel edges give each side a distinct direction, without arrows. */
+.storyNavigation { display: contents; }
+.storyControl { position: absolute; top: 48%; z-index: 5; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.75rem; width: 68px; min-height: 96px; padding: 14px 4px; border: 1px solid rgb(5 67 42 / 30%); border-radius: 999px; background: rgb(247 247 244 / 72%); color: var(--green); cursor: pointer; transform: translateY(-50%); transition: background 400ms ease, color 400ms ease, border-color 400ms ease, box-shadow 400ms ease; }
+.previousControl { left: -0.25rem; }
+.nextControl { right: -0.25rem; }
+.panelMark { position: relative; display: block; width: 30px; height: 26px; }
+.panelMark > span { position: absolute; top: 2px; width: 15px; height: 22px; border: 1px solid currentColor; border-radius: 2px; transition: transform 500ms var(--ease-out); }
+.panelMark > span:first-child { left: 1px; opacity: 0.4; }
+.panelMark > span:last-child { left: 11px; background: currentColor; }
+.previousControl .panelMark { transform: scaleX(-1); }
+.controlLabel { font: 500 0.65rem/1.3 var(--font-display); }
+.storyControl:hover, .storyControl:focus-visible { border-color: var(--green); background: var(--green); color: var(--wash); box-shadow: 0 5px 14px rgb(5 67 42 / 12%); }
+.storyControl:hover .panelMark > span:last-child, .storyControl:focus-visible .panelMark > span:last-child { transform: translateX(3px); }
+.storyControl:focus-visible, .calmPause:focus-visible { outline: 2px solid var(--green); outline-offset: 4px; }
+.storyControl[aria-disabled='true'] { cursor: default; }
 /* Preserve the different editorial arrangements without viewport-based sizing. */
 .embeddedStory { height: 100%; min-height: 0; padding: 0; border: 0; background: transparent; color: var(--green); }
 .embeddedStory > :global(.shell) { height: 100%; min-height: 0; max-width: none; padding: 0; }
@@ -181,6 +178,9 @@
 .embeddedStory .detailHeading { font-size: 0.85rem; margin-top: 0.6rem; }
 .embeddedStory .lightboxHeader h3 { color: var(--green); }
 @media (max-width: 1000px) and (min-width: 651px) {
+  .storyBody { padding-inline: 3.75rem; }
+  .storyControl { width: 52px; min-height: 86px; }
+  .controlLabel { font-size: 0.6rem; }
   .calmHeader { flex-wrap: wrap; gap: 0.85rem; }
   .embeddedStory .editorialIntro { grid-template-columns: 1fr; gap: 1rem; }
   .embeddedStory .introNote { max-width: 56ch; }
@@ -201,9 +201,14 @@
   .chapterJourney button { min-height: 46px; padding: 0.6rem 0.35rem; }
   .calmPause { width: 47px; min-height: 46px; margin-left: 4px; }
   .calmHeader > div:first-child > div { font-size: 0.62rem; gap: 0.6rem; letter-spacing: 0.1em; }
-  .storyNavigation { margin-top: 1.25rem; padding-top: 0.75rem; }
-  .pageTurn { min-width: 0; gap: 1rem; padding-inline: 0.5rem; }
-  .pageTitle { font-size: 1.3rem; }
+  .storyBody { padding: 0; }
+  .storyNavigation { display: flex; justify-content: space-between; gap: 1rem; margin-top: 1.5rem; }
+  .storyControl { position: static; flex-direction: row; width: auto; min-width: 112px; min-height: 50px; padding: 10px 15px; gap: 0.6rem; transform: none; }
+  .nextControl .panelMark { order: 1; }
+  .panelMark { width: 26px; height: 22px; }
+  .panelMark > span { width: 12px; height: 18px; }
+  .panelMark > span:last-child { left: 10px; }
+  .controlLabel { font-size: 0.7rem; }
   .embeddedStory.magazine > :global(.shell) { gap: 1rem; }
   .embeddedStory .editorialIntro { grid-template-columns: 1fr; gap: 0.65rem; }
   .embeddedStory .editorialTitle { font-size: clamp(1.6rem, 7.2vw, 2.3rem); }
@@ -239,8 +244,7 @@
   .embeddedStory .openMark { width: 1.5rem; height: 1.5rem; right: 0.4rem; bottom: 0.4rem; font-size: 0.9rem; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .calmPanel, .pagePhoto, .pagePhoto img, .pageBehind, .pageTitle::after, .calmPause .pauseSymbol, .pauseHint, .chapterJourney button { transition: none; }
-  .pageTurn:hover .pagePhoto, .pageTurn:focus-visible .pagePhoto { transform: rotate(-5deg); }
-  .pageTurn:hover .pageBehind, .pageTurn:focus-visible .pageBehind { transform: rotate(9deg) translateX(5px); }
+  .calmPanel, .storyControl, .panelMark > span, .calmPause .pauseSymbol, .pauseHint, .chapterJourney button { transition: none; }
+  .storyControl:hover .panelMark > span:last-child, .storyControl:focus-visible .panelMark > span:last-child { transform: none; }
   .activePanel .editorialIntro, .activePanel .editorialNote, .activePanel .craftBody > div, .activePanel .craftOverview, .activePanel .exteriorPhoto { animation: none !important; }
 }

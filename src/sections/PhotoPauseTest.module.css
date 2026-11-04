@@ -66,24 +66,14 @@
 .heading em { font-weight: 400; }
 .wordMask { display: inline-block; overflow: hidden; padding: 0.1em 0.06em 0.13em 0; margin: -0.1em -0.06em -0.13em 0; vertical-align: bottom; }
 .wordMask > span, .wordMask > em { display: inline-block; }
-.next {
-  position: relative;
-  display: inline-flex;
-  flex-direction: column;
-  align-items: flex-start;
-  flex: none;
-  gap: 0.5rem;
-  min-height: 64px;
-  padding-block: 0.35rem 0.85rem;
-  color: inherit;
-  text-decoration: none;
-}
-.nextLabel { font: 400 clamp(1.5rem, 2vw, 2rem)/1.15 var(--font-body); letter-spacing: -0.025em; }
-.nextHint { font: 500 0.72rem/1.4 var(--font-display); }
-.next::before, .next::after { content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 1px; background: currentColor; }
-.next::before { opacity: 0.35; }
-.next::after { transform: scaleX(0.24); transform-origin: left; transition: transform 650ms var(--ease-out); }
-.next:hover::after, .next:focus-visible::after { transform: scaleX(1); }
+.invitation { flex: none; display: grid; justify-items: start; gap: 0.85rem; }
+.nextLabel { margin: 0; font: 400 clamp(1.5rem, 2vw, 2rem)/1.15 var(--font-body); letter-spacing: -0.025em; }
+.next { display: inline-flex; align-items: center; justify-content: space-between; gap: 1.1rem; min-height: 56px; padding: 6px 6px 6px 1.3rem; border: 1px solid rgb(247 247 244 / 85%); border-radius: 999px; background: var(--wash); color: var(--green); box-shadow: 0 4px 16px rgb(5 35 24 / 14%); font: 600 0.87rem/1.35 var(--font-display); text-decoration: none; transition: background 350ms ease, transform 350ms var(--ease-out), box-shadow 350ms ease; }
+.conversationMark { display: grid; place-items: center; flex: none; width: 42px; height: 42px; border-radius: 50%; background: var(--green); color: var(--wash); transition: background 350ms ease; }
+.conversationMark svg { width: 21px; height: 21px; }
+.next:hover { background: white; transform: translateY(-2px); box-shadow: 0 8px 22px rgb(5 35 24 / 20%); }
+.next:hover .conversationMark { background: #12613f; }
+.next:active { transform: translateY(0); }
 .credit:hover { background: rgb(5 43 28 / 80%); border-color: rgb(247 247 244 / 65%); }
 
 .credit:focus-visible, .next:focus-visible { outline: 2px solid var(--wash); outline-offset: 5px; }
@@ -93,9 +83,10 @@
   .media::after { background: linear-gradient(180deg, rgb(5 35 24 / 8%), transparent 18%, transparent 40%, rgb(5 43 28 / 45%) 65%, rgb(5 43 28 / 75%) 86%, var(--green)); }
   .caption { flex-direction: column; align-items: flex-start; gap: 1.1rem; }
   .heading { max-width: 10ch; font-size: clamp(3rem, 9vw, 4.5rem); }
-  .next { align-self: flex-end; min-width: 11.5rem; }
+  .invitation { align-self: flex-end; }
 
 }
 @media (prefers-reduced-motion: reduce) {
-  .credit, .next::after { transition: none; }
+  .credit, .next, .conversationMark { transition: none; }
+  .next:hover { transform: none; }
 }

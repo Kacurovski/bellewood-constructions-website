@@ -1,4 +1,4 @@
-type Glyph = 'previous' | 'next' | 'up' | 'down' | 'phone' | 'email' | 'expand' | 'pin'
+type Glyph = 'previous' | 'next' | 'up' | 'down' | 'phone' | 'email' | 'expand' | 'pin' | 'conversation'
 
 /** Small, functional symbols. Text links carry their own visual emphasis. */
 export function ActionGlyph({ name, className }: { name: Glyph; className?: string }) {
@@ -11,6 +11,7 @@ export function ActionGlyph({ name, className }: { name: Glyph; className?: stri
     email: 'M4 5h16v14H4V5Zm0 1 8 7 8-7',
     expand: 'M9 4H4v5m11-5h5v5M4 15v5h5m11-5v5h-5',
     pin: 'M19 10c0 5-7 11-7 11S5 15 5 10a7 7 0 1 1 14 0ZM15 10a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z',
+    conversation: 'M7 5h10a3 3 0 0 1 3 3v6a3 3 0 0 1-3 3h-6l-5 3v-3a3 3 0 0 1-2-3V8a3 3 0 0 1 3-3Zm1 5h8m-8 3h5',
   }
 
   return <svg className={className} viewBox="0 0 24 24" width="24" height="24"
