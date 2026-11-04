@@ -37,6 +37,23 @@
 .badge:active { transform: translateY(0); }
 .badge:focus-visible { outline: 2px solid var(--wash); outline-offset: 5px; }
 
+/* A quiet part of the photograph's navigation, with only the Google mark on white. */
+.hero {
+  min-height: 58px;
+  gap: 0.65rem;
+  padding: 0.6rem 1.1rem 0.6rem 0.8rem;
+  color: var(--wash);
+  background: rgb(5 67 42 / 42%);
+  border-color: rgb(247 247 244 / 32%);
+  box-shadow: none;
+  transition: background 300ms ease, border-color 300ms ease;
+}
+.hero .mark { width: 30px; height: 30px; border: 0; }
+.hero .mark img { width: 20px; height: 20px; }
+.hero .stars { color: #e4c995; }
+.hero .label { color: rgb(247 247 244 / 92%); }
+.hero:hover { background: rgb(5 67 42 / 74%); border-color: rgb(247 247 244 / 65%); box-shadow: none; transform: none; }
+
 @media (prefers-reduced-motion: reduce) {
   .badge { transition: none; }
   .badge:hover { transform: none; }

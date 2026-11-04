@@ -130,7 +130,6 @@ function ScrollHero() {
               </nav>
             </div>
             <div className={styles.heroActions}>
-              {googleReviews.placements.hero && <GoogleReviewBadge />}
               <div className={styles.links}>
                 <button className={styles.skip} type="button" onClick={skip}>
                   <span>Skip tour</span>
@@ -138,6 +137,7 @@ function ScrollHero() {
                 </button>
                 <WorkLink />
               </div>
+              {googleReviews.placements.hero && <GoogleReviewBadge variant="hero" />}
             </div>
           </div>
         </div>
@@ -164,8 +164,8 @@ function StaticHero() {
             </div>
             {index === 0 && googleReviews.placements.hero ? (
               <div className={styles.staticActions}>
-                <GoogleReviewBadge />
                 <WorkLink />
+                <GoogleReviewBadge variant="hero" />
               </div>
             ) : <WorkLink />}
           </div>

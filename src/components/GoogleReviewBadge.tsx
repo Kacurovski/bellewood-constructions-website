@@ -3,9 +3,9 @@ import googleMark from '../assets/brand/google-g.png'
 import styles from './GoogleReviewBadge.module.css'
 
 /** A lightweight link to Google; it does not label the site's quotes as Google reviews. */
-export function GoogleReviewBadge() {
+export function GoogleReviewBadge({ variant = 'light' }: { variant?: 'light' | 'hero' }) {
   return (
-    <a className={styles.badge} href={googleReviews.url} target="_blank" rel="noopener noreferrer"
+    <a className={[styles.badge, variant === 'hero' ? styles.hero : ''].join(' ')} href={googleReviews.url} target="_blank" rel="noopener noreferrer"
       aria-label={`${googleReviews.rating.toFixed(1)} out of 5 on Google. Read reviews for ${googleReviews.businessName} (opens in a new tab).`}>
       <span className={styles.mark} aria-hidden="true">
         <img src={googleMark} width={24} height={24} alt="" />
