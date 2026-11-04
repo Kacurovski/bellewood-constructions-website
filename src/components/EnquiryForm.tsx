@@ -142,7 +142,7 @@ export function EnquiryForm({ compact = false }: { compact?: boolean }) {
 
   return (
     <form className={[styles.form, compact ? styles.compact : ''].join(' ')} onSubmit={onSubmit} noValidate>
-      <div className={styles.row}>
+      <div className={[styles.row, styles.nameRow].join(' ')}>
         <Field
           id={id('firstName')}
           name="firstName"
@@ -206,7 +206,7 @@ export function EnquiryForm({ compact = false }: { compact?: boolean }) {
       </div>
 
       <div className={styles.actions}>
-        <button className="btn" type="submit" disabled={sending}>
+        <button className={styles.submit} type="submit" disabled={sending} aria-busy={sending}>
           {sending ? 'Sending…' : 'Send enquiry'}
         </button>
         <p className={['small', styles.aside].join(' ')}>

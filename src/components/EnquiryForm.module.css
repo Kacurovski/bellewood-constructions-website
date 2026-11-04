@@ -115,6 +115,34 @@
 
 .aside { color: var(--pine); opacity: 0.78; }
 
+.submit {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 11rem;
+  min-height: 56px;
+  padding: 0.9rem 1.75rem;
+  border: 1px solid var(--green);
+  border-radius: 999px;
+  color: var(--wash);
+  background: var(--green);
+  font: 600 0.9375rem/1.35 var(--font-display);
+  cursor: pointer;
+  transition: background 300ms var(--ease), transform 300ms var(--ease), box-shadow 300ms var(--ease);
+}
+.submit:hover:not(:disabled) { background: var(--pine); transform: translateY(-2px); box-shadow: 0 6px 18px #10251a20; }
+.submit:active:not(:disabled) { transform: translateY(0); }
+.submit:disabled { opacity: 0.65; cursor: wait; }
+.submit:focus-visible { outline: 2px solid var(--green); outline-offset: 5px; }
+:global(.on-green) .submit { background: var(--wash); border-color: var(--wash); color: var(--green); }
+:global(.on-green) .submit:hover:not(:disabled) { background: #fff; box-shadow: 0 6px 18px #10251a30; }
+:global(.on-green) .submit:focus-visible { outline-color: var(--wash); }
+
+/* Home pairs the form with its next steps, rather than placing it after them. */
+.compact { gap: 1.15rem; }
+.compact .textarea { min-height: 7rem; }
+.compact .input { scroll-margin-block: calc(var(--header-h) + 1.5rem) 7rem; }
+
 .inlineLink {
   color: var(--green);
   font-weight: 500;
@@ -141,6 +169,30 @@
 
 @media (max-width: 640px) {
   .row { grid-template-columns: minmax(0, 1fr); }
+  .compact .nameRow { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; }
+}
+
+/* The actual submit action stays inside this form while a phone user scrolls.
+   Its normal-flow space remains at the end; it never follows into the footer. */
+@media (max-width: 900px), (max-height: 700px) {
+  .compact .actions {
+    position: sticky;
+    bottom: 0;
+    z-index: 3;
+    padding-block: 0.75rem max(0.75rem, env(safe-area-inset-bottom));
+    margin-top: 0;
+    background: var(--green);
+    box-shadow: 0 -10px 16px var(--green);
+  }
+  .compact .aside { display: none; }
+  .compact .submit { width: 100%; }
+  /* Leave the typing area clear, including when a phone's keyboard opens. */
+  .compact:has(.input:focus) .actions { position: static; box-shadow: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .submit { transition: none; }
+  .submit:hover:not(:disabled) { transform: none; }
 }
 
 
