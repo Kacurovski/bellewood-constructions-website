@@ -11,7 +11,7 @@
 .row {
   position: relative;
   display: grid;
-  grid-template-columns: 1.6rem minmax(0, 1fr) 1rem;
+  grid-template-columns: 1.6rem minmax(0, 1fr);
   gap: 0.5rem 0.65rem;
   align-items: baseline;
   width: 100%;
@@ -44,8 +44,7 @@
   overflow-wrap: anywhere;
 }
 .detail { grid-column: 2 / -1; font-size: var(--t-small); line-height: 1.35; opacity: 0.7; }
-.arrow { font-size: 1.15rem; opacity: 0.3; }
-.rowActive .arrow, .rowActive .number, .rowActive .detail { opacity: 1; }
+.rowActive .number, .rowActive .detail { opacity: 1; }
 .footer { margin-top: clamp(1.5rem, 3vw, 3rem); }
 .gallery { display: grid; grid-template-columns: minmax(0, 1fr); gap: 0; }
 .frame {

@@ -20,8 +20,7 @@
 .street figcaption strong { font-weight: 600; }
 .streetCopy { font-size: 1.12rem; line-height: 1.6; max-width: 32ch; margin-top: 2rem; }
 .projectLink { display: inline-flex; align-items: center; gap: 2rem; margin-top: 1.4rem; padding-block: 0.75rem; border-bottom: 1px solid var(--rule-strong); text-decoration: none; font: 600 0.8rem/1.5 var(--font-display); }
-.projectLink span, .reverseLink span { transition: transform 400ms var(--ease); }
-.projectLink:hover span, .reverseLink:hover span { transform: translate(3px, -3px); }
+
 .roomImage { position: relative; aspect-ratio: 4 / 3; overflow: hidden; background: var(--sage); }
 .roomImage img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transform: scale(1.035); transition: opacity 950ms var(--ease), transform 1800ms var(--ease-out); }
 .roomImage img.roomVisible { opacity: 1; transform: scale(1); }
@@ -29,7 +28,6 @@
 .chapterButtons button { display: flex; align-items: center; gap: 0.7rem; padding: 1.1rem 0.9rem; border: 0; border-right: 1px solid var(--rule-strong); background: transparent; color: var(--green); cursor: pointer; font: 500 0.8rem/1.5 var(--font-display); transition: background 350ms, color 350ms; }
 .chapterButtons button:last-child { border-right: 0; }
 .chapterButtons button > span:first-child { font-size: 0.65rem; }
-.chapterButtons button > span:last-child { margin-left: auto; }
 .chapterButtons button:hover { background: var(--sage); }
 .chapterButtons button[aria-pressed='true'] { background: var(--green); color: var(--wash); }
 .chapterButtons button:focus-visible { outline-offset: 4px; position: relative; z-index: 1; }
@@ -59,23 +57,19 @@
 .selection { display: flex; align-items: center; justify-content: space-between; gap: 3rem; min-height: 10rem; padding-top: 1.5rem; }
 .selectionCopy { max-width: 43rem; }
 .selectionCopy p { margin-top: 0.65rem; font-size: 1.2rem; line-height: 1.55; }
-.reverseLink { flex-shrink: 0; display: inline-flex; justify-content: space-between; align-items: center; gap: 2rem; padding: 1rem 1.15rem; border: 1px solid var(--rule-reverse); text-decoration: none; font: 500 0.8rem/1.5 var(--font-display); transition: background 350ms, color 350ms; }
-.reverseLink:hover { background: var(--wash); color: var(--green); }
+.reverseLink { flex-shrink: 0; display: inline-flex; align-items: center; min-height: 44px; padding: 0.65rem 0; border-bottom: 1px solid var(--rule-reverse); text-decoration: none; font: 500 0.85rem/1.5 var(--font-display); transition: border-color 350ms; }
+.reverseLink:hover { border-bottom-color: currentColor; }
 .collectionLink { display: flex; align-items: center; justify-content: space-between; gap: 1rem 2rem; margin-top: 1.5rem; padding-top: 1.35rem; border-top: 1px solid var(--rule-reverse); }
 .collectionLink > span { font: italic 400 1.15rem/1.4 var(--font-body); }
-.collectionButton { position: relative; display: inline-flex; align-items: center; justify-content: space-between; gap: 2rem; min-width: 22rem; min-height: 72px; padding: 0.75rem 0; color: var(--wash); text-decoration: none; font: 400 clamp(1.8rem, 2.5vw, 2.25rem)/1.1 var(--font-body); letter-spacing: -0.02em; }
+.collectionButton { position: relative; display: inline-flex; align-items: center; justify-content: space-between; gap: 2rem; min-width: 0; min-height: 72px; padding: 0.75rem 0; color: var(--wash); text-decoration: none; font: 400 clamp(1.8rem, 2.5vw, 2.25rem)/1.1 var(--font-body); letter-spacing: -0.02em; }
 .collectionButton::before, .collectionButton::after { content: ''; position: absolute; inset: auto 0 0; height: 1px; background: currentColor; }
 .collectionButton::before { opacity: 0.35; }
 .collectionButton::after { transform: scaleX(0.24); transform-origin: left; transition: transform 650ms var(--ease-out); }
 .collectionButton:hover::after, .collectionButton:focus-visible::after { transform: scaleX(1); }
-.collectionArrow { display: grid; place-items: center; flex: 0 0 4rem; height: 2rem; }
-.collectionArrow svg { display: block; width: 3.5rem; height: 1.5rem; transition: transform 450ms var(--ease); }
-.collectionButton:hover .collectionArrow svg { transform: translateX(5px); }
 @media (max-width: 960px) {
   .intro { gap: 2rem; }
   .journey { grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.4fr); gap: 2rem; }
   .chapterButtons button { gap: 0.45rem; padding-inline: 0.55rem; }
-  .chapterButtons button > span:last-child { display: none; }
   .everydayIntro { align-items: start; }
   .everydayIntro p { max-width: 23ch; }
   .selection { gap: 1.5rem; }
@@ -107,15 +101,12 @@
   .panel:not(.panelActive)::after { background: rgb(0 0 0 / 55%); }
   .selection { align-items: start; flex-direction: column; min-height: 16rem; gap: 1.25rem; }
   .selectionCopy p { font-size: 1.1rem; }
-  .reverseLink { min-width: 13rem; }
+
   .collectionLink { align-items: start; flex-direction: column; gap: 1rem; }
-  .collectionButton { width: 100%; min-width: 0; min-height: 64px; gap: 1rem; }
-  .collectionArrow { flex-basis: 3rem; }
-  .collectionArrow svg { width: 3rem; }
+  .collectionButton { width: fit-content; min-width: 0; min-height: 64px; gap: 1rem; }
 }
 @media (prefers-reduced-motion: reduce) {
   .story *, .everyday * { transition: none !important; }
-  .roomImage img, .panel img, .projectLink:hover span, .reverseLink:hover span { transform: none; }
-  .collectionButton:hover, .collectionButton:hover .collectionArrow svg { transform: none; }
+  .roomImage img, .panel img { transform: none; }
   .collectionButton::after { transition: none; }
 }

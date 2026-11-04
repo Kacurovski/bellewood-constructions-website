@@ -1,3 +1,4 @@
+import { ActionGlyph } from '../components/ActionGlyph'
 import { useRef } from 'react'
 import type { PointerEvent as ReactPointerEvent } from 'react'
 import { Reveal } from '../components/Reveal'
@@ -71,11 +72,7 @@ export function Architects() {
           <p className={styles.callLabel}>Talk it through before tender</p>
           <a href={contact.phoneHref} className={styles.call}>
             {contact.phone}
-            <span className={styles.callArrow} aria-hidden="true">
-              <svg viewBox="0 0 34 10" fill="none">
-                <path d="M0 5h32M27.5 1l4.5 4-4.5 4" stroke="currentColor" strokeWidth="1.2" />
-              </svg>
-            </span>
+            <ActionGlyph className={styles.callIcon} name="phone" />
           </a>
         </Reveal>
       </div>

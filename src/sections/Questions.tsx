@@ -82,9 +82,7 @@ export function Questions({ number = 'E-04' }: { number?: string }) {
           <button type="button" className={styles.next} onClick={() => go(i + 1, true)}>
             <span className={styles.nextLabel}>Next</span>
             <span className={styles.nextQ}>{faq[(i + 1) % faq.length].q}</span>
-            <span className={styles.nextArrow} aria-hidden="true">
-              →
-            </span>
+
           </button>
         )}
       </>

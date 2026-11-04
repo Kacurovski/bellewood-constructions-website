@@ -18,11 +18,10 @@
   letter-spacing: 0.01em;
 }
 
-.backArrow { display: grid; place-items: center; flex: 0 0 2.75rem; width: 2.75rem; height: 3rem; }
-.back svg { width: 2.75rem; height: 1.125rem; transition: transform var(--dur-fast) var(--ease); }
+.backDirection { width: 20px; height: 20px; flex: none; transition: transform var(--dur-fast) var(--ease); }
 .backLabel { position: relative; padding-block: 0.3rem; }
 .backLabel::after { content: ''; position: absolute; inset: auto 0 0; height: 1px; background: currentColor; opacity: 0.3; transform: scaleX(0.28); transform-origin: left; transition: transform var(--dur-fast) var(--ease), opacity var(--dur-fast) var(--ease); }
-.back:hover svg { transform: translateX(-4px); }
+.back:hover svg { transform: translateX(-2px); }
 .back:hover .backLabel::after { opacity: 0.7; transform: scaleX(1); }
 .back:focus-visible { outline: 2px solid currentColor; outline-offset: 6px; border-radius: 2px; }
 .backLight { color: var(--green); }

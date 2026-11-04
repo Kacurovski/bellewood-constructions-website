@@ -154,14 +154,12 @@ function WorkGallery({ project, id, onInteractionChange }: {
           ))}
         </div>
         <div className={styles.galleryFooter}>
-          <Link to={`/work/${project.slug}`} className={styles.explore}>Explore {project.title}<span aria-hidden="true">&#8599;</span></Link>
+          <Link to={`/work/${project.slug}`} className={styles.explore}>Explore {project.title}</Link>
         </div>
       </div>
     </div>
   )
 }
-
-
 
 function ProjectPreviewRow({ project, narrow, active, galleryId, onSelect, onKeyDown, children }: {
   project: Project; narrow: boolean; active: boolean; galleryId: string; onSelect: () => void;
@@ -337,11 +335,7 @@ export default function Work() {
                     </span>
                   </span>
 
-                  <span className={styles.rowArrow} aria-hidden="true">
-                    <svg viewBox="0 0 34 10" fill="none">
-                      <path d="M0 5h32M27.5 1l4.5 4-4.5 4" stroke="currentColor" strokeWidth="1.2" />
-                    </svg>
-                  </span>
+                  <span className={styles.rowAction}>{narrow ? 'View home' : i === at ? 'On view' : 'Preview'}</span>
 
                   {/* The plate, inline. Below the split's breakpoint there is no
                       sticky column to carry it and no pointer to reveal it with,

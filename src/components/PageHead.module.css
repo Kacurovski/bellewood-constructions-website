@@ -239,40 +239,26 @@
 }
 .contact .value a:hover { color: var(--sage); }
 .contact .value a::before { content: none; }
-.contact .row:nth-child(-n + 2) .value a::after {
-  content: '';
-  flex: 0 0 24px;
-  width: 24px;
-  height: 24px;
-  margin-left: auto;
-  background: currentColor;
-  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M5 19 19 5M5 5h14v14' fill='none' stroke='black' stroke-width='1.25'/%3E%3C/svg%3E") center / contain no-repeat;
-  transition: transform 300ms var(--ease-out);
-}
-.contact .value a:hover::after,
-.contact .value a:focus-visible::after { transform: translate(2px, -2px); }
 
-/* Understated section links with a real touch target, not a second button bar. */
+/* The underline identifies a link without a decorative directional symbol. */
+.contact .value a, .work .value a, .about .value a {
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.3em;
+  text-decoration-color: rgb(247 247 244 / 40%);
+}
+.contact .value a:hover, .work .value a:hover, .about .value a:hover { text-decoration-color: currentColor; }
+/* Section links retain a full touch target. */
 .work .value a, .about .value a {
   display: inline-flex;
   align-items: center;
   gap: .65rem;
   min-height: 44px;
   max-width: 100%;
-  text-decoration: none;
 }
 .work .value a::before, .about .value a::before { content: none; }
-.work .value a::after, .about .value a::after {
-  content: '';
-  width: 16px;
-  height: 16px;
-  flex: 0 0 16px;
-  background: currentColor;
-  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M5 5 19 19M5 19h14V5' fill='none' stroke='black' stroke-width='1.25'/%3E%3C/svg%3E") center / contain no-repeat;
-  transition: transform 300ms var(--ease-out);
-}
+
 .work .value a:hover, .about .value a:hover { color: var(--sage); }
-.work .value a:hover::after, .about .value a:hover::after { transform: translate(2px, 2px); }
 
 @keyframes intro-rule { from { transform: scaleX(0); } to { transform: scaleX(1); } }
 @keyframes intro-settle {
@@ -323,7 +309,7 @@
   .contact .title { max-width: 14ch; }
   .contact .row:first-child .value { font-size: clamp(2.25rem, 10vw, 3rem); }
   .contact .row:nth-child(2) .value { font-size: clamp(1rem, 4.6vw, 1.375rem); }
-  .contact .row:nth-child(-n + 2) .value a::after { flex-basis: 20px; width: 20px; height: 20px; }
+
   .work .inner, .about .inner, .contact .inner { row-gap: 1.35rem; }
   .work .row:not(:first-child), .about .row:not(:first-child) { gap: .25rem; padding-block: .65rem .25rem; }
   .work .row:last-child { padding-top: .1rem; }

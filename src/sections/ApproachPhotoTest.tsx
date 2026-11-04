@@ -30,11 +30,11 @@ export function ApproachPhotoTest() {
           <h2 id="approach-photo-test-heading" className={styles.heading}>
             Care in the making.<em>Pleasure in the living.</em>
           </h2>
-          <Link to="/contact" className={styles.button}>Start a conversation<span aria-hidden="true">&#8599;</span></Link>
+          <Link to="/contact" className={styles.button}>Start a conversation</Link>
         </motion.div>
         <div className={styles.creditRow}>
           <span className={styles.note}>Timber, light and a little room to breathe.</span>
-          <Link to="/work/bardon" className={styles.credit}><strong>Bardon</strong><span>View project &#8599;</span></Link>
+          <Link to="/work/bardon" className={styles.credit}><strong>Bardon</strong><span>View project</span></Link>
         </div>
       </div>
     </section>

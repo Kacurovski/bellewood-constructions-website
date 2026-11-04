@@ -84,9 +84,6 @@ export function LeadMagnet({ tone = 'wash', headingId }: {
         <button className={styles.send} type="submit" disabled={!ready || status === 'sending'}
           aria-describedby={!ready ? `${id}-availability` : undefined}>
           <span>{status === 'sending' ? 'Sending…' : 'Send it to me'}</span>
-          <svg viewBox="0 0 50 20" fill="none" aria-hidden="true">
-            <path d="M1 10h46m-9-8 9 8-9 8" stroke="currentColor" strokeWidth="1.25" />
-          </svg>
         </button>
 
         <p className={['small', styles.status].join(' ')} role="status" aria-live="polite">

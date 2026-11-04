@@ -14,9 +14,7 @@
 .columnHeading { margin: 0 0 0.8rem; font: 600 0.68rem/1.5 var(--font-display); text-transform: uppercase; letter-spacing: 0.12em; color: var(--sage) !important; }
 .navigation { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 1.4rem; list-style: none; margin: 0; padding: 0; }
 .navigation a { display: flex; align-items: center; justify-content: space-between; gap: 0.7rem; min-height: 44px; padding-block: 0.5rem; border-bottom: 1px solid rgb(247 247 244 / 16%); font: 500 0.95rem/1.4 var(--font-display); text-decoration: none; transition: border-color 350ms ease; }
-.linkArrow { display: inline-block; font-size: 0.95rem; transition: transform 450ms var(--ease-out); }
 .navigation a:hover { border-color: rgb(247 247 244 / 68%); }
-.navigation a:hover .linkArrow, .social a:hover .linkArrow { transform: translate(2px, -2px); }
 .contact { min-width: 0; }
 .phone { display: inline-flex; align-items: center; min-height: 44px; font: 400 clamp(1.55rem, 2.1vw, 2.1rem)/1.2 var(--font-body); letter-spacing: -0.025em; text-decoration: none; white-space: nowrap; }
 .email { display: block; width: fit-content; min-height: 44px; padding-block: 0.6rem; font: 400 0.9rem/1.5 var(--font-display); text-decoration: none; overflow-wrap: anywhere; }
@@ -62,7 +60,7 @@
   .copyright { max-width: 22ch; font-size: 0.66rem; }
   .backTop { flex: none; gap: 0.4rem; font-size: 0.7rem; }
 }
-@media (prefers-reduced-motion: reduce) {
-  .navigation a, .linkArrow, .backTop svg { transition: none; }
-  .navigation a:hover .linkArrow, .social a:hover .linkArrow, .backTop:hover svg { transform: none; }
-}
+
+.social a { text-decoration: underline; text-underline-offset: 0.35em; text-decoration-thickness: 1px; text-decoration-color: rgb(247 247 244 / 35%); }
+.social a:hover { text-decoration-color: currentColor; }
+@media (prefers-reduced-motion: reduce) { .navigation a, .backTop svg { transition: none; } .backTop:hover svg { transform: none; } }

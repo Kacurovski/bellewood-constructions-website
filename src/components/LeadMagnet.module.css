@@ -127,7 +127,6 @@
   transition: transform 500ms var(--ease-out);
 }
 .send:not(:disabled):hover::after, .send:focus-visible::after { transform: scaleX(1); }
-.send svg { width: 2.5rem; height: 1.25rem; flex: none; }
 .send:disabled { opacity: 0.55; cursor: default; }
 .send:focus-visible { outline: 2px solid var(--green); outline-offset: 5px; }
 

@@ -1,3 +1,4 @@
+import { ActionGlyph } from '../components/ActionGlyph'
 import { useRef } from 'react'
 import type { PointerEvent } from 'react'
 import { Link } from 'react-router-dom'
@@ -53,12 +54,10 @@ export function AboutClosing() {
             <p className={styles.invitation}>Talk it through with Angus</p>
             <a href={contact.phoneHref} className={styles.phone}>
               <span>{contact.phone}</span>
-              <svg viewBox="0 0 50 20" fill="none" aria-hidden="true">
-                <path d="M1 10h46m-9-8 9 8-9 8" stroke="currentColor" strokeWidth="1.25" />
-              </svg>
+              <ActionGlyph name="phone" />
             </a>
             <Link to="/contact" className={styles.enquiry}>
-              Send an enquiry <span aria-hidden="true">&#8599;</span>
+              Send an enquiry
             </Link>
           </div>
         </Reveal>

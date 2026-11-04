@@ -1,3 +1,4 @@
+import { ActionGlyph } from '../components/ActionGlyph'
 import type { ReactNode } from 'react'
 import { useEffect, useId, useLayoutEffect, useRef, useState } from 'react'
 import { motion, useInView, useMotionValue, useScroll, useTransform } from 'framer-motion'
@@ -68,7 +69,7 @@ export function LivingSpaces({ sheetNumber = "A-03", embedded = false }: { sheet
             <span className={styles.shortRule} aria-hidden="true" />
             <p className={styles.editorialQuote}>A place to gather.<br />A little room to retreat.</p>
             <p className={styles.spaceNote}>Wide openings draw the kitchen onto the verandah. Quieter rooms offer a different pace, with daylight and a view to the garden.</p>
-            <Link to="/work" className={styles.architectLink}>Explore the homes <span aria-hidden="true">&#8599;</span></Link>
+            <Link to="/work" className={styles.architectLink}>Explore the homes </Link>
           </Frame>
         </div>
       </div>
@@ -134,7 +135,7 @@ export function Craftsmanship({ sheetNumber = "A-04", embedded = false, onPhotoO
               <p className={styles.kicker}>From the whole room to the smallest detail</p>
               <h2 id="architects-heading" className={styles.craftTitle}>The detail makes<br /><span>the difference.</span></h2>
               <p className={styles.craftCopy}>A stair rail, a cabinet edge, the framing around a window. Each belongs to the whole room. For architects and designers, we build to the drawings, raise questions early in writing, and keep a site you can bring a client to.</p>
-              <a href={contact.phoneHref} className={styles.architectLink}>Talk it through before tender <span aria-hidden="true">&#8599;</span></a>
+              <a href={contact.phoneHref} className={styles.architectLink}>Talk it through before tender </a>
             </Frame>
             <div className={styles.details}>
               {photos.details.map((detail, i) => (
@@ -144,7 +145,7 @@ export function Craftsmanship({ sheetNumber = "A-04", embedded = false, onPhotoO
                     <span className={styles.detailImage} data-story-photo={detail.project.toLowerCase()}>
                       <motion.img draggable={false} src={detail.crop.src!} alt={detail.crop.alt} loading="lazy" decoding="async"
                         whileHover={reduced ? undefined : { scale: 1.06 }} transition={{ duration: 0.9, ease }} />
-                      <span className={styles.openMark} aria-hidden="true">&#8599;</span>
+                      <span className={styles.openMark}><ActionGlyph name="expand" /></span>
                     </span>
                     <span className={styles.detailHeading}><span>{detail.title}</span><span className={styles.detailNumber}>0{i + 1}</span></span>
                     <span className={styles.detailNote}>{detail.project} / View photograph</span>
@@ -354,29 +355,17 @@ export function PhotographyStorySlides({ sheetNumber = 'A-04' }: { sheetNumber?:
             ))}
           </div>
           <div className={styles.storyNavigation} role="group" aria-label="Story controls">
-            <button type="button" className={[styles.calmArrow, styles.previousArrow].join(' ')}
+            <button type="button" className={[styles.storyControl, styles.previousControl].join(' ')}
               aria-label="Previous perspective" aria-controls={stageId}
               aria-disabled={journeys.length > 0} onClick={() => select(1 - active)}>
-              <svg className={styles.arrowFrame} viewBox="0 0 72 104" fill="none" aria-hidden="true" preserveAspectRatio="none">
-                <rect className={styles.arrowSurface} x="1" y="1" width="70" height="102" />
-                <path className={styles.arrowCorners} d="M18 1H1v23m70 56v23H54" />
-              </svg>
-              <svg className={styles.arrowDrawing} viewBox="0 0 64 28" fill="none" aria-hidden="true">
-                <path className={styles.arrowGlyph} d="M58 14H7m12-11L7 14l12 11" />
-              </svg>
-              <span className={styles.arrowLabel}>Previous</span>
+              <ActionGlyph className={styles.directionGlyph} name="previous" />
+              <span className={styles.controlLabel}>Previous</span>
             </button>
-            <button type="button" className={[styles.calmArrow, styles.nextArrow].join(' ')}
+            <button type="button" className={[styles.storyControl, styles.nextControl].join(' ')}
               aria-label="Next perspective" aria-controls={stageId}
               aria-disabled={journeys.length > 0} onClick={() => select(1 - active)}>
-              <svg className={styles.arrowFrame} viewBox="0 0 72 104" fill="none" aria-hidden="true" preserveAspectRatio="none">
-                <rect className={styles.arrowSurface} x="1" y="1" width="70" height="102" />
-                <path className={styles.arrowCorners} d="M54 1h17v23M1 80v23h17" />
-              </svg>
-              <svg className={styles.arrowDrawing} viewBox="0 0 64 28" fill="none" aria-hidden="true">
-                <path className={styles.arrowGlyph} d="M6 14h51M45 3l12 11-12 11" />
-              </svg>
-              <span className={styles.arrowLabel}>Next</span>
+              <ActionGlyph className={styles.directionGlyph} name="next" />
+              <span className={styles.controlLabel}>Next</span>
             </button>
           </div>
         </div>

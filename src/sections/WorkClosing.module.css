@@ -14,7 +14,7 @@
   align-items: center;
   justify-content: space-between;
   gap: clamp(1rem, 2vw, 2rem);
-  width: 100%;
+  width: fit-content;
   max-width: 22rem;
   min-height: 56px;
   padding-block: 0.75rem;
@@ -26,8 +26,7 @@
 .conversation::before { opacity: 0.3; }
 .conversation::after { transform: scaleX(0.24); transform-origin: left; transition: transform 650ms var(--ease-out); }
 .conversation:hover::after, .conversation:focus-visible::after { transform: scaleX(1); }
-.conversation svg { width: 2.75rem; height: 1.25rem; flex: none; transition: transform 450ms var(--ease); }
-.conversation:hover svg { transform: translateX(4px); }
+
 .conversation:focus-visible, .call a:focus-visible { outline: 2px solid var(--green); outline-offset: 5px; }
 .call { display: flex; flex-wrap: wrap; align-items: center; column-gap: 0.5rem; color: var(--green); font: 400 0.875rem/1.5 var(--font-display); }
 .call a { display: inline-flex; align-items: center; min-height: 44px; font-weight: 600; }
@@ -37,6 +36,5 @@
   .actions { gap: 0.5rem; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .conversation::after, .conversation svg { transition: none; }
-  .conversation:hover svg { transform: none; }
+  .conversation::after { transition: none; }
 }

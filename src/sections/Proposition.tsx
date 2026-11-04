@@ -34,7 +34,7 @@ export function Proposition() {
               <figcaption className={styles.caption}><span className={styles.captionNumber}>The house</span>The gabled verandah and adjoining weatherboard wing.</figcaption>
             </figure>
           </Reveal>
-          <Link to="/work/auchenflower" className={styles.projectLink}>Explore Auchenflower <span aria-hidden="true">&#8594;</span></Link>
+          <Link to="/work/auchenflower" className={styles.projectLink}>Explore Auchenflower </Link>
         </div>
         <Reveal delay={0.16} className={styles.bodyWrap}>
           <aside className={styles.note}>

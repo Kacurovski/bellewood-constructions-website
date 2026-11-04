@@ -65,7 +65,7 @@ export function HeritageExplorerTest() {
         </div>
         <div className={styles.controls} role="group" aria-label="Choose a renovation idea">
           {choices.map((item, i) => <button key={item.id} type="button" className={[styles.choice, selected === item.id ? styles.choiceOn : ''].join(' ')} aria-pressed={selected === item.id} aria-controls="heritage-explorer-story" onClick={() => setSelected(item.id)}>
-            <span className={styles.choiceNumber}>0{i + 1}</span><span className={styles.choiceCopy}><strong>{item.label}</strong><span>{item.short}</span></span><span className={styles.choiceArrow} aria-hidden="true">&#8599;</span>
+            <span className={styles.choiceNumber}>0{i + 1}</span><span className={styles.choiceCopy}><strong>{item.label}</strong><span>{item.short}</span></span>
           </button>)}
         </div>
         <div className={styles.grid}>
@@ -81,7 +81,7 @@ export function HeritageExplorerTest() {
             <p className={styles.disclaimer}>The model explains the idea. Photographs show separate completed Bellewood projects.</p>
           </div>
           <div id="heritage-explorer-story" className={styles.story}>
-            <div className={styles.panelHeading}><span>Built example <span aria-hidden="true">/</span> <strong>{current.project}</strong></span><Link to={`/work/${current.slug}`}>View project <span aria-hidden="true">&#8599;</span></Link></div>
+            <div className={styles.panelHeading}><span>Built example <span aria-hidden="true">/</span> <strong>{current.project}</strong></span><Link to={`/work/${current.slug}`}>View project </Link></div>
             <div className={styles.photo}>
               <AnimatePresence initial={false}>
                 <motion.img key={current.id} src={current.photo.src!} alt={current.photo.alt} loading="lazy" decoding="async" initial={reduced ? false : { opacity: 0, scale: 1.025 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0 }} transition={{ duration: reduced ? 0 : 0.8, ease: [0.22, 1, 0.36, 1] }} />
@@ -95,7 +95,7 @@ export function HeritageExplorerTest() {
             </details>
           </div>
         </div>
-        <div className={styles.bottom}><p>Every home brings its own possibilities.</p><Link to="/contact">Talk about your home <span aria-hidden="true">&#8599;</span></Link></div>
+        <div className={styles.bottom}><p>Every home brings its own possibilities.</p><Link to="/contact">Talk about your home </Link></div>
       </div>
     </section>
   )

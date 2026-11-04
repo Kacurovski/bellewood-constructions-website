@@ -1,3 +1,4 @@
+import { ActionGlyph } from '../components/ActionGlyph'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { photo } from '../data/photos'
 import type { PointerEvent as ReactPointerEvent } from 'react'
@@ -207,19 +208,7 @@ export function Testimonials({ sheetNumber = "A-07" }: { sheetNumber?: string } 
             </AnimatePresence>
           </div>
 
-          {/* --- Step and count ---------------------------------------------
-              Two arrows and the position, under the words.
-
-              The band could already be swiped, tabbed and picked from the set,
-              and none of those SAY there is more than one quote here — a
-              reader who does not hover the set and does not swipe sees one
-              testimonial and no reason to think there are three. Arrows are
-              the plainest possible statement that this moves, which is why
-              every slider has had them for thirty years.
-
-              They sit under the quote rather than over the plate: floating
-              chevrons on a photograph is the stock treatment, and this band
-              is set as a sheet. */}
+          {/* Quote navigation and current position. */}
           <div className={styles.nav}>
             <button
               type="button"
@@ -231,9 +220,7 @@ export function Testimonials({ sheetNumber = "A-07" }: { sheetNumber?: string } 
               onBlur={() => setHeld(false)}
               aria-label="Previous quote"
             >
-              <svg viewBox="0 0 34 10" fill="none" aria-hidden="true">
-                <path d="M34 5H2M6.5 1L2 5l4.5 4" stroke="currentColor" strokeWidth="1.2" />
-              </svg>
+              <ActionGlyph name="previous" />
             </button>
 
             <span className={styles.count} aria-hidden="true">
@@ -252,9 +239,7 @@ export function Testimonials({ sheetNumber = "A-07" }: { sheetNumber?: string } 
               onBlur={() => setHeld(false)}
               aria-label="Next quote"
             >
-              <svg viewBox="0 0 34 10" fill="none" aria-hidden="true">
-                <path d="M0 5h32M27.5 1l4.5 4-4.5 4" stroke="currentColor" strokeWidth="1.2" />
-              </svg>
+              <ActionGlyph name="next" />
             </button>
           </div>
 

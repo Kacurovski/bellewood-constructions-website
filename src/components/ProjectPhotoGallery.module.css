@@ -9,7 +9,7 @@
 .arrow { position: absolute; z-index: 2; top: 50%; display: grid; place-items: center; width: 3.25rem; height: 3.25rem; padding: 0.7rem; border: 1px solid color-mix(in srgb, var(--green) 20%, transparent); border-radius: 50%; color: var(--green); background: color-mix(in srgb, var(--wash) 94%, transparent); transform: translateY(-50%); cursor: pointer; transition: background 240ms, color 240ms; }
 .previous { left: clamp(0.65rem, 2vw, 1.5rem); }
 .next { right: clamp(0.65rem, 2vw, 1.5rem); }
-.arrow svg { width: 100%; height: 1.1rem; }
+.arrow svg { width: 20px; height: 20px; flex: none; transition: transform 350ms var(--ease-out); }
 .arrow:hover, .fullNavigation button:hover { background: var(--green); color: var(--wash); }
 .expand { position: absolute; z-index: 2; right: 1rem; bottom: 1rem; display: inline-flex; align-items: center; gap: 0.55rem; min-height: 2.75rem; padding: 0.7rem 0.9rem; border: 1px solid color-mix(in srgb, var(--green) 18%, transparent); background: color-mix(in srgb, var(--wash) 95%, transparent); color: var(--green); font: 500 0.75rem var(--font-display); cursor: pointer; transition: background 240ms; }
 .expand:hover { background: var(--wash); }
@@ -47,7 +47,7 @@
 .lightboxFooter p { margin: 0; font: 400 0.9375rem/1.4 var(--font-body); }
 .fullNavigation { display: flex; flex-shrink: 0; gap: 0.6rem; }
 .fullNavigation button { display: grid; place-items: center; width: 2.75rem; height: 2.75rem; padding: 0.7rem; border: 1px solid var(--rule-strong); border-radius: 50%; background: transparent; color: var(--green); cursor: pointer; transition: color 240ms, background 240ms; }
-.fullNavigation svg { width: 100%; height: 1rem; }
+.fullNavigation svg { width: 20px; height: 20px; flex: none; }
 
 @media (max-width: 600px) {
   .stage { aspect-ratio: 4 / 3; max-height: none; }

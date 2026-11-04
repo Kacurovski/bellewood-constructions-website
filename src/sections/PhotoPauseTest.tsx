@@ -1,3 +1,4 @@
+import { ActionGlyph } from '../components/ActionGlyph'
 import { useRef } from 'react'
 import { motion, useScroll, useTransform } from 'framer-motion'
 import { Link } from 'react-router-dom'
@@ -35,7 +36,7 @@ export function PhotoPauseTest() {
             style={{ scale: reduced ? 1 : scale, y: reduced ? 0 : y }} />
         </motion.div>
         <Link to="/work/windsor" className={styles.credit} aria-label="View the Windsor project">
-          Windsor <span aria-hidden="true">&#8599;</span>
+          View Windsor
         </Link>
         <figcaption className={styles.caption}>
           <motion.h2 id="windsor-story-heading" className={styles.heading}
@@ -61,9 +62,7 @@ export function PhotoPauseTest() {
             else heading.scrollIntoView({ behavior: reduced ? 'instant' : 'smooth', block: 'center' })
           }}>
             <span className={styles.nextLabel}>Your home, next</span>
-            <span className={styles.arrow} aria-hidden="true">
-              <svg viewBox="0 0 32 48" fill="none"><path d="M16 5v36M7 32l9 9 9-9" stroke="currentColor" strokeWidth="1.25" /></svg>
-            </span>
+            <ActionGlyph className={styles.direction} name="down" />
           </a>
         </figcaption>
       </figure>

@@ -118,7 +118,6 @@ export function ContinuityIntroduction() {
           <p className={styles.reassurance}>The same company, the same licence.<br />Angus, still on site.</p>
           <Link to="/about" className={styles.link}>
             <span>Meet Angus and Bellewood</span>
-            <svg viewBox="0 0 32 24" fill="none" aria-hidden="true"><path d="M1 12h28m-8-8 8 8-8 8" /></svg>
           </Link>
         </Reveal>
 

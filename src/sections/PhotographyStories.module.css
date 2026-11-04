@@ -31,12 +31,13 @@
 .craftTitle > span { font: italic 400 1.12em/1.08 var(--font-body); }
 .craftCopy { margin-top: 1.75rem; max-width: 47ch; font-size: var(--t-lead); line-height: 1.65; }
 .architectLink { display: inline-flex; align-items: center; gap: 1.1rem; margin-top: 1.3rem; font: 600 var(--t-small)/1.5 var(--font-display); color: var(--green); text-decoration: none; padding-bottom: 0.35rem; border-bottom: 1px solid var(--ink); }
-.architectLink > span { transition: transform 400ms var(--ease); }
-.architectLink:hover > span { transform: translate(2px, -2px); }
+.architectLink { min-height: 44px; border-bottom-color: color-mix(in srgb, var(--green) 35%, transparent); transition: border-color 350ms; }
+.architectLink:hover { border-bottom-color: var(--green); }
 .details { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(1rem, 2vw, 2rem); margin-top: clamp(2rem, 4vw, 3.5rem); }
 .detailButton { display: block; width: 100%; padding: 0; border: 0; text-align: left; background: none; color: var(--green); cursor: pointer; }
 .detailImage { position: relative; display: block; aspect-ratio: 5 / 4; overflow: hidden; background: var(--sage); }
 .detailImage > img { width: 100%; height: 100%; object-fit: cover; }
+.openMark svg { width: 18px; height: 18px; }
 .openMark { position: absolute; right: 0.6rem; bottom: 0.6rem; display: grid; place-items: center; width: 2rem; height: 2rem; background: var(--wash); color: var(--green); transition: background 350ms var(--ease), color 350ms var(--ease); pointer-events: none; }
 .detailButton:hover .openMark, .detailButton:focus-visible .openMark { background: var(--green); color: var(--wash); }
 .detailHeading { display: flex; justify-content: space-between; gap: 0.5rem; margin-top: 0.8rem; font: 600 var(--t-small)/1.35 var(--font-display); }
@@ -79,10 +80,9 @@
   .detailNote { font-size: 0.7rem; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .architectLink > span, .openMark { transition: none; }
-  .architectLink:hover > span { transform: none; }
-}
+  .architectLink, .openMark { transition: none; }
 
+}
 
 /* A green architectural sheet, with full-colour photography and forest-green ink. */
 .calmStory { --story-ink: #0b5937; position: relative; isolation: isolate; padding-block: clamp(1.8rem, 2.4vw, 2.25rem); background: #c4dac6; color: var(--green); border-block: 1px solid rgb(5 67 42 / 22%); }
@@ -126,24 +126,19 @@
 .calmPause:hover { background: rgb(5 67 42 / 6%); }
 .pauseHint { position: absolute; right: -6px; top: calc(100% + 14px); padding: 0.5rem 0.7rem; white-space: nowrap; background: var(--green); color: var(--wash); font: 400 0.72rem/1.4 var(--font-display); pointer-events: none; opacity: 0; transform: translateY(-3px); transition: opacity 200ms ease, transform 200ms ease; }
 .calmPause:hover .pauseHint, .calmPause:focus-visible .pauseHint { opacity: 1; transform: translateY(0); }
-/* Open corner marks and extended arrows echo the architectural drawing sheets. */
+/* Small browsing controls sit quietly beside the editorial photographs. */
 .storyNavigation { display: contents; }
-.calmArrow { position: absolute; top: 48%; z-index: 5; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.65rem; width: 72px; height: 104px; padding: 12px 0 4px; border: 0; border-radius: 0; background: transparent; color: var(--green); cursor: pointer; transform: translateY(-50%); transition: color 450ms ease, filter 450ms ease; }
-.previousArrow { left: -0.4rem; }
-.nextArrow { right: -0.4rem; }
-.calmArrow .arrowFrame { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; }
-.arrowSurface { fill: rgb(247 247 244 / 32%); transition: fill 450ms ease; }
-.arrowCorners { stroke: var(--green); stroke-opacity: 0.7; stroke-width: 1; vector-effect: non-scaling-stroke; transition: stroke 450ms ease; }
-.calmArrow .arrowDrawing { position: relative; width: 58px; height: 28px; overflow: visible; transition: transform 550ms var(--ease-out); }
-.arrowGlyph { stroke: currentColor; stroke-width: 1.7; stroke-linecap: square; stroke-linejoin: miter; }
-.arrowLabel { position: relative; font: 500 0.65rem/1 var(--font-display); letter-spacing: 0.03em; }
-.calmArrow:hover, .calmArrow:focus-visible { color: var(--wash); filter: drop-shadow(0 5px 8px rgb(5 67 42 / 12%)); }
-.calmArrow:hover .arrowSurface, .calmArrow:focus-visible .arrowSurface { fill: var(--green); }
-.calmArrow:hover .arrowCorners, .calmArrow:focus-visible .arrowCorners { stroke: var(--green); }
-.previousArrow:hover .arrowDrawing { transform: translateX(-5px); }
-.nextArrow:hover .arrowDrawing { transform: translateX(5px); }
-.calmArrow:focus-visible, .calmPause:focus-visible { outline: 2px solid var(--green); outline-offset: 5px; }
-.calmArrow[aria-disabled='true'] { cursor: default; }
+.storyControl { position: absolute; top: 48%; z-index: 5; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.6rem; width: 68px; min-height: 80px; padding: 10px 0; border: 0; background: transparent; color: var(--green); cursor: pointer; transform: translateY(-50%); }
+.previousControl { left: -0.4rem; }
+.nextControl { right: -0.4rem; }
+.directionGlyph { width: 24px; height: 24px; flex: none; transition: transform 400ms var(--ease-out); }
+.controlLabel { position: relative; padding-bottom: 5px; font: 500 0.72rem/1.3 var(--font-display); }
+.controlLabel::after { content: ''; position: absolute; inset: auto 0 0; height: 1px; background: currentColor; opacity: 0.35; transform: scaleX(0.4); transform-origin: center; transition: transform 400ms var(--ease-out), opacity 400ms ease; }
+.storyControl:hover .controlLabel::after, .storyControl:focus-visible .controlLabel::after { opacity: 1; transform: scaleX(1); }
+.previousControl:hover .directionGlyph { transform: translateX(-3px); }
+.nextControl:hover .directionGlyph { transform: translateX(3px); }
+.storyControl:focus-visible, .calmPause:focus-visible { outline: 2px solid var(--green); outline-offset: 3px; }
+.storyControl[aria-disabled='true'] { cursor: default; }
 /* Preserve the different editorial arrangements without viewport-based sizing. */
 .embeddedStory { height: 100%; min-height: 0; padding: 0; border: 0; background: transparent; color: var(--green); }
 .embeddedStory > :global(.shell) { height: 100%; min-height: 0; max-width: none; padding: 0; }
@@ -182,8 +177,8 @@
 .embeddedStory .lightboxHeader h3 { color: var(--green); }
 @media (max-width: 1000px) and (min-width: 651px) {
   .storyBody { padding-inline: 3.6rem; }
-  .calmArrow { width: 52px; height: 88px; }
-  .calmArrow .arrowDrawing { width: 46px; }
+  .storyControl { width: 52px; min-height: 76px; }
+  .storyControl .directionGlyph { width: 24px; }
   .calmHeader { flex-wrap: wrap; gap: 0.85rem; }
   .embeddedStory .editorialIntro { grid-template-columns: 1fr; gap: 1rem; }
   .embeddedStory .introNote { max-width: 56ch; }
@@ -206,11 +201,11 @@
   .calmHeader > div:first-child > div { font-size: 0.62rem; gap: 0.6rem; letter-spacing: 0.1em; }
   .storyBody { padding: 0; }
   .storyNavigation { display: flex; align-items: center; justify-content: space-between; margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid rgb(5 67 42 / 22%); }
-  .calmArrow { position: relative; top: auto; left: auto; right: auto; width: 102px; height: 58px; transform: none; flex-direction: row; gap: 0.4rem; padding: 0 0.5rem; }
-  .calmArrow .arrowDrawing { width: 42px; }
-  .previousArrow .arrowDrawing { order: -1; }
-  .nextArrow .arrowDrawing { order: 1; }
-  .arrowLabel { font-size: 0.64rem; }
+  .storyControl { position: relative; top: auto; left: auto; right: auto; width: auto; min-width: 100px; min-height: 48px; transform: none; flex-direction: row; gap: 0.4rem; padding: 0 0.5rem; }
+  .storyControl .directionGlyph { width: 20px; }
+  .previousControl .directionGlyph { order: -1; }
+  .nextControl .directionGlyph { order: 1; }
+  .controlLabel { font-size: 0.75rem; }
   .embeddedStory.magazine > :global(.shell) { gap: 1rem; }
   .embeddedStory .editorialIntro { grid-template-columns: 1fr; gap: 0.65rem; }
   .embeddedStory .editorialTitle { font-size: clamp(1.6rem, 7.2vw, 2.3rem); }
@@ -246,6 +241,6 @@
   .embeddedStory .openMark { width: 1.5rem; height: 1.5rem; right: 0.4rem; bottom: 0.4rem; font-size: 0.9rem; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .calmPanel, .calmArrow, .arrowDrawing, .arrowSurface, .arrowCorners, .calmPause .pauseSymbol, .pauseHint, .chapterJourney button { transition: none; }
+  .calmPanel, .storyControl, .directionGlyph, .controlLabel::after, .calmPause .pauseSymbol, .pauseHint, .chapterJourney button { transition: none; }
   .activePanel .editorialIntro, .activePanel .editorialNote, .activePanel .craftBody > div, .activePanel .craftOverview, .activePanel .exteriorPhoto { animation: none !important; }
 }

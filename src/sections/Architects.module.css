@@ -117,16 +117,9 @@
   text-decoration: none;
 }
 
-.callArrow {
-  width: 1.9rem;
-  flex: none;
-  transition: transform var(--dur) var(--ease-out);
-}
+.callIcon { width: 22px; height: 22px; flex: none; }
 
-.callArrow svg { width: 100%; height: auto; display: block; }
-
-.call:hover .callArrow,
-.call:focus-visible .callArrow { transform: translateX(0.4rem); }
+.call:hover, .call:focus-visible { text-decoration: underline; text-underline-offset: 0.25em; text-decoration-thickness: 1px; }
 
 @media (max-width: 900px) {
   .inner {

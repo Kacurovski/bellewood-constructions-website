@@ -130,9 +130,11 @@
 
 .row .kind { margin-top: clamp(0.6rem, 1.2vw, 0.9rem); }
 
-/* A drawn arrow that runs on hover. The only affordance in the row, and the
-   thing that says a photograph is a link rather than a picture. */
+/* The project invitation remains a clearly underlined text link. */
 .row .go {
+  text-decoration: underline;
+  text-underline-offset: 0.4em;
+  text-decoration-thickness: 1px;
   display: flex;
   align-items: center;
   gap: 0.75rem;
@@ -144,17 +146,6 @@
   font-size: var(--t-small);
   color: var(--green);
 }
-
-.row .goArrow {
-  width: 1.75rem;
-  flex: none;
-  transition: transform var(--dur) var(--ease-out);
-}
-
-.row .goArrow svg { width: 100%; height: auto; display: block; }
-
-.row .link:hover .goArrow,
-.row .link:focus-visible .goArrow { transform: translateX(0.45rem); }
 
 @media (max-width: 760px) {
   /* One column, plate first. The alternation is a wide-screen device — stacked

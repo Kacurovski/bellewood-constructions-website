@@ -166,15 +166,7 @@
     color var(--dur) var(--ease);
 }
 
-.step svg {
-  width: 55%;
-  height: auto;
-  display: block;
-  /* The arrowhead travels toward the edge it points at, and the shaft is
-     clipped by the disc rather than shrunk — the same run the row variant's
-     arrow does, kept round. */
-  transition: transform var(--dur) var(--ease-out);
-}
+.step svg { width: 20px; height: 20px; flex: none; transition: transform 350ms var(--ease-out); }
 
 .step:hover,
 .step:focus-visible {

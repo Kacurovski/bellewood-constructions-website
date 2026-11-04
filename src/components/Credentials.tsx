@@ -169,7 +169,7 @@ export function Credentials({ running }: { running: boolean }) {
             </div>
           ))}
         </div>
-        {!reduced && <span className={styles.focusHint} aria-hidden="true">← → Turn the cards · Space to pause / play</span>}
+        {!reduced && <span className={styles.focusHint} aria-hidden="true">Left / right keys: turn cards · Space to pause / play</span>}
       </div>
       {!reduced && <p className="visually-hidden" aria-live={held ? 'polite' : 'off'} aria-atomic="true">
         {assurances[at].title}. {assurances[at].value}. {assurances[at].note}

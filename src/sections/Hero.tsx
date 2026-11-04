@@ -1,3 +1,4 @@
+import { ActionGlyph } from '../components/ActionGlyph'
 import { useRef } from 'react'
 import type { CSSProperties } from 'react'
 import { Link } from 'react-router-dom'
@@ -14,9 +15,6 @@ import styles from './Hero.module.css'
 function WorkLink() {
   return <Link className={styles.workLink} to="/work">
     <span>Explore our work</span>
-    <span className={styles.actionArrow} aria-hidden="true">
-      <svg viewBox="0 0 50 20" fill="none"><path d="M1 10h46m-9-8 9 8-9 8" stroke="currentColor" strokeWidth="1.25" /></svg>
-    </span>
   </Link>
 }
 
@@ -123,7 +121,7 @@ function ScrollHero() {
             <Caption key={frame.src} frame={frame} index={index} progress={progress} />)}
           <div className={styles.footer}>
             <div className={styles.journeyControl}>
-              <span className={styles.hint}>Scroll to explore <span aria-hidden="true">↓</span></span>
+              <span className={styles.hint}>Scroll to explore <ActionGlyph name="down" /></span>
               <nav className={styles.stops} aria-label="Ascot rooms">
                 {ascotHeroFrames.map((frame, index) =>
                   <RoomStop key={frame.src} index={index} progress={progress} go={go} />)}
@@ -132,7 +130,7 @@ function ScrollHero() {
             <div className={styles.links}>
               <button className={styles.skip} type="button" onClick={skip}>
                 <span>Skip tour</span>
-                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 4v15m-6-6 6 6 6-6" stroke="currentColor" strokeWidth="1.5" /></svg>
+                <ActionGlyph name="down" />
               </button>
               <WorkLink />
             </div>

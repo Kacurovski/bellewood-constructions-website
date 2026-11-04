@@ -33,11 +33,6 @@ export function SelectedProjects({ sheetNumber = "A-05", compactIntro = false }:
           <ProjectIndex projects={featuredProjects} footer={
             <Link to="/work" className={styles.more}>
               <span className={styles.moreLabel}>See all work</span>
-              <span className={styles.moreArrow} aria-hidden="true">
-                <svg viewBox="0 0 34 10" fill="none">
-                  <path d="M0 5h32M27.5 1l4.5 4-4.5 4" stroke="currentColor" strokeWidth="1.2" />
-                </svg>
-              </span>
             </Link>
           } />
         </Reveal>

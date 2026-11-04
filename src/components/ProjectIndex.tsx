@@ -106,7 +106,7 @@ function ProjectGallery({ project, photoIndex, onPhotoChange }: GalleryProps) {
       </div>
       <div className={styles.caption}>
         <Link to={`/work/${project.slug}`} className={styles.projectLink}>
-          View {project.title}<span aria-hidden="true"> &#8599;</span>
+          View {project.title}
         </Link>
       </div>
     </>
@@ -152,7 +152,7 @@ export function ProjectIndex({ projects, start = 1, footer }: Props) {
                 onFocus={() => selectProject(i)} onClick={() => selectProject(i)}>
                 <span className={styles.number}>{String(start + i).padStart(2, '0')}</span>
                 <span className={styles.title}>{item.title}</span>
-                <span className={styles.arrow} aria-hidden="true">&#8599;</span>
+
                 <span className={styles.detail}>{item.kind}</span>
               </button>
             </li>

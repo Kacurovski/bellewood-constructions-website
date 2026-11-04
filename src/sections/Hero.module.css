@@ -172,7 +172,7 @@
 .skip svg { width: 1.125rem; height: 1.125rem; flex: none; transition: transform 300ms var(--ease); }
 .skip:hover svg { transform: translateY(3px); }
 .workLink {
-  min-width: 15rem;
+  min-width: 0;
   padding: 0.65rem 0;
   gap: 1.4rem;
   font: 400 1.75rem/1.1 var(--font-body);
@@ -182,15 +182,6 @@
 .workLink::before { opacity: 0.35; }
 .workLink::after { transform: scaleX(0.24); transform-origin: left; transition: transform 650ms var(--ease-out); }
 .workLink:hover::after, .workLink:focus-visible::after { transform: scaleX(1); }
-.actionArrow {
-  display: grid;
-  place-items: center;
-  width: 3rem;
-  height: 1.5rem;
-  flex: none;
-}
-.actionArrow svg { width: 2.75rem; height: 1.25rem; transition: transform 450ms var(--ease); }
-.workLink:hover .actionArrow svg { transform: translateX(4px); }
 .skip:focus-visible, .workLink:focus-visible {
   outline: 2px solid var(--wash);
   outline-offset: 5px;
@@ -239,15 +230,13 @@
   .skip, .workLink { min-height: 3.25rem; }
   .skip { gap: 0.5rem; padding-inline: 0; font-size: 0.8125rem; }
   .workLink { flex: 1; min-width: 0; gap: 0.65rem; font-size: 1.3rem; }
-  .actionArrow { width: 2.1rem; height: 1.25rem; }
-  .actionArrow svg { width: 2.1rem; }
   .bottomScrim { height: 55%; }
   .staticFrame { min-height: 90svh; }
   .staticContent .caption { bottom: 7rem; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .skip, .skip svg, .skip::after, .workLink, .workLink::after, .actionArrow svg { transition: none; }
-  .skip:hover svg, .workLink:hover .actionArrow svg { transform: none; }
+  .skip, .skip svg, .skip::after, .workLink, .workLink::after { transition: none; }
+  .skip:hover svg { transform: none; }
 }
 @media (max-height: 600px) and (min-width: 601px) {
   .caption, .left, .upperLeft, .upperRight { top: calc(var(--header-h) + 1rem); padding: 0; }
@@ -256,3 +245,6 @@
   .eyebrow { margin-bottom: 0.6rem; }
   .footer { bottom: 0.75rem; }
 }
+
+.hint { display: inline-flex; align-items: center; gap: 0.5rem; }
+.hint svg { width: 14px; height: 14px; }

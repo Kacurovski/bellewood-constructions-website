@@ -1,3 +1,4 @@
+import { ActionGlyph } from './ActionGlyph'
 import { useEffect, useId, useMemo, useRef, useState } from 'react'
 import type { KeyboardEvent } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
@@ -9,12 +10,6 @@ import styles from './ProjectPhotoGallery.module.css'
 type Photograph = ImageSlot & { src: string }
 const ease = [0.22, 1, 0.36, 1] as const
 const number = (value: number) => String(value).padStart(2, '0')
-
-function Arrow({ back = false }: { back?: boolean }) {
-  return <svg viewBox="0 0 32 20" fill="none" aria-hidden="true" style={back ? { transform: 'rotate(180deg)' } : undefined}>
-    <path d="M2 10h27M21 2l8 8-8 8" stroke="currentColor" strokeWidth="1.4" />
-  </svg>
-}
 
 function FullPhoto({ title, image, index, total, onChange, onClose }: {
   title: string; image: Photograph; index: number; total: number
@@ -63,8 +58,8 @@ function FullPhoto({ title, image, index, total, onChange, onClose }: {
       <div className={styles.lightboxFooter}>
         <p>{image.alt}</p>
         {total > 1 && <div className={styles.fullNavigation}>
-          <button type="button" onClick={() => onChange(index - 1)} aria-label="Previous photograph"><Arrow back /></button>
-          <button type="button" onClick={() => onChange(index + 1)} aria-label="Next photograph"><Arrow /></button>
+          <button type="button" onClick={() => onChange(index - 1)} aria-label="Previous photograph"><ActionGlyph name="previous" /></button>
+          <button type="button" onClick={() => onChange(index + 1)} aria-label="Next photograph"><ActionGlyph name="next" /></button>
         </div>}
       </div>
     </div>
@@ -151,8 +146,8 @@ export function ProjectPhotoGallery({ project }: { project: Project }) {
             transition={{ duration: reduced ? 0 : 0.7, ease }} />
         </AnimatePresence>
         {images.length > 1 && <>
-          <button type="button" className={[styles.arrow, styles.previous].join(' ')} onClick={() => select(active - 1)} aria-label="Previous photograph"><Arrow back /></button>
-          <button type="button" className={[styles.arrow, styles.next].join(' ')} onClick={() => select(active + 1)} aria-label="Next photograph"><Arrow /></button>
+          <button type="button" className={[styles.arrow, styles.previous].join(' ')} onClick={() => select(active - 1)} aria-label="Previous photograph"><ActionGlyph name="previous" /></button>
+          <button type="button" className={[styles.arrow, styles.next].join(' ')} onClick={() => select(active + 1)} aria-label="Next photograph"><ActionGlyph name="next" /></button>
         </>}
         <button type="button" className={styles.expand} onClick={() => setOpened(true)} aria-haspopup="dialog">
           <svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M7 3H3v4m10-4h4v4M3 13v4h4m10-4v4h-4" stroke="currentColor" strokeWidth="1.3" /></svg>

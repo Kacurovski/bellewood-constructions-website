@@ -66,11 +66,6 @@ export function ProjectCard({
             {variant === 'row' && (
               <span className={styles.go}>
                 View project
-                <span className={styles.goArrow} aria-hidden="true">
-                  <svg viewBox="0 0 34 10" fill="none">
-                    <path d="M0 5h32M27.5 1l4.5 4-4.5 4" stroke="currentColor" strokeWidth="1.2" />
-                  </svg>
-                </span>
               </span>
             )}
           </div>

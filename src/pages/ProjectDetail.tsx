@@ -1,3 +1,4 @@
+import { ActionGlyph } from '../components/ActionGlyph'
 import { Link, useParams } from 'react-router-dom'
 import { ImageSlot } from '../components/ImageSlot'
 import { SlicedImage } from '../components/SlicedImage'
@@ -14,11 +15,7 @@ function ProjectReturn({ light = false }: { light?: boolean }) {
   const destination = useRouteReturn()
   return (
     <Link to={destination.to} onClick={destination.onClick} className={[styles.back, light ? styles.backLight : ''].join(' ')}>
-      <span className={styles.backArrow} aria-hidden="true">
-        <svg viewBox="0 0 44 18" fill="none">
-          <path d="M42 9H2m7-7L2 9l7 7" stroke="currentColor" strokeWidth="1.3" />
-        </svg>
-      </span>
+      <ActionGlyph className={styles.backDirection} name="previous" />
       <span className={styles.backLabel}>{destination.label}</span>
     </Link>
   )

@@ -8,12 +8,6 @@ function PageMark() {
   </svg>
 }
 
-function Arrow() {
-  return <svg viewBox="0 0 50 20" fill="none" aria-hidden="true">
-    <path d="M1 10h46m-9-8 9 8-9 8" stroke="currentColor" strokeWidth="1.25" />
-  </svg>
-}
-
 export function RenovationChecklist() {
   return (
     <section id="renovation-checklist" className={styles.feature} tabIndex={-1}
@@ -46,7 +40,7 @@ export function ChecklistInvitation() {
           <p className={styles.invitationCopy}>Our renovation guide is in preparation.</p>
         </div>
         <Link to="/#renovation-checklist" className={styles.resourceLink}>
-          <span>About the checklist</span><Arrow />
+          <span>About the checklist</span>
         </Link>
       </div>
     </aside>

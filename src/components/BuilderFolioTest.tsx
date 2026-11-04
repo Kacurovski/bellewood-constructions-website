@@ -69,7 +69,7 @@ export function BuilderFolioTest() {
   return <div ref={ref} id="builder-folio-test" className={styles.test}>
     <div className={styles.previewBar}>
       <span>About study / Test</span>
-      <button type="button" aria-pressed={photo} onClick={() => setPhoto(!photo)}>{photo ? 'View folio' : 'Original photo'} <span aria-hidden="true">&#8599;</span></button>
+      <button type="button" aria-pressed={photo} onClick={() => setPhoto(!photo)}>{photo ? 'View folio' : 'Original photo'} </button>
     </div>
     {photo ? <ImageSlot slot={stills.onSite} ratio="4 / 5" tone="green" /> : <>
       <div className={styles.folio} aria-label="The Bellewood builder's folio">
@@ -83,7 +83,7 @@ export function BuilderFolioTest() {
             <h2 className={styles.title}>{sheets[active].title}</h2>
             <FolioDrawing index={active} />
             <p className={styles.body}>{sheets[active].body}</p>
-            <Link className={styles.sheetLink} to={sheets[active].to} tabIndex={open ? 0 : -1}>{sheets[active].action}<span aria-hidden="true">&#8599;</span></Link>
+            <Link className={styles.sheetLink} to={sheets[active].to} tabIndex={open ? 0 : -1}>{sheets[active].action}</Link>
           </motion.div>
           <div className={styles.sheetFoot}><span>{sheets[active].foot}</span><span>Illustrative study</span></div>
         </div>
@@ -91,7 +91,7 @@ export function BuilderFolioTest() {
           <Logo tone="reverse" width={180} />
           <div className={styles.coverRule} />
           <div className={styles.coverCopy}><span>The builder's folio</span><p>A personal<br /><em>way to build.</em></p></div>
-          <button type="button" tabIndex={open ? -1 : 0} onClick={() => setOpen(true)}>Open the folio<span aria-hidden="true">&#8599;</span></button>
+          <button type="button" tabIndex={open ? -1 : 0} onClick={() => setOpen(true)}>Open the folio</button>
           <span className={styles.coverFine}>Brisbane / Timber / Character</span>
         </motion.div>
       </div>

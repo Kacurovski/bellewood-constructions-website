@@ -27,13 +27,13 @@ export function FrontDoorStudy() {
         </Reveal>
         <div className={styles.journey}>
           <Reveal className={styles.street}>
-            <div className={styles.streetNote}><span>From the street</span><span aria-hidden="true">01 &mdash; 03 &rarr;</span></div>
+            <div className={styles.streetNote}><span>From the street</span><span>Three spaces</span></div>
             <figure>
               <img src={wilstonStory.exterior.src ?? undefined} alt={wilstonStory.exterior.alt} loading="lazy" decoding="async" width="1200" height="800" />
               <figcaption><strong>Wilston</strong><span>The familiar face.</span></figcaption>
             </figure>
             <p className={styles.streetCopy}>The gable, the verandah, the picket fence. A Brisbane welcome, with another story behind it.</p>
-            <Link className={styles.projectLink} to="/work/wilston">Explore the whole home <span aria-hidden="true">&#8599;</span></Link>
+            <Link className={styles.projectLink} to="/work/wilston">Explore the whole home </Link>
           </Reveal>
           <Reveal delay={0.12} className={styles.inside}>
             <div className={styles.insideTop}><span>Within the home</span><span aria-hidden="true">0{chapter + 1} / 03</span></div>
@@ -43,7 +43,7 @@ export function FrontDoorStudy() {
               ))}
             </div>
             <div className={styles.chapterButtons} role="group" aria-label="Explore the Wilston home">
-              {wilstonStory.chapters.map((room, i) => <button key={room.label} type="button" aria-pressed={chapter === i} aria-controls="wilston-room-caption" onClick={() => setChapter(i)}><span>0{i + 1}</span>{room.label}<span aria-hidden="true">&#8599;</span></button>)}
+              {wilstonStory.chapters.map((room, i) => <button key={room.label} type="button" aria-pressed={chapter === i} aria-controls="wilston-room-caption" onClick={() => setChapter(i)}><span>0{i + 1}</span>{room.label}</button>)}
             </div>
             <div id="wilston-room-caption" className={styles.roomCaption} aria-live="polite" aria-atomic="true"><h3>{current.title}</h3><p>{current.description}</p></div>
           </Reveal>
@@ -122,16 +122,13 @@ export function EverydayStudy({ home = false }: { home?: boolean } = {}) {
           </div>
           <div className={styles.selection} id="everyday-caption">
             <div aria-live="polite" aria-atomic="true" className={styles.selectionCopy}><span className={styles.eyebrow}>{current.project} / {current.title}</span><p>{current.description}</p></div>
-            <Link className={styles.reverseLink} to={`/work/${current.slug}`}>Explore {current.project}<span aria-hidden="true">&#8599;</span></Link>
+            <Link className={styles.reverseLink} to={`/work/${current.slug}`}>Explore {current.project}</Link>
           </div>
         </Reveal>
         {home && <div className={styles.collectionLink}>
           <span>Every home has its own story.</span>
           <Link to="/work" className={styles.collectionButton}>
             <span>Explore all work</span>
-            <span className={styles.collectionArrow} aria-hidden="true">
-              <svg viewBox="0 0 60 24" fill="none"><path d="M1 12h55m-10-9 10 9-10 9" stroke="currentColor" strokeWidth="1.25" /></svg>
-            </span>
           </Link>
         </div>}
       </div>

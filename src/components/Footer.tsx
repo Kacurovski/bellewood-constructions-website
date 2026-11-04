@@ -1,3 +1,4 @@
+import { ActionGlyph } from './ActionGlyph'
 import { Link } from 'react-router-dom'
 import { Logo } from './Logo'
 import { ComplianceLine } from './ComplianceLine'
@@ -36,7 +37,7 @@ export function Footer() {
               {nav.map((item) => (
                 <li key={item.label}>
                   <Link to={{ pathname: item.to, hash: item.hash }}>
-                    <span>{item.label}</span><span className={styles.linkArrow} aria-hidden="true">&#8599;</span>
+                    <span>{item.label}</span>
                   </Link>
                 </li>
               ))}
@@ -52,7 +53,7 @@ export function Footer() {
               {socialLinks.map((item) => (
                 <li key={item.label}>
                   <a href={item.href} target="_blank" rel="noreferrer noopener">
-                    {item.label}<span className={styles.linkArrow} aria-hidden="true">&#8599;</span>
+                    {item.label}
                   </a>
                 </li>
               ))}
@@ -69,7 +70,7 @@ export function Footer() {
             <p className={styles.copyright}>&copy; {year} {site.name}</p>
             <button type="button" className={styles.backTop} onClick={backToTop}>
               Back to top
-              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 20V4m-7 7 7-7 7 7" /></svg>
+              <ActionGlyph name="up" />
             </button>
           </div>
         </div>

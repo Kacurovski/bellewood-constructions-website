@@ -81,8 +81,9 @@
   letter-spacing: -0.025em;
   text-decoration: none;
 }
-.phone svg { width: 2.75rem; height: 1.25rem; flex: none; transition: transform 450ms var(--ease-out); }
-.phone:hover svg, .phone:focus-visible svg { transform: translateX(5px); }
+.phone svg { width: 22px; height: 22px; flex: none; }
+.phone > span { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 0.25em; text-decoration-color: transparent; transition: text-decoration-color 350ms; }
+.phone:hover > span, .phone:focus-visible > span { text-decoration-color: currentColor; }
 .enquiry {
   position: relative;
   display: inline-flex;
@@ -126,6 +127,6 @@
   }
 }
 @media (prefers-reduced-motion: reduce) {
-  .phone svg, .enquiry::after { transition: none; }
-  .phone:hover svg, .phone:focus-visible svg { transform: none; }
+  .phone > span, .enquiry::after { transition: none; }
+
 }
