@@ -8,6 +8,7 @@ import { NameStudy } from '../components/NameStudy'
 import { AboutClosing } from '../sections/AboutClosing'
 import { usePageTitle } from '../hooks/usePageTitle'
 import { contact } from '../config/site'
+import { companyPhoto } from '../data/company'
 import styles from './About.module.css'
 
 /**
@@ -28,8 +29,24 @@ export default function About() {
         number="C-01"
         eyebrow="About"
         title="Good homes begin with good relationships."
+        media={
+          <figure className={styles.introPhoto}>
+            <img
+              src={companyPhoto.src}
+              alt={companyPhoto.alt}
+              width={1080}
+              height={1080}
+              fetchPriority="high"
+              decoding="async"
+            />
+            <figcaption>
+              <span>On site, together.</span>
+              <span>Wilston <span aria-hidden="true">·</span> <time dateTime="2018-11-13">2018</time></span>
+            </figcaption>
+          </figure>
+        }
         meta={[
-          { label: 'Who we work with', value: <>Homeowners.<br />Architects &amp; designers.</> },
+          { label: 'Who we work with', value: 'Homeowners, architects & designers.' },
           { label: 'The builder', value: <Link to={{ pathname: '/about', hash: '#about-builder' }}>Get to know Angus</Link> },
           { label: 'The name', value: <Link to={{ pathname: '/about', hash: '#about-name' }}>Why Bellewood</Link> },
         ]}

@@ -1,4 +1,30 @@
 /* The masthead is PageHead's. */
+.introPhoto { margin: 0; }
+
+.introPhoto img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1;
+}
+
+.introPhoto figcaption {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: .875rem;
+  padding-top: .75rem;
+  border-top: 1px solid var(--rule-reverse);
+  color: var(--wash);
+  font: 400 .8125rem/1.4 var(--font-body);
+}
+
+.introPhoto figcaption > :last-child {
+  color: var(--sage);
+  font: 500 .6875rem/1.6 var(--font-display);
+  letter-spacing: .05em;
+}
+
 .body, .name { scroll-margin-top: var(--header-h); }
 
 .body {
