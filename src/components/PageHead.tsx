@@ -93,12 +93,6 @@ export function PageHead({ number, eyebrow, title, lede, meta, media, children, 
           </IntroSettle>
         )}
 
-        {media && (
-          <IntroSettle className={styles.media} delay={0.16} y={10}>
-            {media}
-          </IntroSettle>
-        )}
-
         {meta && meta.length > 0 && (
           <FactsReveal className={variant ? styles.facts : undefined} delay={variant ? 0.22 : 0.08} y={variant ? 8 : 18}>
             <dl className={styles.meta}>
@@ -110,6 +104,12 @@ export function PageHead({ number, eyebrow, title, lede, meta, media, children, 
               ))}
             </dl>
           </FactsReveal>
+        )}
+
+        {media && (
+          <IntroSettle className={styles.media} delay={0.16} y={10}>
+            {media}
+          </IntroSettle>
         )}
       </div>
     </header>

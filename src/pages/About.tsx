@@ -28,21 +28,19 @@ export default function About() {
         variant="about"
         number="C-01"
         eyebrow="About"
-        title="Good homes begin with good relationships."
+        title={<>Good homes begin with <em>good relationships.</em></>}
         media={
           <figure className={styles.introPhoto}>
-            <img
-              src={companyPhoto.src}
-              alt={companyPhoto.alt}
-              width={1080}
-              height={1080}
-              fetchPriority="high"
-              decoding="async"
-            />
-            <figcaption>
-              <span>On site, together.</span>
-              <span>Wilston <span aria-hidden="true">·</span> <time dateTime="2018-11-13">2018</time></span>
-            </figcaption>
+            <div className={styles.introPhotoWindow}>
+              <img
+                src={companyPhoto.src}
+                alt={companyPhoto.alt}
+                width={1080}
+                height={1080}
+                fetchPriority="high"
+                decoding="async"
+              />
+            </div>
           </figure>
         }
         meta={[

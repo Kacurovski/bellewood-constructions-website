@@ -43,22 +43,25 @@ starting point. No API key or new dependency is required. The earlier
 The About masthead now pairs its relationship-led introduction with the
 owner-selected photograph of the carpentry crew at the Wilston renovation.
 The [original Instagram post](https://www.instagram.com/p/BqHqpQMlFjS/) identifies
-the crew and is dated 13 November 2018. The visible `Wilston · 2018` caption
-presents it as an archive photograph, without naming individuals or implying
-current team membership.
+the crew and is dated 13 November 2018. The owner requested removal of the
+visible caption; the source and date remain here and in the image's alt text.
+No individual is named and no claim is made about current team membership.
 
 `src/data/company.ts` supplies the image and alt text. The approved local asset,
 `src/assets/company/on-site-2018.jpg`, is the full 1080 × 1080 photograph (178 KB);
 the site does not depend on an Instagram embed or expiring image URL. It is
-shown uncropped at up to 544 CSS pixels on desktop, beside the heading and
-existing page links. On narrow screens the order is heading, photograph,
-supporting context and links. Entrance motion respects reduced motion.
+displayed through a bottom-aligned 5:4 crop, removing excess framing above the
+crew while retaining the image's full width and all four people. A slim paper
+border frames the larger photograph, which extends below the green introduction
+into the light story section. The heading pairs Archivo with Newsreader italic.
+On narrow screens the order is heading, supporting context and links, then
+photograph. The soft reveal and image-settle motion respect reduced motion.
 
 `PageHead` accepts an optional `media` slot; its new layout is scoped to About
-with media, leaving other introductions unchanged. Photo and caption styling
-live in `src/pages/About.module.css`. To replace the photo, update the local
-asset reference and alt text in `src/data/company.ts`, then update the caption,
-date and intrinsic image dimensions in `src/pages/About.tsx` together.
+with media, leaving other introductions unchanged. Photo styling and clearance
+for the overlap live in `src/pages/About.module.css`. To replace the photo,
+update the local asset reference and alt text in `src/data/company.ts`, the
+intrinsic image dimensions in `src/pages/About.tsx`, and review the CSS crop.
 
 ## Inner-page introduction test (2 November 2026)
 
@@ -1285,7 +1288,7 @@ None of these is invented in code. Each is marked `OPEN:` at the point it matter
 | 18 | **The existing site carries the wrong ABN.** `anguscowanconstructions.com.au` shows ABN 39 113 772 535, which belongs to Trilogiq Australia Pty Ltd (Kilsyth VIC, deregistered 2017), plus a Victorian address, a Melbourne phone and fax, and **no QBCC licence number at all**. Angus's real details are ABN 19 512 919 083 / ACN 101 528 698. Worth checking whether the same wrong ABN is on his invoices, quotes and contracts. | Compliance, on the live site today | outside this repo |
 | 17 | **bellewood.com.au is already live** on GoDaddy's website builder with a "Launching Soon" page and its own contact form. Going live means repointing it, and any addresses collected there need retrieving | Launch | DNS / GoDaddy |
 | ~~13~~ | ~~Replace every placeholder photograph~~ — **done; `mediaIsPlaceholder` is `false`.** | — | — |
-| 14 | **A current Angus portrait or new team photograph**, to replace the approved 2018 on-site photograph if desired | About introduction | `data/company.ts` and photo caption in `pages/About.tsx` |
+| 14 | **A current Angus portrait or new team photograph**, to replace the approved 2018 on-site photograph if desired | About introduction | `data/company.ts`, image dimensions in `pages/About.tsx` and crop in `pages/About.module.css` |
 | 15 | **Industry memberships** — Master Builders, HIA or similar, if he holds any | The credentials row | `config/site.ts` → `credentials` |
 
 One CSS trap worth recording, since it cost a visible bug: `margin: 0` on an

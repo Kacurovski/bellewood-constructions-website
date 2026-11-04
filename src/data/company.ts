@@ -3,7 +3,8 @@ import onSitePhoto from '../assets/company/on-site-2018.jpg'
 /**
  * Owner-selected archive photograph, approved for the About introduction.
  * The original post identifies the carpentry crew at the Wilston renovation.
- * Keep its date visible; this is not a claim about today's team membership.
+ * Its date remains in the alt text and source record. No individual is named
+ * and the page makes no claim about today's team membership.
  * Replace the local asset here when new company photography is supplied.
  */
 export const companyPhoto = {

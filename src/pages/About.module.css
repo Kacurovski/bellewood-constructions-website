@@ -1,28 +1,41 @@
 /* The masthead is PageHead's. */
-.introPhoto { margin: 0; }
+.introPhoto {
+  position: relative;
+  margin: 0;
+  padding: clamp(.375rem, .6vw, .625rem);
+  background: var(--wash);
+  box-shadow: 0 24px 48px -32px rgb(16 37 26 / .35);
+  animation: photo-unfold 1.3s var(--ease-out) .16s both;
+}
+
+.introPhotoWindow {
+  overflow: hidden;
+  aspect-ratio: 5 / 4;
+}
 
 .introPhoto img {
   display: block;
   width: 100%;
-  height: auto;
-  aspect-ratio: 1;
+  height: 100%;
+  object-fit: cover;
+  /* Remove the empty framing above the crew, preserving all four people. */
+  object-position: center bottom;
+  transform-origin: 50% 75%;
+  animation: photo-settle 1.65s var(--ease-out) .16s both;
 }
 
-.introPhoto figcaption {
-  display: flex;
-  justify-content: space-between;
-  gap: 1rem;
-  margin-top: .875rem;
-  padding-top: .75rem;
-  border-top: 1px solid var(--rule-reverse);
-  color: var(--wash);
-  font: 400 .8125rem/1.4 var(--font-body);
+@keyframes photo-unfold {
+  from { opacity: 0; clip-path: inset(5% 0 0 8%); transform: translateY(16px); }
+  to { opacity: 1; clip-path: inset(0); transform: translateY(0); }
 }
 
-.introPhoto figcaption > :last-child {
-  color: var(--sage);
-  font: 500 .6875rem/1.6 var(--font-display);
-  letter-spacing: .05em;
+@keyframes photo-settle {
+  from { transform: scale(1.045); }
+  to { transform: scale(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .introPhoto, .introPhoto img { animation: none; }
 }
 
 .body, .name { scroll-margin-top: var(--header-h); }
@@ -31,7 +44,8 @@
   display: grid;
   grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
   gap: clamp(2.5rem, 6vw, 6rem);
-  padding-block: clamp(2.75rem, 5vw, 4.5rem) clamp(3rem, 6vw, 6rem);
+  /* Room for the opening photograph to finish across the green/paper edge. */
+  padding-block: clamp(7rem, 10vw, 9rem) clamp(3rem, 6vw, 6rem);
   align-items: start;
 }
 
@@ -97,6 +111,8 @@
   .nameInner { grid-template-columns: minmax(0, 1fr); gap: var(--s-6); }
 
   .portrait { position: static; max-width: 28rem; justify-self: center; }
+
+  .body { padding-top: clamp(5rem, 10vw, 7rem); }
 
   /* Stacked, the licensed-entity line sits directly under the heading it is
      the subject of, and the story follows. It reads as a credit rather than a
