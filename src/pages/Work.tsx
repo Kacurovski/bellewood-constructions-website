@@ -356,7 +356,7 @@ export default function Work() {
 
       {/* The projects show the work; this names it. Numbered after the last
           project page, since the index is B-01 and each project is B-02 on. */}
-      <Services number={`B-${String(projects.length + 2).padStart(2, '0')}`} tone="green" />
+      <Services number={`B-${String(projects.length + 2).padStart(2, '0')}`} />
 
       <WorkClosing />
     </>

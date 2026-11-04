@@ -83,7 +83,7 @@ function Drawing({ paths, delay, reduced }: { paths: string[]; delay: number; re
   )
 }
 
-export function Services({ number = 'B-08', tone = 'light' }: { number?: string; tone?: 'light' | 'green' }) {
+export function Services({ number = 'B-08' }: { number?: string }) {
   const reduced = useReducedMotion()
   const rail = useRef<HTMLOListElement>(null)
   const [at, setAt] = useState(0)
@@ -133,11 +133,10 @@ export function Services({ number = 'B-08', tone = 'light' }: { number?: string;
   }, [])
 
   return (
-    <section className={['section', styles.section, tone === 'green' ? `on-green ${styles.green}` : ''].join(' ')} aria-labelledby="services-heading">
+    <section className={['section', styles.section].join(' ')} aria-labelledby="services-heading">
       <div className="shell">
         <Reveal className={styles.head}>
           <SheetRef
-            className={styles.reference}
             number={number}
             name={
               <h2 id="services-heading" className={styles.heading}>
