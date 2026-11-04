@@ -21,6 +21,23 @@ reference it.
 
 ---
 
+## Contact map (4 November 2026)
+
+`src/sections/ContactMap.tsx` replaces the illustrative regional map with an
+interactive Google Maps embed. Its street-address destination, displayed address,
+full-map link and driving-directions link all come from `contactLocation` in
+`src/config/site.ts`. The destination is 8 Scenic Road, Kenmore QLD 4069, matching
+the kickoff record and the [business's public Houzz listing](https://www.houzz.com.au/professionals/home-builders/angus-cowan-constructions-pty-ltd-pfvwau-pf~1133111154).
+Visitors are asked to call Angus before visiting; no opening hours or showroom
+facilities are claimed. Service coverage is shown separately from this destination.
+
+The map has standard Google controls, original map colours and attribution, and
+loads lazily. It needs an internet connection; address, phone, email and Google
+Maps links remain outside the iframe. Directions use Google's cross-platform
+Maps URL with a destination and driving mode; Google handles the visitor's
+starting point. No API key or new dependency is required. The earlier
+`service-map-test` anchor is retained for existing links.
+
 ## Inner-page introduction test (2 November 2026)
 
 Work, Approach, About and Contact opt into individual `PageHead` variants using

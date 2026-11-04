@@ -7,7 +7,7 @@ import { usePageTitle } from '../hooks/usePageTitle'
 import { contact } from '../config/site'
 import styles from './Contact.module.css'
 
-const ServiceMapTest = lazy(() => import('../sections/ServiceMapTest').then(module => ({ default: module.ServiceMapTest })))
+const ContactMap = lazy(() => import('../sections/ContactMap').then(module => ({ default: module.ContactMap })))
 
 export default function Contact() {
   usePageTitle('Contact')
@@ -29,8 +29,8 @@ export default function Contact() {
       />
 
       <div id="service-map-test" style={{ scrollMarginTop: 'var(--header-h)' }}>
-        <Suspense fallback={<div className="shell" role="status" style={{ minHeight: '30rem', paddingBlock: '4rem' }}>Loading the regional guide&hellip;</div>}>
-          <ServiceMapTest />
+        <Suspense fallback={<div className="shell" role="status" style={{ minHeight: '30rem', paddingBlock: '4rem' }}>Loading the contact map&hellip;</div>}>
+          <ContactMap />
         </Suspense>
       </div>
 

@@ -47,6 +47,29 @@ export const contact = {
 } as const
 
 /**
+ * Contact map destination: the business address in the kickoff records,
+ * also listed publicly by Angus Cowan Constructions on Houzz.
+ * The map and directions use the street address, not a client project or a
+ * service-region centre. Call before visiting; this is not advertised as a showroom.
+ * Keep this separate from the company's registered-address record below.
+ */
+const mapStreet = '8 Scenic Road'
+const mapLocality = 'Kenmore QLD 4069'
+const mapAddress = `${mapStreet}, ${mapLocality}, Australia`
+const mapQuery = encodeURIComponent(mapAddress)
+
+export const contactLocation = {
+  street: mapStreet,
+  locality: mapLocality,
+  address: mapAddress,
+  // Public map embed; no API key, SDK or runtime environment variables.
+  embedUrl: `https://maps.google.com/maps?q=${mapQuery}&z=16&hl=en&output=embed`,
+  mapsUrl: `https://www.google.com/maps/search/?api=1&query=${mapQuery}`,
+  // Let Google Maps obtain the starting point or ask the visitor to enter one.
+  directionsUrl: `https://www.google.com/maps/dir/?api=1&destination=${mapQuery}&travelmode=driving`,
+} as const
+
+/**
  * Social links. An entry with an empty `href` is NOT rendered — the footer and
  * the contact page skip it — so a network we do not yet have the URL for is
  * simply absent rather than pointing somewhere wrong. Facebook and LinkedIn
