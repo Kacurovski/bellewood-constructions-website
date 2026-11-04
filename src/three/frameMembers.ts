@@ -1,310 +1,400 @@
-/** Kalinga photo-referenced architectural study, shared by the live assembly
- * and static fallback. Proportions are interpreted from the supplied exterior
- * photos, including the rear elevation, not surveyed dimensions or a record of construction.
- * Street is +z. Two enclosed levels, a full-width upper verandah, low hip roof,
- * decorative posts/frieze, dark entry, gated fence and two rear wings.
- * Unseen connections are interpreted; this is not a measured survey.
+﻿
+/** Croyde, Camp Hill. Photo-based architectural study: Ray White listing
+ * 3599598, its exterior photographs, aerial and published floor plan.
+ * The 14.5m front verandah and 23.9m return anchor the proportions; roof
+ * heights and concealed construction are interpreted, not surveyed.
+ * The animation explains a build sequence, not the renovation's chronology.
+ * Street is +z; the long garden elevation is -x. Approximate metre units.
  */
-export type MaterialKey = 'frame' | 'clad' | 'trim' | 'joinery' | 'roof' | 'glass' | 'deck'
+export type MaterialKey = 'frame' | 'clad' | 'trim' | 'joinery' | 'roof' | 'glass' | 'deck' | 'accent' | 'ground'
 export type Member = {
-  p: [number, number, number]
-  s: [number, number, number]
-  rx: number
-  ry?: number
-  rz?: number
-  at: number
-  stage: 0 | 1 | 2 | 3
-  mat: MaterialKey
-  outer?: boolean
-  lines?: false
-  layer?: 1 | 2
+  p: [number,number,number]; s: [number,number,number]
+  rx:number; ry?:number; rz?:number; at:number; stage:0|1|2|3
+  mat:MaterialKey; outer?:boolean; lines?:false; layer?:1|2
 }
-export type FrameView = 'front' | 'rear'
-export const FRAME_VIEWS: Record<FrameView, [number, number, number]> = { front: [-10, 7, 15], rear: [12, 8, -16] }
-type V3 = [number, number, number]
-type Opening = { x: number; y: number; w: number; h: number; door?: boolean }
-const W = 12.4, HALF = W / 2
-const BACK = -5, FRONT = 2.8, VERANDAH = 4.9
-const FLOOR = 3.15, EAVE = 6.35
-const RX = HALF + 0.45, RZ = 5.4, PITCH = Math.PI * 14 / 180
-const RIDGE = EAVE + RZ * Math.tan(PITCH)
-const members: Member[] = []
-function box(p: V3, s: V3, mat: MaterialKey, at: number, stage: Member['stage'], outer = true, rotation: Partial<Member> = {}) {
-  members.push({ p, s, mat, at, stage, outer, rx: 0, ...rotation })
+export type FrameView = 'front'|'rear'
+export const FRAME_VIEWS: Record<FrameView,[number,number,number]> = {front:[23,14,42],rear:[-34,16,-26]}
+type V3=[number,number,number]
+type V2=[number,number]
+type Opening={u:number;y:number;w:number;h:number;door?:boolean;panes?:number;hood?:boolean}
+const members:Member[]=[]
+const UP=3.1,EAVE=6.65
+function box(p:V3,s:V3,mat:MaterialKey,at:number,stage:Member['stage'],extras:Partial<Member>={}) {
+  if(s.some(n=>n<=0.0001))return
+  members.push({p,s,mat,at,stage,rx:0,outer:true,...extras})
 }
-function between(a: V3, b: V3, width: number, mat: MaterialKey, at: number, stage: Member['stage'], outer = true) {
-  const dx = b[0]-a[0], dy = b[1]-a[1], dz = b[2]-a[2]
-  const length = Math.hypot(dx,dy,dz)
-  box([(a[0]+b[0])/2,(a[1]+b[1])/2,(a[2]+b[2])/2], [width,width,length], mat, at, stage, outer,
-    { rx: -Math.atan2(dy,Math.hypot(dx,dz)), ry: Math.atan2(dx,dz) })
+function beam(a:V3,b:V3,width:number,mat:MaterialKey,at=0.86,stage:Member['stage']=3) {
+  const dx=b[0]-a[0],dy=b[1]-a[1],dz=b[2]-a[2]
+  box([(a[0]+b[0])/2,(a[1]+b[1])/2,(a[2]+b[2])/2],[width,width,Math.hypot(dx,dy,dz)],mat,at,stage,
+    {rx:-Math.atan2(dy,Math.hypot(dx,dz)),ry:Math.atan2(dx,dz)})
 }
-const frontOpenings: Opening[] = [
-  {x:0,y:1.35,w:1.65,h:2.5,door:true},
-  ...[-4.8,-1.65,1.65,4.8].map(x=>({x,y:1.5,w:0.82,h:1.55})),
-  {x:0,y:4.48,w:1.35,h:2.45,door:true},
-  ...[-2.15,2.15].map(x=>({x,y:4.75,w:1.22,h:1.95})),
-  ...[-4.8,4.8].map(x=>({x,y:4.3,w:1.12,h:1.8,door:true})),
-]
-const sideOpenings: Opening[] = [-3.55,-0.6].flatMap(x=>[
-  {x,y:1.6,w:1.1,h:1.35}, {x,y:4.65,w:1.08,h:1.65},
-])
-function wall(axis: 'front'|'back'|'left'|'right', openings: Opening[]) {
-  const front = axis==='front'||axis==='back'
-  const low = front ? -HALF : BACK
-  const high = front ? HALF : FRONT
-  for(let y=0.2;y<EAVE-0.1;y+=0.17) {
-    let spans: [number,number][] = [[low,high]]
-    for(const o of openings) {
-      if(y+0.085<o.y-o.h/2 || y-0.085>o.y+o.h/2) continue
-      spans=spans.flatMap(([a,b])=>{
-        const l=o.x-o.w/2-0.04,r=o.x+o.w/2+0.04
-        if(r<=a||l>=b)return [[a,b]]
-        const pieces:[number,number][]=[]
-        if(l>a)pieces.push([a,l])
-        if(r<b)pieces.push([r,b])
-        return pieces
-      })
+function slab(x1:number,x2:number,z1:number,z2:number,y:number,mat:MaterialKey='ground',at=0.76) {
+  box([(x1+x2)/2,y,(z1+z2)/2],[x2-x1,0.14,z2-z1],mat,at,3)
+}
+function subtract(spans:V2[],a:number,b:number):V2[] {
+  return spans.flatMap(([lo,hi])=>{
+    if(a>=hi||b<=lo)return [[lo,hi]]
+    const out:V2[]=[];if(a>lo)out.push([lo,a]);if(b<hi)out.push([b,hi]);return out
+  })
+}
+// Board courses stop at the openings. Front upper VJ boards run vertically.
+function facade(axis:'x'|'z',fixed:number,lo:number,hi:number,bottom:number,top:number,holes:Opening[],sign=1,vertical=false) {
+  const place=(u:number,y:number,w:number,h:number,mat:MaterialKey,depth=0.085,offset=0,at=0.79)=>
+    box(axis==='z'?[u,y,fixed+sign*offset]:[fixed+sign*offset,y,u],axis==='z'?[w,h,depth]:[depth,h,w],mat,at,3)
+  if(vertical) {
+    const n=Math.ceil((hi-lo)/0.14),step=(hi-lo)/n
+    for(let i=0;i<n;i++) {
+      const u=lo+(i+0.5)*step;let spans:V2[]=[[bottom,top]]
+      holes.forEach(o=>{if(u+step/2>o.u-o.w/2&&u-step/2<o.u+o.w/2)spans=subtract(spans,o.y-o.h/2-0.035,o.y+o.h/2+0.035)})
+      spans.forEach(([a,b])=>place(u,(a+b)/2,step-0.004,b-a,'clad'))
     }
-    for(const [a,b] of spans) {
-      const fixed=axis==='front'?FRONT:axis==='back'?BACK:axis==='left'?-HALF:HALF
-      box(front?[(a+b)/2,y,fixed]:[fixed,y,(a+b)/2],front?[b-a,0.165,0.075]:[0.075,0.165,b-a], 'clad',0.73+y*0.017,3)
+  } else {
+    const n=Math.ceil((top-bottom)/0.17),step=(top-bottom)/n
+    for(let i=0;i<n;i++) {
+      const y=bottom+(i+0.5)*step;let spans:V2[]=[[lo,hi]]
+      holes.forEach(o=>{if(y+step/2>o.y-o.h/2&&y-step/2<o.y+o.h/2)spans=subtract(spans,o.u-o.w/2-0.035,o.u+o.w/2+0.035)})
+      spans.forEach(([a,b])=>place((a+b)/2,y,b-a,step-0.006,'clad',0.085,0,0.75+(y/EAVE)*0.08))
     }
   }
-}
-function opening(o: Opening, side = false, sign=1) {
-  const z=side?o.x:FRONT+0.07
-  const x=side?sign*(HALF+0.07):o.x
-  const place=(u:number,y:number,w:number,h:number,mat:MaterialKey,depth=0.1)=>
-    box(side?[x,y,z+u]:[x+u,y,z],side?[depth,h,w]:[w,h,depth],mat,0.89,3)
-  place(0,o.y,o.w,o.h,'glass',0.07)
-  for(const u of [-o.w/2,o.w/2])place(u,o.y,0.1,o.h+0.15,'trim')
-  for(const y of [o.y-o.h/2,o.y+o.h/2])place(0,y,o.w+0.19,0.1,'trim')
-  place(0,o.y,o.door?0.07:o.w, o.door?o.h:0.065,o.door&&o.y<3?'joinery':'trim',0.12)
-  if(o.door) {
-    place(0,o.y+o.h*0.28,o.w,0.07,'trim',0.12)
-    if(o.y<3) {
-      place(0,o.y-0.4,o.w-0.15,1.25,'joinery',0.13)
-      place(0,o.y-0.4,0.06,1.25,'trim',0.15)
+  holes.forEach(o=>{
+    place(o.u,o.y,o.w,o.h,'glass',0.055,0.015,0.88)
+    for(const u of [o.u-o.w/2,o.u+o.w/2])place(u,o.y,0.095,o.h+0.18,'joinery',0.13,0.055,0.89)
+    for(const y of [o.y-o.h/2,o.y+o.h/2])place(o.u,y,o.w+0.18,0.105,'trim',0.14,0.06,0.89)
+    const divisions=o.panes??(o.w>3?4:o.w>1.2?2:1)
+    for(let i=1;i<divisions;i++)place(o.u-o.w/2+o.w*i/divisions,o.y,0.065,o.h,'joinery',0.12,0.07,0.9)
+    if(o.door) {
+      place(o.u,o.y-o.h*0.34,o.w-0.08,o.h*0.29,'joinery',0.1,0.07,0.91)
+      place(o.u,o.y+o.h*0.32,o.w,0.06,'trim',0.12,0.07,0.91)
+      place(o.u+o.w*0.13,o.y-0.1,0.035,0.14,'accent',0.06,0.15,0.93)
+    } else place(o.u,o.y,o.w,0.06,'trim',0.12,0.07,0.9)
+    if(o.hood) {
+      const y=o.y+o.h/2+0.2
+      box(axis==='z'?[o.u,y,fixed+sign*0.28]:[fixed+sign*0.28,y,o.u],axis==='z'?[o.w+0.45,0.065,0.65]:[0.65,0.065,o.w+0.45],'roof',0.92,3,axis==='z'?{rx:sign*0.25}:{rz:-sign*0.25})
+      for(const u of [o.u-o.w/2,o.u+o.w/2])beam(axis==='z'?[u,y-0.4,fixed+sign*0.07]:[fixed+sign*0.07,y-0.4,u],axis==='z'?[u,y-0.08,fixed+sign*0.53]:[fixed+sign*0.53,y-0.08,u],0.055,'trim',0.93)
     }
-  } else place(0,o.y+o.h/4,0.04,o.h/2,'trim',0.12)
-  if(side&&o.y>3) {
-    box([x+sign*0.17,o.y+o.h/2+0.15,z],[0.52,0.06,o.w+0.35],'roof',0.9,3,true,{rz:sign*0.25})
-    for(const d of [-o.w/2,o.w/2])between([x,o.y+o.h/2-0.24,z+d],[x+sign*0.4,o.y+o.h/2+0.08,z+d],0.06,'trim',0.91,3)
+  })
+}
+function frame(x1:number,x2:number,z1:number,z2:number,bottom:number,top:number) {
+  for(const y of [bottom,top]) {
+    for(const z of [z1,z2])box([(x1+x2)/2,y,z],[x2-x1,0.16,0.1],'frame',0.1,0,{outer:false})
+    for(const x of [x1,x2])box([x,y,(z1+z2)/2],[0.1,0.16,z2-z1],'frame',0.1,0,{outer:false})
+  }
+  for(let x=x1+0.12;x<x2;x+=0.65)for(const z of [z1+0.12,z2-0.12])box([x,(bottom+top)/2,z],[0.07,top-bottom,0.09],'frame',0.16+(x-x1)*0.006,1,{outer:false})
+  for(let z=z1+0.12;z<z2;z+=0.65)for(const x of [x1+0.12,x2-0.12])box([x,(bottom+top)/2,z],[0.09,top-bottom,0.07],'frame',0.19+(z-z1)*0.004,1,{outer:false})
+  for(let z=z1+0.3;z<z2;z+=0.6)box([(x1+x2)/2,bottom-0.12,z],[x2-x1,0.2,0.09],'frame',0.045,0,{outer:false})
+}
+frame(-7.15,7.15,-3.9,6.9,0.2,UP-0.13)
+frame(-0.65,7.15,-13.3,-3.9,0.2,UP-0.13)
+frame(-4.9,7.15,-12.7,3.9,UP+0.12,EAVE-0.12)
+frame(-4.9,4.8,3.9,6.9,UP+0.12,EAVE-0.12)
+frame(0.7,4.8,6.9,8.15,UP+0.12,EAVE-0.12)
+// Ground floor: bedrooms to the street, living and garage to the rear.
+facade('z',6.9,-7.15,0.7,0.2,UP-0.15,[{u:-4.8,y:1.55,w:1.65,h:1.7},{u:-1.9,y:1.55,w:1.65,h:1.7}])
+facade('z',8.1,0.7,4.8,0.2,UP-0.15,[{u:2.75,y:1.55,w:2.55,h:1.75}])
+facade('x',0.7,6.9,8.1,0.2,UP-0.15,[],-1)
+facade('x',4.8,6.9,8.1,0.2,UP-0.15,[])
+facade('z',6.9,4.8,7.15,0.2,UP-0.15,[{u:6,y:1.55,w:1.1,h:1.6}])
+facade('x',-7.15,-3.9,6.9,0.2,UP-0.15,[{u:5.15,y:1.5,w:1.6,h:2.4,door:true,hood:true},{u:1.7,y:2,w:2.1,h:0.75,panes:3,hood:true},{u:-1.25,y:1.5,w:1.65,h:2.4,door:true,hood:true}],-1)
+facade('x',7.15,-13.3,3.9,0.2,UP-0.15,[{u:0.7,y:1.65,w:1.4,h:1.6,hood:true},{u:-2.3,y:2,w:1.4,h:0.8,hood:true},{u:-9.1,y:1.47,w:5.5,h:2.45,door:true,panes:5}])
+facade('x',7.15,3.9,6.9,0.2,UP-0.15,[{u:5.35,y:1.6,w:1.45,h:1.5,hood:true}])
+facade('x',-0.65,-13.3,-3.9,0.2,UP-0.15,[{u:-7,y:1.5,w:4.6,h:2.5,door:true,panes:4}],-1)
+facade('z',-3.9,-7.15,-0.65,0.2,UP-0.15,[{u:-4.1,y:1.5,w:3.6,h:2.5,door:true,panes:4}],-1)
+facade('z',-13.3,-0.65,7.15,0.2,UP-0.15,[{u:3.8,y:1.6,w:1.7,h:1.4}],-1)
+// Upper front: recessed entry, projecting office and a short right return.
+facade('z',6.9,-4.9,0.7,UP+0.08,EAVE,[{u:-3.25,y:4.63,w:1.55,h:2.65,door:true},{u:-0.7,y:4.63,w:1.3,h:2.65,door:true}],1,true)
+facade('z',8.15,0.7,4.8,UP+0.08,EAVE,[{u:2.8,y:4.68,w:2.6,h:2.65,panes:3}],1,true)
+facade('x',0.7,6.9,8.15,UP+0.08,EAVE,[],-1,true)
+facade('x',4.8,3.9,8.15,UP+0.08,EAVE,[{u:5.9,y:4.7,w:1.9,h:2.45,panes:2}],1,true)
+facade('z',3.9,4.8,7.15,UP+0.08,EAVE,[{u:6,y:4.63,w:1.5,h:2.65,door:true}],1,true)
+facade('x',-4.9,-12.7,6.9,UP+0.08,EAVE,[{u:4.3,y:4.65,w:1.55,h:2.65,door:true},{u:0.8,y:4.65,w:1.35,h:2.6,door:true},{u:-2,y:4.7,w:1.45,h:2.5},{u:-7.2,y:4.65,w:6.1,h:2.75,door:true,panes:5}],-1,true)
+facade('x',7.15,-12.7,3.9,UP+0.08,EAVE,[{u:1.5,y:4.7,w:1.5,h:2.2,hood:true},{u:-2,y:4.7,w:1.55,h:2.2,hood:true},{u:-7.9,y:4.7,w:1.6,h:2.2,hood:true},{u:-10.5,y:4.7,w:1.6,h:2.2,hood:true}])
+facade('z',-12.7,-4.9,0.6,UP+0.08,EAVE,[{u:-1.8,y:4.8,w:2.5,h:1.8}],-1)
+facade('z',-12.7,5.3,7.15,UP+0.08,EAVE,[],-1)
+for(const x of [0.6,5.3])facade('x',x,-15.4,-12.7,UP+0.08,EAVE-0.15,[],Math.sign(x-3))
+facade('z',-15.4,0.6,5.3,UP+0.08,EAVE-0.15,[{u:3,y:5.35,w:1.9,h:0.8}],-1)
+slab(0.6,5.3,-15.4,-12.7,UP-0.04,'clad')
+function deck(x1:number,x2:number,z1:number,z2:number) {
+  slab(x1,x2,z1,z2,UP-0.08,'joinery',0.77)
+  const n=Math.ceil((z2-z1)/0.16),step=(z2-z1)/n
+  for(let i=0;i<n;i++)box([(x1+x2)/2,UP+0.025,z1+(i+0.5)*step],[x2-x1,0.055,step-0.006],'deck',0.8,3,{lines:false})
+}
+deck(-7.25,0.7,6.9,10);deck(0.7,4.8,8.15,10);deck(4.8,7.25,3.9,10)
+deck(-7.25,-4.9,-3.9,6.9)
+// Leave an open stairwell instead of laying the upper terrace over its flights.
+deck(-9,-7.82,-13.9,-3.9);deck(-7.82,-4.9,-13.9,-12.08);deck(-7.82,-4.9,-8.88,-3.9)
+deck(-2.1,0.7,10,10.85)
+slab(-7.25,7.25,8.2,10,0.1);slab(-7.25,0.7,6.9,8.2,0.1);slab(-9,-0.65,-13.9,-3.9,0.1)
+function post(x:number,z:number,top=6.35,bottom=UP) {
+  box([x,(bottom+top)/2,z],[0.12,top-bottom,0.12],'accent',0.33,1)
+  box([x,bottom+0.18,z],[0.19,0.36,0.19],'trim',0.88,3)
+  box([x,top-0.17,z],[0.19,0.29,0.19],'trim',0.88,3)
+}
+function bracket(x:number,z:number,axis:'x'|'z',dir:number,top=6.34) {
+  beam([x,top-0.53,z],axis==='x'?[x+dir*0.42,top-0.06,z]:[x,top-0.06,z+dir*0.42],0.065,'trim',0.91)
+}
+function rail(a:V2,b:V2,base=UP+0.08,height=1.02,frieze=false) {
+  const dx=b[0]-a[0],dz=b[1]-a[1],len=Math.hypot(dx,dz),n=Math.ceil(len/0.135)
+  for(let i=1;i<n;i++)box([a[0]+dx*i/n,base+height/2,a[1]+dz*i/n],[0.045,height,0.045],'trim',0.89,3)
+  for(const y of frieze?[base+height]:[base+0.04,base+height-0.18])beam([a[0],y,a[1]],[b[0],y,b[1]],0.065,'trim',0.89)
+  if(!frieze)beam([a[0],base+height,a[1]],[b[0],base+height,b[1]],0.075,'accent',0.9)
+}
+const frontPosts=[-7.25,-4.8,-2.1,0.7,3.65,7.25]
+frontPosts.forEach(x=>{post(x,10);for(const d of [-1,1])if(Math.abs(x+d*0.5)<7.3)bracket(x,10,'x',d)})
+for(let i=0;i<frontPosts.length-1;i++) {
+  const a=frontPosts[i]+0.09,b=frontPosts[i+1]-0.09
+  if(i!==2)rail([a,10],[b,10]) // Real opening at the stair entrance.
+  rail([a,10],[b,10],UP-0.52,0.36,true)
+}
+for(const z of [3.9,6.9])post(7.25,z)
+rail([7.25,4],[7.25,6.8]);rail([7.25,7],[7.25,9.9])
+const gardenPosts=[-3.9,-0.7,2.5,6.1,10]
+gardenPosts.slice(0,-1).forEach(z=>{post(-7.25,z);bracket(-7.25,z,'z',1);bracket(-7.25,z,'z',-1)})
+for(let i=0;i<gardenPosts.length-1;i++)rail([-7.25,gardenPosts[i]+0.09],[-7.25,gardenPosts[i+1]-0.09])
+for(const z of [-13.9,-10.65,-7.3,-3.9]) {
+  post(-9,z,6.4);box([-9,UP/2,z],[0.22,UP,0.22],'ground',0.31,1)
+  bracket(-9,z,'z',1,6.4);bracket(-9,z,'z',-1,6.4)
+}
+for(const [a,b] of [[-13.8,-10.74],[-10.56,-7.39],[-7.21,-4]])rail([-9,a],[-9,b])
+rail([-8.9,-3.9],[-7.34,-3.9]);rail([-8.9,-13.9],[-6.7,-13.9]);post(-6.6,-13.9,6.4)
+for(const [a,b] of [[[-7.25,10],[7.25,10]],[[-7.25,10],[-7.25,-3.9]],[[7.25,10],[7.25,3.9]],[[-9,-3.9],[-9,-13.9]],[[-9,-3.9],[-7.25,-3.9]],[[-9,-13.9],[-4.9,-13.9]]] as [V2,V2][]) {
+  for(const y of [UP-0.08,6.35])beam([a[0],y,a[1]],[b[0],y,b[1]],y<4?0.22:0.18,'trim',0.86)
+}
+// Stair handrails follow each flight, with an actual intermediate landing.
+function stair(x:number,z1:number,z2:number,y1:number,y2:number,width:number,n:number) {
+  const dz=(z2-z1)/n,dy=(y2-y1)/n
+  for(let i=0;i<n;i++)box([x,y1+dy*i,z1+dz*(i+0.5)],[width,0.09,Math.abs(dz)+0.018],'deck',0.86,3)
+  for(const side of [-1,1]) {
+    const xx=x+side*(width/2-0.04)
+    beam([xx,y1-0.18,z1],[xx,y2-0.18,z2],0.18,'trim',0.85)
+    beam([xx,y1+1.03,z1],[xx,y2+1.03,z2],0.075,'accent',0.91)
+    beam([xx,y1+0.16,z1],[xx,y2+0.16,z2],0.075,'trim',0.91)
+    const count=Math.ceil(Math.abs(z2-z1)/0.14)
+    for(let j=1;j<count;j++)box([xx,y1+(y2-y1)*j/count+0.59,z1+(z2-z1)*j/count],[0.045,0.87,0.045],'trim',0.91,3)
+    for(const [z,y] of [[z1,y1],[z2,y2]])box([xx,y+0.6,z],[0.14,1.2,0.14],'accent',0.91,3)
   }
 }
-// Ground and upper floor framing; all hidden timber stays inside the finished envelope.
-for(const y of [0.12,FLOOR-0.12]) {
-  for(let z=BACK;z<VERANDAH;z+=0.55)box([0,y,z],[W,0.17,0.08],'frame',0.035+(y/FLOOR)*0.065,0,false)
-  for(const x of [-5.8,0,5.8])box([x,y-0.13,-0.05],[0.16,0.2,9.9],'frame',0.025,0,false)
-}
-for(const level of [0,FLOOR]) {
-  for(let x=-HALF;x<=HALF;x+=0.6) {
-    for(const z of [BACK,FRONT]) {
-      if(z===FRONT&&frontOpenings.some(o=>Math.abs(x-o.x)<o.w/2+0.1&&o.y>level&&o.y<level+3.15))continue
-      box([x,level+1.53,z+(z===BACK?0.12:-0.12)],[0.06,2.95,0.09],'frame',0.15+level*0.045+(x+HALF)*0.006,1,false)
-    }
-  }
-  for(const x of [-HALF,HALF]) for(let z=BACK;z<FRONT;z+=0.6) {
-    if(sideOpenings.some(o=>Math.abs(z-o.x)<o.w/2+0.1&&o.y>level&&o.y<level+3.15))continue
-    box([x-Math.sign(x)*0.12,level+1.53,z],[0.09,2.95,0.06],'frame',0.2+level*0.045,1,false)
-  }
-}
-wall('front',frontOpenings);wall('left',sideOpenings);wall('right',sideOpenings)
-frontOpenings.forEach(o=>opening(o))
-sideOpenings.forEach(o=>{opening(o,true,-1);opening(o,true,1)})
-// Verandah: continuous floor, dark exposed joists below, and rails fitted
-// inside each post bay. No balusters run through the structural posts.
-const boardCount=Math.ceil(W/0.14), boardWidth=W/boardCount
-for(let i=0;i<boardCount;i++)box([-HALF+(i+0.5)*boardWidth,FLOOR,(FRONT+VERANDAH)/2],[boardWidth-0.005,0.075,VERANDAH-FRONT],'deck',0.79,3)
-box([0,FLOOR-0.075,(FRONT+VERANDAH)/2],[W,0.08,VERANDAH-FRONT],'joinery',0.78,3)
-for(let x=-HALF+0.15;x<HALF;x+=0.5)box([x,FLOOR-0.19,(FRONT+VERANDAH)/2],[0.07,0.18,VERANDAH-FRONT],'joinery',0.78,3)
-box([0,0.02,(FRONT+VERANDAH)/2],[W,0.09,VERANDAH-FRONT],'clad',0.74,3)
-// Fine paving joints belong to the terrace, not to the timber deck above.
-for(let x=-HALF+0.5;x<HALF;x+=0.65)box([x,0.067,(FRONT+VERANDAH)/2],[0.008,0.004,VERANDAH-FRONT],'roof',0.82,3)
-for(let z=FRONT+0.5;z<VERANDAH;z+=0.65)box([0,0.067,z],[W,0.004,0.008],'roof',0.82,3)
-const posts=[-HALF,-3.9,-1.45,-0.65,0.65,1.45,3.9,HALF]
-for(const x of posts) {
-  box([x,EAVE/2,VERANDAH],[0.12,EAVE,0.12],'trim',0.32,1)
-  box([x,EAVE-0.22,VERANDAH],[0.19,0.38,0.19],'trim',0.9,3)
-  for(const d of [-1,1]) if(Math.abs(x+d*0.3)<HALF+0.1) {
-    between([x,EAVE-0.48,VERANDAH],[x+d*0.34,EAVE-0.08,VERANDAH],0.065,'trim',0.91,3)
-    box([x+d*0.16,EAVE-0.08,VERANDAH],[0.32,0.07,0.1],'trim',0.91,3)
-  }
-}
-for(const y of [FLOOR-0.15,EAVE-0.04])box([0,y,VERANDAH],[W+0.12,0.23,0.18],'trim',0.84,3)
-function balustrade(a:V3,b:V3,base:number,height:number,frieze=false) {
-  const dx=b[0]-a[0],dz=b[2]-a[2],length=Math.hypot(dx,dz)
-  const n=Math.max(2,Math.ceil(length/0.13))
-  for(let i=1;i<n;i++)box([a[0]+dx*i/n,base+height/2,a[2]+dz*i/n],[0.045,height,0.045],'trim',frieze?0.9:0.88,3)
-  const rails=frieze?[base+height-0.03]:[base+0.045,base+height-0.19,base+height]
-  for(const y of rails)between([a[0],y,a[2]],[b[0],y,b[2]],frieze?0.055:0.07,'trim',0.89,3)
-}
-for(let i=0;i<posts.length-1;i++) {
-  const a:V3=[posts[i]+0.065,0,VERANDAH],b:V3=[posts[i+1]-0.065,0,VERANDAH]
-  balustrade(a,b,FLOOR+0.09,1.02)
-  balustrade(a,b,FLOOR-0.71,0.46,true)
-}
-for(const x of [-HALF,HALF]) {
-  balustrade([x,0,FRONT+0.08],[x,0,VERANDAH-0.065],FLOOR+0.09,1.02)
-  balustrade([x,0,FRONT+0.08],[x,0,VERANDAH-0.065],FLOOR-0.71,0.46,true)
-  box([x,3.15,BACK],[0.13,6.25,0.13],'trim',0.87,3)
-}
-// A single low-pitched hipped roof spanning the house and verandah.
-for(const face of ['front','back','left','right'] as const) {
-  const long=face==='front'||face==='back'
-  const half=long?RX:RZ
-  const n=Math.ceil(half*2/0.115),step=half*2/n
-  for(let i=0;i<n;i++) {
-    const u=-half+(i+0.5)*step
-    const run=long?Math.min(RZ,RX-Math.abs(u)):RZ-Math.abs(u)
-    const sign=face==='front'||face==='right'?1:-1
-    const y=EAVE+run/2*Math.tan(PITCH)
-    const len=run/Math.cos(PITCH)
-    box(long?[u,y,sign*(RZ-run/2)]:[sign*(RX-run/2),y,u],long?[step-0.001,0.045,len]:[len,0.045,step-0.001],'roof',0.50+i/n*0.11,2,true,
-      long?{rx:sign*PITCH,lines:false,layer:2}:{rz:-sign*PITCH,lines:false,layer:2})
-    // Narrow raised ribs give the pale roof its corrugated read without heavy outlines.
-    box(long?[u,y+0.027,sign*(RZ-run/2)]:[sign*(RX-run/2),y+0.027,u],long?[0.012,0.014,len]:[len,0.014,0.012],'roof',0.52+i/n*0.11,2,true,
-      long?{rx:sign*PITCH,lines:false,layer:2}:{rz:-sign*PITCH,lines:false,layer:2})
-  }
-}
-for(const sx of [-1,1])for(const sz of [-1,1]) {
-  between([sx*RX,EAVE+0.04,sz*RZ],[sx*(RX-RZ),RIDGE+0.04,0],0.09,'roof',0.64,2)
-  members[members.length-1].layer=2
-}
-box([0,RIDGE+0.04,0],[2*(RX-RZ),0.08,0.11],'roof',0.64,2,true,{layer:2})
-for(const z of [-RZ,RZ])box([0,EAVE-0.045,z],[RX*2,0.15,0.12],'trim',0.65,2,true,{layer:2})
-for(const x of [-RX,RX])box([x,EAVE-0.045,0],[0.12,0.15,RZ*2],'trim',0.65,2,true,{layer:2})
-// Rear elevation, interpreted from W-8308: a tall upper wing over an open
-// terrace at +x and a lower gabled garden room at -x. Street remains +z.
-function facade(axis:'x'|'z', fixed:number, lo:number, hi:number, bottom:number, top:number|((u:number)=>number), openings:Opening[], outward=1) {
-  const topAt=typeof top==='number'?()=>top:top
-  const maxTop=Math.max(topAt(lo),topAt(hi),topAt((lo+hi)/2))
-  for(let y=bottom+0.085;y<maxTop;y+=0.17) {
-    // Short board segments also keep the SVG depth ordering reliable at corners.
-    for(let u=lo;u<hi-0.001;u+=0.45) {
-      const end=Math.min(u+0.45,hi),mid=(u+end)/2
-      const height=Math.min(0.165,topAt(mid)-(y-0.0825))
-      if(height<=0)continue
-      let spans:[number,number][]=[[u,end]]
-      for(const o of openings)if(y+0.083>=o.y-o.h/2&&y-0.083<=o.y+o.h/2) {
-        spans=spans.flatMap(([a,b])=>{
-          const l=o.x-o.w/2-0.04,r=o.x+o.w/2+0.04
-          if(r<=a||l>=b)return [[a,b]]
-          const pieces:[number,number][]=[]
-          if(l>a)pieces.push([a,l]);if(r<b)pieces.push([r,b]);return pieces
-        })
-      }
-      for(const [a,b] of spans)box(axis==='z'?[(a+b)/2,y,fixed]:[fixed,y,(a+b)/2],axis==='z'?[b-a,height,0.075]:[0.075,height,b-a],'clad',0.77,3)
-    }
-  }
-  for(const o of openings) {
-    const place=(u:number,y:number,w:number,h:number,mat:MaterialKey,depth=0.09)=>box(axis==='z'?[o.x+u,y,fixed+outward*0.06]:[fixed+outward*0.06,y,o.x+u],axis==='z'?[w,h,depth]:[depth,h,w],mat,0.88,3)
-    place(0,o.y,o.w,o.h,'glass',0.055)
-    for(const u of [-o.w/2,o.w/2])place(u,o.y,0.09,o.h+0.14,'trim')
-    for(const y of [o.y-o.h/2,o.y+o.h/2])place(0,y,o.w+0.18,0.09,'trim')
-    const divisions=o.w>2?4:o.w>1.3?2:1
-    for(let i=1;i<divisions;i++)place(-o.w/2+o.w*i/divisions,o.y,0.065,o.h,'trim',0.12)
-    if(!o.door)place(0,o.y,o.w,0.06,'trim',0.12)
-  }
-}
-const rearOpenings:Opening[]=[{x:0,y:1.4,w:1.65,h:2.55,door:true},{x:3.8,y:1.35,w:2.2,h:2.4,door:true},{x:5.6,y:1.6,w:0.7,h:1.3},{x:0,y:5.45,w:2.6,h:0.8}]
-facade('z',BACK,-HALF,HALF,0.12,EAVE,rearOpenings,-1)
-// Two-storey rear wing. Its lower storey is the open, paved terrace.
-const tallLeft=1.5,tallRight=HALF,tallRear=-9.0,tallJoin=-4.95
-const tallRoof=(x:number)=>7.05-(x-tallLeft)/(tallRight-tallLeft)*0.7
-box([(tallLeft+tallRight)/2,FLOOR-0.07,(tallRear+tallJoin)/2],[tallRight-tallLeft,0.18,tallJoin-tallRear],'joinery',0.42,1)
-for(const x of [tallLeft,tallRight])for(const z of [tallRear,tallJoin])box([x,FLOOR/2,z],[0.14,FLOOR,0.14],'trim',0.36,1)
-for(let x=tallLeft+0.15;x<tallRight;x+=0.55)box([x,FLOOR-0.22,(tallRear+tallJoin)/2],[0.07,0.16,tallJoin-tallRear],'joinery',0.43,1)
-facade('z',tallRear,tallLeft,tallRight,FLOOR,tallRoof,[{x:2.8,y:4.9,w:1.35,h:1.7},{x:5.15,y:4.8,w:0.9,h:1.5}],-1)
-facade('x',tallRight,tallRear,tallJoin,FLOOR,tallRoof(tallRight),[{x:-7.1,y:4.8,w:1.1,h:1.6}],1)
-facade('x',tallLeft,tallRear,tallJoin,FLOOR,tallRoof(tallLeft),[{x:-7.1,y:5.05,w:1.1,h:1.7}],-1)
-const tallPitch=Math.atan(0.7/(tallRight-tallLeft))
-box([(tallLeft+tallRight)/2,6.72,(tallRear+tallJoin-0.15)/2],[(tallRight-tallLeft+0.65)/Math.cos(tallPitch),0.045,tallJoin-tallRear+0.55],'roof',0.6,2,true,{rz:-tallPitch,layer:1,lines:false})
-for(let z=tallRear-0.3;z<tallJoin+0.2;z+=0.14)box([(tallLeft+tallRight)/2,6.755,z],[(tallRight-tallLeft+0.65)/Math.cos(tallPitch),0.012,0.012],'roof',0.61,2,true,{rz:-tallPitch,layer:1,lines:false})
-for(const z of [tallRear-0.4,tallJoin+0.2])between([tallLeft-0.3,tallRoof(tallLeft-0.3),z],[tallRight+0.3,tallRoof(tallRight+0.3),z],0.13,'trim',0.66,2)
-for(const x of [tallLeft-0.3,tallRight+0.3])box([x,tallRoof(x),(tallRear+tallJoin-0.2)/2],[0.14,0.13,tallJoin-tallRear+0.6],'trim',0.66,2)
-// Window hood, projecting trim and frieze visible on the upper rear elevation.
-box([2.8,5.88,tallRear-0.22],[1.8,0.07,0.52],'roof',0.9,3,true,{rx:-0.2})
-for(const x of [2.08,3.52])between([x,5.45,tallRear-0.07],[x,5.8,tallRear-0.4],0.07,'trim',0.91,3)
-box([(tallLeft+tallRight)/2,FLOOR-0.13,tallRear],[tallRight-tallLeft+0.15,0.22,0.16],'trim',0.86,3)
-balustrade([tallLeft+0.08,0,tallRear],[tallRight-0.08,0,tallRear],FLOOR-0.7,0.46,true)
-// Garden room: a lower gable with the high glazed pair seen in W-8289/W-8308.
-const lowLeft=-HALF,lowRight=-1.4,lowRear=-9.55,lowJoin=-4.95
-const lowCentre=(lowLeft+lowRight)/2,lowEave=3.65,lowRidge=5.05
-const gableTop=(x:number)=>lowRidge-Math.abs(x-lowCentre)/(lowRight-lowLeft)*2*(lowRidge-lowEave)
-facade('z',lowRear,lowLeft,lowRight,0.12,lowEave,[{x:lowCentre,y:1.95,w:3.25,h:1.85}],-1)
-facade('x',lowLeft,lowRear,lowJoin,0.12,lowEave,[{x:-7.3,y:1.95,w:1.8,h:1.85}],-1)
-facade('x',lowRight,lowRear,lowJoin,0.12,lowEave,[{x:-6.4,y:1.4,w:1.5,h:2.55,door:true}],1)
-// Gable infill and two sloping-top panes built in narrow horizontal courses.
-for(let y=lowEave+0.05;y<lowRidge-0.05;y+=0.09) {
- const half=(lowRidge-y)/(lowRidge-lowEave)*(lowRight-lowLeft)/2
- box([lowCentre,y,lowRear],[half*2,0.091,0.075],'clad',0.83,3)
-}
-const glassLo=lowCentre-1.62,glassHi=lowCentre+1.62,glassBottom=3.18
-for(let x=glassLo;x<glassHi;x+=0.08) {
- const top=gableTop(x+0.04)-0.28
- box([x+0.04,(top+glassBottom)/2,lowRear-0.07],[0.081,top-glassBottom,0.055],'glass',0.89,3,true,{lines:false})
-}
-for(const x of [glassLo,lowCentre,glassHi])box([x,(glassBottom+gableTop(x)-0.28)/2,lowRear-0.12],[0.075,gableTop(x)-0.28-glassBottom,0.09],'trim',0.9,3)
-box([lowCentre,glassBottom,lowRear-0.12],[glassHi-glassLo+0.08,0.08,0.09],'trim',0.9,3)
-between([glassLo,gableTop(glassLo)-0.28,lowRear-0.12],[lowCentre,lowRidge-0.28,lowRear-0.12],0.085,'trim',0.9,3)
-between([lowCentre,lowRidge-0.28,lowRear-0.12],[glassHi,gableTop(glassHi)-0.28,lowRear-0.12],0.085,'trim',0.9,3)
-const lowPitch=Math.atan((lowRidge-lowEave)/((lowRight-lowLeft)/2))
-for(const sign of [-1,1]) {
- const run=(lowRight-lowLeft)/2+0.35
- box([lowCentre+sign*run/2,lowRidge-run/2*Math.tan(lowPitch),(lowRear+lowJoin-0.2)/2],[run/Math.cos(lowPitch),0.045,lowJoin-lowRear+0.6],'roof',0.6,2,true,{rz:-sign*lowPitch,layer:1,lines:false})
- for(let z=lowRear-0.35;z<lowJoin+0.2;z+=0.14)box([lowCentre+sign*run/2,lowRidge-run/2*Math.tan(lowPitch)+0.035,z],[run/Math.cos(lowPitch),0.012,0.012],'roof',0.61,2,true,{rz:-sign*lowPitch,layer:1,lines:false})
- between([lowCentre,lowRidge+0.02,lowRear-0.4],[lowCentre+sign*run,lowRidge-run*Math.tan(lowPitch),lowRear-0.4],0.14,'trim',0.66,2)
- box([lowCentre+sign*run,lowRidge-run*Math.tan(lowPitch),(lowRear+lowJoin-0.2)/2],[0.14,0.14,lowJoin-lowRear+0.6],'trim',0.66,2)
-}
-box([lowCentre,lowRidge+0.03,(lowRear+lowJoin-0.2)/2],[0.12,0.08,lowJoin-lowRear+0.6],'roof',0.65,2)
-// Sheltered central link and rear paving connect both volumes to the house.
-box([0,3.35,-6.12],[2.9,0.09,2.55],'roof',0.6,2,true,{rx:-0.07,layer:1})
-box([0,3.15,-7.4],[2.9,0.22,0.14],'trim',0.85,3)
-for(const x of [-1.4,1.5])box([x,1.55,-7.4],[0.14,3.1,0.14],'trim',0.36,1)
-box([2.5,0.02,-7.3],[7.9,0.09,5.1],'clad',0.76,3)
-for(let x=-1.1;x<6.45;x+=0.65)box([x,0.068,-7.3],[0.008,0.004,5.1],'roof',0.84,3)
-for(let z=-9.75;z<-4.8;z+=0.65)box([2.5,0.068,z],[7.9,0.004,0.008],'roof',0.84,3)
-// Corner boards and downpipes make the added volumes read as finished buildings.
-for(const [x,z,top] of [[lowLeft,lowRear,lowEave],[lowRight,lowRear,lowEave],[tallLeft,tallRear,tallRoof(tallLeft)],[tallRight,tallRear,tallRoof(tallRight)]]) {
- const bottom=x>=tallLeft?FLOOR:0.12
- box([x,(top+bottom)/2,z],[0.13,top-bottom,0.13],'trim',0.9,3)
-}
-for(const [x,z,top] of [[-HALF-0.12,FRONT,EAVE],[HALF+0.12,FRONT,EAVE],[tallLeft-0.12,tallRear,6.9],[lowRight+0.12,lowRear,lowEave]])box([x,top/2,z],[0.075,top,0.075],'trim',0.91,3)
-// Fence panels stop at the gateposts. A separate hinged leaf opens inward,
-// leaving the entrance visible, with a paved path aligned to the front door.
-const fencePosts=new Set<string>()
-function fencePost(x:number,z:number) {
- const key=`${x.toFixed(3)},${z.toFixed(3)}`;if(fencePosts.has(key))return;fencePosts.add(key)
- box([x,0.85,z],[0.19,1.7,0.19],'trim',0.93,3)
- box([x,1.72,z],[0.25,0.08,0.25],'trim',0.94,3)
-}
-function fence(a:V3,b:V3,gate=false) {
- const dx=b[0]-a[0],dz=b[2]-a[2],len=Math.hypot(dx,dz),ux=dx/len,uz=dz/len
- if(!gate){fencePost(a[0],a[2]);fencePost(b[0],b[2])}
- const inset=gate?0.055:0.105,span=len-inset*2,n=Math.max(2,Math.ceil(span/0.145))
- for(let i=0;i<=n;i++){const d=inset+span*i/n;box([a[0]+ux*d,0.71,a[2]+uz*d],[0.065,1.35,0.055],'trim',0.935,3,true,{ry:Math.atan2(-uz,ux)})}
- for(const y of [0.14,1.27,1.52])between([a[0]+ux*inset,y,a[2]+uz*inset],[b[0]-ux*inset,y,b[2]-uz*inset],0.085,'trim',0.93,3)
- if(gate)for(const p of [a,b])box([p[0],0.81,p[2]],[0.09,1.5,0.09],'trim',0.94,3)
-}
-for(const [a,b] of [[-7.1,-3.8],[-3.8,-1.02],[1.02,3.8],[3.8,7.1]])fence([a,0,6.7],[b,0,6.7])
-const hinge:V3=[-0.88,0,6.68],gateLength=1.75,angle=Math.PI*65/180
-const latch:V3=[hinge[0]+Math.cos(angle)*gateLength,0,hinge[2]-Math.sin(angle)*gateLength]
-fence(hinge,latch,true)
-for(const y of [0.35,1.15])box([hinge[0]-0.04,y,hinge[2]],[0.12,0.06,0.12],'joinery',0.95,3)
-box([latch[0],1.12,latch[2]],[0.1,0.045,0.08],'joinery',0.95,3)
-box([-1.02,1.02,6.82],[0.15,0.28,0.08],'joinery',0.95,3)
-for(let z=FRONT+0.3;z<6.8;z+=0.65)box([0,0.075,z],[1.5,0.06,0.6],'clad',0.94,3)
-fence([-7.1,0,6.7],[-7.1,0,3.9]);fence([-7.1,0,2.5],[-7.1,0,-3.4])
-fencePost(-7.1,2.5);fence([-7.1,0,3.79],[-6.0,0,3.0],true)
-fence([7.1,0,6.7],[7.1,0,2.6])
+const ENTRY=-0.7
+stair(ENTRY,10.85,12.9,UP,1.65,1.85,9)
+slab(ENTRY-0.93,ENTRY+0.93,12.9,13.9,1.61,'deck',0.86)
+for(const x of [ENTRY-0.89,ENTRY+0.89]){rail([x,12.95],[x,13.85],1.71,0.98);box([x,0.83,13.35],[0.13,1.66,0.13],'accent',0.84,3)}
+stair(ENTRY,13.9,15.95,1.65,0.18,1.85,9)
+slab(ENTRY-1.13,ENTRY+1.13,15.93,16.5,0.1,'ground',0.9)
+stair(-5.65,-12,-9.9,UP,1.6,1.35,9);slab(-7.74,-4.94,-9.9,-8.95,1.55,'deck',0.86)
+stair(-7.05,-9.9,-12,1.6,0.18,1.35,9);rail([-4.94,-8.98],[-7.7,-8.98],1.64,0.98)
+rail([-7.83,-12.08],[-7.83,-8.88]);rail([-7.83,-8.88],[-4.95,-8.88])
+rail([-7.83,-12.08],[-6.35,-12.08])
+box([-7.65,UP+0.44,-13.48],[2.3,0.85,0.65],'joinery',0.9,3)
+box([-7.65,UP+0.9,-13.48],[2.4,0.07,0.73],'ground',0.91,3)
+box([-7.7,UP+0.96,-13.45],[0.8,0.06,0.45],'accent',0.93,3)
 
-export const FRAME_MEMBERS = members
-export const FRAME_BOUNDS = { length: W, halfWidth: 7.3, minZ: -10.1, maxZ: 6.9, height: RIDGE+0.2, ground: -0.12, centreY: RIDGE/2, centreZ: -1.6 }
-export const FRAME_STAGE_STARTS = [0,0.14,0.48,0.72] as const
-export const FRAME_STAGES = [
-  {label:'Drawings',note:'Set out the two-storey house, verandah and rear additions.'},
-  {label:'Frame',note:'Floor framing, walls and terrace posts establish the proportions.'},
-  {label:'Roof',note:'The hipped street roof meets the distinct roof forms at the rear.'},
-  {label:'Finish',note:'Weatherboards, verandah details and a gated picket fence complete the study.'},
+// Intersect roof faces before emitting corrugated strips. Hidden overlaps are
+// removed so hips and gables meet in valleys instead of cutting through roofs.
+type Face={poly:V2[];a:number;b:number;c:number}
+const roofs:Face[]=[]
+const area=(p:V2[])=>p.reduce((s,v,i)=>{const n=p[(i+1)%p.length];return s+v[0]*n[1]-n[0]*v[1]},0)/2
+function clip(p:V2[],a:number,b:number,c:number):V2[] {
+  const out:V2[]=[]
+  for(let i=0;i<p.length;i++) {
+    const s=p[i],e=p[(i+1)%p.length],ds=a*s[0]+b*s[1]+c,de=a*e[0]+b*e[1]+c
+    if(ds>=-1e-7)out.push(s)
+    if((ds>0&&de<0)||(ds<0&&de>0)){const t=ds/(ds-de);out.push([s[0]+t*(e[0]-s[0]),s[1]+t*(e[1]-s[1])])}
+  }
+  return out
+}
+function difference(poly:V2[],cutter:V2[]):V2[][] {
+  const outside:V2[][]=[];let remainder=poly
+  const sign=area(cutter)>=0?1:-1
+  for(let i=0;i<cutter.length&&remainder.length>=3;i++) {
+    const p=cutter[i],q=cutter[(i+1)%cutter.length]
+    const a=-(q[1]-p[1])*sign,b=(q[0]-p[0])*sign,c=-(a*p[0]+b*p[1])
+    const part=clip(remainder,-a,-b,-c)
+    if(part.length>=3&&Math.abs(area(part))>0.0001)outside.push(part)
+    remainder=clip(remainder,a,b,c)
+  }
+  return outside
+}
+function face(poly:V2[],a:number,b:number,c:number){roofs.push({poly,a,b,c})}
+function hip(x1:number,x2:number,z1:number,z2:number,eave:number,rise:number) {
+  const hx=(x2-x1)/2,hz=(z2-z1)/2,run=Math.min(hx,hz),s=rise/run
+  if(hx<=hz) {
+    const cx=(x1+x2)/2,rb=z1+run,rf=z2-run
+    face([[x1,z1],[cx,rb],[cx,rf],[x1,z2]],s,0,eave-x1*s)
+    face([[x2,z2],[cx,rf],[cx,rb],[x2,z1]],-s,0,eave+x2*s)
+    face([[x1,z1],[x2,z1],[cx,rb]],0,s,eave-z1*s)
+    face([[x2,z2],[x1,z2],[cx,rf]],0,-s,eave+z2*s)
+  } else {
+    const cz=(z1+z2)/2,rl=x1+run,rr=x2-run
+    face([[x1,z1],[x2,z1],[rr,cz],[rl,cz]],0,s,eave-z1*s)
+    face([[x2,z2],[x1,z2],[rl,cz],[rr,cz]],0,-s,eave+z2*s)
+    face([[x1,z2],[x1,z1],[rl,cz]],s,0,eave-x1*s)
+    face([[x2,z1],[x2,z2],[rr,cz]],-s,0,eave+x2*s)
+  }
+}
+function gable(x1:number,x2:number,z1:number,z2:number,eave:number,rise:number,side=false) {
+  if(side) {
+    const cz=(z1+z2)/2,s=rise/((z2-z1)/2)
+    face([[x1,z1],[x2,z1],[x2,cz],[x1,cz]],0,s,eave-z1*s)
+    face([[x1,cz],[x2,cz],[x2,z2],[x1,z2]],0,-s,eave+z2*s)
+  } else {
+    const cx=(x1+x2)/2,s=rise/((x2-x1)/2)
+    face([[x1,z1],[cx,z1],[cx,z2],[x1,z2]],s,0,eave-x1*s)
+    face([[cx,z1],[x2,z1],[x2,z2],[cx,z2]],-s,0,eave+x2*s)
+  }
+}
+hip(-7.65,7.65,-4.55,10.4,6.34,2.75)
+gable(0.1,5.65,0.7,8.67,7.18,2)
+gable(3.7,7.55,0.2,4.8,6.7,1.65,true)
+gable(-7.6,-2.2,-4.5,-0.7,6.85,1.28,true)
+gable(-2.2,0.8,8.3,10.85,6.33,1.12)
+hip(-5.2,7.55,-13,-3.75,6.52,1.92)
+hip(-9.4,-4.65,-14.3,-3.55,6.35,1.35)
+hip(0.3,5.6,-15.75,-12.35,6.5,0.85)
+gable(ENTRY-1.5,ENTRY+1.5,16.5,18.5,2.52,0.93)
+function roofAt(x:number,z:number) {
+  let h=-Infinity,best:Face|undefined
+  roofs.forEach(f=>{
+    const sign=area(f.poly)>=0?1:-1
+    const inside=f.poly.every((p,j)=>{const q=f.poly[(j+1)%f.poly.length];return ((q[0]-p[0])*(z-p[1])-(q[1]-p[1])*(x-p[0]))*sign>=-0.0001})
+    const y=f.a*x+f.b*z+f.c
+    if(inside&&y>h){h=y;best=f}
+  })
+  return {h,face:best}
+}
+const roofHeight=(x:number,z:number)=>roofAt(x,z).h
+const roofEdges=new Map<string,[V3,V3]>()
+roofs.forEach((f,index)=>{
+  let pieces=[f.poly]
+  roofs.forEach((g,j)=>{
+    if(j===index)return
+    const upper=clip(g.poly,g.a-f.a,g.b-f.b,g.c-f.c-0.0001)
+    if(upper.length>=3&&Math.abs(area(upper))>0.0001)pieces=pieces.flatMap(p=>difference(p,upper))
+  })
+  pieces.forEach(poly=>{
+    const alongX=Math.abs(f.a)>0.001,cross=alongX?1:0,along=alongX?0:1
+    const lo=Math.min(...poly.map(p=>p[cross])),hi=Math.max(...poly.map(p=>p[cross]))
+    const n=Math.max(1,Math.ceil((hi-lo)/0.12)),step=(hi-lo)/n
+    for(let i=0;i<n;i++) {
+      const u=lo+(i+0.5)*step,hits:number[]=[]
+      poly.forEach((p,j)=>{const q=poly[(j+1)%poly.length];if((p[cross]<=u&&q[cross]>u)||(q[cross]<=u&&p[cross]>u)){const t=(u-p[cross])/(q[cross]-p[cross]);hits.push(p[along]+t*(q[along]-p[along]))}})
+      if(hits.length<2)continue
+      const a=Math.min(...hits),b=Math.max(...hits),v=(a+b)/2
+      const x=alongX?v:u,z=alongX?u:v,y=f.a*x+f.b*z+f.c
+      const slope=alongX?f.a:f.b,len=(b-a)*Math.sqrt(1+slope*slope),rot=alongX?{rz:Math.atan(slope)}:{rx:-Math.atan(slope)}
+      box([x,y,z],alongX?[len,0.045,step+0.002]:[step+0.002,0.045,len],'roof',0.49+i/n*0.12,2,{...rot,lines:false})
+      box([x,y+0.032,z],alongX?[len,0.013,0.012]:[0.012,0.013,len],'roof',0.51+i/n*0.12,2,{...rot,lines:false})
+    }
+    poly.forEach((p,j)=>{
+      const q=poly[(j+1)%poly.length],a:V3=[p[0],f.a*p[0]+f.b*p[1]+f.c+0.035,p[1]],b:V3=[q[0],f.a*q[0]+f.b*q[1]+f.c+0.035,q[1]]
+      const len=Math.hypot(a[0]-b[0],a[2]-b[2])
+      if(len<0.3)return
+      // Polygon subtraction creates internal partition edges. Cap only true
+      // eaves, hips, ridges and valleys, never a seam within one planar sheet.
+      const mx=(a[0]+b[0])/2,mz=(a[2]+b[2])/2,dx=(b[0]-a[0])/len,dz=(b[2]-a[2])/len
+      const l=roofAt(mx-dz*0.02,mz+dx*0.02).face,r=roofAt(mx+dz*0.02,mz-dx*0.02).face
+      if(l&&r&&Math.abs(l.a-r.a)<0.001&&Math.abs(l.b-r.b)<0.001&&Math.abs(l.c-r.c)<0.001)return
+      const key=[a,b].map(v=>v.map(n=>n.toFixed(2)).join(',')).sort().join('/')
+      roofEdges.set(key,[a,b])
+    })
+  })
+})
+roofEdges.forEach(([a,b])=>beam(a,b,0.07,'roof',0.65,2))
+function gableDetail(axis:'x'|'z',fixed:number,centre:number,half:number,base:number,peak:number) {
+  const point=(u:number,y:number):V3=>axis==='z'?[u,y,fixed]:[fixed,y,u]
+  for(let u=centre-half+0.06;u<centre+half;u+=0.085) {
+    const top=peak-Math.abs(u-centre)/half*(peak-base)
+    if(top-base>0.04)box(point(u,(base+top)/2),axis==='z'?[0.055,top-base,0.07]:[0.07,top-base,0.055],'accent',0.87,3,{lines:false})
+  }
+  beam(point(centre-half,base),point(centre,peak),0.15,'trim',0.89)
+  beam(point(centre,peak),point(centre+half,base),0.15,'trim',0.89)
+  beam(point(centre-half,base),point(centre+half,base),0.13,'trim',0.89)
+  beam(point(centre,base),point(centre,peak),0.1,'trim',0.89)
+}
+gableDetail('z',8.71,2.875,2.67,7.26,9.13)
+gableDetail('x',7.59,2.5,2.19,6.79,8.3)
+gableDetail('x',-7.64,-2.6,1.8,6.94,8.08)
+gableDetail('z',10.89,ENTRY,1.4,6.38,7.4)
+// Segmented timber arches, not a flat icon on the model.
+for(const z of [10.05,10.8]) {
+  for(const x of [-2.1,0.7])post(x,z,6.4)
+  const r=1.18,cy=5.32
+  for(let i=0;i<22;i++) {
+    const a=i*Math.PI/22,b=(i+1)*Math.PI/22
+    beam([ENTRY+r*Math.cos(a),cy+r*Math.sin(a),z+0.025],[ENTRY+r*Math.cos(b),cy+r*Math.sin(b),z+0.025],0.085,'trim',0.93)
+  }
+  for(const x of [ENTRY-r,ENTRY+r])beam([x,4.95,z],[x,cy,z],0.085,'trim',0.93)
+}
+for(let y=6.62;y<7.23;y+=0.15)box([2.875,y,8.61],[5.1,0.143,0.08],'clad',0.85,3)
+for(const y of [6.66,7.12])box([2.875,y,8.69],[5.35,0.08,0.1],'trim',0.9,3)
+// Close the back of intersecting gables above the adjoining roof surface.
+function gableBack(axis:'x'|'z',fixed:number,centre:number,half:number,base:number,peak:number,outward:number) {
+  for(let u=centre-half;u<centre+half;u+=0.08) {
+    const mid=u+0.04,top=peak-Math.abs(mid-centre)/half*(peak-base)
+    const roof=axis==='z'?roofHeight(mid,fixed+outward*0.03):roofHeight(fixed+outward*0.03,mid)
+    const bottom=Math.max(base,Number.isFinite(roof)?roof:base)
+    if(top<=bottom)continue
+    box(axis==='z'?[mid,(bottom+top)/2,fixed]:[fixed,(bottom+top)/2,mid],axis==='z'?[0.081,top-bottom,0.07]:[0.07,top-bottom,0.081],'clad',0.84,3,{lines:false})
+  }
+}
+gableBack('z',0.69,2.875,2.775,7.18,9.18,-1)
+gableBack('x',3.69,2.5,2.3,6.7,8.35,-1)
+gableBack('x',-2.19,-2.6,1.9,6.85,8.13,1)
+// Close the rear service floor where the ensuite steps beyond the main wall.
+slab(-0.65,7.15,-13.3,-3.9,UP-0.05,'joinery',0.78)
+const chimneyX=4.3,chimneyZ=-1.55,chimneyBase=roofHeight(chimneyX,chimneyZ)
+box([chimneyX,chimneyBase+0.55,chimneyZ],[0.65,1.1,0.55],'ground',0.67,2)
+box([chimneyX,chimneyBase+1.12,chimneyZ],[0.83,0.12,0.73],'ground',0.68,2)
+box([chimneyX,chimneyBase+1.2,chimneyZ],[0.48,0.05,0.4],'accent',0.69,2)
+for(const x of [1.9,2.7])box([x,7.42,-14.3],[0.65,0.06,0.7],'glass',0.93,3,{rx:0.03})
+for(const [a,b,y] of [[[ -7.65,10.4],[7.65,10.4],6.3],[[-7.65,-4.55],[-7.65,10.4],6.3],[[7.65,-4.55],[7.65,10.4],6.3],[[-9.4,-14.3],[-9.4,-3.55],6.31],[[-9.4,-14.3],[-4.65,-14.3],6.31],[[7.55,-13],[7.55,-4.55],6.48]] as [V2,V2,number][])beam([a[0],y,a[1]],[b[0],y,b[1]],0.14,'trim',0.68,2)
+for(const [x,z,y] of [[-7.3,9.9,6.3],[7.3,9.9,6.3],[-9.05,-13.9,6.3],[7.2,-12.7,6.5]])box([x,y/2,z],[0.075,y,0.075],'trim',0.94,3)
+for(const x of [-4.3,1.05,4.55]) {
+  const z=x<0?6.99:8.24
+  box([x,5.3,z],[0.13,0.24,0.14],'accent',0.95,3)
+  box([x,5.3,z+0.08],[0.075,0.15,0.02],'ground',0.95,3)
+}
+for(const [x,z] of [[-7.15,6.9],[7.15,6.9],[-7.15,-3.9],[7.15,-12.7]])box([x,1.55,z],[0.14,2.9,0.14],'trim',0.9,3)
+for(const [x,z] of [[-4.9,6.9],[0.7,8.15],[4.8,8.15],[7.15,3.9],[-4.9,-12.7],[7.15,-12.7]])box([x,4.9,z],[0.13,3.5,0.13],'trim',0.9,3)
+// Gatehouse, white pickets and a physically open gate aligned with the stair.
+const gateZ=17.5
+for(const x of [ENTRY-1.2,ENTRY+1.2]) {
+  for(const z of [16.7,18.3]) {
+    box([x,1.25,z],[0.18,2.5,0.18],'accent',0.9,3)
+    box([x,0.83,z],[0.3,1.66,0.3],'trim',0.91,3)
+  }
+  beam([x,2.49,16.6],[x,2.49,18.4],0.15,'trim',0.91)
+}
+gableDetail('z',18.52,ENTRY,1.45,2.56,3.43)
+gableDetail('z',16.48,ENTRY,1.45,2.56,3.43)
+for(let i=0;i<16;i++) {
+  const a=i*Math.PI/16,b=(i+1)*Math.PI/16,r=1.07
+  beam([ENTRY+r*Math.cos(a),1.53+r*Math.sin(a),18.3],[ENTRY+r*Math.cos(b),1.53+r*Math.sin(b),18.3],0.11,'trim',0.93)
+}
+for(const side of [-1,1]) {
+  const x=ENTRY+side*1.64
+  box([x,0.97,gateZ],[0.62,1.94,0.42],'trim',0.92,3)
+  box([x,1.08,gateZ+0.24],[0.16,0.12,0.025],'accent',0.94,3)
+  const lo=side<0?-7.3:x+0.34,hi=side<0?x-0.34:7.3
+  rail([lo,gateZ],[hi,gateZ],0.18,1.3)
+  for(let u=lo;u<=hi;u+=2.1)box([u,0.8,gateZ],[0.17,1.6,0.17],'trim',0.92,3)
+}
+const hinge:V2=[ENTRY-0.97,gateZ],leaf:V2=[ENTRY-0.97+Math.cos(1.05)*1.88,gateZ-Math.sin(1.05)*1.88]
+rail(hinge,leaf,0.17,1.32)
+beam([leaf[0],0.15,leaf[1]],[leaf[0],1.56,leaf[1]],0.08,'trim',0.94)
+slab(ENTRY-1.02,ENTRY+1.02,16.35,18.7,0.05,'ground',0.92)
+for(let i=0;i<6;i++)for(let j=0;j<7;j++)if((i+j)%2===0)box([ENTRY-0.85+i*0.34,0.128,16.48+j*0.31],[0.335,0.008,0.305],'joinery',0.94,3,{lines:false})
+
+// Continuous painted base closes the joist ends along the finished walls.
+for(const [x,z1,z2] of [[-7.18,-3.9,6.9],[7.18,-13.3,6.9],[-0.68,-13.3,-3.9]])
+  box([x,0.16,(z1+z2)/2],[0.14,0.32,z2-z1],'joinery',0.86,3)
+for(const [z,x1,x2] of [[6.94,-7.15,0.7],[6.94,4.8,7.15],[8.14,0.7,4.8],[-13.34,-0.65,7.15],[-3.94,-7.15,-0.65]])
+  box([(x1+x2)/2,0.16,z],[x2-x1,0.32,0.14],'joinery',0.86,3)
+
+export const FRAME_MEMBERS=members
+export const FRAME_BOUNDS={length:14.5,halfWidth:9.55,minZ:-15.9,maxZ:18.85,height:9.6,ground:-0.1,centreY:4.75,centreZ:1.45}
+export const FRAME_STAGE_STARTS=[0,0.14,0.48,0.72] as const
+export const FRAME_STAGES=[
+  {label:'Drawings',note:'Set out Croyde’s two levels, wraparound verandah and garden terrace.'},
+  {label:'Frame',note:'Floors, walls and verandah posts establish the shape of the home.'},
+  {label:'Roof',note:'Layered gables meet the long verandah and sheltered rear pavilion.'},
+  {label:'Finish',note:'White weatherboards, fine balustrades and the gabled entrance complete the house.'},
 ] as const

@@ -4,21 +4,24 @@ import * as THREE from 'three'
 import { FRAME_BOUNDS, FRAME_MEMBERS, FRAME_VIEWS } from './frameMembers'
 import type { FrameView, MaterialKey } from './frameMembers'
 
-/** Kalinga-inspired two-storey Queenslander, assembled through scroll.
+/** Croyde's white Federation house, assembled through scroll.
  * The live scene and its fallback share the photo-referenced member list.
  */
 
 const LINE = '#05432a'
 
-/** Pale painted timber and a silver roof, taken from the Kalinga references. */
+/** White painted timber in neutral daylight. The charcoal gable infill and
+ * soft silver roof preserve the contrast visible in the Croyde photographs. */
 const MATERIALS: Record<MaterialKey, { color: string; roughness: number }> = {
-  frame: { color: '#9a8060', roughness: 0.86 },
-  clad: { color: '#d3d1c8', roughness: 0.88 },
-  trim: { color: '#f3f2ec', roughness: 0.78 },
-  joinery: { color: '#303b3b', roughness: 0.8 },
-  deck: { color: '#a59073', roughness: 0.9 },
-  roof: { color: '#cfd3d0', roughness: 0.65 },
-  glass: { color: '#425454', roughness: 0.2 },
+  frame: { color: '#b19b7b', roughness: 0.88 },
+  clad: { color: '#f5f4ef', roughness: 0.86 },
+  trim: { color: '#fffef9', roughness: 0.76 },
+  joinery: { color: '#ecece6', roughness: 0.78 },
+  deck: { color: '#b2aaa0', roughness: 0.9 },
+  roof: { color: '#e1e5e2', roughness: 0.72 },
+  glass: { color: '#56615f', roughness: 0.28 },
+  accent: { color: '#414945', roughness: 0.85 },
+  ground: { color: '#e0dcd2', roughness: 0.95 },
 }
 
 const MATERIAL_KEYS = Object.keys(MATERIALS) as MaterialKey[]
@@ -48,24 +51,31 @@ function Building({ progress }: { progress: React.MutableRefObject<number> }) {
 
   const count = FRAME_MEMBERS.length
   const box = useMemo(() => new THREE.BoxGeometry(1, 1, 1), [])
+  const framePaint = useMemo(() => ({
+    bare: new THREE.Color(MATERIALS.frame.color),
+    finished: new THREE.Color('#ecece6'),
+  }), [])
 
   /** Which instanced mesh each member belongs to, and its slot within it. */
   const layout = useMemo(() => {
     const slot = new Int32Array(count)
+    const lineSlot = new Int32Array(count).fill(-1)
+    let lineCount = 0
     const sizes = {} as Record<MaterialKey, number>
     for (const k of MATERIAL_KEYS) sizes[k] = 0
     FRAME_MEMBERS.forEach((m, i) => {
       slot[i] = sizes[m.mat]
       sizes[m.mat] += 1
+      if (m.lines !== false) lineSlot[i] = lineCount++
     })
-    return { slot, sizes }
+    return { slot, sizes, lineSlot, lineCount }
   }, [count])
 
   const quats = useMemo(
     () =>
       FRAME_MEMBERS.map((m) =>
-        // 'YXZ': roll, then pitch, then yaw. The hip needs all three â€” a sheet
-        // on a hip end rolls, a hip rafter pitches and yaws â€” and a member with
+        // 'YXZ': roll, then pitch, then yaw. The hip needs all three: a sheet
+        // on a hip end rolls, a hip rafter pitches and yaws; a member with
         // only a pitch comes out exactly as it did under the default order.
         new THREE.Quaternion().setFromEuler(new THREE.Euler(m.rx, m.ry ?? 0, m.rz ?? 0, 'YXZ')),
       ),
@@ -76,11 +86,11 @@ function Building({ progress }: { progress: React.MutableRefObject<number> }) {
     const g = new THREE.BufferGeometry()
     g.setAttribute(
       'position',
-      new THREE.BufferAttribute(new Float32Array(count * EDGE_INDICES.length * 3), 3),
+      new THREE.BufferAttribute(new Float32Array(layout.lineCount * EDGE_INDICES.length * 3), 3),
     )
     g.setDrawRange(0, 0)
     return g
-  }, [count])
+  }, [layout.lineCount])
 
   const scratch = useMemo(
     () => ({
@@ -106,16 +116,16 @@ function Building({ progress }: { progress: React.MutableRefObject<number> }) {
     }
 
     const solidOpacity = smoothstep(0.34, 0.68, p)
-    // The lights come on at the very end. A house at dusk with nothing lit reads
-    // as empty, and this is the last beat of the sequence.
-    const lit = smoothstep(0.88, 1, p)
     for (const k of MATERIAL_KEYS) {
       const mat = mats.current[k]
       if (!mat) continue
       mat.opacity = solidOpacity
+      // Exposed bearers and joist ends receive the white finish along with the
+      // house; the timber stage remains legible earlier in the sequence.
+      if (k === 'frame') mat.color.copy(framePaint.bare).lerp(framePaint.finished, smoothstep(0.74, 0.92, p))
       /* Transparent only while fading in. Left transparent once the house is
          built, the blending let the page show through wherever two faces meet
-         â€” the canvas is composited over the page with alpha â€” and every seam
+         (the canvas is composited over the page with alpha), and every seam
          between two boards came out as a pale line that read as a gap. Opaque
          at full strength, nothing gets through. */
       const fading = solidOpacity < 0.999
@@ -123,7 +133,6 @@ function Building({ progress }: { progress: React.MutableRefObject<number> }) {
         mat.transparent = fading
         mat.needsUpdate = true
       }
-      if (k === 'glass') mat.emissiveIntensity = lit * 0.06
     }
 
     if (Math.abs(p - lastProgress.current) < 0.0003) return
@@ -133,6 +142,7 @@ function Building({ progress }: { progress: React.MutableRefObject<number> }) {
     const arr = attr.array as Float32Array
     let anyVisible = false
     let changed = false
+    let linesChanged = false
 
     for (let i = 0; i < count; i++) {
       const m = FRAME_MEMBERS[i]
@@ -140,8 +150,8 @@ function Building({ progress }: { progress: React.MutableRefObject<number> }) {
       if (t > 0.001) anyVisible = true
 
       // A member that has finished growing never needs recomputing. Across the
-      // whole section only a handful are in motion at once, which is what keeps
-      // three hundred members affordable on a phone.
+      // whole section only a subset is in motion at once, which keeps this
+      // detailed assembly affordable on a phone.
       if (scratch.lastT[i] === t) continue
       scratch.lastT[i] = t
       changed = true
@@ -168,10 +178,14 @@ function Building({ progress }: { progress: React.MutableRefObject<number> }) {
       const mesh = meshes.current[m.mat]
       if (mesh) mesh.setMatrixAt(layout.slot[i], scratch.matrix)
 
-      const base = i * EDGE_INDICES.length
-      // A member not yet placed, or one that draws no line (the roof sheet),
-      // collapses to a point and draws nothing.
-      const draws = t > 0.001 && m.lines !== false
+      // Roof sheets and fine corrugations have no drafting outline. Keep them
+      // entirely out of the line buffer instead of transforming thousands of
+      // invisible cube edges while the roof assembles.
+      const lineSlot = layout.lineSlot[i]
+      if (lineSlot < 0) continue
+      linesChanged = true
+      const base = lineSlot * EDGE_INDICES.length
+      const draws = t > 0.001
       for (let e = 0; e < EDGE_INDICES.length; e++) {
         const c = UNIT_CORNERS[EDGE_INDICES[e]]
         scratch.corner.set(c[0], c[1], c[2]).applyMatrix4(scratch.matrix)
@@ -187,17 +201,18 @@ function Building({ progress }: { progress: React.MutableRefObject<number> }) {
       const mesh = meshes.current[k]
       if (mesh) mesh.instanceMatrix.needsUpdate = true
     }
-    attr.needsUpdate = true
-    lineGeometry.setDrawRange(0, anyVisible ? count * EDGE_INDICES.length : 0)
+    if (linesChanged) attr.needsUpdate = true
+    lineGeometry.setDrawRange(0, anyVisible ? layout.lineCount * EDGE_INDICES.length : 0)
   })
 
   return (
-    <group position={[0, -FRAME_BOUNDS.centreY, -FRAME_BOUNDS.centreZ]}>
-      {MATERIAL_KEYS.map((key) => (
+    <group name="croyde-building" position={[0, -FRAME_BOUNDS.centreY, -FRAME_BOUNDS.centreZ]}>
+      {MATERIAL_KEYS.filter((key) => layout.sizes[key] > 0).map((key) => (
         <instancedMesh
           key={key}
+          name={`croyde-${key}`}
           ref={(el) => (meshes.current[key] = el)}
-          args={[box, undefined, Math.max(layout.sizes[key], 1)]}
+          args={[box, undefined, layout.sizes[key]]}
           castShadow={key !== 'glass'}
           receiveShadow={key !== 'glass'}
           frustumCulled={false}
@@ -206,19 +221,47 @@ function Building({ progress }: { progress: React.MutableRefObject<number> }) {
             ref={(el) => (mats.current[key] = el)}
             color={MATERIALS[key].color}
             roughness={MATERIALS[key].roughness}
-            metalness={key === 'roof' ? 0.25 : 0}
-            emissive={key === 'glass' ? '#e2e9e6' : '#000000'}
-            emissiveIntensity={0}
+            metalness={key === 'roof' ? 0.08 : 0}
             transparent
             opacity={0}
           />
         </instancedMesh>
       ))}
 
-      <lineSegments geometry={lineGeometry} frustumCulled={false}>
+      <lineSegments name="croyde-drawing" geometry={lineGeometry} frustumCulled={false}>
         <lineBasicMaterial ref={lineMat} color={LINE} transparent opacity={1} />
       </lineSegments>
     </group>
+  )
+}
+
+function Daylight({ shadows }: { shadows: boolean }) {
+  const canvasWidth = useThree((state) => state.size.width)
+  const shadowSize = canvasWidth < 600 ? 1024 : 2048
+  return (
+    <>
+      {/* Neutral sky and ground bounce keep shaded white walls white rather
+          than tinting them with the site's green. The key reveals board laps,
+          balusters and the depth of the sheltered verandahs. */}
+      <hemisphereLight args={['#ffffff', '#dedbd4', 1.35]} />
+      <directionalLight
+        key={shadowSize}
+        position={[-18, 26, 17]}
+        intensity={1.25}
+        color="#fffefa"
+        castShadow={shadows}
+        shadow-mapSize={[shadowSize, shadowSize]}
+        shadow-bias={-0.0003}
+        shadow-normalBias={0.025}
+        shadow-camera-left={-20}
+        shadow-camera-right={20}
+        shadow-camera-top={20}
+        shadow-camera-bottom={-20}
+        shadow-camera-near={0.5}
+        shadow-camera-far={80}
+      />
+      <directionalLight position={[14, 8, -16]} intensity={0.62} color="#ffffff" />
+    </>
   )
 }
 
@@ -252,25 +295,7 @@ export default function TimberFrame({
     >
       <Fit view={view} />
 
-      {/* Late afternoon, not a product shot. A warm key from over the left
-          shoulder, a cool sky fill, and nothing else. */}
-      <hemisphereLight args={['#f7f7f4', '#afc3b0', 1.0]} />
-      <directionalLight
-        position={[-9, 12, 9]}
-        intensity={1.25}
-        color="#fffdf8"
-        castShadow={shadows}
-        shadow-mapSize={[1024, 1024]}
-        shadow-bias={-0.0015}
-        shadow-normalBias={0.03}
-        shadow-camera-left={-9}
-        shadow-camera-right={9}
-        shadow-camera-top={9}
-        shadow-camera-bottom={-9}
-        shadow-camera-near={0.5}
-        shadow-camera-far={40}
-      />
-      <directionalLight position={[8, 3, -7]} intensity={0.32} color="#dfe8dc" />
+      <Daylight shadows={shadows} />
 
       {shadows && (
         // Catches the shadow and nothing else, so the building sits on the wash
@@ -283,7 +308,7 @@ export default function TimberFrame({
           receiveShadow
         >
           <planeGeometry args={[44, 44]} />
-          <shadowMaterial opacity={0.15} />
+          <shadowMaterial opacity={0.13} />
         </mesh>
       )}
 
@@ -300,57 +325,49 @@ export default function TimberFrame({
  * building over the edges of its own frame.
  */
 function Fit({ view }: { view: FrameView }) {
-  const { camera } = useThree()
-  useLayoutEffect(() => {
-    camera.position.set(...FRAME_VIEWS[view])
-    camera.lookAt(0, 0, 0)
-    camera.updateMatrixWorld()
-  }, [camera, view])
+  const { camera, size } = useThree()
   const corners = useMemo(() => {
-    const { height, ground, halfWidth, minZ, maxZ, centreY, centreZ } = FRAME_BOUNDS
-    // Measured from the model: eaves, the extension and the deck included.
-    const hx = halfWidth + 0.15
-    const out: THREE.Vector3[] = []
-    for (const x of [-hx, hx]) {
-      for (const y of [ground - 0.1 - centreY, height + 0.15 - centreY]) {
-        for (const z of [minZ - 0.15, maxZ + 0.15]) out.push(new THREE.Vector3(x, y, z - centreZ))
-      }
+    const matrix = new THREE.Matrix4()
+    const quaternion = new THREE.Quaternion()
+    const position = new THREE.Vector3()
+    const scale = new THREE.Vector3()
+    const points: THREE.Vector3[] = []
+    for (const member of FRAME_MEMBERS) {
+      quaternion.setFromEuler(new THREE.Euler(member.rx, member.ry ?? 0, member.rz ?? 0, 'YXZ'))
+      position.set(member.p[0], member.p[1] - FRAME_BOUNDS.centreY, member.p[2] - FRAME_BOUNDS.centreZ)
+      scale.set(...member.s)
+      matrix.compose(position, quaternion, scale)
+      for (const corner of UNIT_CORNERS) points.push(new THREE.Vector3(...corner).applyMatrix4(matrix))
     }
-    return out
+    return points
   }, [])
 
-  const scratch = useMemo(() => new THREE.Vector3(), [])
-
-  useFrame(({ camera, size }) => {
+  useLayoutEffect(() => {
     const cam = camera as THREE.OrthographicCamera
-    let minX = Infinity
-    let maxX = -Infinity
-    let minY = Infinity
-    let maxY = -Infinity
-
-    for (const c of corners) {
-      // View space, before the zoom: one unit here is one pixel at zoom 1.
-      scratch.copy(c).applyMatrix4(cam.matrixWorldInverse)
-      minX = Math.min(minX, scratch.x)
-      maxX = Math.max(maxX, scratch.x)
-      minY = Math.min(minY, scratch.y)
-      maxY = Math.max(maxY, scratch.y)
+    cam.position.set(...FRAME_VIEWS[view])
+    cam.lookAt(0, 0, 0)
+    cam.updateMatrixWorld()
+    const point = new THREE.Vector3()
+    let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity
+    for (const corner of corners) {
+      point.copy(corner).applyMatrix4(cam.matrixWorldInverse)
+      minX = Math.min(minX, point.x)
+      maxX = Math.max(maxX, point.x)
+      minY = Math.min(minY, point.y)
+      maxY = Math.max(maxY, point.y)
     }
 
-    const width = Math.max(maxX - minX, 0.001)
-    const height = Math.max(maxY - minY, 0.001)
-    /* A little air on every side â€” the drawing should not touch its edges. On a
-       phone the box is small enough that 10% of it is the difference between a
-       readable building and a thumbnail, so the margin tightens with the canvas
-       rather than staying a fixed fraction of it. */
-    const air = size.width < 520 ? 0.98 : 0.9
-    const target = Math.min(size.width / width, size.height / height) * air
-
-    if (Math.abs(cam.zoom - target) > 0.4) {
-      cam.zoom = target
-      cam.updateProjectionMatrix()
-    }
-  })
+    // Fit the actual silhouette, including projecting stairs and roof peaks.
+    // A box around the whole site wastes much of a small phone's canvas.
+    // Use the finished geometry at every stage so the building never resizes
+    // while it is being assembled. Only a resize or a chosen view refits it.
+    const air = size.width < 520 ? 0.94 : 0.92
+    cam.zoom = Math.min(size.width / Math.max(maxX - minX, 0.001), size.height / Math.max(maxY - minY, 0.001)) * air
+    cam.translateX((minX + maxX) / 2)
+    cam.translateY((minY + maxY) / 2)
+    cam.updateMatrixWorld()
+    cam.updateProjectionMatrix()
+  }, [camera, corners, size.width, size.height, view])
 
   return null
 }

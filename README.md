@@ -666,7 +666,7 @@ drawing rather than a blank space:
 |---|---|---|
 | `HeritageStudy` | A Queenslander with a contemporary extension on the back. The proposition of the business as one object. | `HeritageStudyStill` |
 | `SiteMesh` | Job-site mesh: a green field carrying the reverse lockup, passing at walking pace. The signature moment, and Angus's own idea. | `SiteMeshStill` — the same field, hung flat |
-| `TimberFrame` | A Paddington worker's cottage with an Ashgrove-style extension going up: the old house first, the new wing after it. Line-work first, then solid, then lit. | `TimberFrameStill` |
+| `TimberFrame` | Croyde in Camp Hill: two levels, layered gables, wraparound verandah, rear terrace and a gabled entrance. Scroll assembles the frame, roof and white finish. | `TimberFrameStill` |
 
 ### The hero object
 
@@ -1414,15 +1414,44 @@ illustrations remain unchanged. The six simulated monochrome before images have
 been deleted; comparison sections are hidden until real before photos are supplied.
 This photo-only audit does not change the separate testimonial-copy review status.
 
-### Kalinga architectural model
+### Croyde architectural model — 4 November 2026
 
-The Process / Drawn, then built model now interprets the supplied Kalinga front
-and corner photographs. `frameMembers.ts` defines two enclosed storeys, the
-full-width verandah, low hipped roof, white posts, balustrades, frieze and street
-fence. Live and static renderers share this geometry and matching pale materials.
-The model is labelled an architectural study; its proportions are illustrative,
-not measured project dimensions or an assertion of the actual construction sequence.
-The separate material-key illustration and all project photographs are unchanged.
+Home's Process / Drawn, then built section now models **Croyde, 84 Watson Street,
+Camp Hill**, replacing its earlier Kalinga study. The reference is the exterior
+gallery, aerial and published floor plan in
+[Ray White listing 3599598](https://rwnf.com.au/properties/residential-for-sale/qld/camp-hill-4152/house/3599598).
+The floor plan's 14.5 m front verandah and 23.9 m garden return anchor the proportions.
+Source listing photographs remain reference material in ignored `.tmp/`; none
+has been added to the website photo library.
+
+`src/three/frameMembers.ts` defines the two levels, projecting front room,
+intersecting gabled and hipped roofs, long return verandah, rear entertaining
+terrace, open alfresco below, front landing stair, rear dogleg stairs and gabled
+pedestrian gatehouse. Window and door openings interrupt the board courses;
+terrace and fence railings leave real entry openings. Roof faces are intersected
+before their corrugated strips are emitted, retaining actual ridges and valleys.
+
+The finished house is warm white with pale metal roofs, charcoal accents and
+recessed glazing. Timber is visible during Frame and painted white during Finish.
+The street/garden controls and reversible scroll assembly remain. This is a
+photo-based architectural study, not a surveyed replica or a reconstruction of
+the actual renovation sequence. Hidden rear openings and construction are
+interpreted from the available views and floor plan.
+
+`TimberFrame.tsx` fits each view from the transformed geometry, draws members as
+nine instanced material groups and excludes unoutlined roof strips from the CPU
+drafting-line work. Shadow resolution is reduced on narrow canvases. Reduced
+motion and unavailable WebGL use matching transparent WebP renders:
+`src/assets/models/assembly-street.webp` and `assembly-garden.webp`.
+Regenerate both with the dev server running on port 5173:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File scripts/render_croyde_study.ps1
+```
+
+An optional `-OutputDirectory` keeps review renders outside the source assets;
+`-Progress` renders an intermediate build stage. The separate interactive
+renovation model on Approach is unchanged.
 
 ### Temporary heritage explorer concept
 

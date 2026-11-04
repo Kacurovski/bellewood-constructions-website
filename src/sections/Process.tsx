@@ -83,13 +83,13 @@ export function Process({ headless = false, sheetNumber = "A-05" }: { headless?:
           )}
 
           <div className={styles.sceneWrap}>
-            <div className={styles.viewControls} role="group" aria-label="View the Kalinga house">
+            <div className={styles.viewControls} role="group" aria-label="View Croyde in Camp Hill">
               <button type="button" aria-pressed={view === 'front'} onClick={() => setView('front')}>Street view</button>
               <button type="button" aria-pressed={view === 'rear'} onClick={() => setView('rear')}>Garden view</button>
             </div>
             <SceneFrame
               className={styles.scene}
-              label={`Kalinga architectural study, ${view === 'front' ? 'street view with a gated fence and full-width verandah' : 'garden view with rear wings and a sheltered terrace'}.`}
+              label={`Photo-based architectural study of Croyde, Camp Hill, ${view === 'front' ? 'street view with layered gables, an entrance stair and white verandah balustrades' : 'garden view with the long return verandah and sheltered outdoor living spaces'}.`}
               still={<TimberFrameStill className={styles.still} view={view} />}
             >
               <TimberFrame progress={progress} view={view} />
@@ -98,7 +98,7 @@ export function Process({ headless = false, sheetNumber = "A-05" }: { headless?:
             {/* Read off the frame in `frameMembers.ts`, not typed in â€” the same
                 rule the hero's dimensions follow. */}
             <Dimension
-              figure="Kalinga / architectural study"
+              figure="Croyde / architectural study"
               className={styles.sceneDim}
             />
           </div>

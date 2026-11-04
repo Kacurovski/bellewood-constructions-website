@@ -174,7 +174,7 @@
 .still {
   width: 100%;
   height: 100%;
-  padding: 4%;
+  padding: 0;
   box-sizing: border-box;
 }
 
@@ -257,8 +257,6 @@
      would resize under the drawing and the building would jump size while you
      read it. A fixed layout that loses a line beats a moving one that keeps it. */
   .stepNote { display: none; }
-
-  .still { padding: 1.5%; }
 
   /* Full width of the bled scene on a phone, inside the gutter it gave back. */
   .sceneDim { left: var(--gutter); right: var(--gutter); }
