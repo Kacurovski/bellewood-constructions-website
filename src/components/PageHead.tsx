@@ -16,8 +16,6 @@ type Props = {
   lede?: ReactNode
   /** Supporting context and routes into the page, or project facts. */
   meta?: MetaRow[]
-  /** Optional editorial image alongside the introduction. */
-  media?: ReactNode
   /** Anything that should sit under the title instead of a ledger. */
   children?: ReactNode
   /** Optional page-specific introduction. Omit to retain the original masthead. */
@@ -53,11 +51,11 @@ function IntroSettle({ children, className, delay = 0, y = 12 }: {
  * The header is transparent over this band (see Header.module.css), which is
  * why the band runs up underneath it rather than starting below it.
  */
-export function PageHead({ number, eyebrow, title, lede, meta, media, children, variant }: Props) {
+export function PageHead({ number, eyebrow, title, lede, meta, children, variant }: Props) {
   const FactsReveal = variant ? IntroSettle : Reveal
   return (
     <header
-      className={['on-green', styles.head, variant && styles.refined, variant && styles[variant], media && styles.withMedia].filter(Boolean).join(' ')}
+      className={['on-green', styles.head, variant && styles.refined, variant && styles[variant]].filter(Boolean).join(' ')}
       data-page-intro={variant}
     >
       <RegistrationMarks />
@@ -104,12 +102,6 @@ export function PageHead({ number, eyebrow, title, lede, meta, media, children, 
               ))}
             </dl>
           </FactsReveal>
-        )}
-
-        {media && (
-          <IntroSettle className={styles.media} delay={0.16} y={10}>
-            {media}
-          </IntroSettle>
         )}
       </div>
     </header>

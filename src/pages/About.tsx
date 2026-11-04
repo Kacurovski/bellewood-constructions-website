@@ -1,6 +1,5 @@
-import { Link } from 'react-router-dom'
 import { Reveal } from '../components/Reveal'
-import { PageHead } from '../components/PageHead'
+import { AboutIntroduction } from '../sections/AboutIntroduction'
 import { ScrollWords } from '../components/ScrollWords'
 import { ComplianceLine } from '../components/ComplianceLine'
 import { BuilderFolioTest } from '../components/BuilderFolioTest'
@@ -8,7 +7,6 @@ import { NameStudy } from '../components/NameStudy'
 import { AboutClosing } from '../sections/AboutClosing'
 import { usePageTitle } from '../hooks/usePageTitle'
 import { contact } from '../config/site'
-import { companyPhoto } from '../data/company'
 import styles from './About.module.css'
 
 /**
@@ -24,31 +22,7 @@ export default function About() {
 
   return (
     <>
-      <PageHead
-        variant="about"
-        number="C-01"
-        eyebrow="About"
-        title={<>Good homes begin with <em>good relationships.</em></>}
-        media={
-          <figure className={styles.introPhoto}>
-            <div className={styles.introPhotoWindow}>
-              <img
-                src={companyPhoto.src}
-                alt={companyPhoto.alt}
-                width={1080}
-                height={1080}
-                fetchPriority="high"
-                decoding="async"
-              />
-            </div>
-          </figure>
-        }
-        meta={[
-          { label: 'Who we work with', value: 'Homeowners, architects & designers.' },
-          { label: 'The builder', value: <Link to={{ pathname: '/about', hash: '#about-builder' }}>Get to know Angus</Link> },
-          { label: 'The name', value: <Link to={{ pathname: '/about', hash: '#about-name' }}>Why Bellewood</Link> },
-        ]}
-      />
+      <AboutIntroduction />
 
       <div id="about-builder" tabIndex={-1} className={['shell', styles.body].join(' ')}>
         <Reveal className={styles.copy}>
