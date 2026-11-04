@@ -67,21 +67,23 @@
 .wordMask { display: inline-block; overflow: hidden; padding: 0.1em 0.06em 0.13em 0; margin: -0.1em -0.06em -0.13em 0; vertical-align: bottom; }
 .wordMask > span, .wordMask > em { display: inline-block; }
 .next {
+  position: relative;
   display: inline-flex;
-  align-items: center;
+  flex-direction: column;
+  align-items: flex-start;
   flex: none;
-  gap: 1.25rem;
-  min-height: 52px;
-  padding-block: 0.15rem;
+  gap: 0.5rem;
+  min-height: 64px;
+  padding-block: 0.35rem 0.85rem;
   color: inherit;
-  font: 500 0.85rem/1.4 var(--font-display);
   text-decoration: none;
 }
-.direction { width: 24px; height: 24px; flex: none; transition: transform 400ms var(--ease-out); }
-.nextLabel { position: relative; padding-bottom: 0.35rem; }
-.nextLabel::after { content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 1px; background: currentColor; transform: scaleX(0.2); transform-origin: left; transition: transform 550ms var(--ease-out); }
-.next:hover .direction, .next:focus-visible .direction { transform: translateY(3px); }
-.next:hover .nextLabel::after, .next:focus-visible .nextLabel::after { transform: scaleX(1); }
+.nextLabel { font: 400 clamp(1.5rem, 2vw, 2rem)/1.15 var(--font-body); letter-spacing: -0.025em; }
+.nextHint { font: 500 0.72rem/1.4 var(--font-display); }
+.next::before, .next::after { content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 1px; background: currentColor; }
+.next::before { opacity: 0.35; }
+.next::after { transform: scaleX(0.24); transform-origin: left; transition: transform 650ms var(--ease-out); }
+.next:hover::after, .next:focus-visible::after { transform: scaleX(1); }
 .credit:hover { background: rgb(5 43 28 / 80%); border-color: rgb(247 247 244 / 65%); }
 
 .credit:focus-visible, .next:focus-visible { outline: 2px solid var(--wash); outline-offset: 5px; }
@@ -91,10 +93,9 @@
   .media::after { background: linear-gradient(180deg, rgb(5 35 24 / 8%), transparent 18%, transparent 40%, rgb(5 43 28 / 45%) 65%, rgb(5 43 28 / 75%) 86%, var(--green)); }
   .caption { flex-direction: column; align-items: flex-start; gap: 1.1rem; }
   .heading { max-width: 10ch; font-size: clamp(3rem, 9vw, 4.5rem); }
-  .next { justify-content: space-between; width: 100%; font-size: 0.8rem; }
+  .next { align-self: flex-end; min-width: 11.5rem; }
 
 }
 @media (prefers-reduced-motion: reduce) {
-  .credit, .direction, .nextLabel::after { transition: none; }
-  .next:hover .direction, .next:focus-visible .direction { transform: none; }
+  .credit, .next::after { transition: none; }
 }

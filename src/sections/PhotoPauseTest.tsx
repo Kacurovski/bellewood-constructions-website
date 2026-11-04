@@ -1,4 +1,3 @@
-import { ActionGlyph } from '../components/ActionGlyph'
 import { useRef } from 'react'
 import { motion, useScroll, useTransform } from 'framer-motion'
 import { Link } from 'react-router-dom'
@@ -61,8 +60,8 @@ export function PhotoPauseTest() {
             if (lenis) lenis.scrollTo(heading, { offset: -window.innerHeight * 0.22, duration: 1.15 })
             else heading.scrollIntoView({ behavior: reduced ? 'instant' : 'smooth', block: 'center' })
           }}>
-            <span className={styles.nextLabel}>Your home, next</span>
-            <ActionGlyph className={styles.direction} name="down" />
+            <span className={styles.nextLabel}>Your home, <em>next.</em></span>
+            <span className={styles.nextHint}>Start a conversation</span>
           </a>
         </figcaption>
       </figure>

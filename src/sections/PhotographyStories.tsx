@@ -354,18 +354,23 @@ export function PhotographyStorySlides({ sheetNumber = 'A-04' }: { sheetNumber?:
               </motion.div>
             ))}
           </div>
-          <div className={styles.storyNavigation} role="group" aria-label="Story controls">
-            <button type="button" className={[styles.storyControl, styles.previousControl].join(' ')}
-              aria-label="Previous perspective" aria-controls={stageId}
+          <div className={styles.storyNavigation}>
+            <button type="button" className={styles.pageTurn}
+              aria-label={`Turn the page: ${active === 0 ? 'The finer details' : 'Living spaces'}`} aria-controls={stageId}
               aria-disabled={journeys.length > 0} onClick={() => select(1 - active)}>
-              <ActionGlyph className={styles.directionGlyph} name="previous" />
-              <span className={styles.controlLabel}>Previous</span>
-            </button>
-            <button type="button" className={[styles.storyControl, styles.nextControl].join(' ')}
-              aria-label="Next perspective" aria-controls={stageId}
-              aria-disabled={journeys.length > 0} onClick={() => select(1 - active)}>
-              <ActionGlyph className={styles.directionGlyph} name="next" />
-              <span className={styles.controlLabel}>Next</span>
+              <span className={styles.pagePreview} aria-hidden="true">
+                <span className={styles.pageBehind} />
+                <span className={styles.pagePhoto}>
+                  {[photographyStories.craft.overview, photographyStories.living.main].map((photo, index) => (
+                    <img key={photo.src} src={photo.src!} alt="" loading="lazy" draggable={false}
+                      className={active === index ? styles.previewVisible : ''} />
+                  ))}
+                </span>
+              </span>
+              <span className={styles.pageWords}>
+                <span className={styles.pageHint}>Turn the page</span>
+                <span className={styles.pageTitle}>{active === 0 ? 'The finer details' : 'Living spaces'}</span>
+              </span>
             </button>
           </div>
         </div>

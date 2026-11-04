@@ -30,7 +30,7 @@ export function ApproachPhotoTest() {
           <h2 id="approach-photo-test-heading" className={styles.heading}>
             Care in the making.<em>Pleasure in the living.</em>
           </h2>
-          <Link to="/contact" className={styles.button}>Start a conversation</Link>
+          <Link to="/contact" className={styles.conversation}>Start a <em>conversation</em></Link>
         </motion.div>
         <div className={styles.creditRow}>
           <span className={styles.note}>Timber, light and a little room to breathe.</span>

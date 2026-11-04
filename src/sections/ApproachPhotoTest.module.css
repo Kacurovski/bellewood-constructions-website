@@ -26,10 +26,11 @@
 .copy { max-width: 53rem; }
 .heading { color: var(--wash); font-size: clamp(2.5rem, 4.4vw, 4.75rem); font-weight: 500; line-height: 1.08; letter-spacing: -0.035em; }
 .heading > em { display: block; margin-top: 0.12em; font-family: var(--font-body); font-weight: 400; font-size: 1.09em; }
-.button { display: inline-flex; align-items: center; justify-content: space-between; gap: 2.5rem; margin-top: clamp(1.75rem, 3vw, 3rem); padding: 1rem 1.25rem; border: 1px solid var(--wash); background: var(--wash); color: var(--green); text-decoration: none; font: 600 var(--t-small)/1.5 var(--font-display); transition: background 450ms var(--ease), color 450ms var(--ease); }
-.button > span { font-size: 1.2rem; transition: transform 450ms var(--ease); }
-.button:hover { background: var(--green); color: var(--wash); }
-.button:hover > span { transform: translate(2px, -2px); }
+.conversation { position: relative; display: inline-block; max-width: 100%; min-height: 60px; margin-top: clamp(1.75rem, 3vw, 3rem); padding-block: 0.6rem 0.85rem; color: var(--wash); text-decoration: none; font: 400 clamp(1.6rem, 2.3vw, 2.2rem)/1.3 var(--font-body); letter-spacing: -0.025em; }
+.conversation::before, .conversation::after { content: ''; position: absolute; inset: auto 0 0; height: 1px; background: currentColor; }
+.conversation::before { opacity: 0.4; }
+.conversation::after { transform: scaleX(0.25); transform-origin: left; transition: transform 650ms var(--ease-out); }
+.conversation:hover::after, .conversation:focus-visible::after { transform: scaleX(1); }
 .creditRow { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 1.5rem; padding-top: 1rem; border-top: 1px solid rgb(247 247 244 / 40%); }
 .note { font: 400 var(--t-small)/1.5 var(--font-body); }
 .credit { display: inline-flex; flex-wrap: wrap; gap: 0.4rem 1.2rem; align-items: baseline; color: var(--wash); font: 400 var(--t-fine)/1.5 var(--font-display); text-decoration: none; }
@@ -49,6 +50,5 @@
   .note { max-width: 22ch; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .button, .button > span { transition: none; }
-  .button:hover > span { transform: none; }
+  .conversation::after { transition: none; }
 }
