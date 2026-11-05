@@ -17,6 +17,8 @@ import styles from './Header.module.css'
 export function Header() {
   const [scrolled, setScrolled] = useState(false)
   const [open, setOpen] = useState(false)
+  const mobilePanel = useRef<HTMLDivElement>(null)
+  const menuToggle = useRef<HTMLButtonElement>(null)
   const location = useLocation()
 
   /* How far down the page you are, drawn along the header's own bottom rule.
@@ -34,6 +36,28 @@ export function Header() {
 
   // Close the mobile menu whenever the route changes.
   useEffect(() => setOpen(false), [location.pathname, location.hash])
+
+  useLayoutEffect(() => {
+    mobilePanel.current?.toggleAttribute('inert', !open)
+  }, [open])
+
+  useEffect(() => {
+    if (!open) return
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key !== 'Escape') return
+      setOpen(false)
+      menuToggle.current?.focus({ preventScroll: true })
+    }
+    const desktop = window.matchMedia('(min-width: 881px)')
+    const onResize = () => { if (desktop.matches) setOpen(false) }
+    onResize()
+    document.addEventListener('keydown', onKey)
+    desktop.addEventListener('change', onResize)
+    return () => {
+      document.removeEventListener('keydown', onKey)
+      desktop.removeEventListener('change', onResize)
+    }
+  }, [open])
 
   /* Every route now opens on a dark band — the hero on the home page, the
      PageHead masthead everywhere else — so at the top of any page the header
@@ -77,6 +101,7 @@ export function Header() {
         </a>
 
         <button
+          ref={menuToggle}
           type="button"
           className={styles.toggle}
           aria-expanded={open}
@@ -94,7 +119,8 @@ export function Header() {
         aria-hidden="true"
       />
 
-      <div id="mobile-nav" className={[styles.mobile, open ? styles.mobileOpen : ''].join(' ')}>
+      <div ref={mobilePanel} id="mobile-nav" aria-hidden={!open} data-lenis-prevent
+        className={[styles.mobile, open ? styles.mobileOpen : ''].join(' ')}>
         {/* The panel opens and the links follow it in, one after another. It
             is the same stagger the headline uses, at the one moment on a phone
             where the whole screen changes at once. */}

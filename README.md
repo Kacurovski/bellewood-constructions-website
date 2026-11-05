@@ -22,6 +22,29 @@ reference it.
 
 ---
 
+## Responsive review (5 November 2026)
+
+Reviewed Home, Work, Approach, About, Contact, all nine project pages and the
+not-found screen at 320, 360, 390, 430, 680, 768, 900, 1024, 1280, 1440, 1920
+and 2560 CSS pixels. These 180 route/width checks found no page-wide horizontal
+overflow, broken images or runtime exceptions. Intentional horizontally scrolling
+cards and thumbnail strips were checked separately. Follow-up checks covered
+short phone screens, landscape, menus, photo dialogs and keyboard navigation,
+FAQs, mobile stage/service controls and empty-form validation.
+
+The mobile menu's call link was clipped in landscape. Its open panel now fits
+below the header and scrolls independently when necessary, with the same visual
+design. Closed menu links are inert, Escape closes the panel and returns focus
+to the toggle, and switching to the desktop layout closes the mobile panel.
+Verified at 844×390, 667×375, 320×568, 390×844 and 768×1024.
+
+Normal-motion checks verified automatic photograph changes, the house-preview
+slider and its keyboard control, and the Windsor enquiry link landing at the
+section border beneath the header with all four next-step cards retained.
+Reduced-motion layouts were also reviewed. Validation uses isolated Chrome
+viewport emulation, not physical-device or cross-browser certification. It does
+not test enquiry delivery; that integration remains an open item above.
+
 ## Approved copy refinements (5 November 2026)
 
 Simplified the apartment note, Contact form introduction, two Journey stages,
