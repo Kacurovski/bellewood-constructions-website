@@ -25,6 +25,8 @@ const MATERIALS: Record<MaterialKey, { color: string; roughness: number }> = {
 }
 
 const MATERIAL_KEYS = Object.keys(MATERIALS) as MaterialKey[]
+type RenderKey = MaterialKey | 'corbel'
+const RENDER_KEYS: RenderKey[] = [...MATERIAL_KEYS, 'corbel']
 
 const smoothstep = (a: number, b: number, x: number) => {
   const t = THREE.MathUtils.clamp((x - a) / (b - a), 0, 1)
@@ -44,13 +46,26 @@ const UNIT_CORNERS = [
 ] as const
 
 function Building({ progress }: { progress: React.MutableRefObject<number> }) {
-  const meshes = useRef<Partial<Record<MaterialKey, THREE.InstancedMesh | null>>>({})
-  const mats = useRef<Partial<Record<MaterialKey, THREE.MeshStandardMaterial | null>>>({})
+  const meshes = useRef<Partial<Record<RenderKey, THREE.InstancedMesh | null>>>({})
+  const mats = useRef<Partial<Record<RenderKey, THREE.MeshStandardMaterial | null>>>({})
   const lineMat = useRef<THREE.LineBasicMaterial>(null)
   const lastProgress = useRef(-1)
 
   const count = FRAME_MEMBERS.length
   const box = useMemo(() => new THREE.BoxGeometry(1, 1, 1), [])
+  // One shared extrusion for all curved brackets. A smooth concave edge avoids
+  // both the old diagonal offcuts and seams from approximating it with boxes.
+  const corbel = useMemo(() => {
+    const profile = new THREE.Shape()
+    profile.moveTo(-0.5, 0.5)
+    profile.lineTo(0.5, 0.5)
+    profile.lineTo(0.5, 0.42)
+    profile.absellipse(0.5, -0.5, 1, 0.92, Math.PI / 2, Math.PI, false, 0)
+    profile.closePath()
+    const geometry = new THREE.ExtrudeGeometry(profile, {depth: 1, bevelEnabled: false, curveSegments: 24})
+    geometry.translate(0, 0, -0.5)
+    return geometry
+  }, [])
   const framePaint = useMemo(() => ({
     bare: new THREE.Color(MATERIALS.frame.color),
     finished: new THREE.Color('#ecece6'),
@@ -61,14 +76,17 @@ function Building({ progress }: { progress: React.MutableRefObject<number> }) {
     const slot = new Int32Array(count)
     const lineSlot = new Int32Array(count).fill(-1)
     let lineCount = 0
-    const sizes = {} as Record<MaterialKey, number>
-    for (const k of MATERIAL_KEYS) sizes[k] = 0
+    const sizes = {} as Record<RenderKey, number>
+    const keys: RenderKey[] = []
+    for (const k of RENDER_KEYS) sizes[k] = 0
     FRAME_MEMBERS.forEach((m, i) => {
-      slot[i] = sizes[m.mat]
-      sizes[m.mat] += 1
+      const key = m.profile === 'corbel' ? 'corbel' : m.mat
+      keys[i] = key
+      slot[i] = sizes[key]
+      sizes[key] += 1
       if (m.lines !== false) lineSlot[i] = lineCount++
     })
-    return { slot, sizes, lineSlot, lineCount }
+    return { slot, sizes, keys, lineSlot, lineCount }
   }, [count])
 
   const quats = useMemo(
@@ -116,7 +134,7 @@ function Building({ progress }: { progress: React.MutableRefObject<number> }) {
     }
 
     const solidOpacity = smoothstep(0.34, 0.68, p)
-    for (const k of MATERIAL_KEYS) {
+    for (const k of RENDER_KEYS) {
       const mat = mats.current[k]
       if (!mat) continue
       mat.opacity = solidOpacity
@@ -175,7 +193,7 @@ function Building({ progress }: { progress: React.MutableRefObject<number> }) {
       scratch.position.set(m.p[0], m.p[1], m.p[2]).add(scratch.origin)
       scratch.matrix.compose(scratch.position, quats[i], scratch.scale)
 
-      const mesh = meshes.current[m.mat]
+      const mesh = meshes.current[layout.keys[i]]
       if (mesh) mesh.setMatrixAt(layout.slot[i], scratch.matrix)
 
       // Roof sheets and fine corrugations have no drafting outline. Keep them
@@ -197,7 +215,7 @@ function Building({ progress }: { progress: React.MutableRefObject<number> }) {
     }
 
     if (!changed) return
-    for (const k of MATERIAL_KEYS) {
+    for (const k of RENDER_KEYS) {
       const mesh = meshes.current[k]
       if (mesh) mesh.instanceMatrix.needsUpdate = true
     }
@@ -207,20 +225,20 @@ function Building({ progress }: { progress: React.MutableRefObject<number> }) {
 
   return (
     <group name="croyde-building" position={[0, -FRAME_BOUNDS.centreY, -FRAME_BOUNDS.centreZ]}>
-      {MATERIAL_KEYS.filter((key) => layout.sizes[key] > 0).map((key) => (
+      {RENDER_KEYS.filter((key) => layout.sizes[key] > 0).map((key) => (
         <instancedMesh
           key={key}
           name={`croyde-${key}`}
           ref={(el) => (meshes.current[key] = el)}
-          args={[box, undefined, layout.sizes[key]]}
+          args={[key === 'corbel' ? corbel : box, undefined, layout.sizes[key]]}
           castShadow={key !== 'glass'}
           receiveShadow={key !== 'glass'}
           frustumCulled={false}
         >
           <meshStandardMaterial
             ref={(el) => (mats.current[key] = el)}
-            color={MATERIALS[key].color}
-            roughness={MATERIALS[key].roughness}
+            color={MATERIALS[key === 'corbel' ? 'trim' : key].color}
+            roughness={MATERIALS[key === 'corbel' ? 'trim' : key].roughness}
             metalness={key === 'roof' ? 0.08 : 0}
             transparent
             opacity={0}

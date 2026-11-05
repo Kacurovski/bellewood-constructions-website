@@ -10,7 +10,7 @@ export type MaterialKey = 'frame' | 'clad' | 'trim' | 'joinery' | 'roof' | 'glas
 export type Member = {
   p: [number,number,number]; s: [number,number,number]
   rx:number; ry?:number; rz?:number; at:number; stage:0|1|2|3
-  mat:MaterialKey; outer?:boolean; lines?:false; layer?:1|2
+  mat:MaterialKey; outer?:boolean; lines?:false; layer?:1|2; profile?:'corbel'
 }
 export type FrameView = 'front'|'rear'
 export const FRAME_VIEWS: Record<FrameView,[number,number,number]> = {front:[23,14,42],rear:[-34,16,-26]}
@@ -139,7 +139,12 @@ function verandahSupport(x:number,z:number) {
   box([x,bottom,z],[0.22,0.035,0.22],'ground',0.85,3,{lines:false})
 }
 function bracket(x:number,z:number,axis:'x'|'z',dir:number,top=6.34) {
-  beam([x,top-0.53,z],axis==='x'?[x+dir*0.42,top-0.06,z]:[x,top-0.06,z+dir*0.42],0.065,'trim',0.91)
+  // Solid concave timber corbels, seated against the post and beam underside.
+  // The old diagonal sticks looked like loose offcuts at this viewing scale.
+  const width=0.36,drop=0.44,head=top-0.06,offset=dir*(0.055+width/2)
+  box(axis==='x'?[x+offset,head-drop/2,z]:[x,head-drop/2,z+offset],
+    [width,drop,0.085],'trim',0.91,3,
+    {profile:'corbel',ry:axis==='x'?(dir>0?0:Math.PI):-dir*Math.PI/2,lines:false})
 }
 function rail(a:V2,b:V2,base=UP+0.08,height=1.02,frieze=false) {
   const dx=b[0]-a[0],dz=b[1]-a[1],len=Math.hypot(dx,dz),n=Math.ceil(len/0.135)
@@ -156,7 +161,13 @@ function newel(x:number,z:number,floor:number,bottom=floor-0.25) {
 }
 function landingRail(a:V2,b:V2,floor:number) { rail(a,b,floor+0.08,HANDRAIL-0.08) }
 const frontPosts=[-7.25,-4.8,-2.1,0.7,3.65,7.25]
-frontPosts.forEach(x=>{post(x,10);verandahSupport(x,10);for(const d of [-1,1])if(Math.abs(x+d*0.5)<7.3)bracket(x,10,'x',d)})
+frontPosts.forEach(x=>{
+  post(x,10);verandahSupport(x,10)
+  for(const d of [-1,1]) {
+    const intoEntrance=(x===-2.1&&d===1)||(x===0.7&&d===-1)
+    if(Math.abs(x+d*0.5)<7.3&&!intoEntrance)bracket(x,10,'x',d)
+  }
+})
 for(let i=0;i<frontPosts.length-1;i++) {
   // Rails meet the post centreline, rather than stopping short of its face.
   const a=frontPosts[i],b=frontPosts[i+1]
@@ -166,11 +177,15 @@ for(let i=0;i<frontPosts.length-1;i++) {
 for(const z of [3.9,6.9]){post(7.25,z);verandahSupport(7.25,z)}
 rail([7.25,3.9],[7.25,6.9]);rail([7.25,6.9],[7.25,10])
 const gardenPosts=[-3.9,-0.7,2.5,6.1,10]
-gardenPosts.slice(0,-1).forEach(z=>{post(-7.25,z);bracket(-7.25,z,'z',1);bracket(-7.25,z,'z',-1)})
+gardenPosts.slice(0,-1).forEach(z=>{
+  post(-7.25,z);bracket(-7.25,z,'z',1)
+  if(z>gardenPosts[0])bracket(-7.25,z,'z',-1)
+})
 for(let i=0;i<gardenPosts.length-1;i++)rail([-7.25,gardenPosts[i]],[-7.25,gardenPosts[i+1]])
 for(const z of [-13.9,-10.65,-7.3,-3.9]) {
   post(-9,z,6.4);box([-9,UP/2,z],[0.22,UP,0.22],'ground',0.31,1)
-  bracket(-9,z,'z',1,6.4);bracket(-9,z,'z',-1,6.4)
+  if(z<-3.9)bracket(-9,z,'z',1,6.4)
+  if(z>-13.9)bracket(-9,z,'z',-1,6.4)
 }
 for(const [a,b] of [[-13.9,-10.65],[-10.65,-7.3],[-7.3,-3.9]])rail([-9,a],[-9,b])
 rail([-9,-3.9],[-7.25,-3.9]);rail([-9,-13.9],[-6.6,-13.9]);rail([-6.6,-13.9],[-4.9,-13.9])
@@ -352,16 +367,21 @@ gableDetail('z',8.71,2.875,2.67,7.26,9.13)
 gableDetail('x',7.59,2.5,2.19,6.79,8.3)
 gableDetail('x',-7.64,-2.6,1.8,6.94,8.08)
 gableDetail('z',10.89,ENTRY,1.4,6.38,7.4)
-// Segmented timber arches, not a flat icon on the model.
-for(const z of [10,10.8]) {
-  // The rear pair already belongs to frontPosts. Duplicating it 5 cm forward
-  // made the entry posts overlap and flicker against their white capitals.
-  if(z===10.8)for(const x of [-2.1,0.7])post(x,z,6.4)
+// One street-facing entrance arch. Repeating the full arch at the back of
+// this shallow porch produced two visibly overlapping curves beside the post.
+{
+  const z=10.8
+  for(const x of [-2.1,0.7]) {
+    post(x,z,6.4)
+    beam([x,6.35,10],[x,6.35,z],0.18,'trim',0.86)
+    bracket(x,z,'z',-1,6.35)
+  }
+  beam([-2.1,6.35,z],[0.7,6.35,z],0.18,'trim',0.86)
   // Spring the arch from the inner faces of the columns. The former narrow
   // horseshoe hung clear of both posts with no timber tying it to the beam.
   const r=1.33,cy=5.05,head=6.35
-  for(let i=0;i<22;i++) {
-    const a=i*Math.PI/22,b=(i+1)*Math.PI/22
+  for(let i=0;i<32;i++) {
+    const a=i*Math.PI/32,b=(i+1)*Math.PI/32
     beam([ENTRY+r*Math.cos(a),cy+r*Math.sin(a),z+0.025],[ENTRY+r*Math.cos(b),cy+r*Math.sin(b),z+0.025],0.085,'trim',0.93)
   }
   for(const x of [ENTRY-r,ENTRY+r])beam([x,4.95,z+0.025],[x,cy,z+0.025],0.085,'trim',0.93)

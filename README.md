@@ -1439,8 +1439,9 @@ the actual renovation sequence. Hidden rear openings and construction are
 interpreted from the available views and floor plan.
 
 `TimberFrame.tsx` fits each view from the transformed geometry, draws members as
-nine instanced material groups and excludes unoutlined roof strips from the CPU
-drafting-line work. Shadow resolution is reduced on narrow canvases. Reduced
+nine instanced box-material groups plus one shared curved-bracket extrusion,
+and excludes unoutlined roof strips from the CPU drafting-line work.
+Shadow resolution is reduced on narrow canvases. Reduced
 motion and unavailable WebGL use matching transparent WebP renders:
 `src/assets/models/assembly-street.webp` and `assembly-garden.webp`.
 Regenerate both with the dev server running on port 5173:
@@ -1460,6 +1461,9 @@ with continuous landing posts and deeper stringers carrying the open treads.
 Verandah shafts reach the deck without oversized white collars; aligned ground
 supports continue beneath the front and short return, as in the exterior photos.
 The entrance arch meets its columns and has fretwork joining it to the header.
+Only the street-facing arch remains; a repeated rear arch made the porch trim
+appear doubled. Concave timber corbels replace the thin diagonal braces and
+connect to the post faces and roof beams, with none projecting past beam ends.
 The rear stairwell has supported corners and a complete
 landing guard. The charcoal trim remains part of the photographed house's
 palette. Both fallback renders are regenerated after these geometry corrections.
