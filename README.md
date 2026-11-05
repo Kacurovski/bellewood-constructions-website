@@ -1455,8 +1455,12 @@ renovation model on Approach is unchanged.
 
 The 5 November railing correction removes overlapping entry posts, connects
 verandah rails to post centrelines and uses a shared handrail height across the
-stair flights and landings. Short guarded returns connect the projecting entry
-porch to the front stair; the rear stairwell has supported corners and a complete
+stair flights and landings. The front stair now shares the entry column lines,
+with continuous landing posts and deeper stringers carrying the open treads.
+Verandah shafts reach the deck without oversized white collars; aligned ground
+supports continue beneath the front and short return, as in the exterior photos.
+The entrance arch meets its columns and has fretwork joining it to the header.
+The rear stairwell has supported corners and a complete
 landing guard. The charcoal trim remains part of the photographed house's
 palette. Both fallback renders are regenerated after these geometry corrections.
 

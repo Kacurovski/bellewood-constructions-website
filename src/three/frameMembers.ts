@@ -126,10 +126,17 @@ deck(-7.25,-4.9,-3.9,6.9)
 deck(-9,-7.82,-13.9,-3.9);deck(-7.82,-4.9,-13.9,-12.08);deck(-7.82,-4.9,-8.88,-3.9)
 deck(-2.1,0.7,10,10.85)
 slab(-7.25,7.25,8.2,10,0.1);slab(-7.25,0.7,6.9,8.2,0.1);slab(-9,-0.65,-13.9,-3.9,0.1)
-function post(x:number,z:number,top=6.35,bottom=UP) {
-  box([x,(bottom+top)/2,z],[0.12,top-bottom,0.12],'accent',0.33,1)
-  box([x,bottom+0.18,z],[0.19,0.36,0.19],'trim',0.88,3)
-  box([x,top-0.17,z],[0.19,0.29,0.19],'trim',0.88,3)
+function post(x:number,z:number,top=6.35,bottom=UP-0.12) {
+  // The charcoal shaft reaches the deck and beam. Tall white collars used to
+  // hide both ends, making the posts look detached from the balustrade.
+  box([x,(bottom+top)/2,z],[0.14,top-bottom,0.14],'accent',0.33,1)
+  box([x,UP+0.065,z],[0.19,0.025,0.19],'trim',0.88,3,{lines:false})
+  box([x,top-0.025,z],[0.18,0.09,0.18],'trim',0.88,3)
+}
+function verandahSupport(x:number,z:number) {
+  const bottom=0.17,top=UP-0.07
+  box([x,(bottom+top)/2,z],[0.14,top-bottom,0.14],'accent',0.22,1)
+  box([x,bottom,z],[0.22,0.035,0.22],'ground',0.85,3,{lines:false})
 }
 function bracket(x:number,z:number,axis:'x'|'z',dir:number,top=6.34) {
   beam([x,top-0.53,z],axis==='x'?[x+dir*0.42,top-0.06,z]:[x,top-0.06,z+dir*0.42],0.065,'trim',0.91)
@@ -141,20 +148,22 @@ function rail(a:V2,b:V2,base=UP+0.08,height=1.02,frieze=false) {
   for(const y of frieze?[high]:[low,high-0.18])beam([a[0],y,a[1]],[b[0],y,b[1]],0.065,'trim',0.89)
   if(!frieze)beam([a[0],base+height,a[1]],[b[0],base+height,b[1]],0.075,'accent',0.9)
 }
-function newel(x:number,z:number,floor:number) {
-  box([x,floor+NEWEL_HEIGHT/2,z],[0.14,NEWEL_HEIGHT,0.14],'accent',0.91,3)
-  box([x,floor+NEWEL_HEIGHT,z],[0.17,0.045,0.17],'accent',0.92,3)
+function newel(x:number,z:number,floor:number,bottom=floor-0.25) {
+  const top=floor+NEWEL_HEIGHT
+  // A landing post is also its support, not a dark stub on a separate white leg.
+  box([x,(bottom+top)/2,z],[0.14,top-bottom,0.14],'accent',0.87,3)
+  box([x,top,z],[0.16,0.035,0.16],'accent',0.92,3,{lines:false})
 }
 function landingRail(a:V2,b:V2,floor:number) { rail(a,b,floor+0.08,HANDRAIL-0.08) }
 const frontPosts=[-7.25,-4.8,-2.1,0.7,3.65,7.25]
-frontPosts.forEach(x=>{post(x,10);for(const d of [-1,1])if(Math.abs(x+d*0.5)<7.3)bracket(x,10,'x',d)})
+frontPosts.forEach(x=>{post(x,10);verandahSupport(x,10);for(const d of [-1,1])if(Math.abs(x+d*0.5)<7.3)bracket(x,10,'x',d)})
 for(let i=0;i<frontPosts.length-1;i++) {
   // Rails meet the post centreline, rather than stopping short of its face.
   const a=frontPosts[i],b=frontPosts[i+1]
   if(i!==2)rail([a,10],[b,10]) // Real opening at the stair entrance.
   rail([a,10],[b,10],UP-0.52,0.36,true)
 }
-for(const z of [3.9,6.9])post(7.25,z)
+for(const z of [3.9,6.9]){post(7.25,z);verandahSupport(7.25,z)}
 rail([7.25,3.9],[7.25,6.9]);rail([7.25,6.9],[7.25,10])
 const gardenPosts=[-3.9,-0.7,2.5,6.1,10]
 gardenPosts.slice(0,-1).forEach(z=>{post(-7.25,z);bracket(-7.25,z,'z',1);bracket(-7.25,z,'z',-1)})
@@ -170,31 +179,39 @@ for(const [a,b] of [[[-7.25,10],[7.25,10]],[[-7.25,10],[-7.25,-3.9]],[[7.25,10],
   for(const y of [UP-0.08,6.35])beam([a[0],y,a[1]],[b[0],y,b[1]],y<4?0.22:0.18,'trim',0.86)
 }
 // Stair handrails follow each flight, with an actual intermediate landing.
-function stair(x:number,z1:number,z2:number,y1:number,y2:number,width:number,n:number) {
+function stair(x:number,z1:number,z2:number,y1:number,y2:number,width:number,n:number,posts:{start?:boolean;startBottom?:number;endBottom?:number}={}) {
   const dz=(z2-z1)/n,dy=(y2-y1)/n
   for(let i=0;i<n;i++)box([x,y1+dy*i,z1+dz*(i+0.5)],[width,0.09,Math.abs(dz)+0.018],'deck',0.86,3)
   for(const side of [-1,1]) {
     const xx=x+side*(width/2-0.04)
-    beam([xx,y1-0.18,z1],[xx,y2-0.18,z2],0.18,'trim',0.85)
+    // Deep side stringers carry the open treads. A square stick below the
+    // flight left the tread ends and post feet visibly unsupported.
+    const slope=-Math.atan2(y2-y1,Math.abs(z2-z1))
+    box([xx,(y1+y2)/2-0.1,(z1+z2)/2],[0.14,0.3,Math.hypot(z2-z1,y2-y1)],'trim',0.85,3,
+      {rx:slope,ry:z2<z1?Math.PI:0})
     beam([xx,y1+HANDRAIL,z1],[xx,y2+HANDRAIL,z2],0.075,'accent',0.91)
     beam([xx,y1+LOWER_RAIL,z1],[xx,y2+LOWER_RAIL,z2],0.075,'trim',0.91)
     const count=Math.ceil(Math.abs(z2-z1)/0.14)
     for(let j=1;j<count;j++)box([xx,y1+(y2-y1)*j/count+(LOWER_RAIL+HANDRAIL)/2,z1+(z2-z1)*j/count],[0.045,HANDRAIL-LOWER_RAIL,0.045],'trim',0.91,3)
-    for(const [z,y] of [[z1,y1],[z2,y2]])newel(xx,z,y)
+    if(posts.start!==false)newel(xx,z1,y1,posts.startBottom)
+    newel(xx,z2,y2,posts.endBottom)
   }
 }
 const ENTRY=-0.7
-stair(ENTRY,10.85,12.9,UP,1.65,1.85,9)
-slab(ENTRY-0.93,ENTRY+0.93,12.9,13.9,1.61,'deck',0.86)
+// Use the entrance column lines for both flights. The previous narrower
+// stair created four short dog-leg rails and extra posts beside the entrance.
+const ENTRY_STAIR_WIDTH=2.88
+stair(ENTRY,10.8,12.9,UP,1.65,ENTRY_STAIR_WIDTH,9,{start:false,endBottom:0.17})
+slab(ENTRY-1.48,ENTRY+1.48,12.9,13.9,1.61,'deck',0.86)
 for(const side of [-1,1]) {
-  const x=ENTRY+side*(1.85/2-0.04),porticoX=ENTRY+side*1.4
-  landingRail([porticoX,10],[porticoX,10.8],UP)
-  landingRail([porticoX,10.8],[x,10.85],UP)
+  const x=ENTRY+side*1.4
+  landingRail([x,10],[x,10.8],UP)
   landingRail([x,12.9],[x,13.9],1.65)
-  for(const z of [12.9,13.9])box([x,0.79,z],[0.13,1.58,0.13],'trim',0.84,3)
+  box([x,1.56,13.4],[0.14,0.23,1.14],'trim',0.86,3)
+  for(const z of [12.9,13.9])box([x,0.17,z],[0.22,0.035,0.22],'ground',0.88,3,{lines:false})
 }
-stair(ENTRY,13.9,15.95,1.65,0.18,1.85,9)
-slab(ENTRY-1.13,ENTRY+1.13,15.93,16.5,0.1,'ground',0.9)
+stair(ENTRY,13.9,15.95,1.65,0.18,ENTRY_STAIR_WIDTH,9,{startBottom:0.17,endBottom:0.1})
+slab(ENTRY-1.6,ENTRY+1.6,15.93,16.5,0.1,'ground',0.9)
 stair(-5.65,-12,-9.9,UP,1.6,1.35,9);slab(-7.74,-4.94,-9.9,-8.95,1.55,'deck',0.86)
 stair(-7.05,-9.9,-12,1.6,0.18,1.35,9)
 // Continuous guard around the rear landing and upstairs stairwell. The two
@@ -340,12 +357,18 @@ for(const z of [10,10.8]) {
   // The rear pair already belongs to frontPosts. Duplicating it 5 cm forward
   // made the entry posts overlap and flicker against their white capitals.
   if(z===10.8)for(const x of [-2.1,0.7])post(x,z,6.4)
-  const r=1.18,cy=5.32
+  // Spring the arch from the inner faces of the columns. The former narrow
+  // horseshoe hung clear of both posts with no timber tying it to the beam.
+  const r=1.33,cy=5.05,head=6.35
   for(let i=0;i<22;i++) {
     const a=i*Math.PI/22,b=(i+1)*Math.PI/22
     beam([ENTRY+r*Math.cos(a),cy+r*Math.sin(a),z+0.025],[ENTRY+r*Math.cos(b),cy+r*Math.sin(b),z+0.025],0.085,'trim',0.93)
   }
-  for(const x of [ENTRY-r,ENTRY+r])beam([x,4.95,z],[x,cy,z],0.085,'trim',0.93)
+  for(const x of [ENTRY-r,ENTRY+r])beam([x,4.95,z+0.025],[x,cy,z+0.025],0.085,'trim',0.93)
+  for(let u=-r+0.07;u<r;u+=0.105) {
+    const bottom=cy+Math.sqrt(r*r-u*u)
+    if(bottom<head)box([ENTRY+u,(bottom+head)/2,z+0.025],[0.035,head-bottom,0.055],'trim',0.93,3,{lines:false})
+  }
 }
 for(let y=6.62;y<7.23;y+=0.15)box([2.875,y,8.61],[5.1,0.143,0.08],'clad',0.85,3)
 for(const y of [6.66,7.12])box([2.875,y,8.69],[5.35,0.08,0.1],'trim',0.9,3)
