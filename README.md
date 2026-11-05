@@ -1453,6 +1453,13 @@ An optional `-OutputDirectory` keeps review renders outside the source assets;
 `-Progress` renders an intermediate build stage. The separate interactive
 renovation model on Approach is unchanged.
 
+The 5 November railing correction removes overlapping entry posts, connects
+verandah rails to post centrelines and uses a shared handrail height across the
+stair flights and landings. Short guarded returns connect the projecting entry
+porch to the front stair; the rear stairwell has supported corners and a complete
+landing guard. The charcoal trim remains part of the photographed house's
+palette. Both fallback renders are regenerated after these geometry corrections.
+
 ### Temporary heritage explorer concept
 
 Approach includes `HeritageExplorerTest` immediately after MaterialKey, labelled

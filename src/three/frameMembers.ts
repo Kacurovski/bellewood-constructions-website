@@ -19,6 +19,8 @@ type V2=[number,number]
 type Opening={u:number;y:number;w:number;h:number;door?:boolean;panes?:number;hood?:boolean}
 const members:Member[]=[]
 const UP=3.1,EAVE=6.65
+// One height datum for the verandah, stair flights and their landings.
+const HANDRAIL=1.1,LOWER_RAIL=0.16,NEWEL_HEIGHT=1.2
 function box(p:V3,s:V3,mat:MaterialKey,at:number,stage:Member['stage'],extras:Partial<Member>={}) {
   if(s.some(n=>n<=0.0001))return
   members.push({p,s,mat,at,stage,rx:0,outer:true,...extras})
@@ -134,28 +136,36 @@ function bracket(x:number,z:number,axis:'x'|'z',dir:number,top=6.34) {
 }
 function rail(a:V2,b:V2,base=UP+0.08,height=1.02,frieze=false) {
   const dx=b[0]-a[0],dz=b[1]-a[1],len=Math.hypot(dx,dz),n=Math.ceil(len/0.135)
-  for(let i=1;i<n;i++)box([a[0]+dx*i/n,base+height/2,a[1]+dz*i/n],[0.045,height,0.045],'trim',0.89,3)
-  for(const y of frieze?[base+height]:[base+0.04,base+height-0.18])beam([a[0],y,a[1]],[b[0],y,b[1]],0.065,'trim',0.89)
+  const low=frieze?base:base+0.08,high=base+height
+  for(let i=1;i<n;i++)box([a[0]+dx*i/n,(low+high)/2,a[1]+dz*i/n],[0.045,high-low,0.045],'trim',0.89,3)
+  for(const y of frieze?[high]:[low,high-0.18])beam([a[0],y,a[1]],[b[0],y,b[1]],0.065,'trim',0.89)
   if(!frieze)beam([a[0],base+height,a[1]],[b[0],base+height,b[1]],0.075,'accent',0.9)
 }
+function newel(x:number,z:number,floor:number) {
+  box([x,floor+NEWEL_HEIGHT/2,z],[0.14,NEWEL_HEIGHT,0.14],'accent',0.91,3)
+  box([x,floor+NEWEL_HEIGHT,z],[0.17,0.045,0.17],'accent',0.92,3)
+}
+function landingRail(a:V2,b:V2,floor:number) { rail(a,b,floor+0.08,HANDRAIL-0.08) }
 const frontPosts=[-7.25,-4.8,-2.1,0.7,3.65,7.25]
 frontPosts.forEach(x=>{post(x,10);for(const d of [-1,1])if(Math.abs(x+d*0.5)<7.3)bracket(x,10,'x',d)})
 for(let i=0;i<frontPosts.length-1;i++) {
-  const a=frontPosts[i]+0.09,b=frontPosts[i+1]-0.09
+  // Rails meet the post centreline, rather than stopping short of its face.
+  const a=frontPosts[i],b=frontPosts[i+1]
   if(i!==2)rail([a,10],[b,10]) // Real opening at the stair entrance.
   rail([a,10],[b,10],UP-0.52,0.36,true)
 }
 for(const z of [3.9,6.9])post(7.25,z)
-rail([7.25,4],[7.25,6.8]);rail([7.25,7],[7.25,9.9])
+rail([7.25,3.9],[7.25,6.9]);rail([7.25,6.9],[7.25,10])
 const gardenPosts=[-3.9,-0.7,2.5,6.1,10]
 gardenPosts.slice(0,-1).forEach(z=>{post(-7.25,z);bracket(-7.25,z,'z',1);bracket(-7.25,z,'z',-1)})
-for(let i=0;i<gardenPosts.length-1;i++)rail([-7.25,gardenPosts[i]+0.09],[-7.25,gardenPosts[i+1]-0.09])
+for(let i=0;i<gardenPosts.length-1;i++)rail([-7.25,gardenPosts[i]],[-7.25,gardenPosts[i+1]])
 for(const z of [-13.9,-10.65,-7.3,-3.9]) {
   post(-9,z,6.4);box([-9,UP/2,z],[0.22,UP,0.22],'ground',0.31,1)
   bracket(-9,z,'z',1,6.4);bracket(-9,z,'z',-1,6.4)
 }
-for(const [a,b] of [[-13.8,-10.74],[-10.56,-7.39],[-7.21,-4]])rail([-9,a],[-9,b])
-rail([-8.9,-3.9],[-7.34,-3.9]);rail([-8.9,-13.9],[-6.7,-13.9]);post(-6.6,-13.9,6.4)
+for(const [a,b] of [[-13.9,-10.65],[-10.65,-7.3],[-7.3,-3.9]])rail([-9,a],[-9,b])
+rail([-9,-3.9],[-7.25,-3.9]);rail([-9,-13.9],[-6.6,-13.9]);rail([-6.6,-13.9],[-4.9,-13.9])
+post(-6.6,-13.9,6.4);post(-4.9,-13.9,6.4)
 for(const [a,b] of [[[-7.25,10],[7.25,10]],[[-7.25,10],[-7.25,-3.9]],[[7.25,10],[7.25,3.9]],[[-9,-3.9],[-9,-13.9]],[[-9,-3.9],[-7.25,-3.9]],[[-9,-13.9],[-4.9,-13.9]]] as [V2,V2][]) {
   for(const y of [UP-0.08,6.35])beam([a[0],y,a[1]],[b[0],y,b[1]],y<4?0.22:0.18,'trim',0.86)
 }
@@ -166,23 +176,35 @@ function stair(x:number,z1:number,z2:number,y1:number,y2:number,width:number,n:n
   for(const side of [-1,1]) {
     const xx=x+side*(width/2-0.04)
     beam([xx,y1-0.18,z1],[xx,y2-0.18,z2],0.18,'trim',0.85)
-    beam([xx,y1+1.03,z1],[xx,y2+1.03,z2],0.075,'accent',0.91)
-    beam([xx,y1+0.16,z1],[xx,y2+0.16,z2],0.075,'trim',0.91)
+    beam([xx,y1+HANDRAIL,z1],[xx,y2+HANDRAIL,z2],0.075,'accent',0.91)
+    beam([xx,y1+LOWER_RAIL,z1],[xx,y2+LOWER_RAIL,z2],0.075,'trim',0.91)
     const count=Math.ceil(Math.abs(z2-z1)/0.14)
-    for(let j=1;j<count;j++)box([xx,y1+(y2-y1)*j/count+0.59,z1+(z2-z1)*j/count],[0.045,0.87,0.045],'trim',0.91,3)
-    for(const [z,y] of [[z1,y1],[z2,y2]])box([xx,y+0.6,z],[0.14,1.2,0.14],'accent',0.91,3)
+    for(let j=1;j<count;j++)box([xx,y1+(y2-y1)*j/count+(LOWER_RAIL+HANDRAIL)/2,z1+(z2-z1)*j/count],[0.045,HANDRAIL-LOWER_RAIL,0.045],'trim',0.91,3)
+    for(const [z,y] of [[z1,y1],[z2,y2]])newel(xx,z,y)
   }
 }
 const ENTRY=-0.7
 stair(ENTRY,10.85,12.9,UP,1.65,1.85,9)
 slab(ENTRY-0.93,ENTRY+0.93,12.9,13.9,1.61,'deck',0.86)
-for(const x of [ENTRY-0.89,ENTRY+0.89]){rail([x,12.95],[x,13.85],1.71,0.98);box([x,0.83,13.35],[0.13,1.66,0.13],'accent',0.84,3)}
+for(const side of [-1,1]) {
+  const x=ENTRY+side*(1.85/2-0.04),porticoX=ENTRY+side*1.4
+  landingRail([porticoX,10],[porticoX,10.8],UP)
+  landingRail([porticoX,10.8],[x,10.85],UP)
+  landingRail([x,12.9],[x,13.9],1.65)
+  for(const z of [12.9,13.9])box([x,0.79,z],[0.13,1.58,0.13],'trim',0.84,3)
+}
 stair(ENTRY,13.9,15.95,1.65,0.18,1.85,9)
 slab(ENTRY-1.13,ENTRY+1.13,15.93,16.5,0.1,'ground',0.9)
 stair(-5.65,-12,-9.9,UP,1.6,1.35,9);slab(-7.74,-4.94,-9.9,-8.95,1.55,'deck',0.86)
-stair(-7.05,-9.9,-12,1.6,0.18,1.35,9);rail([-4.94,-8.98],[-7.7,-8.98],1.64,0.98)
-rail([-7.83,-12.08],[-7.83,-8.88]);rail([-7.83,-8.88],[-4.95,-8.88])
-rail([-7.83,-12.08],[-6.35,-12.08])
+stair(-7.05,-9.9,-12,1.6,0.18,1.35,9)
+// Continuous guard around the rear landing and upstairs stairwell. The two
+// flights share the landing datum and leave the walking route unobstructed.
+for(const [a,b] of [[[-5.015,-9.9],[-4.94,-8.95]],[[-4.94,-8.95],[-7.685,-8.95]],[[-7.685,-8.95],[-7.685,-9.9]],[[-6.285,-9.9],[-6.415,-9.9]]] as [V2,V2][])
+  landingRail(a,b,1.6)
+for(const x of [-4.94,-7.685])newel(x,-8.95,1.6)
+for(const [a,b] of [[[-7.83,-12.08],[-7.83,-8.88]],[[-7.83,-8.88],[-4.95,-8.88]],[[-7.83,-12.08],[-6.285,-12.08]],[[-6.285,-12.08],[-6.285,-12]]] as [V2,V2][])
+  landingRail(a,b,UP)
+for(const [x,z] of [[-7.83,-12.08],[-7.83,-8.88],[-4.95,-8.88]])newel(x,z,UP)
 box([-7.65,UP+0.44,-13.48],[2.3,0.85,0.65],'joinery',0.9,3)
 box([-7.65,UP+0.9,-13.48],[2.4,0.07,0.73],'ground',0.91,3)
 box([-7.7,UP+0.96,-13.45],[0.8,0.06,0.45],'accent',0.93,3)
@@ -314,8 +336,10 @@ gableDetail('x',7.59,2.5,2.19,6.79,8.3)
 gableDetail('x',-7.64,-2.6,1.8,6.94,8.08)
 gableDetail('z',10.89,ENTRY,1.4,6.38,7.4)
 // Segmented timber arches, not a flat icon on the model.
-for(const z of [10.05,10.8]) {
-  for(const x of [-2.1,0.7])post(x,z,6.4)
+for(const z of [10,10.8]) {
+  // The rear pair already belongs to frontPosts. Duplicating it 5 cm forward
+  // made the entry posts overlap and flicker against their white capitals.
+  if(z===10.8)for(const x of [-2.1,0.7])post(x,z,6.4)
   const r=1.18,cy=5.32
   for(let i=0;i<22;i++) {
     const a=i*Math.PI/22,b=(i+1)*Math.PI/22
