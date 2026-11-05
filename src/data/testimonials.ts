@@ -1,29 +1,8 @@
 /**
- * What past clients say.
- *
- * ===========================================================================
- * !!! THESE ARE NOT REAL. THEY MUST BE REPLACED BEFORE THIS SITE PUBLISHES !!!
- *
- * They are written to read naturally so the page can be reviewed as finished
- * work, and there is deliberately nothing on the page itself that marks them as
- * placeholder. That makes them the single most dangerous thing in this repo:
- * a fabricated endorsement of a real, licensed business reads as a real one.
- *
- * Publishing them would be a fake review. In Australia that is misleading
- * conduct under the ACL and the ACCC pursues it.
- *
- * Two safeguards, since the page carries no warning:
- *   - `testimonialsArePlaceholder` below logs a warning to the browser console
- *     on every load while it is true.
- *   - The README carries it as an open item.
- *
- * Attributions are a role and a suburb rather than invented full names. No
- * fictional person is created here, and it is how a builder normally credits a
- * client anyway.
- *
- * When the real ones arrive: replace `quote`, `name` and `detail`, set every
- * `placeholder` to false. Get written permission for the name and suburb first.
- * ===========================================================================
+ * Layout samples, not collected client reviews.
+ * Keep the visible draft notice and console warning while any placeholder is true.
+ * Replace these with verified, approved client quotes before publication.
+ * Real quotes must retain the client's wording and accurate attribution.
  */
 
 export type Testimonial = {
@@ -47,7 +26,7 @@ export const testimonials: Testimonial[] = [
   },
   {
     quote:
-      'He rang us about the subfloor before it turned into a variation — two options, and what each one would cost. That phone call was the whole job in miniature. Nothing was ever a surprise.',
+      'He rang us about the subfloor before it turned into a variation, with two options and what each one would cost. That phone call was the whole job in miniature. Nothing was ever a surprise.',
     name: 'Homeowner',
     detail: 'Ashgrove · Extension',
     placeholder: true,

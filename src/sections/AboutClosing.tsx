@@ -38,17 +38,17 @@ export function AboutClosing() {
 
         <Reveal delay={0.05} className={styles.promise}>
           <ScrollWords as="h2" id="about-closing-heading" className={styles.statement}
-            text="The drawings you were handed are the drawings *you get.*" />
+            text="Your drawings guide *the build*." />
           <p className={styles.care}>
-            The same sequence on every job. The same care, from the first week to the last.
+            We work closely with your architect or designer to carry their plans through to the finished house.
           </p>
         </Reveal>
 
         <Reveal delay={0.12} className={styles.detail}>
           <p className={styles.audience}>For architects and designers</p>
           <p className={styles.copy}>
-            Questions come early, in writing, before they become variations.
-            {' '}The site is kept in a state you can bring a client to.
+            We raise questions about the documents early and in writing.
+            {' '}We keep the site tidy and can arrange visits with you and your client.
           </p>
           <div className={styles.contact}>
             <p className={styles.invitation}>Talk it through with Angus</p>

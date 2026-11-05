@@ -23,7 +23,7 @@ export function FrontDoorStudy() {
         <div className={styles.studyLabel}><span>Featured home / Wilston</span><span>From the street to the garden</span></div>
         <Reveal className={styles.intro}>
           <h2 id="front-door-heading">Beyond the<br /><em>front door.</em></h2>
-          <div><span className={styles.eyebrow}>One home. More to discover.</span><p>A familiar face to the street. A different feeling within. Explore the spaces that make this Wilston house a home.</p></div>
+          <div><span className={styles.eyebrow}>A closer look at Wilston</span><p>From the street frontage to the living room, terrace and garden. Take a look through the house.</p></div>
         </Reveal>
         <div className={styles.journey}>
           <Reveal className={styles.street}>
@@ -32,7 +32,7 @@ export function FrontDoorStudy() {
               <img src={wilstonStory.exterior.src ?? undefined} alt={wilstonStory.exterior.alt} loading="lazy" decoding="async" width="1200" height="800" />
               <figcaption><strong>Wilston</strong><span>The familiar face.</span></figcaption>
             </figure>
-            <p className={styles.streetCopy}>The gable, the verandah, the picket fence. A Brisbane welcome, with another story behind it.</p>
+            <p className={styles.streetCopy}>A gabled roof, front verandah and white picket fence face the street.</p>
             <Link className={styles.projectLink} to="/work/wilston">Explore the whole home </Link>
           </Reveal>
           <Reveal delay={0.12} className={styles.inside}>
@@ -106,7 +106,7 @@ export function EverydayStudy({ home = false }: { home?: boolean } = {}) {
           <div className={styles.studyLabel}><span>Spaces to live in</span><span>Four ways to feel at home</span></div>}
         <Reveal className={styles.everydayIntro}>
           <h2 id="everyday-heading">Room for<br /><em>everyday life.</em></h2>
-          <p>Good homes make room for the ordinary things.<br />Choose a moment. Find a home.</p>
+          <p>Places to cook, relax and spend time outside.<br />Explore four of our homes.</p>
         </Reveal>
         <Reveal>
           <div className={styles.panels} role="group" aria-label="Choose a moment at home">

@@ -4,7 +4,7 @@
    A ledger with a spine. The reference column carries a vertical hairline the
    height of the list; a green fill grows down it with the scroll, and each
    stage's ring fills as the spine reaches it. Each text composition has a
-   two-line thought, an inset explanation and a short rule keyed to the spine.
+   short practical lead and a supporting explanation aligned beneath it.
    --------------------------------------------------------------------------- */
 
 .section {
@@ -104,20 +104,6 @@
 .body {
   position: relative;
   min-width: 0;
-  padding-left: clamp(1.75rem, 2.8vw, 3rem);
-}
-
-.leadRule {
-  position: absolute;
-  left: 0;
-  top: 1.1rem;
-  height: 1px;
-  width: clamp(1rem, 1.7vw, 1.8rem);
-  background: var(--green);
-  transform: scaleX(.25);
-  transform-origin: left;
-  opacity: .3;
-  transition: transform 900ms var(--ease), opacity 600ms ease;
 }
 
 .lead {
@@ -129,11 +115,8 @@
 }
 
 .leadLine { display: block; opacity: .86; transform: translateY(5px); transition: transform 850ms var(--ease), opacity 700ms ease; }
-.leadLine + .leadLine { transition-delay: 110ms; }
-.lead em { font-weight: 400; }
 .itemDone .leadLine, .itemActive .leadLine { opacity: 1; transform: translateY(0); }
-.itemDone .leadRule, .itemActive .leadRule { transform: scaleX(1); opacity: 1; }
-.support { max-width: 47ch; margin: 1rem 0 0 clamp(1.25rem, 2.8vw, 2.5rem); }
+.support { max-width: 47ch; margin: 1rem 0 0; }
 
 /* On a desk the card wrapper is invisible to the grid: its children take
    their own columns. On a phone it becomes the card. */
@@ -182,11 +165,10 @@
 
   .body {
     grid-column: 2;
-    padding-left: 2rem;
   }
 
   .lead { font-size: 1.9rem; }
-  .support { max-width: 48ch; margin-left: 1.5rem; }
+  .support { max-width: 48ch; }
 
   .spine {
     left: 1rem;
@@ -296,9 +278,8 @@
 
   .title { font-size: 1.125rem; }
   .body { padding-left: 0; }
-  .leadRule { position: relative; display: block; top: auto; width: 1.75rem; margin-bottom: .85rem; }
   .lead { font-size: clamp(1.5rem, 6.5vw, 1.75rem); line-height: 1.13; }
-  .support { margin: 1rem 0 0 .75rem; }
+  .support { margin: 1rem 0 0; }
   .para { font-size: 1.0625rem; line-height: 1.5; }
 
   .rule {
@@ -343,6 +324,5 @@
 
 @media (prefers-reduced-motion: reduce) {
   .item .leadLine { opacity: 1; transform: none; transition: none; }
-  .item .leadRule { opacity: 1; transform: none; transition: none; }
   .title, .item::before, .item::after, .railFill { transition: none; }
 }

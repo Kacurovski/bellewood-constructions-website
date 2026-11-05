@@ -66,9 +66,8 @@ export function LivingSpaces({ sheetNumber = "A-03", embedded = false }: { sheet
             <StoryPhoto still={embedded} image={photos.exterior} project="Windsor" caption="The street facade and garden." shape="exterior" />
           </Frame>
           <Frame delay={0.16} className={styles.editorialNote}>
-            <span className={styles.shortRule} aria-hidden="true" />
             <p className={styles.editorialQuote}>A place to gather.<br />A little room to retreat.</p>
-            <p className={styles.spaceNote}>Wide openings draw the kitchen onto the verandah. Quieter rooms offer a different pace, with daylight and a view to the garden.</p>
+            <p className={styles.spaceNote}>The kitchen opens onto the verandah, with room to eat outside. Elsewhere in the house, smaller rooms offer a quiet place to sit.</p>
             <Link to="/work" className={styles.architectLink}>Explore the homes </Link>
           </Frame>
         </div>
@@ -134,7 +133,7 @@ export function Craftsmanship({ sheetNumber = "A-04", embedded = false, onPhotoO
             <Frame>
               <p className={styles.kicker}>From the whole room to the smallest detail</p>
               <h2 id="architects-heading" className={styles.craftTitle}>The detail makes<br /><span>the difference.</span></h2>
-              <p className={styles.craftCopy}>A stair rail, a cabinet edge, the framing around a window. Each belongs to the whole room. For architects and designers, we build to the drawings, raise questions early in writing, and keep a site you can bring a client to.</p>
+              <p className={styles.craftCopy}>Timber handrails, fitted cabinetry and painted window frames. Look closer at the joinery in these homes. We work with architects and designers to build these details from their drawings.</p>
               <a href={contact.phoneHref} className={styles.architectLink}>Talk it through before tender </a>
             </Frame>
             <div className={styles.details}>

@@ -220,7 +220,7 @@ export function EnquiryForm({ compact = false }: { compact?: boolean }) {
 
       <p className={['small', styles.status].join(' ')} role="status" aria-live="polite">
         {status === 'invalid' && 'A few details are missing. They are marked above.'}
-        {status === 'ok' && 'Thank you — that has come through. Angus will be in touch.'}
+        {status === 'ok' && 'Thank you. Your enquiry has been sent to Angus.'}
         {status === 'error' &&
           `That did not send. Please call ${contact.phone} or email ${contact.email}.`}
         {status === 'not-configured' &&

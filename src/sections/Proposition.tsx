@@ -15,7 +15,7 @@ export function Proposition() {
         <Reveal className={styles.head}>
           <SheetRef number="A-02" name="What we build" rule={false} />
           <ScrollWords as="h2" id="proposition-heading" className={styles.statement}
-            text="A worker's cottage, a Queenslander, a post-war home *worth keeping*. Built predominantly in *timber*, because that is what these houses are made of." />
+            text="Renovations and extensions to *worker's cottages*, Queenslanders and post-war homes. Timber construction, with care for the *original details*." />
         </Reveal>
         <div className={styles.figures}>
           <Reveal>

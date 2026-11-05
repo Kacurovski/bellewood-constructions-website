@@ -265,7 +265,7 @@ export default function Work() {
         number="B-01"
         eyebrow="Work"
         title="Renovations, extensions and restorations."
-        lede="From a familiar street frontage to the life within. Explore the spaces, materials and details that make each home its own."
+        lede="Explore our work across Brisbane, from restored verandahs and timber details to new kitchens, living rooms and outdoor spaces."
         meta={[
           { label: 'In the collection', value: <span className={styles.count}>{shown} homes</span> },
           { label: 'All projects', value: <Link to={{ pathname: '/work', hash: '#work-collection' }}>Explore the collection</Link> },

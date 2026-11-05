@@ -6,7 +6,8 @@ The public website for Bellewood Constructions, a Brisbane builder of high-end
 heritage renovations. Domain: `bellewood.com.au`. Built by Systemations.
 
 > **Status: design preview, not publishable.** Project photography now comes from
-> the nine approved client folders. The testimonials still need approval;
+> the nine approved client folders. The testimonial quotes are labelled layout
+> samples and must be replaced with genuine, approved client reviews;
 > the enquiry endpoint is unfinished. The optional checklist is off the site
 > until its content and delivery are ready. See **Open items**
 > below before anything goes live. Every one of those is a flag in the code, not
@@ -20,6 +21,29 @@ README. `AGENT.md` in the repo root carries the build instructions that
 reference it.
 
 ---
+
+## Copy and decorative dash review (5 November 2026)
+
+Removed the short strokes before shared section labels and Journey leads, the
+photography note's decorative stroke, and the dash between testimonial counts.
+The counter now uses a slash. Page dividers, functional progress indicators,
+link underlines and the page-top scroll progress line are retained.
+
+Journey now uses complete practical leads with aligned supporting paragraphs,
+without forced italic punchlines. About, services, FAQs, photo captions and
+enquiry copy have been simplified. Visible sentence-level em dashes were replaced
+with ordinary punctuation. No business credentials or contact details changed.
+
+The testimonial audit confirmed that the three quotes are invented layout
+samples, not Google reviews. A visible conditional notice now accompanies them;
+replace the samples with verified client words before publication. The Google
+rating link remains separate. Real client quotes should not be rewritten as
+marketing copy.
+
+Validation: production build passed; desktop (1440px) and mobile (390px) checks
+covered Home, Work, Approach, About, Contact and a project detail page. No runtime
+exceptions, page overflow, or targeted decorative strokes were found. Journey's
+desktop timeline and mobile cards were visually checked.
 
 ## Contact map (4 November 2026)
 

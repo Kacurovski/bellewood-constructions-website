@@ -77,7 +77,7 @@ export const projects: Project[] = [
     summary: 'A Queenslander over two levels, with a verandah that looks across the suburb to the city.',
     story: [
       'From the garden: a gabled verandah on the upper level, the house carried on posts over an open lower floor with the dining table under it, and the original weatherboard wing running off to the side with its sash windows and window hoods.',
-      'Inside, the house is lined in vertical boards throughout — the kitchen with its long island and pendant lights, the stair landing with its timber handrail, the hallway with a glazed door onto the wine room, and the bathroom with its patterned wallpaper. The upper verandah is furnished as a room, with the city on the skyline.',
+      'Vertical boards line the interior. The kitchen has a long island and pendant lights, while the stair landing has a timber handrail. A glazed door opens onto the wine room, and patterned wallpaper finishes the bathroom. The furnished upper verandah looks towards the city.',
     ],
     hero: projectPhotos['auchenflower'][13],
     before: none('No verified before photograph supplied'),
@@ -250,7 +250,7 @@ export const ascotHeroFrames: HeroFrame[] = [
     alt: 'The Ascot kitchen with a stone island, white cabinetry and plantation shutters.',
     room: 'The kitchen',
     title: 'A place to come together.',
-    body: 'Stone, timber and considered details at the heart of the home.',
+    body: 'Stone benchtops and timber cabinetry in a kitchen made for everyday use.',
     placement: 'upperLeft',
     focus: [0.49, 0.54],
     position: '50% 50%',

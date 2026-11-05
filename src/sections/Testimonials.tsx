@@ -12,34 +12,7 @@ import { GoogleReviewBadge } from '../components/GoogleReviewBadge'
 import { googleReviews } from '../config/site'
 import styles from './Testimonials.module.css'
 
-/**
- * What past clients say.
- *
- * Placed immediately before the enquiry, which is where another owner's words
- * do the most work: someone weighing up a two-million-dollar renovation reads
- * this last, then decides whether to make contact.
- *
- * The quotes in `data/testimonials.ts` are WRITTEN, not collected, and nothing
- * on the page says so — that is deliberate, so the section can be reviewed as
- * finished work. It also means the only thing standing between a fabricated
- * endorsement and a live website is the warning below and the README. Do not
- * remove either until the real quotes are in.
- *
- * --- The ground ------------------------------------------------------------
- * Each quote stands on the house it is about, moving.
- *
- * This band has now been through three grounds. It was flat. Then it was ruled
- * paper, drifting — which was honest to the drawing language and far too quiet
- * to carry the last thing a reader sees before deciding whether to ring; at a
- * glance it read as a lined notepad. So the ground is now the project itself:
- * the plate for the quote's own job, darkened right down under a green scrim,
- * slowly pushing in the whole time it holds and cross-fading to the next.
- *
- * That is the live background, and it is built from footage this business
- * owns rather than bought footage of somebody else's site. A `PLATES` entry
- * takes a `video` instead of an `image` the day there is real footage of
- * Angus's own work — nothing else has to change.
- */
+/** Photo-backed testimonial layout. Sample quotes carry a visible draft notice. */
 
 /** How long each quote holds. Long: this is reading, not a slideshow. */
 const HOLD = 8000
@@ -61,8 +34,8 @@ type Plate = {
 }
 
 /**
- * The plate behind each quote — the project that quote is actually about, so
- * the ground is never decoration. Index for index with `testimonials`.
+ * Photographs used for the layout preview. They are not evidence of a review
+ * about the pictured project. Index for index with `testimonials`.
  */
 const PLATES: Plate[] = [
   // Angus's own photographs. The quotes in front of them are still written
@@ -104,8 +77,7 @@ export function Testimonials({ sheetNumber = "A-07" }: { sheetNumber?: string } 
     if (Math.abs(moved) > 44) go(at + (moved < 0 ? 1 : -1))
   }
 
-  // The page carries no visible marker, so the warning goes somewhere a
-  // developer will see it and a visitor never will.
+  // Also flag sample testimonials for developers during preview.
   useEffect(() => {
     if (!testimonialsArePlaceholder) return
     console.warn(
@@ -183,6 +155,7 @@ export function Testimonials({ sheetNumber = "A-07" }: { sheetNumber?: string } 
             </h2>
             {googleReviews.placements.testimonials && <GoogleReviewBadge />}
           </div>
+          {testimonialsArePlaceholder && <p className={styles.draftNote}>Layout preview: these sample quotes are not client reviews. Read genuine reviews using the Google link above.</p>}
         </Reveal>
 
         <div className={styles.stage}>
@@ -230,7 +203,7 @@ export function Testimonials({ sheetNumber = "A-07" }: { sheetNumber?: string } 
 
             <span className={styles.count} aria-hidden="true">
               <span className={styles.countNow}>{String(at + 1).padStart(2, '0')}</span>
-              <span className={styles.countRule} />
+              <span>/</span>
               <span>{String(testimonials.length).padStart(2, '0')}</span>
             </span>
 

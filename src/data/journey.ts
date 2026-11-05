@@ -22,65 +22,57 @@
 export type Stage = {
   title: string
   lead: string
-  emphasis: string
   body: string[]
 }
 
 export const journey: Stage[] = [
   {
     title: 'A conversation',
-    lead: 'You speak directly',
-    emphasis: 'with Angus.',
+    lead: 'Call Angus to talk about the job.',
     body: [
-      'Tell us where the house is, what you have in mind and how far along you are. We’ll talk through whether it’s a good fit.',
+      'Let him know the suburb, what you want to do and whether you have drawings. He’ll let you know if it’s work we can take on.',
     ],
   },
   {
     title: 'A look at the house',
-    lead: 'Start with what makes',
-    emphasis: 'it worth keeping.',
+    lead: 'Show us what you want to change.',
     body: [
-      'We visit the house, look at its character and discuss what you want to keep or change. Bring drawings if you already have them.',
+      'At the house, we look at the existing building and discuss the work you have in mind. We can go through any drawings with you there.',
     ],
   },
   {
     title: 'The documents',
-    lead: 'Resolve the questions',
-    emphasis: 'while they’re on paper.',
+    lead: 'We go through the drawings.',
     body: [
-      'We review the drawings with your architect or designer, clarify the approvals needed and raise questions early, in writing.',
+      'We review the plans with your architect or designer and put any questions in writing. The documents and approvals needed for the job are discussed at this stage.',
     ],
   },
   {
     title: 'Scope and price, in writing',
-    lead: 'Know what’s included',
-    emphasis: 'before you commit.',
+    lead: 'You receive a written quote.',
     body: [
-      'A written quote sets out the scope, exclusions and price. Take time to read it, compare it and ask questions.',
+      'The quote sets out the work, the price and anything excluded. You can read it in your own time and ask us about anything that isn’t clear.',
     ],
   },
   {
     title: 'A start date',
-    lead: 'Make plans around',
-    emphasis: 'a clear start date.',
+    lead: 'We discuss when work can begin.',
     body: [
-      'With around four projects a year, we discuss availability early. If your timing doesn’t fit, we’ll say so before you make plans.',
+      'We take on around four projects a year. We’ll discuss our availability and your timing early, so you know whether they fit.',
     ],
   },
   {
     title: 'The build',
-    lead: 'Clear communication',
-    emphasis: 'throughout the build.',
+    lead: 'Angus runs the job on site.',
     body: [
-      'Angus remains your person on site. We follow a clear sequence, raise questions early in writing, and keep the site orderly.',
+      'You continue dealing with Angus during construction. If something needs a decision, we raise it with you and your architect or designer in writing.',
     ],
   },
   {
     title: 'Handover',
-    lead: 'A home to settle into.',
-    emphasis: 'A builder you can call.',
+    lead: 'We walk through the house with you.',
     body: [
-      'We walk through the finished house together and go through the project paperwork. Angus remains a point of contact after handover.',
+      'Together, we check the finished work and go through the project paperwork. You can contact Angus with questions after handover too.',
     ],
   },
 ]

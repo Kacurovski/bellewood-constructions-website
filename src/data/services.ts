@@ -28,38 +28,38 @@ export type Service = {
 export const services: Service[] = [
   {
     title: 'Renovation',
-    lead: 'Making an old house work as a home again, without losing what made it worth keeping.',
+    lead: 'Updating an older home to suit the people living in it.',
     body:
-      'Kitchens, bathrooms, living spaces and the services behind them, brought up to standard inside a house whose bones are worth the trouble. The original detail is repaired and matched rather than replaced where it can be.',
+      'Kitchens, bathrooms and living spaces, along with the plumbing, wiring and structural work they need. Original details are repaired or matched where possible.',
   },
   {
     title: 'Extension',
-    lead: 'New rooms behind or beside the original, so the street still sees the house it always has.',
+    lead: 'Adding rooms behind or beside the existing house.',
     body:
-      'Most extensions to older Brisbane houses go out the back and open to the north, and the join between old and new is the whole job. It is drawn to be honest about which is which, and built so the original roof still reads from the footpath.',
+      'An extension can add living space, bedrooms or a connection to the garden. We work from your architect’s or designer’s drawings, paying attention to where the addition meets the existing building.',
   },
   {
     title: 'Lift and build-under',
     lead: 'Raising the house and building a new level beneath it.',
     body:
-      'The Brisbane way to double a house without changing its front. The original goes up on new stumps, a new ground floor is framed in timber beneath it, and the house you see from the street is the same house, a level higher.',
+      'The existing house is raised and supported while a new ground floor is built below. The work brings together the structure, stairs and connections between the two levels.',
   },
   {
     title: 'Restoration',
-    lead: 'Putting a house back the way it was built, with modern services behind it.',
+    lead: 'Repairing the original fabric and details of an older house.',
     body:
-      'Verandahs brought back to their proper line, sashes rebuilt, boards lifted and relaid, fretwork and brackets repaired or remade to match. The parts nobody sees — wiring, plumbing, structure — are done properly at the same time.',
+      'Verandahs, sash windows, floorboards, fretwork and brackets can be repaired or remade to match. Structural repairs, wiring and plumbing are considered alongside the visible work.',
   },
   {
     title: 'Character and heritage work',
-    lead: 'Houses in a character overlay, and what can and cannot be done to them.',
+    lead: 'Renovations that retain the features of character and heritage homes.',
     body:
-      'Much of inner Brisbane sits in a character or heritage overlay, and the rules for the street elevation are not the rules for the back. Most of the work on this site is exactly this kind: keep and repair what the street sees, put the new work behind it.',
+      'We work with your architect or designer to carry out the specified repairs and additions, including the timber profiles, windows and verandah details that need to be retained or matched.',
   },
   {
     title: 'Apartment refurbishment',
     lead: 'Full interior refurbishments, in Brisbane and on the Sunshine Coast.',
     body:
-      'Not the main work, but done to the same standard by the same builder. Apartments bring their own constraints — body corporate, access, working hours — and those are handled as part of the job rather than arriving as surprises.',
+      'Apartment work needs planning around building access, body corporate requirements and permitted working hours. We discuss these arrangements as part of the job.',
   },
 ]

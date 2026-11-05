@@ -37,69 +37,68 @@ export const faq: Question[] = [
   {
     q: 'What kind of work do you take on?',
     a: [
-      'Renovations, extensions and restorations to houses in inner Brisbane, and most of them are heritage or older homes — worker’s cottages, Queenslanders, post-war houses worth keeping. Lifting a house and building under it is part of that. So is opening the back of a cottage to the north without touching what the street sees.',
-      'Alongside the houses there are apartment refurbishments, in Brisbane and on the Sunshine Coast, done to the same standard.',
+      'Mostly renovations, extensions and restorations to older homes in inner Brisbane, including worker’s cottages, Queenslanders and post-war houses. We also lift houses and build underneath them.',
+      'We take on apartment refurbishments in Brisbane and on the Sunshine Coast too.',
     ],
   },
   {
     q: 'Do I need an architect before I call you?',
     a: [
-      'No. Plenty of conversations start with a house, a rough idea and no drawings at all. If that is where you are, call and we will talk about whether the idea works and what it would take to find out.',
-      'If you already have an architect or designer, better again. We build to their documents, and the earlier we see them the more useful we are.',
+      'No. You can call with an idea before you have drawings. We’ll discuss what you want to do and what you might need next.',
+      'If you’re already working with an architect or designer, we can review their documents with you.',
     ],
   },
   {
     q: 'Who is actually on site?',
     a: [
-      'Angus. This is a one-builder business by choice, not by size — he is on his own jobs, and the person you meet at the first visit is the person running the build.',
-      'That is also why there are only about four projects a year. It is as many as one builder can run properly.',
+      'Angus runs the build and is on site on his own jobs. You deal with him from the first visit through to handover.',
+      'We take on around four projects a year.',
     ],
   },
   {
     q: 'How do you price a job?',
     a: [
-      'After a look at the house and whatever drawings exist, you get scope and price in writing. Not a number over the phone, and not a figure you have to decide on while somebody is standing in your kitchen.',
-      'You should be able to read a quote properly, compare it with another one, and see what is and is not in it.',
+      'We look at the house and the available drawings, then provide a written quote setting out the work, price and exclusions.',
+      'You can review it in your own time and ask about anything that needs explaining.',
     ],
   },
   {
     q: 'What happens when something in the drawings does not work on site?',
     a: [
-      'You hear about it before it is built, not after. Old houses are full of things nobody could have drawn — a wall that is not where the survey says, a floor that has moved, a stump that has been doing nothing for forty years.',
-      'When one of those turns up, the question comes to you and the architect in writing, while it is still a question. That is the difference between a decision and a variation.',
+      'Existing buildings can differ from the drawings, and some conditions only become visible during construction.',
+      'We raise these issues with you and your architect or designer in writing, so you can discuss the options before the affected work proceeds.',
     ],
   },
   {
     q: 'Do you work on character and heritage houses?',
     a: [
-      'Most of the work is exactly that. A lot of inner Brisbane sits in a character overlay, and what you can do to the street elevation is not the same as what you can do at the back.',
-      'It shapes the job rather than stopping it: keep and repair what the street sees, and put the new work behind it.',
+      'Yes. Most of our work is on heritage and older homes in inner Brisbane. We work with your architect or designer on the details of the existing house and the proposed changes.',
     ],
   },
   {
     q: 'How long does a renovation take?',
     a: [
-      'It depends on the house and on how settled the drawings are before a start date is set. What is worth knowing is that the programme you are given is one builder’s real diary, not a best case written to win the job.',
-      'If the honest answer is that we could not start until after your deadline, you will be told that at the first conversation.',
+      'The scope of work, the condition of the house and the stage of the drawings all affect the timing.',
+      'Tell Angus if you have a deadline. We’ll discuss availability early and let you know whether it fits.',
     ],
   },
   {
     q: 'Are you licensed and insured?',
     a: [
-      'Yes. QBCC licence 1014350, and the statutory home warranty cover that goes with a job of this size. The licence number is at the bottom of every page on this site.',
-      'The company name on the licence is Angus Cowan Constructions Pty Ltd. Bellewood is the same business under a new name — same licence, same builder.',
+      'Yes. Our company QBCC licence is 1014350. Ask Angus about the insurance and home warranty cover for your project.',
+      'The licensed company is Angus Cowan Constructions Pty Ltd, trading as Bellewood Constructions.',
     ],
   },
   {
     q: 'Where do you work?',
     a: [
-      'Inner Brisbane for the houses, and the Sunshine Coast for apartment work. If you are outside that, ring anyway and we will tell you honestly whether we are the right ones for it.',
+      'Our house projects are mostly in inner Brisbane. We also refurbish apartments in Brisbane and on the Sunshine Coast. Call Angus to discuss a project outside these areas.',
     ],
   },
   {
     q: 'What is the quickest way to reach you?',
     a: [
-      'The phone. If Angus is on site and cannot pick up, you will get a text back, so a missed call is not a lost one. The form on the contact page reaches him directly as well.',
+      'Call Angus. If he’s on site and can’t answer, you’ll get a text back. You can also use the enquiry form on the Contact page.',
     ],
   },
 ]

@@ -55,7 +55,7 @@ const KEY: { mat: Key; name: string; note: string }[] = [
   {
     mat: 'clad',
     name: 'Cladding',
-    note: 'Weatherboards, the skin of the original cottage — kept and repaired rather than replaced.',
+    note: 'The original cottage’s weatherboards, retained and repaired where possible.',
   },
   {
     mat: 'charred',

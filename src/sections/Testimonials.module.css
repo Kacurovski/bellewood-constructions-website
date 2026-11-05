@@ -198,11 +198,7 @@
 
 .countNow { color: var(--wash); }
 
-.countRule {
-  width: clamp(1.25rem, 2.5vw, 2rem);
-  height: 1px;
-  background: var(--ink);
-}
+.draftNote { max-width: 65ch; margin-top: 1rem; color: var(--wash); font: 400 .875rem/1.5 var(--font-display); }
 
 .set {
   grid-column: 2;

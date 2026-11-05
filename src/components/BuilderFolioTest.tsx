@@ -9,9 +9,9 @@ import { useReducedMotion } from '../hooks/useReducedMotion'
 import styles from './BuilderFolioTest.module.css'
 
 const sheets = [
-  { label: 'The builder', title: 'One builder. One conversation.', note: contact.principal + ' / Director', body: 'The person who looks at your house is the person who prices it, and the person on site while it is being built.', foot: 'Personally involved', to: '/contact', action: 'Talk with Angus' },
-  { label: 'The material', title: 'Character, carried in timber.', note: 'Renovations / Extensions / Restorations', body: 'Predominantly timber. Care for the weatherboards, the verandahs and the details that make an older Brisbane house its own.', foot: 'Built with care', to: '/work', action: 'Explore the homes' },
-  { label: 'The approach', title: 'Drawn carefully. Built carefully.', note: 'A small number of projects', body: 'Around four projects a year. Drawings followed carefully, with questions taken back to the architect while they are still questions.', foot: 'Time for the details', to: '/approach', action: 'See the approach' },
+  { label: 'The builder', title: 'Working with Angus.', note: contact.principal + ' / Director', body: 'Angus visits the house, prepares the quote and runs the work on site.', foot: 'Personally involved', to: '/contact', action: 'Talk with Angus' },
+  { label: 'The material', title: 'Working in timber.', note: 'Renovations / Extensions / Restorations', body: 'Weatherboards, verandahs and timber joinery are a large part of our work on older Brisbane houses.', foot: 'Built with care', to: '/work', action: 'Explore the homes' },
+  { label: 'The approach', title: 'Working from your plans.', note: 'A small number of projects', body: 'We follow your architect’s or designer’s drawings and raise any questions in writing as the job progresses.', foot: 'Around four projects a year', to: '/approach', action: 'See the approach' },
 ]
 
 /** Illustrative architectural notation, not project drawings or measured plans. */

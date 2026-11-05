@@ -34,7 +34,6 @@ export function SheetRef({ name, note, className, rule = true }: RefProps) {
   return (
     <div className={className}>
       <div className={styles.ref}>
-        <span className={styles.tick} aria-hidden="true" />
         <span className={styles.name}>{name}</span>
         {note && <span className={styles.note}>{note}</span>}
       </div>

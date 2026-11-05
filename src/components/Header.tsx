@@ -57,7 +57,7 @@ export function Header() {
       ].join(' ')}
     >
       <div className={[styles.inner, 'shell'].join(' ')}>
-        <Link to="/" className={styles.brand} aria-label={`${site.name} — home`}>
+        <Link to="/" className={styles.brand} aria-label={`${site.name}, home`}>
           <Logo variant="lockup" tone={overDark ? 'reverse' : 'green'} width={168} decorative />
         </Link>
 

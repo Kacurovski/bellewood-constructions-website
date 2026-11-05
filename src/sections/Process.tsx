@@ -75,8 +75,8 @@ export function Process({ headless = false, sheetNumber = "A-05" }: { headless?:
 
               <Reveal delay={0.08}>
                 <p className={[styles.lede, 'measure-tight'].join(' ')}>
-                  We work from the architect's documents, set out square, and build in
-                  the same order every time. Nothing about the sequence is improvised.
+                    Follow the build from the drawings through the frame, roof and
+                    finishing work. This model shows how the main parts come together.
                 </p>
               </Reveal>
             </div>

@@ -59,28 +59,24 @@ export default function About() {
                 falls on the part that is the actual difference. */}
             <ScrollWords
               className={styles.opening}
-              text={`Bellewood Constructions is run by ${contact.principal}. He has been building in inner Brisbane for more than two decades, almost all of it on heritage and older homes, and he is *on site on his own jobs*.`}
+              text={`Bellewood Constructions is run by ${contact.principal}. He has worked on heritage and older homes in inner Brisbane for more than two decades. He is *on site on his own jobs*.`}
             />
             <p>
-              The work is mostly renovations, extensions and restorations, built
-              predominantly in timber. Around four projects a year, in the range
-              where the detail matters and the drawings are worth following
-              carefully. We also take on apartment refurbishments, in Brisbane and
-              on the Sunshine Coast.
+              We take on around four projects a year, mostly renovations,
+              extensions and restorations built in timber. We also refurbish
+              apartments in Brisbane and on the Sunshine Coast.
             </p>
             <p>
-              He is QBCC licensed, and has been throughout. The licence
-              number is at the bottom of every page on this site, and it is the
-              same number it has always been.
+              Our company QBCC licence is 1014350. The change to Bellewood
+              keeps the same licensed company behind the work.
             </p>
             <p>
-              Most of the work arrives through architects and designers, and
-              through people who have had a neighbour’s house done.
+              Most of our work comes through architects, designers and
+              recommendations from previous clients.
             </p>
             <p>
-              One builder means one conversation. The person who looks at your
-              house is the person who prices it, and the person on site while it
-              is being built.
+              Angus visits the house, prepares the quote and runs the build.
+              You deal with him throughout the job.
             </p>
           </div>
         </Reveal>
@@ -115,21 +111,16 @@ export default function About() {
             <div className={['stack-lg', styles.nameBody].join(' ')}>
               <p>
                 Angus Cowan Constructions is becoming Bellewood Constructions. Belle
-                for beautiful, wood for what we build with. There is no family
-                connection in the name. It was chosen for how it sounds and for what
-                it says about the material.
+                for beautiful, wood for the material we build with.
               </p>
               <p>
-                It is a name change and nothing else. The same company, the same
-                ABN, the same QBCC licence, the same person on site. Every project
-                already in the diary continues exactly as it was. For a while you
-                will see both names together — on this site, on signage, and on
-                the job boards out the front of our work.
+                The company, ABN and QBCC licence stay the same, and Angus
+                continues running the work. Existing projects carry on as agreed.
+                During the change, you may see both names on our website and site signs.
               </p>
               <p>
-                If you have worked with us before, nothing about that changes. If
-                you are about to, it is worth knowing that the reputation you are
-                hiring is longer than the name on the sign.
+                If you know us as Angus Cowan Constructions, you can still
+                contact Angus in the usual way.
               </p>
             </div>
           </Reveal>

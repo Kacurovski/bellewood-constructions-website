@@ -94,9 +94,8 @@ export function Enquiry({ sheetNumber = "A-08" }: { sheetNumber?: string } = {})
             Start a conversation.
           </h2>
           <p className={[styles.note, 'measure-tight'].join(' ')}>
-            Tell us roughly what you are thinking about and where. If it is a good
-            fit we will come and look at the house. If it is not, we will say so and
-            point you somewhere better.
+            Tell Angus where the house is and what you have in mind.
+            We’ll discuss the work and, if it suits, arrange a visit.
           </p>
 
           <dl className={styles.details}>

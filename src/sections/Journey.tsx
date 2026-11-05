@@ -19,7 +19,7 @@ import styles from './Journey.module.css'
  * column that fills with the scroll, so the page keeps its place in the
  * sequence the way the progress bar in the header keeps its place in the
  * page. Each stage's number sits in a ring; the ring fills as the spine
- * reaches it. A short connecting rule and a two-line opening statement settle
+ * reaches it. A short opening statement and supporting explanation settle
  * into place with each stage. Supporting text remains at full contrast.
  *
  * Under reduced motion the spine is drawn full, every ring is filled, and
@@ -147,10 +147,8 @@ export function Journey({ number = 'E-04' }: { number?: string }) {
                   <div className={styles.card}>
                     <h3 className={styles.title}>{stage.title}</h3>
                     <div className={styles.body}>
-                      <span className={styles.leadRule} aria-hidden="true" />
                       <p className={styles.lead}>
-                        <span className={styles.leadLine}>{stage.lead}</span>{' '}
-                        <em className={styles.leadLine}>{stage.emphasis}</em>
+                        <span className={styles.leadLine}>{stage.lead}</span>
                       </p>
                       <div className={styles.support}>
                         {stage.body.map((para) => <p key={para} className={styles.para}>{para}</p>)}

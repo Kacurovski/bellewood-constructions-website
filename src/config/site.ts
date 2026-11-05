@@ -225,7 +225,7 @@ export const forms = {
   leadMagnet: {
     title: 'The major renovation checklist',
     blurb:
-      'What to settle before you open up an older Brisbane home — the questions worth asking before you commit to a builder, and the ones most people only think of once the walls are off.',
+      'Questions to discuss with your builder before renovating an older Brisbane home.',
     // OPEN: the PDF itself. Delivered with Milestone 2.
     file: null as string | null,
   },
@@ -260,7 +260,7 @@ export const nextSteps = [
   },
   {
     label: 'A start date',
-    note: 'Around four projects a year means the diary is honest about when we could begin.',
+    note: 'We discuss availability and your preferred timing before agreeing on a start date.',
   },
 ] as const
 
