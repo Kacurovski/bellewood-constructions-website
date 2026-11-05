@@ -78,8 +78,7 @@ export const faq: Question[] = [
   {
     q: 'How long does a renovation take?',
     a: [
-      'The scope of work, the condition of the house and the stage of the drawings all affect the timing.',
-      'Tell Angus if you have a deadline. We’ll discuss availability early and let you know whether it fits.',
+      'It depends on the scope of work and the condition of the house. Angus can discuss the likely timeframe once he has reviewed the project.',
     ],
   },
   {

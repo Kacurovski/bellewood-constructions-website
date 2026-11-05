@@ -67,7 +67,7 @@ export function LivingSpaces({ sheetNumber = "A-03", embedded = false }: { sheet
           </Frame>
           <Frame delay={0.16} className={styles.editorialNote}>
             <p className={styles.editorialQuote}>A place to gather.<br />A little room to retreat.</p>
-            <p className={styles.spaceNote}>The kitchen opens onto the verandah, with room to eat outside. Elsewhere in the house, smaller rooms offer a quiet place to sit.</p>
+            <p className={styles.spaceNote}>At Bardon, the kitchen opens onto a sheltered deck. At Yeronga, leadlight windows bring character into the bathroom.</p>
             <Link to="/work" className={styles.architectLink}>Explore the homes </Link>
           </Frame>
         </div>

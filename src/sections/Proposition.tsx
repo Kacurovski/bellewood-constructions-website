@@ -39,7 +39,7 @@ export function Proposition() {
         <Reveal delay={0.16} className={styles.bodyWrap}>
           <aside className={styles.note}>
             <span className={['eyebrow', styles.noteLabel].join(' ')}>Beyond the family home</span>
-            <p className={styles.aside}>We also take on apartment refurbishments, in Brisbane and on the Sunshine Coast, to the same standard.</p>
+            <p className={styles.aside}>We also refurbish apartments in Brisbane and on the Sunshine Coast.</p>
           </aside>
         </Reveal>
       </div>

@@ -22,6 +22,22 @@ reference it.
 
 ---
 
+## Approved copy refinements (5 November 2026)
+
+Simplified the apartment note, Contact form introduction, two Journey stages,
+the renovation-duration FAQ and the restoration description. Seven project
+stories now use shorter descriptions of the visible architecture. The living
+spaces copy names Bardon and Yeronga separately rather than implying that their
+photographs show rooms in the same home. Removed the generic sentence beside
+Home's all-work link, preserving the link's desktop alignment.
+
+About's introduction now puts Angus first and removes its repeated closing
+paragraph. The opening statement retains the scroll treatment; the supporting
+sentence uses body type so the longer wording does not dominate small screens.
+The owner explicitly retained Contact's two audience labels and "Or write it
+down" heading, plus About's company-licence paragraph. Testimonials remain
+unchanged at the owner's request pending approved review text.
+
 ## Finished section labels and enquiry links (5 November 2026)
 
 The Home photograph, Work closing and Approach photograph links now read

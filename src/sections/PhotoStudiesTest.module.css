@@ -59,8 +59,7 @@
 .selectionCopy p { margin-top: 0.65rem; font-size: 1.2rem; line-height: 1.55; }
 .reverseLink { flex-shrink: 0; display: inline-flex; align-items: center; min-height: 44px; padding: 0.65rem 0; border-bottom: 1px solid var(--rule-reverse); text-decoration: none; font: 500 0.85rem/1.5 var(--font-display); transition: border-color 350ms; }
 .reverseLink:hover { border-bottom-color: currentColor; }
-.collectionLink { display: flex; align-items: center; justify-content: space-between; gap: 1rem 2rem; margin-top: 1.5rem; padding-top: 1.35rem; border-top: 1px solid var(--rule-reverse); }
-.collectionLink > span { font: italic 400 1.15rem/1.4 var(--font-body); }
+.collectionLink { display: flex; align-items: center; justify-content: flex-end; gap: 1rem 2rem; margin-top: 1.5rem; padding-top: 1.35rem; border-top: 1px solid var(--rule-reverse); }
 .collectionButton { position: relative; display: inline-flex; align-items: center; justify-content: space-between; gap: 2rem; min-width: 0; min-height: 72px; padding: 0.75rem 0; color: var(--wash); text-decoration: none; font: 400 clamp(1.8rem, 2.5vw, 2.25rem)/1.1 var(--font-body); letter-spacing: -0.02em; }
 .collectionButton::before, .collectionButton::after { content: ''; position: absolute; inset: auto 0 0; height: 1px; background: currentColor; }
 .collectionButton::before { opacity: 0.35; }

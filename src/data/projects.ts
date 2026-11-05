@@ -59,7 +59,7 @@ export const projects: Project[] = [
     year: null,
     summary: 'A two-storey Queenslander behind a white picket fence, verandahs on both levels.',
     story: [
-      'Double verandahs across the full width of the house, on turned posts with fretwork brackets at every head, and French doors opening onto the upper deck. The whole house in one pale colour under a corrugated roof, and a picket fence and gate to the street in the same white as the balustrades.',
+      'Verandahs span both levels of this Queenslander, with French doors opening onto the upper deck. White timber detailing continues from the balustrades to the front fence and gate.',
     ],
     hero: projectPhotos['kalinga'][0],
     before: none('No verified before photograph supplied'),
@@ -76,7 +76,7 @@ export const projects: Project[] = [
     year: null,
     summary: 'A Queenslander over two levels, with a verandah that looks across the suburb to the city.',
     story: [
-      'From the garden: a gabled verandah on the upper level, the house carried on posts over an open lower floor with the dining table under it, and the original weatherboard wing running off to the side with its sash windows and window hoods.',
+      'A gabled verandah overlooks the garden, with a sheltered dining area beneath it. Alongside, the weatherboard wing retains its sash windows and window hoods.',
       'Vertical boards line the interior. The kitchen has a long island and pendant lights, while the stair landing has a timber handrail. A glazed door opens onto the wine room, and patterned wallpaper finishes the bathroom. The furnished upper verandah looks towards the city.',
     ],
     hero: projectPhotos['auchenflower'][13],
@@ -94,7 +94,7 @@ export const projects: Project[] = [
     year: null,
     summary: 'A two-storey character home at dusk, its verandah and lattice lit from within.',
     story: [
-      'The street front: a full-width verandah on the upper level with a timber balustrade on turned posts, a lattice frieze beneath it, two round windows either side of the entry, and a low fence with a wrought-iron gate. The lights are on inside.',
+      'A full-width upper verandah sits above decorative latticework, with two round windows framing the entrance below. A low fence and wrought-iron gate complete the street frontage.',
     ],
     hero: projectPhotos['clayfield'][4],
     before: none('No verified before photograph supplied'),
@@ -111,7 +111,7 @@ export const projects: Project[] = [
     year: null,
     summary: 'A character home in Ascot: a navy front door under a fanlight, and a window seat in the front room.',
     story: [
-      'The entry: a pair of glazed doors in deep navy under a fanlight, on a verandah lined in vertical boards. Inside, the front room is lined the same way, with a window seat set into the bay under three sash windows and the timber floor running through.',
+      'Deep navy glazed doors sit beneath a fanlight on the verandah. Inside, timber floors lead into a front room with a window seat beneath three sash windows.',
     ],
     hero: projectPhotos['ascot'][8],
     before: none('No verified before photograph supplied'),
@@ -128,7 +128,7 @@ export const projects: Project[] = [
     year: null,
     summary: 'A living room under a coffered ceiling, opening through full-height glass to the deck and the view.',
     story: [
-      'One long room: a coffered ceiling overhead, wide timber boards underfoot, a stone-clad fireplace wall with the television set into it, timber shelving beside it, and full-height glazing along the far side opening onto a deck with the suburb below.',
+      'A coffered ceiling and timber floors define the living room, which opens onto a broad deck overlooking the suburb. A stone-clad fireplace and fitted timber shelving sit along one wall.',
     ],
     hero: projectPhotos['windsor'][7],
     before: none('No verified before photograph supplied'),
@@ -145,7 +145,7 @@ export const projects: Project[] = [
     year: null,
     summary: 'A pair of new homes side by side, in weatherboard, brick and timber.',
     story: [
-      'Two houses on neighbouring blocks, photographed at dusk with the lights on: one in horizontal weatherboard with a timber-screened balcony over a garage, the other in vertical board over a brick base. The one departure on this site from older homes.',
+      'Two neighbouring homes use weatherboard, brick and timber in different ways. One has a timber-screened balcony above the garage; the other combines vertical cladding with a brick base.',
     ],
     hero: projectPhotos['camp-hill'][8],
     before: none('No verified before photograph supplied'),
@@ -191,7 +191,7 @@ export const projects: Project[] = [
     kind: "Character home",
     year: null,
     summary: "Weatherboard verandahs, polished timber floors and leadlight windows, with a pool and lawn behind the house.",
-    story: ["Front stairs rise between the weatherboard wings to a sheltered verandah. Inside, polished timber floors lead through the hallway to the kitchen, and leadlight windows frame a bathroom with a clawfoot bath.", "The rear opens onto a lawn and pool beneath two levels of verandahs. The photographs also show the contrast between traditional painted joinery and a bathroom finished with timber cabinetry, dark tiles and glass."],
+    story: ["Front stairs rise between the weatherboard wings to a sheltered verandah. Inside, polished timber floors lead through the hallway to the kitchen, and leadlight windows frame a bathroom with a clawfoot bath.", "The rear opens onto a lawn and pool beneath two levels of verandahs. Alongside the traditional painted joinery, a contemporary bathroom combines timber cabinetry, dark tiles and glass."],
     hero: projectPhotos['yeronga'][4],
     before: none('No verified before photograph supplied'),
     after: projectPhotos['yeronga'][4],

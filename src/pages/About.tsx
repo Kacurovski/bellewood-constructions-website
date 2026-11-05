@@ -59,8 +59,12 @@ export default function About() {
                 falls on the part that is the actual difference. */}
             <ScrollWords
               className={styles.opening}
-              text={`Bellewood Constructions is run by ${contact.principal}. He has worked on heritage and older homes in inner Brisbane for more than two decades. He is *on site on his own jobs*.`}
+              text={`${contact.principal} runs Bellewood Constructions and has worked on heritage and older homes in inner Brisbane for *more than two decades*.`}
             />
+            <p>
+              He visits the house, prepares the quote and runs the build,
+              so you deal with him throughout.
+            </p>
             <p>
               We take on around four projects a year, mostly renovations,
               extensions and restorations built in timber. We also refurbish
@@ -73,10 +77,6 @@ export default function About() {
             <p>
               Most of our work comes through architects, designers and
               recommendations from previous clients.
-            </p>
-            <p>
-              Angus visits the house, prepares the quote and runs the build.
-              You deal with him throughout the job.
             </p>
           </div>
         </Reveal>

@@ -42,8 +42,8 @@ export default function Contact() {
               Or write it down.
             </h2>
             <p className={[styles.asideNote, 'measure-tight'].join(' ')}>
-              A suburb and a sentence about what you are thinking of is enough to
-              start. Angus reads every one of these himself.
+              Tell us the suburb and a little about the work you have in mind.
+              Angus reads each enquiry himself.
             </p>
           </Reveal>
 

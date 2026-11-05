@@ -44,14 +44,14 @@ export const journey: Stage[] = [
     title: 'The documents',
     lead: 'We go through the drawings.',
     body: [
-      'We review the plans with your architect or designer and put any questions in writing. The documents and approvals needed for the job are discussed at this stage.',
+      'We review the plans with your architect or designer and put any questions in writing. We also discuss which documents and approvals the job needs.',
     ],
   },
   {
     title: 'Scope and price, in writing',
-    lead: 'You receive a written quote.',
+    lead: 'Time to review the details.',
     body: [
-      'The quote sets out the work, the price and anything excluded. You can read it in your own time and ask us about anything that isn’t clear.',
+      'Your quote sets out the work, price and exclusions. Read it through and ask Angus about anything that needs explaining.',
     ],
   },
   {

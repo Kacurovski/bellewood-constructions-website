@@ -126,7 +126,6 @@ export function EverydayStudy({ home = false }: { home?: boolean } = {}) {
           </div>
         </Reveal>
         {home && <div className={styles.collectionLink}>
-          <span>Every home has its own story.</span>
           <Link to="/work" className={styles.collectionButton}>
             <span>Explore all work</span>
           </Link>

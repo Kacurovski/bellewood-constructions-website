@@ -46,7 +46,7 @@ export const services: Service[] = [
   },
   {
     title: 'Restoration',
-    lead: 'Repairing the original fabric and details of an older house.',
+    lead: 'Repairing the original materials and features of an older home.',
     body:
       'Verandahs, sash windows, floorboards, fretwork and brackets can be repaired or remade to match. Structural repairs, wiring and plumbing are considered alongside the visible work.',
   },
