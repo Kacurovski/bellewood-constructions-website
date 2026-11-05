@@ -3,6 +3,7 @@ import { Canvas, useFrame, useThree } from '@react-three/fiber'
 import * as THREE from 'three'
 import { FRAME_BOUNDS, FRAME_MEMBERS, FRAME_VIEWS } from './frameMembers'
 import type { FrameView, MaterialKey } from './frameMembers'
+import { CroydeLandscape, GARDEN_TREES } from './CroydeLandscape'
 
 /** Croyde's white Federation house, assembled through scroll.
  * The live scene and its fallback share the photo-referenced member list.
@@ -10,18 +11,18 @@ import type { FrameView, MaterialKey } from './frameMembers'
 
 const LINE = '#05432a'
 
-/** White painted timber in neutral daylight. The charcoal gable infill and
- * soft silver roof preserve the contrast visible in the Croyde photographs. */
+/** A full white finish, requested for this architectural study. Small tonal
+ * differences and natural shadows reveal the joinery without dark trim. */
 const MATERIALS: Record<MaterialKey, { color: string; roughness: number }> = {
   frame: { color: '#b19b7b', roughness: 0.88 },
-  clad: { color: '#f5f4ef', roughness: 0.86 },
-  trim: { color: '#fffef9', roughness: 0.76 },
-  joinery: { color: '#ecece6', roughness: 0.78 },
-  deck: { color: '#b2aaa0', roughness: 0.9 },
-  roof: { color: '#e1e5e2', roughness: 0.72 },
-  glass: { color: '#56615f', roughness: 0.28 },
-  accent: { color: '#414945', roughness: 0.85 },
-  ground: { color: '#e0dcd2', roughness: 0.95 },
+  clad: { color: '#ffffff', roughness: 0.86 },
+  trim: { color: '#ffffff', roughness: 0.76 },
+  joinery: { color: '#fdfefa', roughness: 0.78 },
+  deck: { color: '#f5f5ef', roughness: 0.9 },
+  roof: { color: '#fafcf9', roughness: 0.72 },
+  glass: { color: '#839491', roughness: 0.3 },
+  accent: { color: '#ffffff', roughness: 0.82 },
+  ground: { color: '#f5f5ef', roughness: 0.95 },
 }
 
 const MATERIAL_KEYS = Object.keys(MATERIALS) as MaterialKey[]
@@ -68,7 +69,7 @@ function Building({ progress }: { progress: React.MutableRefObject<number> }) {
   }, [])
   const framePaint = useMemo(() => ({
     bare: new THREE.Color(MATERIALS.frame.color),
-    finished: new THREE.Color('#ecece6'),
+    finished: new THREE.Color('#ffffff'),
   }), [])
 
   /** Which instanced mesh each member belongs to, and its slot within it. */
@@ -127,10 +128,9 @@ function Building({ progress }: { progress: React.MutableRefObject<number> }) {
     const p = progress.current
 
     if (lineMat.current) {
-      // The drawing hands over to solid material through the middle of the
-      // section, and a trace of it stays: the drawing does not stop being true
-      // once the thing is built.
-      lineMat.current.opacity = 1 - smoothstep(0.48, 0.9, p) * 0.97
+      // The drawing hands over to solid material. At completion the white
+      // paint and its shadows define the edges, without a green wire outline.
+      lineMat.current.opacity = 1 - smoothstep(0.48, 0.9, p)
     }
 
     const solidOpacity = smoothstep(0.34, 0.68, p)
@@ -261,20 +261,20 @@ function Daylight({ shadows }: { shadows: boolean }) {
       {/* Neutral sky and ground bounce keep shaded white walls white rather
           than tinting them with the site's green. The key reveals board laps,
           balusters and the depth of the sheltered verandahs. */}
-      <hemisphereLight args={['#ffffff', '#dedbd4', 1.35]} />
+      <hemisphereLight args={['#ffffff', '#e9e7dc', 1.35]} />
       <directionalLight
         key={shadowSize}
         position={[-18, 26, 17]}
-        intensity={1.25}
+        intensity={1.45}
         color="#fffefa"
         castShadow={shadows}
         shadow-mapSize={[shadowSize, shadowSize]}
         shadow-bias={-0.0003}
         shadow-normalBias={0.025}
-        shadow-camera-left={-20}
-        shadow-camera-right={20}
-        shadow-camera-top={20}
-        shadow-camera-bottom={-20}
+        shadow-camera-left={-27}
+        shadow-camera-right={27}
+        shadow-camera-top={27}
+        shadow-camera-bottom={-27}
         shadow-camera-near={0.5}
         shadow-camera-far={80}
       />
@@ -315,21 +315,7 @@ export default function TimberFrame({
 
       <Daylight shadows={shadows} />
 
-      {shadows && (
-        // Catches the shadow and nothing else, so the building sits on the wash
-        // ground rather than floating above it.
-        <mesh
-          rotation={[-Math.PI / 2, 0, 0]}
-          // On the ground, not under the floor: the house is high-set, and a
-          // shadow under the floor line would float a metre and a half up.
-          position={[0, FRAME_BOUNDS.ground - FRAME_BOUNDS.centreY - 0.005, 0]}
-          receiveShadow
-        >
-          <planeGeometry args={[44, 44]} />
-          <shadowMaterial opacity={0.13} />
-        </mesh>
-      )}
-
+      <CroydeLandscape />
       <Building progress={progress} />
     </Canvas>
   )
@@ -356,6 +342,16 @@ function Fit({ view }: { view: FrameView }) {
       scale.set(...member.s)
       matrix.compose(position, quaternion, scale)
       for (const corner of UNIT_CORNERS) points.push(new THREE.Vector3(...corner).applyMatrix4(matrix))
+    }
+    // Include the garden's useful extent, keeping trees and the gate path in
+    // frame in both views. The soft outer lawn fades beyond this silhouette.
+    for (const [x, y, z] of [[-10.5, 0, 18.5], [10.5, 0, 18.5], [-0.7, 0, 21], [-10, 0, -17], [10, 0, -17]]) {
+      points.push(new THREE.Vector3(x, y - FRAME_BOUNDS.centreY, z - FRAME_BOUNDS.centreZ))
+    }
+    for (const tree of GARDEN_TREES) {
+      for (const x of [-1, 1]) for (const z of [-1, 1]) {
+        points.push(new THREE.Vector3(tree.x + x * tree.width * 1.3, tree.height * 1.06 - FRAME_BOUNDS.centreY, tree.z + z * tree.width * 1.3 - FRAME_BOUNDS.centreZ))
+      }
     }
     return points
   }, [])

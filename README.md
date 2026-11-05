@@ -1505,8 +1505,9 @@ pedestrian gatehouse. Window and door openings interrupt the board courses;
 terrace and fence railings leave real entry openings. Roof faces are intersected
 before their corrugated strips are emitted, retaining actual ridges and valleys.
 
-The finished house is warm white with pale metal roofs, charcoal accents and
-recessed glazing. Timber is visible during Frame and painted white during Finish.
+The finished house has white cladding, roofs, verandah posts, rails, gable infill,
+joinery and decks, with recessed grey-green glazing. Timber is visible during
+Frame and painted white during Finish.
 The street/garden controls and reversible scroll assembly remain. This is a
 photo-based architectural study, not a surveyed replica or a reconstruction of
 the actual renovation sequence. Hidden rear openings and construction are
@@ -1539,8 +1540,27 @@ Only the street-facing arch remains; a repeated rear arch made the porch trim
 appear doubled. Concave timber corbels replace the thin diagonal braces and
 connect to the post faces and roof beams, with none projecting past beam ends.
 The rear stairwell has supported corners and a complete
-landing guard. The charcoal trim remains part of the photographed house's
-palette. Both fallback renders are regenerated after these geometry corrections.
+landing guard. Both fallback renders are regenerated after these geometry corrections.
+
+#### White finish and garden setting, 6 November 2026
+
+The owner requested an all-white interpretation of the house. The original
+charcoal details now share its white finish; daylight and shadows retain the
+depth of the rails, board courses and roof. The drafting outline fades away
+completely at Finish. No rail, stair, gate or roof geometry was changed.
+
+`CroydeLandscape.tsx` adds textured lawn, low planting beds, two trees and stone
+paths aligned with the existing front gate and rear stair. This garden is an
+illustrative setting, not a claim about the property's actual landscaping.
+Seeded canvas textures and instanced leaves/branches are generated locally,
+with no external image requests, new dependencies or stock photographs.
+The trees stay in the same positions in both views. Camera fitting includes
+their canopies and the entry path; the lawn fades into the page and a muted
+sky tint behind the canvas separates the white roof from the page background.
+
+Both still images were regenerated from the live scene. They preserve the same
+garden and white finish for reduced motion and unavailable WebGL. The scroll
+sequence, view controls and separate Approach model remain unchanged.
 
 ### Temporary heritage explorer concept
 
