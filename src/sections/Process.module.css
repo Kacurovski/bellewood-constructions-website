@@ -164,9 +164,10 @@
 .scene {
   position: absolute;
   inset: 0 0 clamp(1.5rem, 3vh, 2.25rem);
-  /* A quiet sky tint separates the white roof from the paper. The garden
-     itself lives in Three, so it keeps its depth in both viewing angles. */
-  background: radial-gradient(ellipse at 50% 48%, #d2dfd6 0%, rgba(210, 223, 214, 0.55) 35%, rgba(210, 223, 214, 0) 70%);
+  /* Landscape fills the scene, including behind the roof. Only the outer
+     edge blends into the page, with the same treatment on static renders. */
+  mask-image: linear-gradient(to right, transparent, #000 2.8%, #000 97.2%, transparent), linear-gradient(to bottom, transparent, #000 2.8%, #000 97.2%, transparent);
+  mask-composite: intersect;
 }
 
 .sceneDim {

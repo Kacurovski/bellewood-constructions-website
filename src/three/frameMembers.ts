@@ -6,14 +6,14 @@
  * The animation explains a build sequence, not the renovation's chronology.
  * Street is +z; the long garden elevation is -x. Approximate metre units.
  */
-export type MaterialKey = 'frame' | 'clad' | 'trim' | 'joinery' | 'roof' | 'glass' | 'deck' | 'accent' | 'ground'
+export type MaterialKey = 'frame' | 'clad' | 'trim' | 'joinery' | 'roof' | 'glass' | 'deck' | 'accent' | 'ground' | 'brick'
 export type Member = {
   p: [number,number,number]; s: [number,number,number]
   rx:number; ry?:number; rz?:number; at:number; stage:0|1|2|3
   mat:MaterialKey; outer?:boolean; lines?:false; layer?:1|2; profile?:'corbel'
 }
 export type FrameView = 'front'|'rear'
-export const FRAME_VIEWS: Record<FrameView,[number,number,number]> = {front:[23,14,42],rear:[-34,16,-26]}
+export const FRAME_VIEWS: Record<FrameView,[number,number,number]> = {front:[23,21,42],rear:[-34,23,-26]}
 type V3=[number,number,number]
 type V2=[number,number]
 type Opening={u:number;y:number;w:number;h:number;door?:boolean;panes?:number;hood?:boolean}
@@ -408,8 +408,8 @@ gableBack('x',-2.19,-2.6,1.9,6.85,8.13,1)
 // Close the rear service floor where the ensuite steps beyond the main wall.
 slab(-0.65,7.15,-13.3,-3.9,UP-0.05,'joinery',0.78)
 const chimneyX=4.3,chimneyZ=-1.55,chimneyBase=roofHeight(chimneyX,chimneyZ)
-box([chimneyX,chimneyBase+0.55,chimneyZ],[0.65,1.1,0.55],'ground',0.67,2)
-box([chimneyX,chimneyBase+1.12,chimneyZ],[0.83,0.12,0.73],'ground',0.68,2)
+box([chimneyX,chimneyBase+0.55,chimneyZ],[0.65,1.1,0.55],'brick',0.67,2)
+box([chimneyX,chimneyBase+1.12,chimneyZ],[0.83,0.12,0.73],'brick',0.68,2)
 box([chimneyX,chimneyBase+1.2,chimneyZ],[0.48,0.05,0.4],'accent',0.69,2)
 for(const x of [1.9,2.7])box([x,7.42,-14.3],[0.65,0.06,0.7],'glass',0.93,3,{rx:0.03})
 for(const [a,b,y] of [[[ -7.65,10.4],[7.65,10.4],6.3],[[-7.65,-4.55],[-7.65,10.4],6.3],[[7.65,-4.55],[7.65,10.4],6.3],[[-9.4,-14.3],[-9.4,-3.55],6.31],[[-9.4,-14.3],[-4.65,-14.3],6.31],[[7.55,-13],[7.55,-4.55],6.48]] as [V2,V2,number][])beam([a[0],y,a[1]],[b[0],y,b[1]],0.14,'trim',0.68,2)

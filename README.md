@@ -1505,19 +1505,19 @@ pedestrian gatehouse. Window and door openings interrupt the board courses;
 terrace and fence railings leave real entry openings. Roof faces are intersected
 before their corrugated strips are emitted, retaining actual ridges and valleys.
 
-The finished house has white cladding, roofs, verandah posts, rails, gable infill,
-joinery and decks, with recessed grey-green glazing. Timber is visible during
-Frame and painted white during Finish.
+The finished house has white cladding and trim, charcoal verandah posts, rails
+and gable infill, a pale metal roof, weathered decks, a brick chimney and recessed
+grey-green glazing. Timber is visible during Frame and painted white during Finish.
 The street/garden controls and reversible scroll assembly remain. This is a
 photo-based architectural study, not a surveyed replica or a reconstruction of
 the actual renovation sequence. Hidden rear openings and construction are
 interpreted from the available views and floor plan.
 
 `TimberFrame.tsx` fits each view from the transformed geometry, draws members as
-nine instanced box-material groups plus one shared curved-bracket extrusion,
+ten instanced box-material groups plus one shared curved-bracket extrusion,
 and excludes unoutlined roof strips from the CPU drafting-line work.
 Shadow resolution is reduced on narrow canvases. Reduced
-motion and unavailable WebGL use matching transparent WebP renders:
+motion and unavailable WebGL use matching WebP renders:
 `src/assets/models/assembly-street.webp` and `assembly-garden.webp`.
 Regenerate both with the dev server running on port 5173:
 
@@ -1542,25 +1542,28 @@ connect to the post faces and roof beams, with none projecting past beam ends.
 The rear stairwell has supported corners and a complete
 landing guard. Both fallback renders are regenerated after these geometry corrections.
 
-#### White finish and garden setting, 6 November 2026
+#### Photo-referenced colours and surrounding garden, 6 November 2026
 
-The owner requested an all-white interpretation of the house. The original
-charcoal details now share its white finish; daylight and shadows retain the
-depth of the rails, board courses and roof. The drafting outline fades away
-completely at Finish. No rail, stair, gate or roof geometry was changed.
+White remains the main wall colour. The owner clarified that the other finishes
+should follow the photographs, so the charcoal posts, rails and gable infill,
+weathered decking and brick chimney retain their contrast. Neutral daylight
+reveals the boards and verandah details. Drafting outlines disappear at Finish.
+No rail, stair, gate or roof geometry was changed by this colour/landscape update.
 
-`CroydeLandscape.tsx` adds textured lawn, low planting beds, two trees and stone
-paths aligned with the existing front gate and rear stair. This garden is an
-illustrative setting, not a claim about the property's actual landscaping.
+`CroydeLandscape.tsx` interprets the aerial and exterior photographs: the long
+garden-side pool, pale stone terrace, open sloping lawn, side aggregate driveway,
+street edge, picket fencing, mature trees and planted boundaries. Terrain extends
+around and behind the whole house. Dimensions and hidden planting are approximate;
+this remains an architectural study, not a surveyed model of the grounds.
 Seeded canvas textures and instanced leaves/branches are generated locally,
 with no external image requests, new dependencies or stock photographs.
-The trees stay in the same positions in both views. Camera fitting includes
-their canopies and the entry path; the lawn fades into the page and a muted
-sky tint behind the canvas separates the white roof from the page background.
+Both camera views share the same planting and ground. Framing includes the house,
+pool and entrance path; the wider setting continues beyond the canvas, whose
+outer edges fade into the page. The house stays large enough to read on phones.
 
-Both still images were regenerated from the live scene. They preserve the same
-garden and white finish for reduced motion and unavailable WebGL. The scroll
-sequence, view controls and separate Approach model remain unchanged.
+Both still images are regenerated from the live scene for reduced motion and
+unavailable WebGL. The scroll sequence, view controls and separate Approach model
+remain unchanged.
 
 ### Temporary heritage explorer concept
 

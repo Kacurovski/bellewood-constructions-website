@@ -3,26 +3,28 @@ import { Canvas, useFrame, useThree } from '@react-three/fiber'
 import * as THREE from 'three'
 import { FRAME_BOUNDS, FRAME_MEMBERS, FRAME_VIEWS } from './frameMembers'
 import type { FrameView, MaterialKey } from './frameMembers'
-import { CroydeLandscape, GARDEN_TREES } from './CroydeLandscape'
+import { CroydeLandscape } from './CroydeLandscape'
 
 /** Croyde's white Federation house, assembled through scroll.
  * The live scene and its fallback share the photo-referenced member list.
  */
 
-const LINE = '#05432a'
+// Pale drafting lines stay legible over the planted setting during assembly.
+const LINE = '#f4f1dd'
 
-/** A full white finish, requested for this architectural study. Small tonal
- * differences and natural shadows reveal the joinery without dark trim. */
+/** White is the main paint colour. The photographed house's charcoal posts,
+ * gable infill, muted metal roof and weathered decks supply the contrast. */
 const MATERIALS: Record<MaterialKey, { color: string; roughness: number }> = {
   frame: { color: '#b19b7b', roughness: 0.88 },
   clad: { color: '#ffffff', roughness: 0.86 },
   trim: { color: '#ffffff', roughness: 0.76 },
-  joinery: { color: '#fdfefa', roughness: 0.78 },
-  deck: { color: '#f5f5ef', roughness: 0.9 },
-  roof: { color: '#fafcf9', roughness: 0.72 },
-  glass: { color: '#839491', roughness: 0.3 },
-  accent: { color: '#ffffff', roughness: 0.82 },
-  ground: { color: '#f5f5ef', roughness: 0.95 },
+  joinery: { color: '#f5f4ee', roughness: 0.78 },
+  deck: { color: '#b2aaa0', roughness: 0.9 },
+  roof: { color: '#e5e6df', roughness: 0.72 },
+  glass: { color: '#627572', roughness: 0.3 },
+  accent: { color: '#414945', roughness: 0.82 },
+  ground: { color: '#dcd5c6', roughness: 0.95 },
+  brick: { color: '#95765f', roughness: 0.94 },
 }
 
 const MATERIAL_KEYS = Object.keys(MATERIALS) as MaterialKey[]
@@ -265,16 +267,16 @@ function Daylight({ shadows }: { shadows: boolean }) {
       <directionalLight
         key={shadowSize}
         position={[-18, 26, 17]}
-        intensity={1.45}
+        intensity={1.25}
         color="#fffefa"
         castShadow={shadows}
         shadow-mapSize={[shadowSize, shadowSize]}
         shadow-bias={-0.0003}
         shadow-normalBias={0.025}
-        shadow-camera-left={-27}
-        shadow-camera-right={27}
-        shadow-camera-top={27}
-        shadow-camera-bottom={-27}
+        shadow-camera-left={-36}
+        shadow-camera-right={36}
+        shadow-camera-top={36}
+        shadow-camera-bottom={-36}
         shadow-camera-near={0.5}
         shadow-camera-far={80}
       />
@@ -311,6 +313,7 @@ export default function TimberFrame({
       resize={{ scroll: false }}
       onCreated={({ camera }) => camera.lookAt(0, 0, 0)}
     >
+      <fog attach="fog" args={['#dce2d5', 80, 155]} />
       <Fit view={view} />
 
       <Daylight shadows={shadows} />
@@ -343,15 +346,10 @@ function Fit({ view }: { view: FrameView }) {
       matrix.compose(position, quaternion, scale)
       for (const corner of UNIT_CORNERS) points.push(new THREE.Vector3(...corner).applyMatrix4(matrix))
     }
-    // Include the garden's useful extent, keeping trees and the gate path in
-    // frame in both views. The soft outer lawn fades beyond this silhouette.
-    for (const [x, y, z] of [[-10.5, 0, 18.5], [10.5, 0, 18.5], [-0.7, 0, 21], [-10, 0, -17], [10, 0, -17]]) {
+    // Frame the house and nearby pool/paths, not the entire 45 m property.
+    // The surrounding landscape continues beyond the camera in every direction.
+    for (const [x, y, z] of [[-14.9, 0, 2.8], [-14.9, 0, -15], [10, 0, 18.5], [-0.7, 0, 21]]) {
       points.push(new THREE.Vector3(x, y - FRAME_BOUNDS.centreY, z - FRAME_BOUNDS.centreZ))
-    }
-    for (const tree of GARDEN_TREES) {
-      for (const x of [-1, 1]) for (const z of [-1, 1]) {
-        points.push(new THREE.Vector3(tree.x + x * tree.width * 1.3, tree.height * 1.06 - FRAME_BOUNDS.centreY, tree.z + z * tree.width * 1.3 - FRAME_BOUNDS.centreZ))
-      }
     }
     return points
   }, [])
