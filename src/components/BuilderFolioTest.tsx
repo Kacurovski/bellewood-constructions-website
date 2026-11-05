@@ -2,8 +2,6 @@ import { useEffect, useRef, useState } from 'react'
 import { motion, useInView } from 'framer-motion'
 import { Link } from 'react-router-dom'
 import { Logo } from './Logo'
-import { ImageSlot } from './ImageSlot'
-import { stills } from '../data/projects'
 import { contact } from '../config/site'
 import { useReducedMotion } from '../hooks/useReducedMotion'
 import styles from './BuilderFolioTest.module.css'
@@ -52,7 +50,6 @@ export function BuilderFolioTest() {
   const ref = useRef<HTMLDivElement>(null)
   const seen = useInView(ref, { once: true, amount: 0.35 })
   const introduced = useRef(false)
-  const [photo, setPhoto] = useState(false)
   const [open, setOpen] = useState(reduced)
   const [active, setActive] = useState(0)
 
@@ -67,11 +64,7 @@ export function BuilderFolioTest() {
   }, [seen, reduced])
 
   return <div ref={ref} id="builder-folio-test" className={styles.test}>
-    <div className={styles.previewBar}>
-      <span>About study / Test</span>
-      <button type="button" aria-pressed={photo} onClick={() => setPhoto(!photo)}>{photo ? 'View folio' : 'Original photo'} </button>
-    </div>
-    {photo ? <ImageSlot slot={stills.onSite} ratio="4 / 5" tone="green" /> : <>
+    <p className={styles.folioLabel}>The builder’s folio</p>
       <div className={styles.folio} aria-label="The Bellewood builder's folio">
         <div className={styles.binding} aria-hidden="true"><span>Bellewood / Field notes</span></div>
         <div className={styles.paperBack} aria-hidden="true" />
@@ -99,6 +92,5 @@ export function BuilderFolioTest() {
         {sheets.map((sheet, index) => <button key={sheet.label} type="button" aria-pressed={open && active === index} onClick={() => { setActive(index); setOpen(true) }}><span>0{index + 1}</span>{sheet.label.replace('The ', '')}</button>)}
       </div>
       <div className={styles.footer}><span>Three notes on how we build.</span><button type="button" onClick={() => setOpen(!open)}>{open ? 'Close folio' : 'Open folio'}<span aria-hidden="true">{open ? '\u2212' : '+'}</span></button></div>
-    </>}
   </div>
 }

@@ -155,7 +155,7 @@ export function Testimonials({ sheetNumber = "A-07" }: { sheetNumber?: string } 
             </h2>
             {googleReviews.placements.testimonials && <GoogleReviewBadge />}
           </div>
-          {testimonialsArePlaceholder && <p className={styles.draftNote}>Layout preview: these sample quotes are not client reviews. Read genuine reviews using the Google link above.</p>}
+          {testimonialsArePlaceholder && <p className={styles.draftNote}>Sample quotes, not client reviews. These will be replaced with genuine client feedback before publication.</p>}
         </Reveal>
 
         <div className={styles.stage}>

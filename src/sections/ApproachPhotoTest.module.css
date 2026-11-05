@@ -21,8 +21,7 @@
   min-height: clamp(36rem, 74svh, 54rem);
   padding-block: clamp(1.5rem, 3vw, 3rem);
 }
-.testLabel { display: flex; flex-wrap: wrap; align-items: center; gap: 0.7rem 1rem; font: 400 0.7rem/1.5 var(--font-display); }
-.testLabel > span:first-child { border: 1px solid rgb(247 247 244 / 65%); padding: 0.3rem 0.65rem; text-transform: uppercase; letter-spacing: 0.12em; }
+.eyebrow { margin: 0; font: 500 0.7rem/1.5 var(--font-display); text-transform: uppercase; letter-spacing: 0.12em; }
 .copy { max-width: 53rem; }
 .heading { color: var(--wash); font-size: clamp(2.5rem, 4.4vw, 4.75rem); font-weight: 500; line-height: 1.08; letter-spacing: -0.035em; }
 .heading > em { display: block; margin-top: 0.12em; font-family: var(--font-body); font-weight: 400; font-size: 1.09em; }

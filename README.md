@@ -22,6 +22,17 @@ reference it.
 
 ---
 
+## Finished section labels and enquiry links (5 November 2026)
+
+The Home photograph, Work closing and Approach photograph links now read
+“Explore your options”, retaining their existing destinations and button design.
+The Google review badge appears in the Home hero only. The Approach photograph
+uses “Building with Bellewood” instead of the concept/test banner. About's folio
+uses a finished heading, with the old photo comparison control removed.
+Existing anchor IDs remain stable. Illustrative-model captions and the notice
+identifying sample testimonials remain accurate; this cleanup does not resolve
+the genuine reviews or enquiry delivery items listed above.
+
 ## Copy and decorative dash review (5 November 2026)
 
 Removed the short strokes before shared section labels and Journey leads, the

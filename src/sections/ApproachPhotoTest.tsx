@@ -6,7 +6,7 @@ import { stills } from '../data/projects'
 import { useReducedMotion } from '../hooks/useReducedMotion'
 import styles from './ApproachPhotoTest.module.css'
 
-/** Additive concept preview. Existing Approach closing content stays above it. */
+/** Photographic closing invitation for the Approach page. */
 export function ApproachPhotoTest() {
   const ref = useRef<HTMLElement>(null)
   const reduced = useReducedMotion()
@@ -24,7 +24,7 @@ export function ApproachPhotoTest() {
       </motion.div>
       <div className={styles.scrim} aria-hidden="true" />
       <div className={['shell', styles.content].join(' ')}>
-        <div className={styles.testLabel}><span>Concept preview</span><span>Additional section / Test</span></div>
+        <p className={styles.eyebrow}>Building with Bellewood</p>
         <motion.div className={styles.copy} initial={reduced ? false : { opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.3 }}
           transition={{ duration: reduced ? 0 : 1, delay: reduced ? 0 : 0.2 }}>
@@ -32,7 +32,7 @@ export function ApproachPhotoTest() {
             Care in the making.<em>Pleasure in the living.</em>
           </h2>
           <Link to="/contact" className={styles.conversation}>
-            <span>Start a conversation</span>
+            <span>Explore your options</span>
             <span className={styles.conversationMark}><ActionGlyph name="conversation" /></span>
           </Link>
         </motion.div>

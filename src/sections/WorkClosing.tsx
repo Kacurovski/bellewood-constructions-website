@@ -15,7 +15,7 @@ export function WorkClosing() {
       </Reveal>
       <Reveal delay={0.1} className={styles.actions}>
         <Link to="/contact" className={styles.conversation}>
-          <span>Start a conversation</span>
+          <span>Explore your options</span>
           <span className={styles.conversationMark}><ActionGlyph name="conversation" /></span>
         </Link>
         <p className={styles.call}>Or call Angus <a href={contact.phoneHref}>{contact.phone}</a></p>

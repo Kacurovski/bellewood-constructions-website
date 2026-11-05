@@ -63,7 +63,7 @@ export function PhotoPauseTest() {
               if (lenis) lenis.scrollTo(destination, { duration: 1.15, immediate: reduced })
               else destination.scrollIntoView({ behavior: reduced ? 'instant' : 'smooth', block: 'start' })
             }}>
-              <span>Start a conversation</span>
+              <span>Explore your options</span>
               <span className={styles.conversationMark}><ActionGlyph name="conversation" /></span>
             </a>
           </div>

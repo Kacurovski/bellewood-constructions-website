@@ -58,7 +58,7 @@ export function HeritageExplorerTest() {
   return (
     <section ref={section} id="heritage-explorer-test" className={styles.section} aria-labelledby="heritage-explorer-heading">
       <div className="shell">
-        <div className={styles.testBar}><span className={styles.testBadge}>Guided renovation study</span><span>Test / comparison with the material study above</span></div>
+        <div className={styles.testBar}><span className={styles.testBadge}>Guided renovation study</span></div>
         <div className={styles.intro}>
           <h2 id="heritage-explorer-heading" className={styles.heading}>How we approach<br /><em>an older home.</em></h2>
           <div className={styles.introCopy}><p>Keep the character you love. Make space for the way you live.</p><p>Choose an idea below to highlight the model and see a real example from our work.</p></div>

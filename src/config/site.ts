@@ -70,7 +70,7 @@ export const contactLocation = {
 } as const
 
 /**
- * Placement comparison: keep either badge by turning off the other placement.
+ * The Google rating badge appears in the Home hero only.
  * Rating checked on the public Google Maps listing on 4 November 2026.
  * This is a manually maintained snapshot, not a live reviews integration.
  * Recheck the rating before publication; the listing still uses Angus's name.
@@ -80,7 +80,7 @@ export const googleReviews = {
   rating: 5.0,
   verifiedOn: '2026-11-04',
   url: 'https://www.google.com/maps/place/Angus+Cowan+Constructions/data=!4m7!3m6!1s0x6b9151fb7cc1efc7:0xeb529a809d5980fc!8m2!3d-27.5248914!4d152.930056!9m1!1b1?hl=en',
-  placements: { hero: true, testimonials: true },
+  placements: { hero: true, testimonials: false },
 } as const
 
 /**
