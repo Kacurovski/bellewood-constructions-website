@@ -21,7 +21,6 @@ const MATERIALS: Record<MaterialKey, { color: string; roughness: number }> = {
   joinery: { color: '#f5f4ee', roughness: 0.78 },
   deck: { color: '#b2aaa0', roughness: 0.9 },
   roof: { color: '#e5e6df', roughness: 0.72 },
-  roofTrim: { color: '#53594f', roughness: 0.65 },
   glass: { color: '#627572', roughness: 0.3 },
   accent: { color: '#414945', roughness: 0.82 },
   ground: { color: '#dcd5c6', roughness: 0.95 },
@@ -249,7 +248,7 @@ function Building({ progress }: { progress: React.MutableRefObject<number> }) {
             ref={(el) => (mats.current[key] = el)}
             color={MATERIALS[key === 'corbel' ? 'trim' : key].color}
             roughness={MATERIALS[key === 'corbel' ? 'trim' : key].roughness}
-            metalness={key === 'roof' || key === 'roofTrim' ? 0.08 : 0}
+            metalness={key === 'roof' ? 0.08 : 0}
             transparent
             opacity={0}
           />
