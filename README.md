@@ -1514,7 +1514,7 @@ the actual renovation sequence. Hidden rear openings and construction are
 interpreted from the available views and floor plan.
 
 `TimberFrame.tsx` fits each view from the transformed geometry, draws members as
-eleven instanced box-material groups plus one shared curved-bracket extrusion,
+ten instanced box-material groups plus one shared curved-bracket extrusion,
 and excludes unoutlined roof strips from the CPU drafting-line work.
 Shadow resolution is reduced on narrow canvases. Reduced
 motion and unavailable WebGL use matching WebP renders:
@@ -1575,12 +1575,20 @@ water appears last. Paving and fence members grow in a staggered sequence, while
 the house's existing gate and fence retain their member-based assembly. Scrolling
 back reverses all of these additions, including their shadows.
 
-Roof perimeter edges use the darker gutter/barge-flashing colour visible in the
-exterior photos. Pale ridge and valley caps and white fascia boards remain.
-Perimeter edges are derived from the intersected roof faces so strips stop at
-real junctions rather than running across the roof sheets. Both finished stills
-are regenerated after this change. The sequence is illustrative, not a record of
-the actual construction schedule.
+The experimental dark perimeter edging was subsequently removed at the owner's
+request. Roof caps use the original pale roof material and narrow profile; the
+gate roof still assembles with its posts near the end. Both finished stills match
+the restored pale roof. The sequence is illustrative, not a record of the actual
+construction schedule.
+
+#### Mobile hero controls, 6 November 2026
+
+Below 600px, the hero footer uses two rows: scene markers with Skip tour, then
+Explore our work beside a compact Google rating link. The redundant scroll hint
+is hidden on phones. Captions sit above these rows with more space left for the
+photograph. The badge retains its rating, five stars, Google identity and full
+accessible link label. Desktop navigation and the review destination are unchanged.
+Reduced-motion photography uses the same compact work/reviews row.
 
 ### Temporary heritage explorer concept
 

@@ -21,7 +21,7 @@ export function GoogleReviewBadge({ variant = 'light' }: { variant?: 'light' | '
             ))}
           </span>
         </span>
-        <span className={styles.label}>Read our Google reviews</span>
+        <span className={styles.label}><span className={styles.labelLead}>Read our </span>Google reviews</span>
       </span>
     </a>
   )
