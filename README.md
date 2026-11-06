@@ -1514,7 +1514,7 @@ the actual renovation sequence. Hidden rear openings and construction are
 interpreted from the available views and floor plan.
 
 `TimberFrame.tsx` fits each view from the transformed geometry, draws members as
-ten instanced box-material groups plus one shared curved-bracket extrusion,
+eleven instanced box-material groups plus one shared curved-bracket extrusion,
 and excludes unoutlined roof strips from the CPU drafting-line work.
 Shadow resolution is reduced on narrow canvases. Reduced
 motion and unavailable WebGL use matching WebP renders:
@@ -1564,6 +1564,23 @@ outer edges fade into the page. The house stays large enough to read on phones.
 Both still images are regenerated from the live scene for reduced motion and
 unavailable WebGL. The scroll sequence, view controls and separate Approach model
 remain unchanged.
+
+#### Exterior build sequence and roof edging, 6 November 2026
+
+The landscape now receives the house's scroll progress. At the start, only the
+terrain, established planting and public street/footpath remain. The pool shell
+appears during the later roof stage; terrace stones, driveway, paths, glass guard,
+new ornamental planting and the fence extension assemble through Finish. Pool
+water appears last. Paving and fence members grow in a staggered sequence, while
+the house's existing gate and fence retain their member-based assembly. Scrolling
+back reverses all of these additions, including their shadows.
+
+Roof perimeter edges use the darker gutter/barge-flashing colour visible in the
+exterior photos. Pale ridge and valley caps and white fascia boards remain.
+Perimeter edges are derived from the intersected roof faces so strips stop at
+real junctions rather than running across the roof sheets. Both finished stills
+are regenerated after this change. The sequence is illustrative, not a record of
+the actual construction schedule.
 
 ### Temporary heritage explorer concept
 

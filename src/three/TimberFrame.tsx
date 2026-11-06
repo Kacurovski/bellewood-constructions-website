@@ -21,6 +21,7 @@ const MATERIALS: Record<MaterialKey, { color: string; roughness: number }> = {
   joinery: { color: '#f5f4ee', roughness: 0.78 },
   deck: { color: '#b2aaa0', roughness: 0.9 },
   roof: { color: '#e5e6df', roughness: 0.72 },
+  roofTrim: { color: '#53594f', roughness: 0.65 },
   glass: { color: '#627572', roughness: 0.3 },
   accent: { color: '#414945', roughness: 0.82 },
   ground: { color: '#dcd5c6', roughness: 0.95 },
@@ -140,6 +141,10 @@ function Building({ progress }: { progress: React.MutableRefObject<number> }) {
       const mat = mats.current[k]
       if (!mat) continue
       mat.opacity = solidOpacity
+      // Invisible drafting-stage solids must not leave phantom shadows on
+      // the lawn. The line drawing itself does not cast a building shadow.
+      const mesh = meshes.current[k]
+      if (mesh) mesh.castShadow = k !== 'glass' && solidOpacity > 0.01
       // Exposed bearers and joist ends receive the white finish along with the
       // house; the timber stage remains legible earlier in the sequence.
       if (k === 'frame') mat.color.copy(framePaint.bare).lerp(framePaint.finished, smoothstep(0.74, 0.92, p))
@@ -192,6 +197,9 @@ function Building({ progress }: { progress: React.MutableRefObject<number> }) {
       scratch.origin.applyQuaternion(quats[i])
 
       scratch.scale.set(Math.max(sx, 1e-5), Math.max(sy, 1e-5), Math.max(sz, 1e-5))
+      // A member shortened on only one axis still has a broad end face.
+      // Collapse all axes before it starts, otherwise that face casts a line.
+      if (t <= 0.001) scratch.scale.setScalar(1e-8)
       scratch.position.set(m.p[0], m.p[1], m.p[2]).add(scratch.origin)
       scratch.matrix.compose(scratch.position, quats[i], scratch.scale)
 
@@ -241,7 +249,7 @@ function Building({ progress }: { progress: React.MutableRefObject<number> }) {
             ref={(el) => (mats.current[key] = el)}
             color={MATERIALS[key === 'corbel' ? 'trim' : key].color}
             roughness={MATERIALS[key === 'corbel' ? 'trim' : key].roughness}
-            metalness={key === 'roof' ? 0.08 : 0}
+            metalness={key === 'roof' || key === 'roofTrim' ? 0.08 : 0}
             transparent
             opacity={0}
           />
@@ -318,7 +326,7 @@ export default function TimberFrame({
 
       <Daylight shadows={shadows} />
 
-      <CroydeLandscape />
+      <CroydeLandscape progress={progress} />
       <Building progress={progress} />
     </Canvas>
   )

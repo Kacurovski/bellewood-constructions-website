@@ -6,7 +6,7 @@
  * The animation explains a build sequence, not the renovation's chronology.
  * Street is +z; the long garden elevation is -x. Approximate metre units.
  */
-export type MaterialKey = 'frame' | 'clad' | 'trim' | 'joinery' | 'roof' | 'glass' | 'deck' | 'accent' | 'ground' | 'brick'
+export type MaterialKey = 'frame' | 'clad' | 'trim' | 'joinery' | 'roof' | 'roofTrim' | 'glass' | 'deck' | 'accent' | 'ground' | 'brick'
 export type Member = {
   p: [number,number,number]; s: [number,number,number]
   rx:number; ry?:number; rz?:number; at:number; stage:0|1|2|3
@@ -315,7 +315,7 @@ function roofAt(x:number,z:number) {
   return {h,face:best}
 }
 const roofHeight=(x:number,z:number)=>roofAt(x,z).h
-const roofEdges=new Map<string,[V3,V3]>()
+const roofEdges=new Map<string,{a:V3;b:V3;exposed:boolean}>()
 roofs.forEach((f,index)=>{
   let pieces=[f.poly]
   roofs.forEach((g,j)=>{
@@ -324,6 +324,7 @@ roofs.forEach((f,index)=>{
     if(upper.length>=3&&Math.abs(area(upper))>0.0001)pieces=pieces.flatMap(p=>difference(p,upper))
   })
   pieces.forEach(poly=>{
+    const gateRoof=f.poly.every(p=>p[1]>15)
     const alongX=Math.abs(f.a)>0.001,cross=alongX?1:0,along=alongX?0:1
     const lo=Math.min(...poly.map(p=>p[cross])),hi=Math.max(...poly.map(p=>p[cross]))
     const n=Math.max(1,Math.ceil((hi-lo)/0.12)),step=(hi-lo)/n
@@ -334,8 +335,8 @@ roofs.forEach((f,index)=>{
       const a=Math.min(...hits),b=Math.max(...hits),v=(a+b)/2
       const x=alongX?v:u,z=alongX?u:v,y=f.a*x+f.b*z+f.c
       const slope=alongX?f.a:f.b,len=(b-a)*Math.sqrt(1+slope*slope),rot=alongX?{rz:Math.atan(slope)}:{rx:-Math.atan(slope)}
-      box([x,y,z],alongX?[len,0.045,step+0.002]:[step+0.002,0.045,len],'roof',0.49+i/n*0.12,2,{...rot,lines:false})
-      box([x,y+0.032,z],alongX?[len,0.013,0.012]:[0.012,0.013,len],'roof',0.51+i/n*0.12,2,{...rot,lines:false})
+      box([x,y,z],alongX?[len,0.045,step+0.002]:[step+0.002,0.045,len],'roof',gateRoof?0.94+i/n*0.012:0.49+i/n*0.12,gateRoof?3:2,{...rot,lines:false})
+      box([x,y+0.032,z],alongX?[len,0.013,0.012]:[0.012,0.013,len],'roof',gateRoof?0.945+i/n*0.01:0.51+i/n*0.12,gateRoof?3:2,{...rot,lines:false})
     }
     poly.forEach((p,j)=>{
       const q=poly[(j+1)%poly.length],a:V3=[p[0],f.a*p[0]+f.b*p[1]+f.c+0.035,p[1]],b:V3=[q[0],f.a*q[0]+f.b*q[1]+f.c+0.035,q[1]]
@@ -347,21 +348,34 @@ roofs.forEach((f,index)=>{
       const l=roofAt(mx-dz*0.02,mz+dx*0.02).face,r=roofAt(mx+dz*0.02,mz-dx*0.02).face
       if(l&&r&&Math.abs(l.a-r.a)<0.001&&Math.abs(l.b-r.b)<0.001&&Math.abs(l.c-r.c)<0.001)return
       const key=[a,b].map(v=>v.map(n=>n.toFixed(2)).join(',')).sort().join('/')
-      roofEdges.set(key,[a,b])
+      // Dark gutters and barge flashings belong at the exposed perimeter.
+      // Internal hips/ridges/valleys retain the pale roof-metal capping.
+      const gableEnd=[8.67,10.85,16.5,18.5].some(z=>Math.abs(a[2]-z)<0.02&&Math.abs(b[2]-z)<0.02)
+        || [7.55,-7.6].some(x=>Math.abs(a[0]-x)<0.02&&Math.abs(b[0]-x)<0.02)
+      const exposed=!l||!r||(gableEnd&&Math.abs(a[1]-b[1])>0.02)
+      roofEdges.set(key,{a,b,exposed})
     })
   })
 })
-roofEdges.forEach(([a,b])=>beam(a,b,0.07,'roof',0.65,2))
+roofEdges.forEach(({a,b,exposed})=>{
+  const gateRoof=a[2]>15&&b[2]>15
+  if(exposed) {
+    const eave=Math.abs(a[1]-b[1])<0.02
+    const offset=eave?-0.045:0.015
+    beam([a[0],a[1]+offset,a[2]],[b[0],b[1]+offset,b[2]],eave?0.14:0.09,'roofTrim',gateRoof?0.95:0.66,gateRoof?3:2)
+  } else beam(a,b,0.07,'roof',gateRoof?0.95:0.65,gateRoof?3:2)
+})
 function gableDetail(axis:'x'|'z',fixed:number,centre:number,half:number,base:number,peak:number) {
   const point=(u:number,y:number):V3=>axis==='z'?[u,y,fixed]:[fixed,y,u]
+  const gate=axis==='z'&&fixed>15
   for(let u=centre-half+0.06;u<centre+half;u+=0.085) {
     const top=peak-Math.abs(u-centre)/half*(peak-base)
-    if(top-base>0.04)box(point(u,(base+top)/2),axis==='z'?[0.055,top-base,0.07]:[0.07,top-base,0.055],'accent',0.87,3,{lines:false})
+    if(top-base>0.04)box(point(u,(base+top)/2),axis==='z'?[0.055,top-base,0.07]:[0.07,top-base,0.055],'accent',gate?0.95:0.87,3,{lines:false})
   }
-  beam(point(centre-half,base),point(centre,peak),0.15,'trim',0.89)
-  beam(point(centre,peak),point(centre+half,base),0.15,'trim',0.89)
-  beam(point(centre-half,base),point(centre+half,base),0.13,'trim',0.89)
-  beam(point(centre,base),point(centre,peak),0.1,'trim',0.89)
+  beam(point(centre-half,base),point(centre,peak),0.15,'trim',gate?0.95:0.89)
+  beam(point(centre,peak),point(centre+half,base),0.15,'trim',gate?0.95:0.89)
+  beam(point(centre-half,base),point(centre+half,base),0.13,'trim',gate?0.95:0.89)
+  beam(point(centre,base),point(centre,peak),0.1,'trim',gate?0.95:0.89)
 }
 gableDetail('z',8.71,2.875,2.67,7.26,9.13)
 gableDetail('x',7.59,2.5,2.19,6.79,8.3)
@@ -462,6 +476,6 @@ export const FRAME_STAGE_STARTS=[0,0.14,0.48,0.72] as const
 export const FRAME_STAGES=[
   {label:'Drawings',note:'Set out Croyde’s two levels, wraparound verandah and garden terrace.'},
   {label:'Frame',note:'Floors, walls and verandah posts establish the shape of the home.'},
-  {label:'Roof',note:'Layered gables meet the long verandah and sheltered rear pavilion.'},
-  {label:'Finish',note:'White weatherboards, fine balustrades and the gabled entrance complete the house.'},
+  {label:'Roof',note:'Metal roofing, gutters and edging complete the layered gables.'},
+  {label:'Finish',note:'Cladding and verandah details finish the house. Paths, fencing and the pool complete the grounds.'},
 ] as const

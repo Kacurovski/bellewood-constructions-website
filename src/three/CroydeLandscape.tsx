@@ -1,4 +1,6 @@
 import { useEffect, useLayoutEffect, useMemo, useRef } from 'react'
+import type { MutableRefObject, ReactNode } from 'react'
+import { useFrame } from '@react-three/fiber'
 import * as THREE from 'three'
 import { FRAME_BOUNDS } from './frameMembers'
 
@@ -14,7 +16,7 @@ const GARDEN_TREES = [
  * pool beside the long verandah, open side lawn, driveway and planted edges.
  * Extents and levels are approximate, not a survey of the property.
  * All textures are generated locally; the live scene and stills use the same
- * seeded planting. Leaves, branches and paving each share one draw call. */
+ * seeded planting. Each planting, paving or fence batch shares one draw call. */
 function random(seed: number) {
   return () => {
     seed = (Math.imul(1664525, seed) + 1013904223) | 0
@@ -117,13 +119,34 @@ function groundMask() {
 }
 
 type Instance = { p: [number, number, number]; s: [number, number, number]; r?: [number, number, number]; color: string }
-function Instances({ name, items, geometry, material, shadows = true }: {
-  name: string; items: Instance[]; geometry: THREE.BufferGeometry; material: THREE.Material; shadows?: boolean
+type BuildSchedule = { progress: MutableRefObject<number>; start: number; end: number; axis: 'x' | 'y' | 'z' }
+
+/** World-space pivot keeps a new surface anchored while it is laid out.
+ * Driven by the same scroll ref as the house, including when scrolling back. */
+function Constructed({ name, build, anchor, children }: {
+  name: string; build: BuildSchedule; anchor: number; children: ReactNode
+}) {
+  const ref = useRef<THREE.Group>(null)
+  useFrame(() => {
+    const t = THREE.MathUtils.smoothstep(build.progress.current, build.start, build.end)
+    const group = ref.current!
+    group.visible = t > 0.001
+    group.scale[build.axis] = Math.max(t, 0.00001)
+    group.position[build.axis] = anchor * (1 - t)
+  })
+  return <group ref={ref} name={name} visible={false}>{children}</group>
+}
+
+function Instances({ name, items, geometry, material, shadows = true, build }: {
+  name: string; items: Instance[]; geometry: THREE.BufferGeometry; material: THREE.Material; shadows?: boolean; build?: BuildSchedule
 }) {
   const ref = useRef<THREE.InstancedMesh>(null)
+  const animated = !!build
+  const last = useRef(-1)
+  const object = useMemo(() => new THREE.Object3D(), [])
   useLayoutEffect(() => {
     const mesh = ref.current!
-    const object = new THREE.Object3D(), color = new THREE.Color()
+    const color = new THREE.Color()
     items.forEach((item, i) => {
       object.position.set(...item.p)
       object.scale.set(...item.s)
@@ -135,13 +158,43 @@ function Instances({ name, items, geometry, material, shadows = true }: {
     mesh.instanceMatrix.needsUpdate = true
     if (mesh.instanceColor) mesh.instanceColor.needsUpdate = true
     mesh.computeBoundingSphere()
-  }, [items])
+    mesh.visible = !animated
+    last.current = -1
+  }, [items, object, animated])
+  useFrame(() => {
+    if (!build) return
+    const p = THREE.MathUtils.clamp(build.progress.current, build.start, build.end)
+    if (p === last.current) return
+    last.current = p
+    const mesh = ref.current!, duration = build.end - build.start
+    mesh.visible = p > build.start
+    items.forEach((item, i) => {
+      // The fence grows along its frontage; posts and rails at the same
+      // position appear together. Paving is laid one slab after another.
+      const order = name === 'croyde-boundary-fence'
+        ? THREE.MathUtils.clamp((item.p[0] + 27.5) / 20.2, 0, 1)
+        : i / Math.max(1, items.length - 1)
+      const start = build.start + duration * 0.65 * order
+      const t = THREE.MathUtils.smoothstep(p, start, start + duration * 0.35)
+      object.position.set(...item.p)
+      object.scale.set(...item.s)
+      object.rotation.set(...(item.r ?? [0, 0, 0]))
+      const full = object.scale[build.axis]
+      object.scale[build.axis] = Math.max(full * t, 0.00001)
+      if (t <= 0.001) object.scale.setScalar(1e-8)
+      object.position[build.axis] -= full * (1 - t) / 2
+      object.updateMatrix()
+      mesh.setMatrixAt(i, object.matrix)
+    })
+    mesh.instanceMatrix.needsUpdate = true
+  })
   return <instancedMesh ref={ref} name={name} args={[geometry, material, items.length]} castShadow={shadows} receiveShadow />
 }
 
 function planting() {
   const rng = random(417)
-  const leaves: Instance[] = [], branches: Instance[] = [], paving: Instance[] = [], fence: Instance[] = []
+  const leaves: Instance[] = [], branches: Instance[] = [], paths: Instance[] = [], coping: Instance[] = [], fence: Instance[] = [], newPlanting: Instance[] = []
+  let foliage = leaves
   const greens = ['#4d633a', '#657544', '#77864c', '#344d32', '#829369', '#526d46']
   // Each plant has an irregular silhouette of individual leaves, with no
   // opaque spheres inside the canopy. The house remains visible between them.
@@ -150,7 +203,7 @@ function planting() {
       const a = rng() * Math.PI * 2, v = rng() * 2 - 1
       const radial = Math.sqrt(1 - v * v), distance = Math.cbrt(rng())
       const scale = leafSize * (0.65 + rng() * 0.65)
-      leaves.push({
+      foliage.push({
         p: [x + Math.cos(a) * radial * distance * rx, groundHeight(x) + y + v * distance * ry, z + Math.sin(a) * radial * distance * rz],
         s: [scale * 0.5, scale, scale],
         r: [rng() * Math.PI, rng() * Math.PI * 2, rng() * Math.PI],
@@ -194,28 +247,29 @@ function planting() {
   }
   // The clipped hedge beside the pool, and magnolia-like planting beneath
   // the front verandah, both visible in the garden/street photographs.
+  foliage = newPlanting
   for (let z = -14; z < 2.5; z += 0.9) hedge(-15.2, z, 0.75, 0.55)
   for (let x = -6.6; x < 6.5; x += 0.9) {
     if (x > -2.4 && x < 1) continue
     hedge(x, 10.7, 1.65, 0.62)
   }
   // Stone slabs align to the existing gate and the foot of the front stair.
-  for (let i = 0; i < 6; i++) paving.push({ p: [-0.7, -0.04, 16.4 + i * 0.79], s: [1.8, 0.12, 0.75], color: i % 2 ? '#e6e2d7' : '#eeeade' })
+  for (let i = 0; i < 6; i++) paths.push({ p: [-0.7, -0.04, 16.4 + i * 0.79], s: [1.8, 0.12, 0.75], color: i % 2 ? '#e6e2d7' : '#eeeade' })
   // A short garden path continues from the rear stair to the open lawn.
-  for (let i = 0; i < 4; i++) paving.push({ p: [-7.05, -0.04, -12.55 - i * 0.85], s: [1.35, 0.12, 0.72], color: '#e6e2d7' })
+  for (let i = 0; i < 4; i++) paths.push({ p: [-7.05, -0.04, -12.55 - i * 0.85], s: [1.35, 0.12, 0.72], color: '#e6e2d7' })
   // Continue the street fence across the lawn, retaining the existing gate.
   for (let x = -27.5; x < -7.3; x += 0.16) fence.push({ p: [x, 0.76 + groundHeight(x), 17.5], s: [0.065, 1.18, 0.065], color: '#f7f6ee' })
   for (let x = -27.5; x < -7.3; x += 2.1) fence.push({ p: [x, 0.81 + groundHeight(x), 17.5], s: [0.15, 1.62, 0.15], color: '#f7f6ee' })
   for (let x = -27; x < -7.3; x += 1) for (const y of [0.3, 1.34]) fence.push({ p: [x, y + groundHeight(x), 17.5], s: [1.04, 0.06, 0.08], color: y > 1 ? '#51594c' : '#f7f6ee' })
   // Individual terrace tiles keep the stone from reading as a flat block.
   for (let z = -15.2; z < 2.4; z += 1.1) {
-    for (const x of [-14.15, -9.45]) paving.push({ p: [x, -0.025, z], s: [1, 0.14, 1.075], color: rng() > 0.4 ? '#f4eada' : '#e2d5be' })
+    for (const x of [-14.15, -9.45]) coping.push({ p: [x, -0.025, z], s: [1, 0.14, 1.075], color: rng() > 0.4 ? '#f4eada' : '#e2d5be' })
   }
-  for (const z of [-15.75, 2.7]) for (let x = -14.1; x < -9; x += 1.05) paving.push({ p: [x, -0.025, z], s: [1.025, 0.14, 0.8], color: '#eee3d0' })
-  return { leaves, branches, paving, fence }
+  for (const z of [-15.75, 2.7]) for (let x = -14.1; x < -9; x += 1.05) coping.push({ p: [x, -0.025, z], s: [1.025, 0.14, 0.8], color: '#eee3d0' })
+  return { leaves, branches, paths, coping, fence, newPlanting }
 }
 
-export function CroydeLandscape() {
+export function CroydeLandscape({ progress }: { progress: MutableRefObject<number> }) {
   const resources = useMemo(() => {
     const lawn = surface('lawn'), stone = surface('stone'), soil = surface('soil'), gravel = surface('gravel'), water = surface('water'), mask = groundMask()
     const terrain = new THREE.PlaneGeometry(200, 200, 50, 50)
@@ -259,38 +313,56 @@ export function CroydeLandscape() {
       <mesh geometry={resources.street} receiveShadow>
         <meshStandardMaterial color="#7a7d73" roughness={1} />
       </mesh>
-      {[[ -5.3, 16.4, 4.4, 1.3 ], [4.7, 16.4, 4.4, 1.3], [11.8, -1, 1.4, 37], [-8, -19.6, 40, 2], [-15.2, -6, 1.3, 18]].map(([x, z, w, d], i) => (
+      {[[ -5.3, 16.4, 4.4, 1.3 ], [4.7, 16.4, 4.4, 1.3], [11.8, -1, 1.4, 37], [-8, -19.6, 40, 2]].map(([x, z, w, d], i) => (
         <mesh key={i} rotation={[-Math.PI / 2, 0, 0]} position={[x, groundHeight(x) + 0.02, z]} receiveShadow>
           <planeGeometry args={[w, d]} />
           <meshStandardMaterial map={resources.soil} alphaMap={resources.mask} transparent depthWrite={false} roughness={1} />
         </mesh>
       ))}
       {/* Exposed-aggregate driveway down the narrow side of the house. */}
-      <mesh name="croyde-driveway" rotation={[-Math.PI / 2, 0, 0]} position={[9.25, -0.09, 0.8]} receiveShadow>
-        <planeGeometry args={[3.3, 40]} />
-        <meshStandardMaterial map={resources.gravel} bumpMap={resources.gravel} bumpScale={0.035} roughness={1} />
-      </mesh>
+      <Constructed name="croyde-driveway-build" build={{ progress, start: 0.78, end: 0.9, axis: 'z' }} anchor={20.8}>
+        <mesh name="croyde-driveway" rotation={[-Math.PI / 2, 0, 0]} position={[9.25, -0.09, 0.8]} receiveShadow>
+          <planeGeometry args={[3.3, 40]} />
+          <meshStandardMaterial map={resources.gravel} bumpMap={resources.gravel} bumpScale={0.035} roughness={1} />
+        </mesh>
+      </Constructed>
       {/* Long garden-side pool with pale coping and restrained green water. */}
-      <mesh name="croyde-pool-basin" position={[-11.8, -0.18, -6.5]} receiveShadow>
-        <boxGeometry args={[3.8, 0.36, 17.6]} />
-        <meshStandardMaterial color="#d5d8c7" roughness={0.85} />
-      </mesh>
-      <mesh name="croyde-pool-water" rotation={[-Math.PI / 2, 0, 0]} position={[-11.8, 0.015, -6.5]}>
-        <planeGeometry args={[3.4, 17.2]} />
-        <meshStandardMaterial map={resources.water} roughness={0.22} metalness={0.08} />
-      </mesh>
-      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[-11.8, 0.025, -14.65]}>
-        <planeGeometry args={[3.4, 0.9]} />
-        <meshStandardMaterial color="#8bb3a5" roughness={0.45} />
-      </mesh>
-      <mesh name="croyde-pool-guard" position={[-14.75, 0.61, -6.5]}>
-        <boxGeometry args={[0.018, 1.15, 19]} />
-        <meshStandardMaterial color="#d5e4db" transparent opacity={0.14} depthWrite={false} roughness={0.25} />
-      </mesh>
+      <Constructed name="croyde-pool-shell-build" build={{ progress, start: 0.64, end: 0.77, axis: 'z' }} anchor={-15.3}>
+        <mesh name="croyde-pool-basin" position={[-11.8, -0.18, -6.5]} receiveShadow>
+          <boxGeometry args={[3.8, 0.36, 17.6]} />
+          <meshStandardMaterial color="#d5d8c7" roughness={0.85} />
+        </mesh>
+      </Constructed>
+      <Constructed name="croyde-pool-water-build" build={{ progress, start: 0.95, end: 1, axis: 'z' }} anchor={-15.1}>
+        <mesh name="croyde-pool-water" rotation={[-Math.PI / 2, 0, 0]} position={[-11.8, 0.015, -6.5]}>
+          <planeGeometry args={[3.4, 17.2]} />
+          <meshStandardMaterial map={resources.water} roughness={0.22} metalness={0.08} />
+        </mesh>
+        <mesh rotation={[-Math.PI / 2, 0, 0]} position={[-11.8, 0.025, -14.65]}>
+          <planeGeometry args={[3.4, 0.9]} />
+          <meshStandardMaterial color="#8bb3a5" roughness={0.45} />
+        </mesh>
+      </Constructed>
+      <Constructed name="croyde-pool-guard-build" build={{ progress, start: 0.9, end: 0.97, axis: 'y' }} anchor={0.035}>
+        <mesh name="croyde-pool-guard" position={[-14.75, 0.61, -6.5]}>
+          <boxGeometry args={[0.018, 1.15, 19]} />
+          <meshStandardMaterial color="#d5e4db" transparent opacity={0.14} depthWrite={false} roughness={0.25} />
+        </mesh>
+      </Constructed>
       <Instances name="croyde-foliage" items={items.leaves} geometry={resources.leaf} material={resources.leafMat} />
       <Instances name="croyde-branches" items={items.branches} geometry={resources.branch} material={resources.woodMat} />
-      <Instances name="croyde-path" items={items.paving} geometry={resources.box} material={resources.stoneMat} shadows={false} />
-      <Instances name="croyde-boundary-fence" items={items.fence} geometry={resources.box} material={resources.woodMat} />
+      <Constructed name="croyde-planting-build" build={{ progress, start: 0.88, end: 0.99, axis: 'y' }} anchor={-0.14}>
+        <Instances name="croyde-new-planting" items={items.newPlanting} geometry={resources.leaf} material={resources.leafMat} />
+      </Constructed>
+      <Constructed name="croyde-pool-bed-build" build={{ progress, start: 0.87, end: 0.93, axis: 'z' }} anchor={-15}>
+        <mesh rotation={[-Math.PI / 2, 0, 0]} position={[-15.2, -0.12, -6]} receiveShadow>
+          <planeGeometry args={[1.3, 18]} />
+          <meshStandardMaterial map={resources.soil} alphaMap={resources.mask} transparent depthWrite={false} roughness={1} />
+        </mesh>
+      </Constructed>
+      <Instances name="croyde-path" items={items.paths} geometry={resources.box} material={resources.stoneMat} shadows={false} build={{ progress, start: 0.88, end: 0.98, axis: 'z' }} />
+      <Instances name="croyde-pool-coping" items={items.coping} geometry={resources.box} material={resources.stoneMat} shadows={false} build={{ progress, start: 0.77, end: 0.88, axis: 'z' }} />
+      <Instances name="croyde-boundary-fence" items={items.fence} geometry={resources.box} material={resources.woodMat} build={{ progress, start: 0.89, end: 0.985, axis: 'y' }} />
     </group>
   )
 }
